@@ -1,0 +1,18 @@
+:root {
+    --primary-color: #354E56;
+    --secondary-color: #294D59;
+}
+* {
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.aside-class {
+    background-color: var(--primary-color);
+    padding: 15px;
+    height: 100vh;
+    width: 180px;
+}
+.card {
+    width: fit-content;
+    background-color: var(--secondary-color);
+}
