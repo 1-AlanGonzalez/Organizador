@@ -3,66 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles.css">
-    <!-- Importo fuente de letras  -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Marko+One&display=swap" rel="stylesheet">
-    <!-- Importación de bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
-    <title>Dashboard</title>
+    <!-- 
+        Preconexiones para optimizar la carga de fuentes desde Google Fonts
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- 
+        Marko One: fuente personalizada desde Google Fonts
+    -->
+    <link href="https://fonts.googleapis.com/css2?family=Marko+One&display=swap" rel="stylesheet">
+    <!-- 
+        Bootstrap CSS: framework CSS para estilos y diseño responsivo
+    -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 
+        styles.css: archivo CSS personalizado para los estilos del sitio
+    -->
+    <link rel="stylesheet" href="styles.css">
+    <title>Gym Manager | Dashboard</title>
 </head>
 <body>
-    <div class="d-flex">
-        <aside class="aside-class">
-            <h2>Menú</h2>
-            <ul>
-                <li class="btn btn-outline-secondary"><a class="text-decoration-none" href="#">Inicio</a></li>
-                <li class="btn btn-outline-secondary"><a class="text-decoration-none" href="#">Clientes</a></li>
-                <li class="btn btn-outline-secondary"><a class="text-decoration-none" href="#">Asistencias</a></li>
-                <li class="btn btn-outline-secondary"><a class="text-decoration-none" href="#">Actividades</a></li>
-                <li class="btn btn-outline-secondary"><a class="text-decoration-none" href="#">Ingresos</a></li>
-            </ul>
+    <!-- Los comentarios están por encima de su etiqueta (cada comentario es para la etiqueta que está abajo) -->
+
+    <!--Divisor que contiene todo el contenido
+        d-flex: para usar flexbox 
+        wrapper: clase personalizada para el contenedor principal
+        -->
+    <div class="d-flex wrapper">
+
+        <!-- Barra lateral izquierda (aside)
+            Clases de bootstrap:
+            d-flex: para usar flexbox
+            flex-column: para que los elementos hijos se dispongan en columna 
+            p-3: padding de 3 unidades
+        -->
+        <aside class="sidebar d-flex flex-column p-3">
+
+            <!-- Divisor que contiene los links (ya no son botones)
+                mb-auto: "margin-bottom" auto para empujar el footer(lo que está por debajo del aside) hacia abajo 
+            -->
+            <div class="mb-auto">
+                <!-- 
+                    ul: lista desordenada
+                    nav: clase de bootstrap para navegación
+                    nav-pills: clase de bootstrap para darle un estilo a los links
+                    flex-column: para que los elementos hijos se dispongan en columna
+                    gap-3: espacio entre los elementos hijos
+                    mt-5: margin-top de 5 unidades
+                -->
+                <ul class="nav nav-pills flex-column mb-auto gap-3 mt-5">
+                    <!-- 
+                        li: elemento de lista
+                        nav-item: clase de bootstrap para los elementos de navegación
+                        a: enlace
+                        nav-link: clase de bootstrap para los enlaces de navegación
+                        custom-btn: clase personalizada para los botones
+                        active: clase de bootstrap para el enlace activo
+                    -->
+                    <li class="nav-item">
+                        <a href="#" class="nav-link custom-btn active">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link custom-btn">Clientes</a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link custom-btn">Asistencias</a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link custom-btn">Actividades</a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link custom-btn">Ingresos</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 
+                Divisor que contiene el footer de la barra lateral
+                sidebar-footer: clase personalizada para el footer de la barra lateral
+                text-center: clase de bootstrap para centrar el texto
+                mt-5: margin-top de 5 unidades
+            -->
+            <div class="sidebar-footer text-center mt-5">
+                <!-- 
+                    logo-placeholder: clase personalizada para el logo del footer
+                -->
+                <div class="logo-placeholder">
+                    <h3>GYM<br><small>MANAGER</small></h3>
+                </div>
+            </div>
         </aside>
-        <main class="flex-fill p-3">
-            <header><h1>Panel de control</h1> <p>...</p></header>
-            <section>
-                <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Ingreso Mensual</h5>
-                    <p class="card-text">Mes Actual: Noviembre</p>
-                    <p class="card-text"><small class="text-body-secondary">Ingreso: <b class="ingreso-actual">$444.444</b></small></p>
-                </div>
-                </div>
-            </section>
-            <section>
-                <div class="card">
-                    <h2>Cantidad de clientes</h2>
-                    <div>...</div>
-                </div>
-            </section>
-            <section>
-                <div class="card">
-                    <h2>Acciones rápidas</h2>
-                    <div>
-                        <button class="btn btn-primary">Registrar Asistencia</button>
-                        <button class="btn btn-primary">Agregar Cliente</button>
-                        <button class="btn btn-primary">Gestionar Actividades</button>
+
+        <!-- Main: contenido principal
+            flex-fill: para que ocupe el espacio restante 
+        -->
+        <main class="flex-fill">
+        <!-- 
+            Header: encabezado del contenido principal
+            p-3: padding de 3 unidades
+            border-bottom-soft: clase personalizada para un borde inferior suave    
+        -->
+        <header class="p-3 border-bottom-soft">
+            <!-- 
+                span: elemento en línea para texto
+                text-muted: clase de bootstrap para texto atenuado
+            -->
+            <span class="text-muted">Panel de control / Inicio</span>
+        </header>
+        <!-- 
+            Divisor que contiene TODO el contenido principal
+            content: clase personalizada para el contenido principal
+            p-4: padding de 4 unidades
+        -->
+        <div class="content p-4">
+            <!-- 
+                Divisor que contiene la primera fila de tarjetas (La de ingreso mensual y cantidad de clientes)
+                row: clase de bootstrap para una fila
+                g-4: gap de 4 unidades entre columnas
+                mb-4: margin-bottom de 4 unidades
+            -->
+            <div class="row g-4 mb-4">
+                <!--
+                    Divisor que contiene la primera columna (Ingreso Mensual) 
+                col-md-6: clase de bootstrap para una columna que ocupa 6 de 12 columnas en pantallas medianas y superiores
+                -->
+                <div class="col-md-6">
+                <!-- 
+                    section-title: clase personalizada para el título de la sección    
+                -->
+                    <h4 class="section-title">Ingreso Mensual</h4>
+                    <!-- 
+                        card: clase de bootstrap para una tarjeta
+                        custom-card: clase personalizada para la tarjeta
+                        p-3: padding de 3 unidades
+                    -->
+                    <div class="card custom-card p-3">
+                        <!-- 
+                            divisor que contiene una fila
+                            row: clase de bootstrap para una fila
+                            align-items-center: clase de bootstrap para alinear los elementos hijos verticalmente al centro
+                            h-100: "height" 100% para que ocupe toda la altura del contenedor padre
+                        -->
+                        <div class="row align-items-center h-100">
+                            <!-- 
+                                divisor que contiene la primera columna
+                                col-6: clase de bootstrap para una columna que ocupa 6 de 12 columnas en todos los tamaños de pantalla
+                                border-end border-secondary: clases de bootstrap para un borde derecho de color secundario
+                            -->
+                            <div class="col-6 border-end border-secondary">
+                                <!-- 
+                                    fw-light: clase de bootstrap para texto con peso de fuente ligero
+                                    mb-3: margin-bottom de 3 unidades
+                                -->
+                                <h5 class="fw-light mb-3">Mes actual</h5>
+                                <!--
+                                    mb-0: margin-bottom 0
+                                -->
+                                <h4 class="mb-0">Ingresos</h4>
+                            </div>
+                            <!-- 
+                                divisor que contiene la segunda parte de ingresos mensual
+                            -->
+                            <div class="col-6 ps-4">
+                                <h5 class="fw-light mb-3">Noviembre</h5>
+                                <h4 class="text-success fw-bold">$100.000</h4>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
-            <section>
-                <div class="card">
-                    <h2>Gráfico de ingresos</h2>
-                    <div>...</div>
+                <!-- 
+                Divisor que contiene la segunda columna (Cantidad de Clientes)
+                col-md-6: clase de bootstrap para una columna que ocupa 6 de 12 columnas en pantallas medianas y superiores
+                -->
+                <div class="col-md-6">
+                    <h4 class="section-title">Cantidad de Clientes</h4>
+                    <div class="card custom-card p-3">
+                        <div class="row align-items-center h-100">
+                            <div class="col-6 border-end border-secondary">
+                                <h2 class="display-6 mb-0">Totales</h2>
+                            </div>
+                            <div class="col-6 ps-4">
+                                <div class="d-flex justify-content-between">
+                                    <span class="fs-4">100</span>
+                                </div>
+                                <div class="d-flex justify-content-between text-success">
+                                    <span>Activos</span>
+                                    <span class="fw-bold">70</span>
+                                </div>
+                                <div class="d-flex justify-content-between text-warning">
+                                    <span>Pendientes</span>
+                                    <span class="fw-bold">30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </section>
-        </main>
+            </div>
+
+            <div class="row g-4">
+                
+                <div class="col-md-5">
+                    <h4 class="section-title">Acciones rápidas</h4>
+                    <div class="d-grid gap-3 mt-3">
+                        <button class="btn btn-action btn-lg py-3">Tomar Asistencia</button>
+                        <button class="btn btn-action btn-lg py-3">Gestionar Actividades</button>
+                        <button class="btn btn-action btn-lg py-3">Gestionar Clientes</button>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <h4 class="section-title">Gráfico ingresos Mensuales</h4>
+                    <div class="card custom-card p-2" style="height: 250px;">
+                        <canvas id="ingresosChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
     </div>
-
-    <!-- Importación de bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-
+<!-- 
+    Importación de scripts
+    bootstrap.bundle.min.js: incluye Popper.js (necesario para algunos componentes de Bootstrap como tooltips y popovers)
+    script.js: archivo JavaScript personalizado para la funcionalidad del sitio
+    -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

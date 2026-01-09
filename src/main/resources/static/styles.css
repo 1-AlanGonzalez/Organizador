@@ -1,19 +1,80 @@
 :root {
-    --primary-color: #354E56;
-    --secondary-color: #294D59;
+    --primary-dark: #2A424B;    /* Fondo Sidebar y Cards */
+    --secondary-dark: #354E56;  /* Un tono más claro */
+    --bg-main: #BCC5C7;         /* Fondo gris claro principal */
+    --btn-color: #6D858D;       /* Color de los botones */
+    --text-green: #68D391;
+    --text-orange: #F6AD55;
 }
 * {
     font-size: 14px;
     font-family: 'Marko One';
 }
-
-.aside-class {
-    background-color: var(--primary-color);
-    padding: 15px;
-    height: 100vh;
-    width: 180px;
+body {
+    background-color: var(--bg-main);
+    margin: 0;
+    overflow-x: hidden; /* Evita el scroll horizontal */
 }
-.card {
-    width: fit-content;
-    background-color: var(--secondary-color);
+/* Layout Principal */
+.wrapper {  /* Clase que está en el contenedor principal */
+    min-height: 100vh; /* Asegura que el contenedor ocupe al menos el 100% de la altura de la ventana */
+}
+/* Sidebar */
+.sidebar {
+    width: 200px;
+    background-color: var(--secondary-dark);
+    flex-shrink: 0; /* Evita que el sidebar se reduzca */
+}
+/* 
+Estilos para los enlaces de navegación en el sidebar
+*/
+.sidebar .nav-link {
+    color: white;
+    background-color: var(--btn-color);
+    border-radius: 10px;
+    padding: 10px 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+}
+/* 
+Estilo para los enlaces de navegación en el sidebar al pasar el mouse
+ o estar activos
+*/
+.nav-link:hover{
+    background-color: #556B72;
+}
+/* 
+Estilo para los títulos de las secciones
+*/
+.section-title {
+    color: var(--secondary-dark);
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+/* 
+Estilo personalizado para las tarjetas
+*/
+.custom-card {
+    background-color: var(--secondary-dark);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* 
+Estilo para los botones de acción rápida
+*/
+.btn-action {
+    background-color: var(--btn-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+/* hover en los botones */
+.btn-action:hover {
+    background-color: #5a7077;
+    color: white;
 }
