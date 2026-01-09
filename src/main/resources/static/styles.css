@@ -4,8 +4,9 @@
 }
 * {
     font-size: 14px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Marko One';
 }
+
 .aside-class {
     background-color: var(--primary-color);
     padding: 15px;
