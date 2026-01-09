@@ -19,7 +19,7 @@
     <!-- 
         styles.css: archivo CSS personalizado para los estilos del sitio
     -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../static/styles.css">
     <title>Gym Manager | Dashboard</title>
 </head>
 <body>
@@ -30,15 +30,14 @@
         wrapper: clase personalizada para el contenedor principal
         -->
     <div class="d-flex wrapper">
+<!-- Barra lateral izquierda (aside)
+    Clases de bootstrap:
+    d-flex: para usar flexbox
+    flex-column: para que los elementos hijos se dispongan en columna 
+    p-3: padding de 3 unidades
+-->
 
-        <!-- Barra lateral izquierda (aside)
-            Clases de bootstrap:
-            d-flex: para usar flexbox
-            flex-column: para que los elementos hijos se dispongan en columna 
-            p-3: padding de 3 unidades
-        -->
-        <aside class="sidebar d-flex flex-column p-3">
-
+        <aside th:fragment="sidebar-fragment" class="sidebar d-flex flex-column p-3">
             <!-- Divisor que contiene los links (ya no son botones)
                 mb-auto: "margin-bottom" auto para empujar el footer(lo que está por debajo del aside) hacia abajo 
             -->
@@ -61,19 +60,19 @@
                         active: clase de bootstrap para el enlace activo
                     -->
                     <li class="nav-item">
-                        <a href="#" class="nav-link custom-btn active">Inicio</a>
+                        <a th:href="@{/}" href="#" class="nav-link custom-btn active">Inicio</a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link custom-btn">Clientes</a>
+                        <a th:href="@{/clientes}" href="#" class="nav-link custom-btn">Clientes</a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link custom-btn">Asistencias</a>
+                        <a th:href="@{/asistencias}" href="#" class="nav-link custom-btn">Asistencias</a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link custom-btn">Actividades</a>
+                        <a th:href="@{/actividades}" href="#" class="nav-link custom-btn">Actividades</a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link custom-btn">Ingresos</a>
+                        <a th:href="@{/ingresos}" href="#" class="nav-link custom-btn">Ingresos</a>
                     </li>
                 </ul>
             </div>

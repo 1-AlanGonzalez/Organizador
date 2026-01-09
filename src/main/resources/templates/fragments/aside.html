@@ -1,0 +1,70 @@
+<!-- 
+Fragmento del ASIDE usando thymeleaf.
+Para exportarlo use th:fragment="sidebar-fragment" en la etiqueta <aside>
+en cada link usé th:href para que cada "click" redirija a la ruta correspondiente (/ inicio, /clientes, etc)
+-->
+
+
+
+<!-- Barra lateral izquierda (aside)
+    Clases de bootstrap:
+    d-flex: para usar flexbox
+    flex-column: para que los elementos hijos se dispongan en columna 
+    p-3: padding de 3 unidades
+-->
+
+<aside th:fragment="sidebar-fragment" class="sidebar d-flex flex-column p-3">
+    <!-- Divisor que contiene los links (ya no son botones)
+        mb-auto: "margin-bottom" auto para empujar el footer(lo que está por debajo del aside) hacia abajo 
+    -->
+    <div class="mb-auto">
+        <!-- 
+            ul: lista desordenada
+            nav: clase de bootstrap para navegación
+            nav-pills: clase de bootstrap para darle un estilo a los links
+            flex-column: para que los elementos hijos se dispongan en columna
+            gap-3: espacio entre los elementos hijos
+            mt-5: margin-top de 5 unidades
+        -->
+        <ul class="nav nav-pills flex-column mb-auto gap-3 mt-5">
+            <!-- 
+                li: elemento de lista
+                nav-item: clase de bootstrap para los elementos de navegación
+                a: enlace
+                nav-link: clase de bootstrap para los enlaces de navegación
+                custom-btn: clase personalizada para los botones
+                active: clase de bootstrap para el enlace activo
+            -->
+            <li class="nav-item">
+                <a th:href="@{/}" href="#" class="nav-link custom-btn active">Inicio</a>
+            </li>
+            <li>
+                <a th:href="@{/clientes}" href="#" class="nav-link custom-btn">Clientes</a>
+            </li>
+            <li>
+                <a th:href="@{/asistencias}" href="#" class="nav-link custom-btn">Asistencias</a>
+            </li>
+            <li>
+                <a th:href="@{/actividades}" href="#" class="nav-link custom-btn">Actividades</a>
+            </li>
+            <li>
+                <a th:href="@{/ingresos}" href="#" class="nav-link custom-btn">Ingresos</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 
+        Divisor que contiene el footer de la barra lateral
+        sidebar-footer: clase personalizada para el footer de la barra lateral
+        text-center: clase de bootstrap para centrar el texto
+        mt-5: margin-top de 5 unidades
+    -->
+    <div class="sidebar-footer text-center mt-5">
+        <!-- 
+            logo-placeholder: clase personalizada para el logo del footer
+        -->
+        <div class="logo-placeholder">
+            <h3>GYM<br><small>MANAGER</small></h3>
+        </div>
+    </div>
+</aside>
