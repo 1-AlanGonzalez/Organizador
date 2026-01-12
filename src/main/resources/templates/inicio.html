@@ -1,183 +1,63 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 
-        Preconexiones para optimizar la carga de fuentes desde Google Fonts
-    -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- 
-        Marko One: fuente personalizada desde Google Fonts
-    -->
-    <link href="https://fonts.googleapis.com/css2?family=Marko+One&display=swap" rel="stylesheet">
-    <!-- 
-        Bootstrap CSS: framework CSS para estilos y diseño responsivo
-    -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- 
-        styles.css: archivo CSS personalizado para los estilos del sitio
-    -->
-    <link rel="stylesheet" th:href="@{/styles.css}" href="styles.css">
-    <title>Gym Manager | Dashboard</title>
-</head>
-<body>
-    <!-- Los comentarios están por encima de su etiqueta (cada comentario es para la etiqueta que está abajo) -->
+<div th:fragment="contenido">
 
-    <!--Divisor que contiene todo el contenido
-        d-flex: para usar flexbox 
-        wrapper: clase personalizada para el contenedor principal
-        -->
-    <div class="d-flex wrapper">
+    <div class="row g-4 mb-4">
 
-        <div th:replace="fragments/sidebar :: sidebar-fragment"></div>
-
-        <!-- Main: contenido principal
-            flex-fill: para que ocupe el espacio restante 
-        -->
-        <main class="flex-fill">
-        <!-- 
-            Header: encabezado del contenido principal
-            p-3: padding de 3 unidades
-            border-bottom-soft: clase personalizada para un borde inferior suave    
-        -->
-        <header class="p-3 border-bottom-soft">
-            <!-- 
-                span: elemento en línea para texto
-                text-muted: clase de bootstrap para texto atenuado
-            -->
-            <span class="text-muted">Panel de control / Inicio</span>
-        </header>
-        <!-- 
-            Divisor que contiene TODO el contenido principal
-            content: clase personalizada para el contenido principal
-            p-4: padding de 4 unidades
-        -->
-        <div class="content p-4">
-            <!-- 
-                Divisor que contiene la primera fila de tarjetas (La de ingreso mensual y cantidad de clientes)
-                row: clase de bootstrap para una fila
-                g-4: gap de 4 unidades entre columnas
-                mb-4: margin-bottom de 4 unidades
-            -->
-            <div class="row g-4 mb-4">
-                <!--
-                    Divisor que contiene la primera columna (Ingreso Mensual) 
-                col-md-6: clase de bootstrap para una columna que ocupa 6 de 12 columnas en pantallas medianas y superiores
-                -->
-                <div class="col-md-6">
-                <!-- 
-                    section-title: clase personalizada para el título de la sección    
-                -->
-                    <h4 class="section-title">Ingreso Mensual</h4>
-                    <!-- 
-                        card: clase de bootstrap para una tarjeta
-                        custom-card: clase personalizada para la tarjeta
-                        p-3: padding de 3 unidades
-                    -->
-                    <div class="card custom-card p-3">
-                        <!-- 
-                            divisor que contiene una fila
-                            row: clase de bootstrap para una fila
-                            align-items-center: clase de bootstrap para alinear los elementos hijos verticalmente al centro
-                            h-100: "height" 100% para que ocupe toda la altura del contenedor padre
-                        -->
-                        <div class="row align-items-center h-100">
-                            <!-- 
-                                divisor que contiene la primera columna
-                                col-6: clase de bootstrap para una columna que ocupa 6 de 12 columnas en todos los tamaños de pantalla
-                                border-end border-secondary: clases de bootstrap para un borde derecho de color secundario
-                            -->
-                            <div class="col-6 border-end border-secondary">
-                                <!-- 
-                                    fw-light: clase de bootstrap para texto con peso de fuente ligero
-                                    mb-3: margin-bottom de 3 unidades
-                                -->
-                                <h5 class="fw-light mb-3">Mes actual</h5>
-                                <!--
-                                    mb-0: margin-bottom 0
-                                -->
-                                <h4 class="mb-0">Ingresos</h4>
-                            </div>
-                            <!-- 
-                                divisor que contiene la segunda parte de ingresos mensual
-                            -->
-                            <div class="col-6 ps-4">
-                                <h5 class="fw-light mb-3">Noviembre</h5>
-                                <h4 class="text-success fw-bold">$100.000</h4>
-                            </div>
-                        </div>
+        <div class="col-md-6">
+            <h4 class="section-title">Ingreso Mensual</h4>
+            <div class="card custom-card p-3">
+                <div class="row align-items-center h-100">
+                    <div class="col-6 border-end border-secondary">
+                        <h5 class="fw-light mb-3">Mes actual</h5>
+                        <h4 class="mb-0">Ingresos</h4>
                     </div>
-                </div>
-                <!-- 
-                Divisor que contiene la segunda columna (Cantidad de Clientes)
-                col-md-6: clase de bootstrap para una columna que ocupa 6 de 12 columnas en pantallas medianas y superiores
-                -->
-                <div class="col-md-6">
-                    <h4 class="section-title">Cantidad de Alumnos</h4>
-                    <div class="card custom-card p-3">
-                        <div class="row align-items-center h-100">
-                            
-                            <div class="col-6 border-end border-secondary d-flex flex-column justify-content-center">
-                                <div class="mb-2">
-                                    <span class="fs-4">Totales</span>
-                                </div>
-                                <div class="text-success mb-1">
-                                    <span>Activos</span>
-                                </div>
-                                <div class="text-warning">
-                                    <span>Pendientes</span>
-                                </div>
-                            </div>
-
-                            <div class="col-6 ps-4 d-flex flex-column justify-content-center">
-                                <div class="mb-2">
-                                    <span class="fs-4">100</span>
-                                </div>
-                                <div class="text-success fw-bold mb-1">
-                                    <span>70</span>
-                                </div>
-                                <div class="text-warning fw-bold">
-                                    <span>30</span>
-                                </div>
-                            </div>
-
-                        </div>
+                    <div class="col-6 ps-4">
+                        <h5 class="fw-light mb-3">Noviembre</h5>
+                        <h4 class="text-success fw-bold">$100.000</h4>
                     </div>
                 </div>
             </div>
-
-            <div class="row g-4">
-                
-                <div class="col-md-5">
-                    <h4 class="section-title">Acciones rápidas</h4>
-                    <div class="d-grid gap-3 mt-3">
-                        <button class="btn btn-action btn-lg py-3">Tomar Asistencia</button>
-                        <button class="btn btn-action btn-lg py-3">Gestionar Actividades</button>
-                        <button class="btn btn-action btn-lg py-3">Gestionar Clientes</button>
-                    </div>
-                </div>
-
-                <div class="col-md-7">
-                    <h4 class="section-title">Gráfico ingresos Mensuales</h4>
-                    <div class="card custom-card p-2" style="height: 250px;">
-                        <canvas id="ingresosChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
         </div>
-    </main>
+
+        <div class="col-md-6">
+            <h4 class="section-title">Cantidad de Alumnos</h4>
+            <div class="card custom-card p-3">
+                <div class="row align-items-center h-100">
+
+                    <div class="col-6 border-end border-secondary d-flex flex-column justify-content-center">
+                        <span class="fs-4 mb-2">Totales</span>
+                        <span class="text-success">Activos</span>
+                        <span class="text-warning">Pendientes</span>
+                    </div>
+
+                    <div class="col-6 ps-4 d-flex flex-column justify-content-center">
+                        <span class="fs-4 mb-2">100</span>
+                        <span class="text-success fw-bold">70</span>
+                        <span class="text-warning fw-bold">30</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
-<!-- 
-    Importación de scripts
-    bootstrap.bundle.min.js: incluye Popper.js (necesario para algunos componentes de Bootstrap como tooltips y popovers)
-    script.js: archivo JavaScript personalizado para la funcionalidad del sitio
-    -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="script.js"></script>
-</body>
-</html>
+
+    <div class="row g-4">
+
+        <div class="col-md-5">
+            <h4 class="section-title">Acciones rápidas</h4>
+            <div class="d-grid gap-3 mt-3">
+                <button class="btn btn-action btn-lg py-3">Tomar Asistencia</button>
+                <button class="btn btn-action btn-lg py-3">Gestionar Actividades</button>
+                <button class="btn btn-action btn-lg py-3">Gestionar Clientes</button>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <h4 class="section-title">Gráfico ingresos Mensuales</h4>
+            <div class="card custom-card p-2" style="height: 250px;">
+                <canvas id="ingresosChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+</div>

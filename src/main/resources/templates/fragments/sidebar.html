@@ -36,19 +36,24 @@ en cada link usé th:href para que cada "click" redirija a la ruta correspondien
                 active: clase de bootstrap para el enlace activo
             -->
             <li class="nav-item">
-                <a th:href="@{/}" href="#" class="nav-link custom-btn active">Inicio</a>
+                <a th:href="@{/dashboard}"
+                class="nav-link"
+                th:classappend="${active == 'dashboard'} ? 'active'">
+                    Inicio
+                </a>
             </li>
             <li>
-                <a th:href="@{/clientes}" href="#" class="nav-link custom-btn">Clientes</a>
+                <a th:href="@{/clientes}" class="nav-link" th:classappend="${active == 'clientes'} ? 'active'"> Clientes </a>
             </li>
             <li>
-                <a th:href="@{/asistencias}" href="#" class="nav-link custom-btn">Asistencias</a>
+                <a th:href="@{/asistencias}" class="nav-link" th:classappend="${active == 'asistencias'} ? 'active'"> Asistencias </a>
+                </li>
+            <li>
+                <a th:href="@{/actividades}"
+                class="nav-link" th:classappend="${active == 'actividades'} ? 'active'"> Actividades </a>
             </li>
             <li>
-                <a th:href="@{/actividades}" href="#" class="nav-link custom-btn">Actividades</a>
-            </li>
-            <li>
-                <a th:href="@{/ingresos}" href="#" class="nav-link custom-btn">Ingresos</a>
+                <a th:href="@{/actividades}" class="nav-link" th:classappend="${active == 'ingresos'} ? 'active'"> Ingresos </a>
             </li>
         </ul>
     </div>

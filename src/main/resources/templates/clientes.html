@@ -1,0 +1,55 @@
+<div th:fragment="contenido">
+
+    <!-- Título de sección -->
+    <h4 class="section-title mb-4">Clientes</h4>
+
+    <!-- Botones superiores -->
+    <div class="d-flex gap-3 mb-4">
+        <button class="btn btn-success px-4">Añadir Cliente</button>
+        <button class="btn btn-secondary px-4">Editar Cliente</button>
+        <button class="btn btn-danger px-4">Eliminar Cliente</button>
+
+        <!-- Filtro alineado a la derecha -->
+        <div class="ms-auto">
+            <input type="text" class="form-control" placeholder="Filtrar">
+        </div>
+    </div>
+
+    <!-- Tabla de clientes -->
+    <div class="card custom-card p-3">
+
+        <table class="table table-borderless align-middle mb-0">
+            <thead class="border-bottom">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Nombre</th>
+                    <th>Nombre</th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Filas de ejemplo -->
+                <tr>
+                    <td>Cliente 1</td>
+                    <td>Dato</td>
+                    <td>Dato</td>
+                    <td>Dato</td>
+                </tr>
+                <tr>
+                    <td>Cliente 2</td>
+                    <td>Dato</td>
+                    <td>Dato</td>
+                    <td>Dato</td>
+                </tr>
+                <tr>
+                    <td>Cliente 3</td>
+                    <td>Dato</td>
+                    <td>Dato</td>
+                    <td>Dato</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>

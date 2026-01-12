@@ -1,11 +1,13 @@
 :root {
-    --primary-dark: #2A424B;    /* Fondo Sidebar y Cards */
-    --secondary-dark: #354E56;  /* Un tono más claro */
-    --bg-main: #BCC5C7;         /* Fondo gris claro principal */
-    --btn-color: #6D858D;       /* Color de los botones */
-    --text-green: #68D391;
-    --text-orange: #F6AD55;
+    --primary-dark: #2B3A40;    /* Sidebar – gris azulado profundo */
+    --secondary-dark: #36474F;  /* Hover / active – apenas más claro */
+    --bg-main: #F3F5F7;         /* Fondo principal muy suave */
+    --btn-color: #5E737C;       /* Botones sobrios, nada chillón */
+    --text-green: #4E9F8F;      /* Éxito elegante (apagado) */
+    --text-orange: #C79255;     /* Warning elegante */
+    --text-muted: #6B7280;      /* Texto secundario */
 }
+
 * {
     font-size: 14px;
     font-family: 'Marko One';
@@ -22,14 +24,16 @@ body {
 /* Sidebar */
 .sidebar {
     width: 200px;
-    background-color: var(--secondary-dark);
+    background-color: var(--primary-dark);
     flex-shrink: 0; /* Evita que el sidebar se reduzca */
 }
 /* 
 Estilos para los enlaces de navegación en el sidebar
 */
+.nav-link {
+    color: #D1D5DB;
+}
 .sidebar .nav-link {
-    color: white;
     background-color: var(--btn-color);
     border-radius: 10px;
     padding: 10px 15px;
@@ -43,6 +47,13 @@ Estilo para los enlaces de navegación en el sidebar al pasar el mouse
 .nav-link:hover{
     background-color: #556B72;
 }
+
+.nav-link.active {
+    background-color: var(--secondary-dark);
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
 /* 
 Estilo para los títulos de las secciones
 */
@@ -68,7 +79,7 @@ Estilo para los botones de acción rápida
 */
 .btn-action {
     background-color: var(--btn-color);
-    color: white;
+    color: #FFFFFF;
     border: none;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
