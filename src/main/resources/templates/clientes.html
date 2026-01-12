@@ -1,52 +1,56 @@
 <div th:fragment="contenido">
 
-    <!-- Título de sección -->
-    <h4 class="section-title mb-4">Clientes</h4>
+    <!-- Header de sección -->
+    <div class="d-flex align-items-center mb-4">
+        <h4 class="section-title mb-0">Clientes</h4>
 
-    <!-- Botones superiores -->
-    <div class="d-flex gap-3 mb-4">
-        <button class="btn btn-success px-4">Añadir Cliente</button>
-        <button class="btn btn-secondary px-4">Editar Cliente</button>
-        <button class="btn btn-danger px-4">Eliminar Cliente</button>
-
-        <!-- Filtro alineado a la derecha -->
-        <div class="ms-auto">
-            <input type="text" class="form-control" placeholder="Filtrar">
+        <!-- Acciones -->
+        <div class="ms-auto d-flex gap-2">
+            <button class="btn btn-outline-secondary btn-sm">
+                Editar
+            </button>
+            <button class="btn btn-outline-secondary btn-sm">
+                - Eliminar
+            </button>
+            <button class="btn btn-action btn-sm">
+                + Añadir
+            </button>
         </div>
     </div>
 
-    <!-- Tabla de clientes -->
-    <div class="card custom-card p-3">
+    <!-- Filtro -->
+    <div class="mb-3" style="max-width: 250px;">
+        <input type="text" class="form-control form-control-sm"
+               placeholder="Filtrar clientes">
+    </div>
 
-        <table class="table table-borderless align-middle mb-0">
-            <thead class="border-bottom">
-                <tr>
+    <!-- Tabla -->
+    <div class="card custom-card">
+
+        <table class="table table-sm align-middle mb-0">
+            <thead>
+                <tr class="text-muted">
                     <th>Nombre</th>
-                    <th>Nombre</th>
-                    <th>Nombre</th>
-                    <th>Nombre</th>
+                    <th>Actividad</th>
+                    <th>Fecha de pago</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
+
             <tbody>
-                <!-- Filas de ejemplo -->
                 <tr>
-                    <td>Cliente 1</td>
-                    <td>Dato</td>
-                    <td>Dato</td>
-                    <td>Dato</td>
+                    <td>Alan</td>
+                    <td>Gym</td>
+                    <td>12/01/2025</td>
+                    <td class="text-success">Activo</td>
                 </tr>
                 <tr>
-                    <td>Cliente 2</td>
-                    <td>Dato</td>
-                    <td>Dato</td>
-                    <td>Dato</td>
+                    <td>Jonathan</td>
+                    <td>Boxeo</td>
+                    <td>01/01/2026</td>
+                    <td class="text-warning">Pendiente</td>
                 </tr>
-                <tr>
-                    <td>Cliente 3</td>
-                    <td>Dato</td>
-                    <td>Dato</td>
-                    <td>Dato</td>
-                </tr>
+
             </tbody>
         </table>
 

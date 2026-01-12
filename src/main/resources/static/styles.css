@@ -23,9 +23,8 @@ body {
 }
 /* Sidebar */
 .sidebar {
-    width: 200px;
     background-color: var(--primary-dark);
-    flex-shrink: 0; /* Evita que el sidebar se reduzca */
+    padding: 1rem;
 }
 /* 
 Estilos para los enlaces de navegación en el sidebar
@@ -34,58 +33,76 @@ Estilos para los enlaces de navegación en el sidebar
     color: #D1D5DB;
 }
 .sidebar .nav-link {
-    background-color: var(--btn-color);
-    border-radius: 10px;
-    padding: 10px 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    transition: all 0.3s;
+    background-color: transparent; /* clave */
+    border-radius: 6px;
+    padding: 10px 12px;
+    box-shadow: none;
+    color: #D1D5DB;
+    margin-bottom: 6px;
 }
 /* 
 Estilo para los enlaces de navegación en el sidebar al pasar el mouse
  o estar activos
 */
-.nav-link:hover{
-    background-color: #556B72;
+.nav-link:hover {
+    background-color: rgba(255,255,255,0.08);
 }
 
 .nav-link.active {
     background-color: var(--secondary-dark);
     color: #FFFFFF;
-    font-weight: 600;
 }
 
 /* 
 Estilo para los títulos de las secciones
 */
 .section-title {
-    color: var(--secondary-dark);
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-    opacity: 0.8;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
 }
 /* 
 Estilo personalizado para las tarjetas
 */
 .custom-card {
-    background-color: var(--secondary-dark);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    background-color: #FFFFFF;   
+    color: #1F2933;
+    border-radius: 8px;       
+    border: 1px solid #E5E7EB;
+    box-shadow: none;          
 }
-
 /* 
 Estilo para los botones de acción rápida
 */
 .btn-action {
-    background-color: var(--btn-color);
-    color: #FFFFFF;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    background-color: #FFFFFF;
+    color: var(--secondary-dark);
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    box-shadow: none;
+    font-weight: 500;
 }
+
 /* hover en los botones */
 .btn-action:hover {
     background-color: #5a7077;
     color: white;
+}
+
+/* TABLAS */
+.table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.table td {
+    font-size: 0.85rem;
+}
+
+.table tbody tr:hover {
+    background-color: #F3F4F6;
 }

@@ -1,0 +1,51 @@
+<div th:fragment="contenido">
+
+    <!-- Header -->
+    <div class="d-flex align-items-center mb-4">
+        <h4 class="section-title mb-0">Actividades</h4>
+
+        <div class="ms-auto d-flex gap-2">
+            <button class="btn btn-outline-secondary btn-sm">
+                Editar
+            </button>
+            <button class="btn btn-outline-secondary btn-sm">
+                Eliminar
+            </button>
+            <button class="btn btn-action btn-sm">
+                + Nueva actividad
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="card custom-card">
+
+        <table class="table table-sm align-middle mb-0">
+            <thead>
+                <tr class="text-muted">
+                    <th>Nombre</th>
+                    <th>Instructor</th>
+                    <th>Días</th>
+                    <th>Horario</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Gym</td>
+                    <td>Carlos</td>
+                    <td>Lun a Vie</td>
+                    <td>08:00 - 10:00</td>
+                </tr>
+                <tr>
+                    <td>Boxeo</td>
+                    <td>Marcos</td>
+                    <td>Lun / Mie / Vie</td>
+                    <td>18:00 - 19:00</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
