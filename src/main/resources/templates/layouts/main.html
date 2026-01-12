@@ -39,7 +39,7 @@
 
         <!-- CONTENIDO DINÁMICO -->
         <div class="contenido p-4">
-            <div th:replace="~{${vista} :: ${fragmento}}"></div>
+            <div th:insert="~{${vista} :: ${fragmento}}"></div>
         </div>
 
     </main>
