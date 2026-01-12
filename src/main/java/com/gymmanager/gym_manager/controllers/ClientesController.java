@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.gymmanager.gym_manager.entity.Cliente;
+
 @Controller
 @RequestMapping("/clientes")
 public class ClientesController {
@@ -20,6 +22,15 @@ public class ClientesController {
         model.addAttribute("active", "clientes");
         return "layouts/main";
     }
+
+@GetMapping("/clientes/nuevo")
+public String nuevoClienteForm(Model model) {
+    model.addAttribute("cliente", new Cliente());
+    model.addAttribute("view", "clientes_form");
+    model.addAttribute("fragment", "contenido");
+    model.addAttribute("active", "clientes");
+    return "layouts/main";
+}
 }
 
 

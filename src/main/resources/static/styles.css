@@ -1,11 +1,11 @@
 :root {
-    --primary-dark: #2B3A40;    /* Sidebar – gris azulado profundo */
-    --secondary-dark: #36474F;  /* Hover / active – apenas más claro */
-    --bg-main: #F3F5F7;         /* Fondo principal muy suave */
-    --btn-color: #5E737C;       /* Botones sobrios, nada chillón */
-    --text-green: #4E9F8F;      /* Éxito elegante (apagado) */
-    --text-orange: #C79255;     /* Warning elegante */
-    --text-muted: #6B7280;      /* Texto secundario */
+    --primary-dark: #2B3A40; 
+    --secondary-dark: #36474F;  
+    --bg-main: #F3F5F7;     
+    --btn-color: #5E737C;      
+    --text-green: #4E9F8F;      
+    --text-orange: #C79255;    
+    --text-muted: #6B7280;     
 }
 
 * {
