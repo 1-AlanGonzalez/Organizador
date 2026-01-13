@@ -1,11 +1,11 @@
 :root {
     --primary-dark: #2B3A40; 
-    --secondary-dark: #36474F;  
-    --bg-main: #F3F5F7;     
+    --secondary-dark: #1b2022;  
+    --bg-main: #ffffff;     
     --btn-color: #5E737C;      
     --text-green: #4E9F8F;      
     --text-orange: #C79255;    
-    --text-muted: #6B7280;     
+    --text-muted: #6B7280;
 }
 
 * {
