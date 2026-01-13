@@ -23,14 +23,14 @@ public class ClientesController {
         return "layouts/main";
     }
 
-@GetMapping("/nuevo")
-public String nuevoClienteForm(Model model) {
-    model.addAttribute("cliente", new Cliente());
-    model.addAttribute("vista", "clientes_form");
-    model.addAttribute("fragmento", "contenido");
-    model.addAttribute("active", "clientes");
-    return "layouts/main";
-}
+    @GetMapping("/nuevo")
+    public String nuevoClienteForm(Model model) {
+        model.addAttribute("cliente", new Cliente());
+        model.addAttribute("vista", "clientes_form");
+        model.addAttribute("fragmento", "contenido");
+        model.addAttribute("active", "clientes");
+        return "layouts/main";
+    }
 }
 
 
