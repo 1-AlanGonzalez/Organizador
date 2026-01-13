@@ -38,17 +38,12 @@
             </thead>
 
             <tbody>
-                <tr>
-                    <td>Alan</td>
+                <tr th:each="cliente : ${clientes}">
+                    <td th:text="${cliente.nombre} + ' ' + ${cliente.apellido}"></td>
                     <td>Gym</td>
-                    <td>12/01/2025</td>
+                    <td>12/01/2026</td>
                     <td class="text-success">Activo</td>
-                </tr>
-                <tr>
-                    <td>Jonathan</td>
-                    <td>Boxeo</td>
-                    <td>01/01/2026</td>
-                    <td class="text-warning">Pendiente</td>
+
                 </tr>
 
             </tbody>
