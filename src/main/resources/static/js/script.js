@@ -1,3 +1,4 @@
+// Panel de cliente:
 function abrirPanelCliente() {
     document.getElementById("panelOverlay").classList.remove("d-none");
 }
@@ -6,10 +7,35 @@ function cerrarPanelCliente() {
     document.getElementById("panelOverlay").classList.add("d-none");
 }
 
-// Cerrar panel con el Escape 
+// Cerrar panel de cliente con el Escape 
 document.addEventListener("keydown", function(e) {
     if (e.key === "Escape") cerrarPanelCliente();
 });
+// Panel de asistencia:
+function abrirPanelAsistencia() {
+    document.getElementById("panelOverlayAsistencia").classList.remove("d-none");
+}
+
+function cerrarPanelAsistencia() {
+    document.getElementById("panelOverlayAsistencia").classList.add("d-none");
+}
+
+// Cerrar panel de asistencia con el Escape 
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") cerrarPanelAsistencia();
+});
+    
+
+// Panel de actividad:
+function abrirPanelActividad() {
+    document.getElementById("panelOverlayActividad").classList.remove("d-none");
+}
+
+function cerrarPanelActividad() {
+    document.getElementById("panelOverlayActividad").classList.add("d-none");
+}
+
+
 
 // Filtro de clientes
 

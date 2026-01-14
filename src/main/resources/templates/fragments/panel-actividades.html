@@ -1,0 +1,62 @@
+<div th:fragment="panelActividad">
+
+    <div class="card custom-card" style="max-width: 500px;">
+        <div class="card-body">
+
+            <h4 class="section-title mb-4">Nueva Actividad</h4>
+
+            <form th:action="@{/actividades/guardar}"
+                  th:object="${actividad}"
+                  method="post">
+
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text"
+                           th:field="*{nombre}"
+                           class="form-control"
+                           placeholder="Ingrese el nombre de la actividad"
+                           required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Cupo Máximo</label>
+                    <input type="number"
+                           th:field="*{cupoMaximo}"
+                           class="form-control"
+                           placeholder="Ingrese el cupo máximo de la actividad"
+                           required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Precio</label>
+                    <input type="number"
+                           th:field="*{precio}"
+                           class="form-control"
+                           placeholder="Ej: 15000"
+                           required>
+                </div>
+
+                <!-- <div class="mb-4">
+                    <label class="form-label">Instructor</label>
+                    <input type="text"
+                           th:field="*{telefono}"
+                           class="form-control"
+                           placeholder="Ingrese el nombre del instructor"
+                           required>
+                </div> -->
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a th:href="@{/actividades}" class="btn btn-outline-secondary">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-action">
+                        Guardar Actividad
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

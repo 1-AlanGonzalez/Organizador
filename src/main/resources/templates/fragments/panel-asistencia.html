@@ -1,0 +1,24 @@
+<table th:fragment="panelAsistencia" class="table table-hover">
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Actividad</th>
+            <th>Presente</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="a : ${asistencias}">
+            <td th:text="${a.cliente.nombre}"></td>
+            <td th:text="${a.actividad.nombre}"></td>
+            <td>
+                <form method="post" th:action="@{/asistencias/marcar}">
+                    <input type="hidden" name="id" th:value="${a.id}">
+                    <input type="checkbox"
+                           name="presente"
+                           th:checked="${a.presente}"
+                           onchange="this.form.submit()">
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>

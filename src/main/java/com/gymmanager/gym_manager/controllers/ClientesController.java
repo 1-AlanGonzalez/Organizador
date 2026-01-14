@@ -44,6 +44,7 @@ public class ClientesController {
     //     model.addAttribute("active", "clientes");
     //     return "layouts/main";
     // }
+    
     @PostMapping("/guardar")
     public String guardarCliente(@ModelAttribute Cliente cliente) {
         clienteRepository.save(cliente);
