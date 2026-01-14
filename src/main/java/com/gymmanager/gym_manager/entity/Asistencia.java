@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -16,18 +17,22 @@ public class Asistencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_ASISTENCIA")
-    private Long id;
-    @Column(name = "FECHA")
+    private Integer idAsistencai;
+
+    @Column(name = "FECHA", nullable = false)
     private LocalDate fecha;
-    @Column(name = "PRESENTE")
+
+    @Column(name = "PRESENTE", nullable = false)
     private Boolean presente;
-    @Column(name = "ID_ACTIVIDAD_CLIENTE")
-    private long Id_actividad_cliente;
-    @Column(name = "ID_CLIENTE")
+
+
     @ManyToOne
+    @JoinColumn(name = "ID_CLIENTE")
     private Cliente cliente;
-    @Column(name = "ID_ACTIVIDAD")
+
+
     @ManyToOne
+    @JoinColumn(name = "ID_ACTIVIDAD")
     private Actividad actividad;
 
     public Asistencia() {
@@ -37,12 +42,11 @@ public class Asistencia {
 
     /* ================== Getters y Setters ================== */
 
-    public Asistencia(Long id, LocalDate fecha, Boolean presente, long id_actividad_cliente, Cliente cliente,
+    public Asistencia(Long id, LocalDate fecha, Boolean presente, Cliente cliente,
             Actividad actividad) {
         this.id = id;
         this.fecha = fecha;
         this.presente = presente;
-        Id_actividad_cliente = id_actividad_cliente;
         this.cliente = cliente;
         this.actividad = actividad;
     }
@@ -67,13 +71,6 @@ public class Asistencia {
     public void setPresente(Boolean presente) {
         this.presente = presente;
     }
-    public long getId_actividad_cliente() {
-        return Id_actividad_cliente;
-    }
-    public void setId_actividad_cliente(long id_actividad_cliente) {
-        Id_actividad_cliente = id_actividad_cliente;
-    }
-
     public Cliente getCliente() {
         return cliente;
     }
