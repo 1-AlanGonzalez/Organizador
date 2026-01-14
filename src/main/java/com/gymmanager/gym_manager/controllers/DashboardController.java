@@ -2,6 +2,8 @@ package com.gymmanager.gym_manager.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+
 import org.springframework.ui.Model;
 
 @Controller
@@ -16,6 +18,9 @@ public class DashboardController {
         model.addAttribute("fragmento", "contenido");
 
         model.addAttribute("active", "dashboard");
+
+        // Necesitamos obtener la cantidad totales de clientes para mostrar en el dashboard
+        // model.addAttribute("totalClientes", ClienteRepository.); 
 
         return "layouts/main";
     }

@@ -1,11 +1,14 @@
 :root {
-    --primary-dark: #2B3A40; 
-    --secondary-dark: #1b2022;  
-    --bg-main: #ffffff;     
-    --btn-color: #5E737C;      
-    --text-green: #4E9F8F;      
-    --text-orange: #C79255;    
-    --text-muted: #6B7280;
+    --sidebar-bg: #1f2a30;
+    --sidebar-active: #2d3f46;
+    --main-bg: #f5f7fa;
+
+    --card-bg: #ffffff;
+    --card-shadow: 0 6px 18px rgba(0,0,0,0.06);
+
+    --text-muted: #6b7280;
+    --success: #16a34a;
+    --warning: #f59e0b;
 }
 
 * {
@@ -13,8 +16,8 @@
     font-family: 'Marko One';
 }
 body {
-    background-color: var(--bg-main);
-    margin: 0;
+    background-color: var(--main-bg);
+    font-family: 'Inter', system-ui, sans-serif;
     overflow-x: hidden; /* Evita el scroll horizontal */
 }
 /* Layout Principal */
@@ -23,8 +26,9 @@ body {
 }
 /* Sidebar */
 .sidebar {
-    background-color: var(--primary-dark);
-    padding: 1rem;
+    width: 240px;
+    min-height: 100vh;
+    background-color: var(--sidebar-bg);
 }
 /* 
 Estilos para los enlaces de navegación en el sidebar
@@ -33,26 +37,31 @@ Estilos para los enlaces de navegación en el sidebar
     color: #D1D5DB;
 }
 .sidebar .nav-link {
-    background-color: transparent; /* clave */
-    border-radius: 6px;
-    padding: 10px 12px;
-    box-shadow: none;
-    color: #D1D5DB;
-    margin-bottom: 6px;
+    color: #cbd5e1;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-weight: 500;
 }
 /* 
 Estilo para los enlaces de navegación en el sidebar al pasar el mouse
  o estar activos
 */
-.nav-link:hover {
-    background-color: rgba(255,255,255,0.08);
+.sidebar .nav-link:hover {
+    background-color: rgba(255,255,255,0.06);
+    color: #fff;
 }
 
-.nav-link.active {
-    background-color: var(--secondary-dark);
-    color: #FFFFFF;
+.sidebar .nav-link.active {
+    background-color: var(--sidebar-active);
+    color: #fff;
 }
-
+.sidebar-footer h3 {
+    color: #fff;
+    letter-spacing: 2px;
+}
+.sidebar-footer small {
+    color: #94a3b8;
+}
 /* 
 Estilo para los títulos de las secciones
 */
@@ -68,28 +77,28 @@ Estilo para los títulos de las secciones
 Estilo personalizado para las tarjetas
 */
 .custom-card {
-    background-color: #FFFFFF;   
-    color: #1F2933;
-    border-radius: 8px;       
-    border: 1px solid #E5E7EB;
-    box-shadow: none;          
+    background-color: var(--card-bg);
+    border-radius: 14px;
+    box-shadow: var(--card-shadow);
+    border: none;         
 }
 /* 
 Estilo para los botones de acción rápida
 */
 .btn-action {
-    background-color: #FFFFFF;
-    color: var(--secondary-dark);
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    box-shadow: none;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    border: none;
+    text-align: left;
     font-weight: 500;
+    transition: 0.2s ease;
 }
 
 /* hover en los botones */
 .btn-action:hover {
-    background-color: #5a7077;
-    color: white;
+    transform: translateY(-2px);
+    transition: 0.2s ease;
 }
 
 /* TABLAS */
