@@ -1,54 +1,71 @@
 <div th:fragment="contenido">
 
-    <!-- Header de sección -->
+    <!-- Header -->
     <div class="d-flex align-items-center mb-4">
-        <h4 class="section-title mb-0">Clientes</h4>
-
         <!-- Acciones -->
         <div class="ms-auto d-flex gap-2">
             <button class="btn btn-outline-secondary btn-sm">
                 Editar
             </button>
-            <button class="btn btn-outline-secondary btn-sm">
-                - Eliminar
+            <button class="btn btn-outline-danger btn-sm">
+                Eliminar
             </button>
-            <a th:href="@{/clientes/nuevo}" class="btn btn-action btn-sm">
+            <button class="btn btn-success btn-sm" onclick="abrirPanelCliente()">
                 + Añadir Cliente
-            </a>
+            </button>
+            
         </div>
     </div>
 
     <!-- Filtro -->
-    <div class="mb-3" style="max-width: 250px;">
-        <input type="text" class="form-control form-control-sm"
+    <div class="mb-3 d-flex justify-content-between">
+        <input 
+                id="filtroClientes"
+                type="text"
+               class="form-control form-control-sm"
+               style="max-width: 250px;"
                placeholder="Filtrar clientes">
+    </div>
+
+    <!-- Sección del panel que se abre con "añadir cliente" -->
+    <div id="panelOverlay"
+        class="panel-overlay d-none"
+        onclick="cerrarPanelCliente()">
+
+        <!-- Panel -->
+        <div class="panel-container"
+            onclick="event.stopPropagation()"
+            th:insert="fragments/panel-cliente :: panelCliente">
+        </div>
     </div>
 
     <!-- Tabla -->
     <div class="card custom-card">
+        <div class="table-responsive">
+            <table id="tablaClientes" class="table table-hover table-sm align-middle mb-0">
+                <thead>
+                    <tr class="text-muted small text-uppercase">
+                        <th>Nombre</th>
+                        <th>Actividad</th>
+                        <th>Fecha de pago</th>
+                        <th class="text-center">Estado</th>
+                    </tr>
+                </thead>
 
-        <table class="table table-sm align-middle mb-0">
-            <thead>
-                <tr class="text-muted">
-                    <th>Nombre</th>
-                    <th>Actividad</th>
-                    <th>Fecha de pago</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr th:each="cliente : ${clientes}">
-                    <td th:text="${cliente.nombre} + ' ' + ${cliente.apellido}"></td>
-                    <td>Gym</td>
-                    <td>12/01/2026</td>
-                    <td class="text-success">Activo</td>
-
-                </tr>
-
-            </tbody>
-        </table>
-
+                <tbody>
+                    <tr th:each="cliente : ${clientes}">
+                        <td>
+                            <strong th:text="${cliente.nombre} + ' ' + ${cliente.apellido}"></strong>
+                        </td>
+                        <td ></td>
+                        <td></td>
+                        <td class="text-center">
+                            <span class="badge bg-success"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>

@@ -27,6 +27,7 @@ public class ClientesController {
         model.addAttribute("clientes", clienteRepository.findAll());
         model.addAttribute("title", "Gym Manager | Clientes");
         model.addAttribute("header", "Panel de control / Clientes");
+        model.addAttribute("cliente", new Cliente());
 
         model.addAttribute("vista", "clientes");
         model.addAttribute("fragmento", "contenido");
@@ -35,14 +36,14 @@ public class ClientesController {
         return "layouts/main";
     }
 
-    @GetMapping("/nuevo")
-    public String nuevoClienteForm(Model model) {
-        model.addAttribute("cliente", new Cliente());
-        model.addAttribute("vista", "clientes_form");
-        model.addAttribute("fragmento", "contenido");
-        model.addAttribute("active", "clientes");
-        return "layouts/main";
-    }
+    // @GetMapping("/nuevo")
+    // public String nuevoClienteForm(Model model) {
+    //     model.addAttribute("cliente", new Cliente());
+    //     model.addAttribute("vista", "clientes_form");
+    //     model.addAttribute("fragmento", "contenido");
+    //     model.addAttribute("active", "clientes");
+    //     return "layouts/main";
+    // }
     @PostMapping("/guardar")
     public String guardarCliente(@ModelAttribute Cliente cliente) {
         clienteRepository.save(cliente);
