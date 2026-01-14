@@ -11,12 +11,22 @@
             <button class="btn btn-outline-danger btn-sm">
                 - Eliminar
             </button>
-            <button class="btn btn-outline-success btn-sm">
+            <button class="btn btn-outline-success btn-sm" onclick="abrirPanelActividad()">
                 + Nueva actividad
             </button>
         </div>
     </div>
 
+    <div id="panelOverlayActividad"
+        class="panel-overlay d-none"
+        onclick="cerrarPanelActividad()">
+
+        <!-- Panel -->
+        <div class="panel-container"
+            onclick="event.stopPropagation()"
+            th:insert="fragments/panel-actividades :: panelActividad">
+        </div>
+    </div>
     <!-- Tabla -->
     <div class="card custom-card">
 
@@ -29,19 +39,16 @@
                     <th>Horario</th>
                 </tr>
             </thead>
-
             <tbody>
-                <tr>
-                    <td>Gym</td>
-                    <td>Carlos</td>
-                    <td>Lun a Vie</td>
-                    <td>08:00 - 10:00</td>
-                </tr>
-                <tr>
-                    <td>Boxeo</td>
-                    <td>Marcos</td>
-                    <td>Lun / Mie / Vie</td>
-                    <td>18:00 - 19:00</td>
+                <tr th:each="actividad : ${actividades}">
+                    <td>
+                        <strong th:text="${actividad.nombre}"></strong>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-center">
+                        <span class="badge bg-success"></span>
+                    </td>
                 </tr>
             </tbody>
         </table>

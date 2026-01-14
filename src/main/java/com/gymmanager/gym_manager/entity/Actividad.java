@@ -28,11 +28,9 @@ public class Actividad {
     @Column(name = "PRECIO", nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
 
-    // 🔴 Constructor vacío OBLIGATORIO para JPA
     public Actividad() {
     }
 
-    // Constructor opcional
     public Actividad(String nombre, Integer cupoMaximo, BigDecimal precio) {
         this.nombre = nombre;
         this.cupoMaximo = cupoMaximo;
