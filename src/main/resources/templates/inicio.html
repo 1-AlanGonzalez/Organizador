@@ -48,7 +48,12 @@
         <div class="col-md-5">
             <h4 class="section-title">Acciones rápidas</h4>
             <div class="d-grid gap-3 mt-3">
-                <button class="btn btn-action btn-lg py-4">Tomar Asistencia</button>
+                <button class="btn btn-action btn-lg py-4">Tomar Asistencia 
+                    <span>
+                        <!--Día de hoy:  -->
+                        <i class="bi bi-calendar3 ms-5"></i>
+                        <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span>
+                    </span></button>
                 <button class="btn btn-action btn-lg py-4">Gestionar Actividades</button>
                 <button class="btn btn-action btn-lg py-4">Gestionar Clientes</button>
                 <button class="btn btn-action btn-lg py-4">Exportar Excel</button>
