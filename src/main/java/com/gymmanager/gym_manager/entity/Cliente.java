@@ -1,10 +1,8 @@
 package com.gymmanager.gym_manager.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.*;
 @Entity
@@ -28,6 +26,8 @@ public class Cliente {
     @Column(name = "TELEFONO", nullable = false, length = 20)
     private String telefono;
 
+    @ManyToMany
+    private Set<Actividad> actividades = new HashSet<>();
 
     public Cliente() {}
 
@@ -38,6 +38,8 @@ public class Cliente {
         this.dni = dni;
         this.telefono = telefono;
     }
+
+    /* ================== Getters y Setters ================== */
 
     public Integer getIdCliente() {
         return idCliente;
@@ -79,6 +81,34 @@ public class Cliente {
         this.telefono = telefono;
     }
 
+    /* ================== LÓGICA DEL CLIENTE ================== */
+
+    public void agregarActividad(Actividad unaActividad){
+        if(!this.existeUnaActividad(unaActividad)){
+            throw new RuntimeException("La actividad que quiere quitar no esta registrado en el cliente");
+
+        }
+
+        actividades.add(unaActividad);
+        unaActividad.aumentoDeCuposActuales();
+    }
+
+    private Boolean existeUnaActividad(Actividad unaActividad){
+        return actividades.contains(unaActividad);
+    }
+
+    public void quitarActividad(Actividad unaActividad) {
+        if(!this.existeUnaActividad(unaActividad)){
+            throw new RuntimeException("La actividad que quiere quitar no esta registrado en el cliente");
+
+        }
+
+        actividades.remove(unaActividad);
+    }
+
+    public BigDecimal calcularCuotaTotal(){
+        return actividades.stream().map(Actividad::getPrecio).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
     
 }
 

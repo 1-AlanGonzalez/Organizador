@@ -28,18 +28,20 @@ public class Actividad {
     @Column(name = "PRECIO", nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
 
-    // 🔴 Constructor vacío OBLIGATORIO para JPA
+    private Integer cuposActuales;
+
     public Actividad() {
     }
 
-    // Constructor opcional
+    
     public Actividad(String nombre, Integer cupoMaximo, BigDecimal precio) {
         this.nombre = nombre;
         this.cupoMaximo = cupoMaximo;
         this.precio = precio;
     }
 
-    // Getters y Setters
+    /* ================== Getters y Setters ================== */
+
 
     public Integer getIdActividad() {
         return idActividad;
@@ -71,6 +73,20 @@ public class Actividad {
 
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
+    }
+
+    /* ================== LÓGICA DE ACTIVIDAD ================== */
+
+    public void aumentoDeCuposActuales(){
+        if(cuposActuales > cupoMaximo){
+            throw new RuntimeException("El cupo de la actividad esta lleno");
+        }
+
+        cuposActuales+=1;
+    }
+
+    public void liberacionDeCuposActuales(){
+        cuposActuales-=1;
     }
 }
 
