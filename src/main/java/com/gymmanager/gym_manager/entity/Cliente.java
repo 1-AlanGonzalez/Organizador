@@ -104,6 +104,7 @@ public class Cliente {
         }
 
         actividades.remove(unaActividad);
+        unaActividad.liberacionDeCuposActuales();
     }
 
     public BigDecimal calcularCuotaTotal(){
