@@ -20,14 +20,22 @@ body {
     font-family: 'Inter', system-ui, sans-serif;
     overflow-x: hidden; /* Evita el scroll horizontal */
 }
+html, body {
+    height: 100%;
+    margin: 0;
+}
+main {
+    display: flex;
+    flex-direction: column;
+}
 /* Layout Principal */
-.wrapper {  /* Clase que está en el contenedor principal */
-    min-height: 100vh; /* Asegura que el contenedor ocupe al menos el 100% de la altura de la ventana */
+.wrapper {
+    height: 100vh;
+    overflow: hidden; 
 }
 /* Sidebar */
 .sidebar {
     width: 240px;
-    min-height: 100vh;
     background-color: var(--sidebar-bg);
 }
 /* 

@@ -83,6 +83,9 @@ private void prepararModelo(Model model) {
         return "redirect:/clientes";
     }
 
+    public long cantidadTotal() {
+        return clienteRepository.count();
+    }
 
 }
 

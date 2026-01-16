@@ -8,7 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -25,18 +26,18 @@ public class Instructor {
     @Column(name = "APELLIDO", nullable = false, length = 50)
     private String apellido;
     @Column(name = "DNI", nullable = false)
-    private Integer dni;
+    private String dni;
     @Column(name = "TELEFONO", nullable = false, length = 20)
-    private Integer telefono;
-
-    @OneToMany(mappedBy = "instructor")
-    private List<Actividad> actividades = new ArrayList<>();    
-
+    private String telefono;
+  
+    @ManyToOne
+    @JoinColumn(name = "ID_ACTIVIDAD", nullable = false)
+    private Actividad actividad;
 
     public Instructor() {
     }
 
-    public Instructor(String nombre, String apellido, Integer dni, Integer telefono) {
+    public Instructor(String nombre, String apellido, String dni, String telefono) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
@@ -66,28 +67,28 @@ public class Instructor {
         this.apellido = apellido;
     }
 
-    public Integer getDni() {
+    public String getDni() {
         return dni;
     }
 
-    public void setDni(Integer dni) {
+    public void setDni(String dni) {
         this.dni = dni;
     }
 
-    public Integer getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(Integer telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
-    public List<Actividad> getActividades() {
-        return actividades;
+    public Actividad getActividades() {
+        return actividad;
     }
 
-    public void setActividades(List<Actividad> actividades) {
-        this.actividades = actividades;
+    public void setActividades(Actividad actividad) {
+        this.actividad = actividad;
     }
 
     

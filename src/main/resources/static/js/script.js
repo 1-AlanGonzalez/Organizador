@@ -33,8 +33,13 @@ function abrirPanelActividad() {
 function cerrarPanelActividad() {
     document.getElementById("panelOverlayActividad").classList.add("d-none");
 }
-
-
+// Panel de instructor
+function abrirPanelInstructor() {
+    document.getElementById("panelOverlayInstructor").classList.remove("d-none");
+}
+function cerrarPanelInstructor() {
+    document.getElementById("panelOverlayInstructor").classList.add("d-none");
+}
 
 // Filtro de clientes
 

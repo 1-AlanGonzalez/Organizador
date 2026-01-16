@@ -44,6 +44,9 @@
                 <thead>
                     <tr class="text-muted small text-uppercase">
                         <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>DNI</th>
+                        <th>Tel.</th>
                         <th>Actividad</th>
                         <th>Fecha de pago</th>
                         <th class="text-center">Estado</th>
@@ -53,12 +56,19 @@
                 <tbody>
                     <tr th:each="cliente : ${clientes}">
                         <td>
-                            <strong th:text="${cliente.nombre + ' ' + cliente.apellido}"></strong>
+                            <strong th:text="${cliente.nombre}"></strong>
                         </td>
-                        <td></td>
-                        <td></td>
-                        <td class="text-center">
-                            <span class="badge bg-success">Activo</span>
+                        <td> 
+                            <strong th:text="${cliente.apellido}"></strong>
+                        </td>
+                        <td>
+                            <strong th:text="${cliente.dni}"></strong>
+                        </td>
+                        <td>
+                            <strong th:text="${cliente.telefono}"></strong>
+                        </td>
+                        <td>
+                            <strong></strong>
                         </td>
                         
                     </tr>

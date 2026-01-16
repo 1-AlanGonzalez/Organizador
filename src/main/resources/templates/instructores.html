@@ -1,0 +1,75 @@
+
+<div th:fragment="contenido">
+
+    <!-- Header -->
+    <div class="d-flex align-items-center mb-4">
+        <div class="ms-auto d-flex gap-2">
+            <button class="btn btn-outline-secondary btn-sm">
+                Editar
+            </button>
+            <button class="btn btn-outline-danger btn-sm" onclick="toggleModoEliminarInstructor()">
+                Eliminar
+            </button>
+            <button class="btn btn-outline-success btn-sm" onclick="abrirPanelInstructor()">
+                + Añadir Instructor
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtro -->
+    <div class="mb-3 d-flex justify-content-between">
+        <input 
+            id="filtroInstructores"
+            type="text"
+            class="form-control form-control-sm"
+            style="max-width: 250px;"
+            placeholder="Filtrar instructores">
+    </div>
+
+    <!-- Panel añadir instructor -->
+    <div id="panelOverlayInstructor"
+         class="panel-overlay"
+         th:classappend="${abrirPanelInstructor} ? '' : 'd-none'"
+         onclick="cerrarPanelInstructor()">
+
+        <div class="panel-container"
+             onclick="event.stopPropagation()"
+             th:insert="fragments/panel-instructor :: panelInstructor">
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="card custom-card">
+        <div class="table-responsive">
+            <table id="tablaInstructores" class="table table-hover table-sm align-middle mb-0">
+                <thead>
+                    <tr class="text-muted small text-uppercase">
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>DNI</th>
+                        <th>Teléfono</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="instructor : ${instructores}">
+                        <td>
+                            <strong th:text="${instructor.nombre}"></strong>
+                        </td>
+                        <td>
+                            <strong th:text="${instructor.apellido}"></strong>
+                        </td>
+                        <td>
+                            <strong th:text="${instructor.dni}"></strong>
+                        </td>
+                        <td >
+                            <strong th:text="${instructor.telefono}"></strong>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>

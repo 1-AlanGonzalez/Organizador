@@ -59,10 +59,10 @@ en cada link usé th:href para que cada "click" redirija a la ruta correspondien
                 <i class="bi bi-calendar-check me-2"></i>
                 Actividades </a>
             </li>
-            <a th:href="@{/instructores}" class="nav-link" th:classappend="${active == 'ingresos'} ? 'active'"> 
+            <a th:href="@{/instructores}" class="nav-link" th:classappend="${active == 'instructores'} ? 'active'"> 
                 <i class="bi bi-person-badge me-2"></i>
                 Instructores </a>
-        </li>
+            </li>
             <li>
                 <a th:href="@{/ingresos}" class="nav-link" th:classappend="${active == 'ingresos'} ? 'active'"> 
                     <i class="bi bi-currency-dollar me-2"></i>
@@ -78,7 +78,7 @@ en cada link usé th:href para que cada "click" redirija a la ruta correspondien
         text-center: clase de bootstrap para centrar el texto
         mt-5: margin-top de 5 unidades
     -->
-    <div class="sidebar-footer text-center mt-5">
+    <div class="sidebar-footer text-center ">
         <!-- 
             logo-placeholder: clase personalizada para el logo del footer
         -->

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.gymmanager.gym_manager.entity.Actividad;
+import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 
 @Controller
@@ -42,6 +43,16 @@ public class ActividadController {
         actividadRepository.save(actividad);
         return "redirect:/actividades";
     }
+
+    // Vista para el selector de actividades del cliente:
+    // @GetMapping
+    // public String vista(Model model) {
+
+    //     model.addAttribute("actividades", actividadRepository.findAll());
+    //     model.addAttribute("cliente", new Cliente());
+
+    //     return "layouts/main";
+    // }
 }
 
 
