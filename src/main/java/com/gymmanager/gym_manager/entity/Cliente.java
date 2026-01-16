@@ -83,12 +83,11 @@ public class Cliente {
 
     /* ================== LÓGICA DEL CLIENTE ================== */
 
+
     public void agregarActividad(Actividad unaActividad){
-        if(!this.existeUnaActividad(unaActividad)){
+        if(this.existeUnaActividad(unaActividad)){
             throw new RuntimeException("La actividad que quiere quitar no esta registrado en el cliente");
-
         }
-
         actividades.add(unaActividad);
         unaActividad.aumentoDeCuposActuales();
     }
@@ -100,9 +99,7 @@ public class Cliente {
     public void quitarActividad(Actividad unaActividad) {
         if(!this.existeUnaActividad(unaActividad)){
             throw new RuntimeException("La actividad que quiere quitar no esta registrado en el cliente");
-
         }
-
         actividades.remove(unaActividad);
         unaActividad.liberacionDeCuposActuales();
     }

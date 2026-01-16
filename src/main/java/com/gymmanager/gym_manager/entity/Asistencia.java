@@ -44,7 +44,6 @@ public class Asistencia {
 
     public Asistencia(Long id, LocalDate fecha, Boolean presente, Cliente cliente,
             Actividad actividad) {
-        this.id = id;
         this.fecha = fecha;
         this.presente = presente;
         this.cliente = cliente;
@@ -52,13 +51,12 @@ public class Asistencia {
     }
 
 
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // public Long getId() {
+    //     return id;
+    // }
+    // public void setId(Long id) {
+    //     this.id = id;
+    // }
     public LocalDate getFecha() {
         return fecha;
     }
@@ -86,6 +84,7 @@ public class Asistencia {
 
     /* ================== LÓGICA DE ASISTENCIA ================== */
 
-    public tomarPresente()
-
+    // public tomarPresente(){ 
+    //     return this.presente;
+    // }
 }

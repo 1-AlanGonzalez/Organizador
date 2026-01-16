@@ -229,3 +229,29 @@ Panel de clientes
         transform: scale(1);
     }
 }
+
+
+/* ===============================
+   MODO ELIMINAR CLIENTES
+   =============================== */
+
+.modo-eliminar {
+    display: none;
+}
+
+body.modo-eliminar-activo .modo-eliminar {
+    display: inline-block;
+}
+
+body.modo-eliminar-activo .modo-normal {
+    display: none;
+}
+
+/* Feedback visual */
+body.modo-eliminar-activo table tr {
+    background-color: #fff5f5;
+}
+
+body.modo-eliminar-activo table tr:hover {
+    background-color: #ffe3e3;
+}

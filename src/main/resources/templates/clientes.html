@@ -2,40 +2,37 @@
 
     <!-- Header -->
     <div class="d-flex align-items-center mb-4">
-        <!-- Acciones -->
         <div class="ms-auto d-flex gap-2">
             <button class="btn btn-outline-secondary btn-sm">
                 Editar
             </button>
-            <button class="btn btn-outline-danger btn-sm">
+            <button class="btn btn-outline-danger btn-sm" onclick="toggleModoEliminar()">
                 Eliminar
             </button>
             <button class="btn btn-outline-success btn-sm" onclick="abrirPanelCliente()">
                 + Añadir Cliente
             </button>
-            
         </div>
     </div>
 
     <!-- Filtro -->
     <div class="mb-3 d-flex justify-content-between">
         <input 
-                id="filtroClientes"
-                type="text"
-               class="form-control form-control-sm"
-               style="max-width: 250px;"
-               placeholder="Filtrar clientes">
+            id="filtroClientes"
+            type="text"
+            class="form-control form-control-sm"
+            style="max-width: 250px;"
+            placeholder="Filtrar clientes">
     </div>
 
-    <!-- Sección del panel que se abre con "añadir cliente" -->
+    <!-- Panel añadir cliente -->
     <div id="panelOverlay"
-        class="panel-overlay d-none"
-        onclick="cerrarPanelCliente()">
+         class="panel-overlay d-none"
+         onclick="cerrarPanelCliente()">
 
-        <!-- Panel -->
         <div class="panel-container"
-            onclick="event.stopPropagation()"
-            th:insert="fragments/panel-cliente :: panelCliente">
+             onclick="event.stopPropagation()"
+             th:insert="fragments/panel-cliente :: panelCliente">
         </div>
     </div>
 
@@ -55,15 +52,17 @@
                 <tbody>
                     <tr th:each="cliente : ${clientes}">
                         <td>
-                            <strong th:text="${cliente.nombre} + ' ' + ${cliente.apellido}"></strong>
+                            <strong th:text="${cliente.nombre + ' ' + cliente.apellido}"></strong>
                         </td>
-                        <td ></td>
+                        <td></td>
                         <td></td>
                         <td class="text-center">
-                            <span class="badge bg-success"></span>
+                            <span class="badge bg-success">Activo</span>
                         </td>
+                        
                     </tr>
                 </tbody>
+
             </table>
         </div>
     </div>

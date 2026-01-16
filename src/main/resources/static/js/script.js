@@ -57,3 +57,17 @@ document.getElementById("filtroClientes").addEventListener("keyup", function () 
             : "none";
     });
 });
+
+
+// Eliminar clientes
+
+// Alternar modo eliminar:
+// Muestra u oculta la columna de acciones de eliminar
+function toggleModoEliminar() {
+    document.body.classList.toggle('modo-eliminar-activo');
+}
+// Confirmar eliminación:
+// Muestra un cuadro de confirmación al eliminar un cliente
+function confirmarEliminacion(nombre, apellido) {
+    return confirm(`¿Seguro que querés eliminar a ${nombre} ${apellido}?`);
+}

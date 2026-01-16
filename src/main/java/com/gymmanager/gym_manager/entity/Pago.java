@@ -1,5 +1,6 @@
 package com.gymmanager.gym_manager.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -27,23 +28,24 @@ public class Pago {
     private Boolean estado;
 
     @Column(name = "MONTO_A_PAGAR", nullable = false, precision = 10, scale = 2)
-    private Double montoAPagar;
+    private BigDecimal montoAPagar;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_ACTIVIDAD_CLIENTE")
-    private ActividadCliente actividadCliente;
+    // @ManyToOne
+    // @JoinColumn(name = "ID_ACTIVIDAD_CLIENTE")
+    // private ActividadCliente actividadCliente;
 
     public Pago(){
 
     }
 
-    public Pago(String idPago, LocalDate fechaDePago, Boolean estado, Double montoAPagar,
-            ActividadCliente actividadCliente) {
+    public Pago(String idPago, LocalDate fechaDePago, Boolean estado, BigDecimal montoAPagar
+            // ,ActividadCliente actividadCliente
+            ) {
         this.idPago = idPago;
         this.fechaDePago = fechaDePago;
         this.estado = estado;
         this.montoAPagar = montoAPagar;
-        this.actividadCliente = actividadCliente;
+        // this.actividadCliente = actividadCliente;
     }
 
 
@@ -74,28 +76,27 @@ public class Pago {
         this.estado = estado;
     }
 
-    public Double getMontoAPagar() {
+    public BigDecimal getMontoAPagar() {
         return montoAPagar;
     }
 
-    public void setMontoAPagar(Double montoAPagar) {
+    public void setMontoAPagar(BigDecimal montoAPagar) {
         this.montoAPagar = montoAPagar;
     }
 
-    public ActividadCliente getActividadCliente() {
-        return actividadCliente;
-    }
+    // public ActividadCliente getActividadCliente() {
+    //     return actividadCliente;
+    // }
 
-    public void setActividadCliente(ActividadCliente actividadCliente) {
-        this.actividadCliente = actividadCliente;
-    }
+    // public void setActividadCliente(ActividadCliente actividadCliente) {
+    //     this.actividadCliente = actividadCliente;
+    // }
 
 
     /* ================== LÓGICA DEL PAGO ================== */
 
 
-    public void generarPago()
+    // public void generarPago()
 
-    
 
 }
