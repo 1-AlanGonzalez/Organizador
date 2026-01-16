@@ -26,15 +26,16 @@
     </div>
 
     <!-- Panel añadir cliente -->
-    <div id="panelOverlay"
-         class="panel-overlay d-none"
-         onclick="cerrarPanelCliente()">
+        <div id="panelOverlay"
+            class="panel-overlay"
+            th:classappend="${abrirPanel} ? '' : 'd-none'"
+            onclick="cerrarPanelCliente()">
 
-        <div class="panel-container"
-             onclick="event.stopPropagation()"
-             th:insert="fragments/panel-cliente :: panelCliente">
+            <div class="panel-container"
+                onclick="event.stopPropagation()"
+                th:insert="fragments/panel-cliente :: panelCliente">
+            </div>
         </div>
-    </div>
 
     <!-- Tabla -->
     <div class="card custom-card">
