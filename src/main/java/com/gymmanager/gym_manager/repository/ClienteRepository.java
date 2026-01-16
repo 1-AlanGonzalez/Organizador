@@ -7,5 +7,5 @@ import com.gymmanager.gym_manager.entity.Cliente;
 
 
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
-
+    boolean existsByDni(String dni);
 }
