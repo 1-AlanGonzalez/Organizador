@@ -50,30 +50,50 @@
                         <th>Actividad</th>
                         <th>Fecha de pago</th>
                         <th class="text-center">Estado</th>
+                        <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <tr th:each="cliente : ${clientes}">
-                        <td>
-                            <strong th:text="${cliente.nombre}"></strong>
-                        </td>
-                        <td> 
-                            <strong th:text="${cliente.apellido}"></strong>
-                        </td>
-                        <td>
-                            <strong th:text="${cliente.dni}"></strong>
-                        </td>
-                        <td>
-                            <strong th:text="${cliente.telefono}"></strong>
-                        </td>
-                        <td>
-                            <strong></strong>
-                        </td>
                         
+                        <td th:text="${cliente.nombre}">
+                        </td>
+                        <td th:text="${cliente.apellido}"> 
+                        </td>
+                        <td th:text="${cliente.dni}">
+                        </td>
+                        <td th:text="${cliente.telefono}">
+                        </td>
+                        <td>
+                            actividad..
+                        </td>
+                        <td>
+                            fecha...
+                        </td>
+                        <td>
+                            estado...
+                        </td>
+                        <td class="text-center">
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-danger"
+                                    th:attr="data-id=${cliente.idCliente}, data-nombre=${cliente.nombre}"
+                                    onclick="abrirPanelEliminarCliente(this)">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </td>
+
                     </tr>
                 </tbody>
+                <div id="panelEliminarClienteOverlay"
+                    class="panel-overlay d-none"
+                    onclick="cerrarPanelEliminarCliente()">
 
+                    <div class="panel-container"
+                        onclick="event.stopPropagation()"
+                        th:insert="~{fragments/eliminar-cliente :: panelEliminarCliente}">
+                    </div>
+                </div>
             </table>
         </div>
     </div>

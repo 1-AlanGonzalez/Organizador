@@ -67,13 +67,24 @@ document.getElementById("filtroClientes").addEventListener("keyup", function () 
 
 // Alternar modo eliminar:
 // Muestra u oculta la columna de acciones de eliminar
-function toggleModoEliminar() {
-    document.body.classList.toggle('modo-eliminar-activo');
+function abrirPanelEliminarCliente(btn) {
+    const id = btn.dataset.id;
+    const nombre = btn.dataset.nombre;
+
+    document.getElementById('nombreClienteEliminar').innerText = nombre;
+
+    const form = document.getElementById('formEliminarCliente');
+    form.action = `/clientes/eliminar/${id}`;
+
+    document
+        .getElementById('panelEliminarClienteOverlay')
+        .classList.remove('d-none');
 }
-// Confirmar eliminación:
-// Muestra un cuadro de confirmación al eliminar un cliente
-function confirmarEliminacion(nombre, apellido) {
-    return confirm(`¿Seguro que querés eliminar a ${nombre} ${apellido}?`);
+
+function cerrarPanelEliminarCliente() {
+    document
+        .getElementById('panelEliminarClienteOverlay')
+        .classList.add('d-none');
 }
 
 
