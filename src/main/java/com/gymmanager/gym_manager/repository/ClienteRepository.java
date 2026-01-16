@@ -6,6 +6,6 @@ import com.gymmanager.gym_manager.entity.Cliente;
 
 
 
-public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
 }

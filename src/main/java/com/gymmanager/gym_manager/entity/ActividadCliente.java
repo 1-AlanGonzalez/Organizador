@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,9 +26,11 @@ public class ActividadCliente {
     @Column(name = "COSTO", nullable = false)
     private BigDecimal costo;
     
+    @ManyToOne
     @JoinColumn(name = "ID_CLIENTE")
     private Cliente cliente;
     
+    @ManyToOne
     @JoinColumn(name = "ID_ACTIVIDAD")
     private Actividad actividad;
 

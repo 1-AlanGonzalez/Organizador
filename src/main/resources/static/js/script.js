@@ -25,7 +25,6 @@ document.addEventListener("keydown", function(e) {
     if (e.key === "Escape") cerrarPanelAsistencia();
 });
     
-
 // Panel de actividad:
 function abrirPanelActividad() {
     document.getElementById("panelOverlayActividad").classList.remove("d-none");
@@ -70,4 +69,10 @@ function toggleModoEliminar() {
 // Muestra un cuadro de confirmación al eliminar un cliente
 function confirmarEliminacion(nombre, apellido) {
     return confirm(`¿Seguro que querés eliminar a ${nombre} ${apellido}?`);
+}
+
+
+// Errores de inscripción a actividades
+function errorActividadYaRegistrada(actividad) {
+    
 }

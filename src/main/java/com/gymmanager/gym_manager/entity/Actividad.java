@@ -8,8 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 
 @Entity
@@ -30,10 +31,11 @@ public class Actividad {
     @Column(name = "PRECIO", nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
 
-    @ManyToMany
-    @JoinColumn(name = "INSTRUCTOR")
+    @ManyToOne
+    @JoinColumn(name = "ID_INSTRUCTOR")
     private Instructor instructor;
 
+    @Transient
     private Integer cuposActuales;
 
     public Actividad() {
