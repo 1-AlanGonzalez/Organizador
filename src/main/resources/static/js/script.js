@@ -67,10 +67,12 @@ document.getElementById("filtroClientes").addEventListener("keyup", function () 
 
 // Alternar modo eliminar:
 // Muestra u oculta la columna de acciones de eliminar
-function abrirPanelEliminarCliente(btn) {
+function abrirPanelEliminarCliente(btn) {   
+    // Guardo en una constante la ID que guardé en el botón (data-id... y data-nombre..)
     const id = btn.dataset.id;
     const nombre = btn.dataset.nombre;
 
+    
     document.getElementById('nombreClienteEliminar').innerText = nombre;
 
     const form = document.getElementById('formEliminarCliente');

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.gymmanager.gym_manager.entity.Actividad;
-import com.gymmanager.gym_manager.entity.Cliente;
+
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 
 @Controller
