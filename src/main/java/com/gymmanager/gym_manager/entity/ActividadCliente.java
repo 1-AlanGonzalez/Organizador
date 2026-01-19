@@ -6,8 +6,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,8 +40,7 @@ public class ActividadCliente {
     @JoinColumn(name = "ID_ACTIVIDAD")
     private Actividad actividad;
 
-    @Transient
-    @OneToMany(mappedBy = "actividadCliente")
+    @OneToMany(mappedBy = "actividadCliente", cascade = CascadeType.ALL)
     private Set<Pago> pagos = new HashSet<>();
 
     @Transient
@@ -114,8 +112,17 @@ public class ActividadCliente {
 
     /* Como juan se inscribio a boxeo en el mes, Esta inscripcion primero q se genera el pago y luego tambien guarda como dijimos historial de pagos */
 
-    public Pago GenerarPagoMensual(LocalDate fechaDePago, EstadoPago estado, BigDecimal montoAPagar){
-        Pago pagoMensual = new Pago(fechaDePago, estado, montoAPagar, this);
+    public BigDecimal calcularMontoMensual(){
+        return actividad.getPrecio();
+    }
+
+    public Pago generarPagoMensual(int mes, int anio){
+        Boolean yaExiiste = pagos.stream().anyMatch(p->p.getMes() == mes && p.getAnio() == anio);
+        if(yaExiiste){
+            throw new RuntimeException("Ya existe un pago para ese mes"); /* Esto posiblemente esa un metodo privado aparte */
+        }
+        BigDecimal monto = this.calcularMontoMensual();
+        Pago pagoMensual = new Pago(mes, anio, monto ,this);
         pagos.add(pagoMensual);
         return pagoMensual;
     }
@@ -123,8 +130,30 @@ public class ActividadCliente {
     public Boolean tienePagosAdeudados(){
         return pagos.stream().anyMatch(p-> p.getEstado() == EstadoPago.ADEUDA);
     }
-    
-    
 
+    public Boolean adeudaMes(int mes,int anio){
+        return pagos.stream().anyMatch(p->p.getMes() == mes && p.getAnio() == anio && p.getEstado() == EstadoPago.ADEUDA);
+    }
+
+
+    public BigDecimal calcularAdeudado() {
+        return pagos.stream().filter(pago -> pago.getEstado() == EstadoPago.ADEUDA).map(Pago::getMontoAPagar).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public void pagarTodo(){
+        pagos.stream().filter(p->p.getEstado() == EstadoPago.ADEUDA).forEach(p->p.pagar());
+    }
+
+    public void pagarElMes(int mes, int anio){
+        Pago pago = pagos.stream().filter(p -> p.getMes() == mes && p.getAnio() == anio).findFirst().orElseThrow(() ->
+            new RuntimeException("No existe pago para ese mes")  /* Posible errores creado por nosotros tanto este como el de abajo en una carpeta de errores lo mismo de posibles metodos privados para la consulta */
+        );
+
+        if (pago.getEstado() == EstadoPago.PAGADO) {
+            throw new RuntimeException("Ese mes ya está pagado");
+    }
+
+        pago.pagar();
+    }
 
 }

@@ -91,9 +91,22 @@ public class Cliente {
         inscripcion.setCliente(this);
     }
 
-    public Boolean adeuda(){
-        return inscripciones.stream().anyMatch(ActividadCliente::tienePagosAdeudados);
+    public boolean adeuda() {
+        return inscripciones.stream().anyMatch(inscripcion -> inscripcion.calcularAdeudado().compareTo(BigDecimal.ZERO) > 0);
     }
+
+    public boolean adeudaMes(int mes, int anio) {
+        return inscripciones.stream().anyMatch(inscripcion -> inscripcion.adeudaMes(mes, anio));
+    }
+
+    public BigDecimal totalAdeudado() {
+        return inscripciones.stream().map(ActividadCliente::calcularAdeudado).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    
+    public void pagarTodo(){
+        inscripciones.stream().forEach(ActividadCliente::pagarTodo);
+    }
+
     
 }
 
