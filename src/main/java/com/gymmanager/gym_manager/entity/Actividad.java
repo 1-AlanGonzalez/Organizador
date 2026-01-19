@@ -37,11 +37,9 @@ public class Actividad {
     @JoinColumn(name = "ID_INSTRUCTOR")
     private Instructor instructor;
 
-    @Transient
-    private Set<ActividadCliente> Inscripciones = new HashSet<>();
 
     @Transient
-    private Set<Dicta> dictados = new HashSet<>();
+    private Set<Dicta> dictados = new HashSet<>(); /* Esta mal la notacion es para cambiar luego */
 
     public Actividad() {
     }

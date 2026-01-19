@@ -27,13 +27,8 @@ public class Asistencia {
 
 
     @ManyToOne
-    @JoinColumn(name = "ID_CLIENTE")
-    private Cliente cliente;
-
-
-    @ManyToOne
-    @JoinColumn(name = "ID_ACTIVIDAD")
-    private Actividad actividad;
+    @JoinColumn(name = "ID_ACTIVIDAD_CLIENTE", nullable = false)
+    private ActividadCliente actividadCliente;
 
     public Asistencia() {
     }
@@ -42,11 +37,10 @@ public class Asistencia {
 
     /* ================== Getters y Setters ================== */
 
-    public Asistencia(LocalDate fecha, Boolean presente, Cliente cliente,Actividad actividad) {
+    public Asistencia(LocalDate fecha, Boolean presente, ActividadCliente actividadCliente) {
         this.fecha = fecha;
         this.presente = presente;
-        this.cliente = cliente;
-        this.actividad = actividad;
+        this.actividadCliente = actividadCliente;
     }
 
 
@@ -68,18 +62,15 @@ public class Asistencia {
     public void setPresente(Boolean presente) {
         this.presente = presente;
     }
-    public Cliente getCliente() {
-        return cliente;
+
+    public ActividadCliente getActividadCliente() {
+        return actividadCliente;
     }
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+
+    public void setActividadCliente(ActividadCliente actividadCliente) {
+        this.actividadCliente = actividadCliente;
     }
-    public Actividad getActividad() {
-        return actividad;
-    }
-    public void setActividad(Actividad actividad) {
-        this.actividad = actividad;
-    } 
+    
 
     /* ================== LÓGICA DE ASISTENCIA ================== */
 

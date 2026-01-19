@@ -16,7 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+
 
 @Entity
 @Table(name = "ACTIVIDAD_CLIENTE")
@@ -43,7 +43,7 @@ public class ActividadCliente {
     @OneToMany(mappedBy = "actividadCliente", cascade = CascadeType.ALL)
     private Set<Pago> pagos = new HashSet<>();
 
-    @Transient
+    @OneToMany(mappedBy = "actividadCliente", cascade = CascadeType.ALL)
     private Set<Asistencia> asistencias = new HashSet<>();
 
     public ActividadCliente() { }
@@ -105,8 +105,13 @@ public class ActividadCliente {
     /*Los pagos no son del cliente ,las asistencias no son de la actividad, son de esa inscripción puntual */
     /* Ya que si juan se inscribe a Boxeo, entonces es juan asiste a su inscripcion de boxeo tal, donde el historial de pago es tal... */
 
+
+    /* Sistema de tomar asistencia simple */
+    /* Cosas a agregar a futuro :  */
+    /* asistencias por mes,porcentaje de asistencia, faltas consecutivas (a charlar para saber si lo agregamos) */
+
     public void tomarAsistencia(LocalDate fecha, Boolean presente){
-        Asistencia asistencia = new Asistencia(fecha,presente,cliente,actividad);
+        Asistencia asistencia = new Asistencia(fecha,presente,this);
         asistencias.add(asistencia);
     }
 

@@ -91,6 +91,14 @@ public class Cliente {
         inscripcion.setCliente(this);
     }
 
+    public void darseDeBajaAInscripcion(ActividadCliente inscripcion){
+        if(!inscripciones.contains(inscripcion)){
+            throw new RuntimeException("La inscripcion que quiere darse de baja no esta en sus actividades");
+        }
+
+        inscripciones.remove(inscripcion);    
+    }
+
     public boolean adeuda() {
         return inscripciones.stream().anyMatch(inscripcion -> inscripcion.calcularAdeudado().compareTo(BigDecimal.ZERO) > 0);
     }
