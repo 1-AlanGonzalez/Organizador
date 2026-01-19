@@ -49,21 +49,14 @@
                            required>
                 </div>
 
-                <!-- <div class="mb-3">
-                    <label class="form-label">Actividad</label>
-
-                    <select class="form-select"
-                            th:field="*{actividad}"
-                            required>
-
-                        <option value="">Seleccionar actividad</option>
-
-                        <option th:each="actividad : ${actividades}"
-                                th:value="${actividad.idActividad}"
-                                th:text="${actividad.nombre}">
-                        </option>
-                    </select>
-                </div> -->
+                <!-- Actividad -->
+                <!-- <select name="idActividad" class="form-select">
+                    <option value="">Seleccionar actividad</option>
+                    <option th:each="act : ${actividades}"
+                            th:value="${act.idActividad}"
+                            th:text="${act.nombre}">
+                    </option>
+                </select> -->
 
                 <div class="mb-3">
                     <label class="form-label">Fecha de último pago</label>

@@ -50,7 +50,7 @@ public class InstructorController {
     @PostMapping("/guardar")
     public String guardarInstructor(
             @ModelAttribute Instructor instructor,
-            @RequestParam List<Long> actividadIds,
+            @RequestParam(required = false) List<Long> actividadIds,
             Model model,
             RedirectAttributes redirectAttributes) {
 

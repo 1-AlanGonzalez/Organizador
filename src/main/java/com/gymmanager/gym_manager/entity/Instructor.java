@@ -1,7 +1,8 @@
 package com.gymmanager.gym_manager.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,8 +10,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -29,12 +31,24 @@ public class Instructor {
     private String dni;
     @Column(name = "TELEFONO", nullable = false, length = 20)
     private String telefono;
-  
-    @ManyToOne
-    @JoinColumn(name = "ID_ACTIVIDAD", nullable = false)
-    private Actividad actividad;
 
-    public Instructor() {
+    
+    // Comento esto que ya estaba implementado porque me tira error al crear el instructor
+    // @ManyToOne
+    // @JoinColumn(name = "ID_ACTIVIDAD", nullable = false)
+    // private Actividad actividad;
+
+    // Muchos a muchos entre instructor y actividad
+    @ManyToMany
+    @JoinTable(
+        name = "INSTRUCTOR_ACTIVIDAD",
+        joinColumns = @JoinColumn(name = "ID_INSTRUCTOR"),
+        inverseJoinColumns = @JoinColumn(name = "ID_ACTIVIDAD")
+    )
+    private Set<Actividad> actividades = new HashSet<>();
+    
+
+public Instructor() {
     }
 
     public Instructor(String nombre, String apellido, String dni, String telefono) {
@@ -83,12 +97,12 @@ public class Instructor {
         this.telefono = telefono;
     }
 
-    public Actividad getActividades() {
-        return actividad;
+    public Set<Actividad> getActividades() {
+        return actividades;
     }
 
-    public void setActividades(Actividad actividad) {
-        this.actividad = actividad;
+    public void setActividades(Set<Actividad> actividades) {
+        this.actividades = actividades;
     }
 
     

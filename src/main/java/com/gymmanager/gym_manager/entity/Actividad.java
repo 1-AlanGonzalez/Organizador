@@ -37,7 +37,7 @@ public class Actividad {
     @JoinColumn(name = "ID_INSTRUCTOR")
     private Instructor instructor;
 
-
+    private Integer cuposActuales = 0;
     @Transient
     private Set<Dicta> dictados = new HashSet<>(); /* Esta mal la notacion es para cambiar luego */
 

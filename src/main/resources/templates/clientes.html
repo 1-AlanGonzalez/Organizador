@@ -71,14 +71,16 @@
                         </td>
                         <!-- <td th:text="${cliente.telefono}"> -->
                         </td>
-                        <td>
-                            actividad..
+                        <!-- actividad.. -->
+                        <td >
                         </td>
                         <td>
                             fecha...
                         </td>
-                        <td >
-                            estado...
+                        <!-- para el estado usar la funcion Adeuda() -->
+                        <td class="text-center">
+                            <span th:if="${cliente.adeuda()}" class="badge bg-danger">Adeuda</span>
+                            <span th:if="${!cliente.adeuda()}" class="badge bg-success">Al día</span>
                         </td>
 <td class="text-center">
     <button type="button"
