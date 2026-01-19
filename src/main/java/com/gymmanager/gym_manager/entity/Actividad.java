@@ -1,6 +1,8 @@
 package com.gymmanager.gym_manager.entity;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,7 +38,10 @@ public class Actividad {
     private Instructor instructor;
 
     @Transient
-    private Integer cuposActuales;
+    private Set<ActividadCliente> Inscripciones = new HashSet<>();
+
+    @Transient
+    private Set<Dicta> dictados = new HashSet<>();
 
     public Actividad() {
     }

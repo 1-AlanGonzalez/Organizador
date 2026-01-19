@@ -1,7 +1,12 @@
 package com.gymmanager.gym_manager.entity;
 
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.swing.text.StyledEditorKit.BoldAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +15,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "ACTIVIDAD_CLIENTE")
@@ -27,12 +34,19 @@ public class ActividadCliente {
     private BigDecimal costo;
     
     @ManyToOne
-    @JoinColumn(name = "ID_CLIENTE")
+    @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
     
     @ManyToOne
     @JoinColumn(name = "ID_ACTIVIDAD")
     private Actividad actividad;
+
+    @Transient
+    @OneToMany(mappedBy = "actividadCliente")
+    private Set<Pago> pagos = new HashSet<>();
+
+    @Transient
+    private Set<Asistencia> asistencias = new HashSet<>();
 
     public ActividadCliente() { }
 
@@ -84,5 +98,33 @@ public class ActividadCliente {
     public void setActividad(Actividad actividad) {
         this.actividad = actividad;
     }
+
+    /* ================== LÓGICA DE ACTIVIDADCLIENTE ================== */
+
+    /* El nucleo central de todo va a ser esta entidad */
+    /* Aca vamos a guardar las asistencias, los pagos y demas */
+    /* Es el centro por que ya conoce cliente y actividad la logica es la siguiente: */
+    /*Los pagos no son del cliente ,las asistencias no son de la actividad, son de esa inscripción puntual */
+    /* Ya que si juan se inscribe a Boxeo, entonces es juan asiste a su inscripcion de boxeo tal, donde el historial de pago es tal... */
+
+    public void tomarAsistencia(LocalDate fecha, Boolean presente){
+        Asistencia asistencia = new Asistencia(fecha,presente,cliente,actividad);
+        asistencias.add(asistencia);
+    }
+
+    /* Como juan se inscribio a boxeo en el mes, Esta inscripcion primero q se genera el pago y luego tambien guarda como dijimos historial de pagos */
+
+    public Pago GenerarPagoMensual(LocalDate fechaDePago, EstadoPago estado, BigDecimal montoAPagar){
+        Pago pagoMensual = new Pago(fechaDePago, estado, montoAPagar, this);
+        pagos.add(pagoMensual);
+        return pagoMensual;
+    }
+
+    public Boolean tienePagosAdeudados(){
+        return pagos.stream().anyMatch(p-> p.getEstado() == EstadoPago.ADEUDA);
+    }
+    
+    
+
 
 }

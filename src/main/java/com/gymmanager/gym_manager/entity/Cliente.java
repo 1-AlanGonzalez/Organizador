@@ -28,8 +28,8 @@ public class Cliente {
     @Column(name = "TELEFONO", nullable = false, length = 20)
     private String telefono;
 
-    @ManyToMany
-    private Set<Actividad> actividades = new HashSet<>();
+    @OneToMany
+    private Set<ActividadCliente> inscripciones = new HashSet<>();
 
     public Cliente() {}
 
@@ -86,28 +86,13 @@ public class Cliente {
     /* ================== LÓGICA DEL CLIENTE ================== */
 
 
-    public void inscribirseAUnaActividad(Actividad unaActividad){
-        if(this.existeUnaActividad(unaActividad)){
-            throw new RuntimeException("El cliente ya está inscrito en esta actividad\"");
-        }
-        actividades.add(unaActividad);
-        unaActividad.aumentoDeCuposActuales();
+    public void agregarInscripcion(ActividadCliente inscripcion){
+        inscripciones.add(inscripcion);
+        inscripcion.setCliente(this);
     }
 
-    private Boolean existeUnaActividad(Actividad unaActividad){
-        return actividades.contains(unaActividad);
-    }
-
-    public void quitarActividad(Actividad unaActividad) {
-        if(!this.existeUnaActividad(unaActividad)){
-            throw new RuntimeException("La actividad que quiere quitar no esta registrado en el cliente");
-        }
-        actividades.remove(unaActividad);
-        unaActividad.liberacionDeCuposActuales();
-    }
-
-    public BigDecimal calcularCuotaTotal(){
-        return actividades.stream().map(Actividad::getPrecio).reduce(BigDecimal.ZERO, BigDecimal::add);
+    public Boolean adeuda(){
+        return inscripciones.stream().anyMatch(ActividadCliente::tienePagosAdeudados);
     }
     
 }
