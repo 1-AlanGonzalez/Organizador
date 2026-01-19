@@ -98,7 +98,36 @@ Estilo para los botones de acción rápida
     font-weight: 500;
     transition: 0.2s ease;
 }
+/* Por defecto los botones de acciones están ocultos */
+.btn-editar,
+.btn-eliminar,
+.btn-ver {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    width: 32px;
+    height: 32px;
+}
 
+/* Cuando se activa el modo editar/acciones, se muestran */
+body.modo-editar .btn-editar,
+body.modo-eliminar-activo .btn-eliminar,
+body.modo-ver .btn-ver {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+}
+body.modo-editar .btn-modo-editar {
+    background-color: #e5e7eb;
+    border-color: #9ca3af;
+}
+.d-none {
+    display: none !important;
+}
+body.modo-eliminar-activo .btn-modo-eliminar {
+    background-color: #fee2e2;
+    border-color: #ef4444;
+}
 /* hover en los botones */
 .btn-action:hover {
     transform: translateY(-2px);

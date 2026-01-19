@@ -1,6 +1,21 @@
 // Panel de cliente:
 function abrirPanelCliente() {
-    document.getElementById("panelOverlay").classList.remove("d-none");
+    const overlay = document.getElementById("panelOverlay");
+    const form = overlay.querySelector("form");
+    if (!form) return;
+
+    overlay.classList.remove("d-none");
+
+    // Limpiar campos
+    form.reset();
+
+    // Cambiar título
+    const titulo = document.getElementById("panelClienteTitulo");
+    if (titulo) titulo.textContent = "Nuevo Cliente";
+
+    // Cambiar texto del botón submit
+    const submitBtn = form.querySelector("button[type='submit']");
+    if (submitBtn) submitBtn.textContent = "Guardar Cliente";
 }
 
 function cerrarPanelCliente() {
@@ -112,3 +127,52 @@ function closeSidebar() {
     sidebar.classList.remove("show");
     overlay.classList.remove("show");
 }
+
+
+
+// Editar cliente
+
+function abrirPanelEditarCliente(btn) {
+    const overlay = document.getElementById("panelOverlay");
+    const form = overlay.querySelector("form");
+    if (!form) return;
+
+    // Abrimos el panel
+    overlay.classList.remove("d-none");
+
+    // Cambiamos el título del panel
+    const titulo = document.getElementById("panelClienteTitulo");
+    if (titulo) titulo.textContent = "Editar Cliente";
+
+    // Cambiamos el texto del botón submit
+    const submitBtn = form.querySelector("button[type='submit']");
+    if (submitBtn) submitBtn.textContent = "Guardar Cambios";
+
+    // Llenamos los campos con los datos del cliente
+    form.querySelector("input[name='idCliente']").value = btn.dataset.id || "";
+    form.querySelector("input[name='nombre']").value = btn.dataset.nombre || "";
+    form.querySelector("input[name='apellido']").value = btn.dataset.apellido || "";
+    form.querySelector("input[name='dni']").value = btn.dataset.dni || "";
+    form.querySelector("input[name='telefono']").value = btn.dataset.telefono || "";
+}
+
+function toggleModoEditar() {
+    const body = document.body;
+
+    // Si estaba activo eliminar, lo apagamos
+    body.classList.remove("modo-eliminar-activo");
+
+    // Alternamos editar
+    body.classList.toggle("modo-editar");
+}
+
+function toggleModoEliminar() {
+    const body = document.body;
+
+    // Si estaba activo editar, lo apagamos
+    body.classList.remove("modo-editar");
+
+    // Alternamos eliminar
+    body.classList.toggle("modo-eliminar-activo");
+}
+

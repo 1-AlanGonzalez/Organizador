@@ -44,13 +44,23 @@ public class ClientesController {
 @PostMapping("/guardar")
 public String guardarCliente(@ModelAttribute Cliente cliente, Model model, RedirectAttributes redirectAttributes) {
     try {
-        if (clienteRepository.existsByDni(cliente.getDni())) {
+    //    Comprobar si el DNI ya existe en otro cliente
+        boolean dniExiste = clienteRepository.existsByDni(cliente.getDni());
+        // Si es un nuevo cliente (idCliente es null) y el DNI ya existe, mostrar error
+        if (cliente.getIdCliente() == null && dniExiste) {
             // ERROR: No redireccionamos. Cargamos el modelo y devolvemos la vista.
             prepararModelo(model);
             model.addAttribute("error", "El DNI ya está registrado para otro cliente.");
             model.addAttribute("abrirPanel", true); // Señal para el HTML
             return "layouts/main"; 
         }
+        // Si es una edición (idCliente no es null)
+        // busco el cliente existente por DNI y lo guardo en clienteExistente 
+        // if (cliente.getIdCliente() != null) {
+        //     Cliente clienteExistente = clienteRepository.findByDni(cliente.getDni());
+
+        //     if (clienteExistente != null && !clienteExistente.getId)
+        // }
 
         clienteRepository.save(cliente);
         

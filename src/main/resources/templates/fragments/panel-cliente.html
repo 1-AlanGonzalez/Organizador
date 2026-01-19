@@ -2,12 +2,16 @@
 
     <div class="card custom-card" style="max-width: 500px;">
         <div class="card-body">
-
-            <h4 class="section-title mb-4">Nuevo Cliente</h4>
+            <!-- Le agrego una id para que el texto cambie si presiona el botón de editar -->
+            <h4 class="section-title mb-4" id="panelClienteTitulo">Nuevo Cliente</h4>
 
             <form th:action="@{/clientes/guardar}"
                   th:object="${cliente}"
                   method="post">
+                    <!-- 
+                    Campo oculto para el id del cliente (necesario para editar)
+                    -->
+                  <input type="hidden" th:field="*{idCliente}">
 
                 <div class="mb-3">
                     <label class="form-label">Nombre</label>
