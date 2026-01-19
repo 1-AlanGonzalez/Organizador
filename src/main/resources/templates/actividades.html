@@ -33,7 +33,7 @@
         <table class="table table-sm align-middle mb-0">
             <thead>
                 <tr class="text-muted">
-                    <th>Nombre</th>
+                    <th>Actividad</th>
                     <th>Instructor</th>
                     <th>Días</th>
                     <th>Horario</th>
@@ -41,13 +41,10 @@
             </thead>
             <tbody>
                 <tr th:each="actividad : ${actividades}">
+                    <td th:text="${actividad.nombre}"></td>
+                    <td></td>
+                    <td></td>
                     <td>
-                        <strong th:text="${actividad.nombre}"></strong>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-center">
-                        <span class="badge bg-success"></span>
                     </td>
                 </tr>
             </tbody>

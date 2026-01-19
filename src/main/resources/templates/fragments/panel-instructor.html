@@ -48,27 +48,6 @@
                            required>
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label">Actividades</label>
-
-                    <select class="form-select"
-                            name="actividadIds"
-                            multiple
-                            required>
-
-                        <option th:each="actividad : ${actividades}"
-                                th:value="${actividad.idActividad}"
-                                th:text="${actividad.nombre}">
-                        </option>
-
-                    </select>
-
-                    <small class="text-muted">
-                        Podés seleccionar más de una actividad (Ctrl o Shift)
-                    </small>
-                </div>
-
-
                 <div id="alert-error" 
                     th:classappend="${error == null} ? 'd-none' : ''" 
                     class="alert alert-danger shadow-sm">
