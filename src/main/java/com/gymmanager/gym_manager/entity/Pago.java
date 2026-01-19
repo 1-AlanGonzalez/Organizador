@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,27 +25,24 @@ public class Pago {
     private LocalDate fechaDePago;
 
     @Column(name = "ESTADO", nullable = false)
-    private Boolean estado;
+    private EstadoPago estado;
 
     @Column(name = "MONTO_A_PAGAR", nullable = false, precision = 10, scale = 2)
     private BigDecimal montoAPagar;
 
-    // @ManyToOne
-    // @JoinColumn(name = "ID_ACTIVIDAD_CLIENTE")
-    // private ActividadCliente actividadCliente;
+    @ManyToOne
+    @JoinColumn(name = "ID_ACTIVIDAD_CLIENTE", nullable = false)
+    private ActividadCliente actividadCliente;
 
     public Pago(){
 
     }
 
-    public Pago(String idPago, LocalDate fechaDePago, Boolean estado, BigDecimal montoAPagar
-            // ,ActividadCliente actividadCliente
-            ) {
-        this.idPago = idPago;
+    public Pago(LocalDate fechaDePago, EstadoPago estado, BigDecimal montoAPagar ,ActividadCliente actividadCliente) {
         this.fechaDePago = fechaDePago;
         this.estado = estado;
         this.montoAPagar = montoAPagar;
-        // this.actividadCliente = actividadCliente;
+        this.actividadCliente = actividadCliente;
     }
 
 
@@ -66,11 +65,11 @@ public class Pago {
         this.fechaDePago = fechaDePago;
     }
 
-    public Boolean getEstado() {
+    public EstadoPago getEstado() {
         return estado;
     }
 
-    public void setEstado(Boolean estado) {
+    public void setEstado(EstadoPago estado) {
         this.estado = estado;
     }
 

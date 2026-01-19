@@ -17,7 +17,7 @@ public class Asistencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_ASISTENCIA")
-    private Integer idAsistencai;
+    private Integer idAsistencia;
 
     @Column(name = "FECHA", nullable = false)
     private LocalDate fecha;
@@ -42,8 +42,7 @@ public class Asistencia {
 
     /* ================== Getters y Setters ================== */
 
-    public Asistencia(Long id, LocalDate fecha, Boolean presente, Cliente cliente,
-            Actividad actividad) {
+    public Asistencia(LocalDate fecha, Boolean presente, Cliente cliente,Actividad actividad) {
         this.fecha = fecha;
         this.presente = presente;
         this.cliente = cliente;
@@ -84,7 +83,5 @@ public class Asistencia {
 
     /* ================== LÓGICA DE ASISTENCIA ================== */
 
-    // public tomarPresente(){ 
-    //     return this.presente;
-    // }
+    
 }
