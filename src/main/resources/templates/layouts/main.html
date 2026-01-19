@@ -30,6 +30,8 @@
 <div class="d-flex wrapper">
 
     <!-- SIDEBAR -->
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
     <div th:replace="fragments/sidebar :: sidebar-fragment"></div>
 
     <!-- CONTENIDO PRINCIPAL -->
@@ -37,6 +39,10 @@
 
         <!-- HEADER -->
         <header class="p-3 border-bottom-soft">
+            <button onclick="toggleSidebar()" class="btn btn-outline-secondary d-md-none" id="btnToggleSidebar">
+                <i class="bi bi-list fs-4"></i>
+            </button>
+
             <span class="text-muted" th:text="${header}">
                 Panel de control
             </span>

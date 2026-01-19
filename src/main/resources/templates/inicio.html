@@ -1,72 +1,72 @@
-<div th:fragment="contenido">
+    <div th:fragment="contenido">
 
-    <div class="row g-4 mb-4">
+        <div class="row g-4 mb-4">
 
-        <div class="col-md-6">
-            <h4 class="section-title mb-3">Ingreso Mensual</h4>
-            <div class="card custom-card p-4">
-                <div class="row align-items-center h-100">
-                    <div class="col-6 border-end border-secondary">
-                        <h5 class="fw-normal mb-2">Mes actual</h5>
-                        <h4 class="mb-0">Ingresos</h4>
+            <div class="col-md-6">
+                <h4 class="section-title mb-3">Ingreso Mensual</h4>
+                <div class="card custom-card p-4">
+                    <div class="row align-items-center h-100">
+                        <div class="col-6 border-end border-secondary">
+                            <h5 class="fw-normal mb-2">Mes actual</h5>
+                            <h4 class="mb-0">Ingresos</h4>
+                        </div>
+                        <div class="col-6 ps-4">
+                                <!-- Actualizar mes automaticamente -->
+                                <!-- Con la primer letra en mayúscula -->
+                                <h5 class="fw-light mb-3" th:text="${#dates.format(#dates.createNow(), 'MMMM')}"></h5>
+                            <h4 class="fw-semibold text-success">$100.000</h4>
+                        </div>
                     </div>
-                    <div class="col-6 ps-4">
-                            <!-- Actualizar mes automaticamente -->
-                             <!-- Con la primer letra en mayúscula -->
-                            <h5 class="fw-light mb-3" th:text="${#dates.format(#dates.createNow(), 'MMMM')}"></h5>
-                        <h4 class="fw-semibold text-success">$100.000</h4>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h4 class="section-title">Cantidad de Clientes</h4>
+                <div class="card custom-card p-3">
+                    <div class="row align-items-center h-100">
+
+                        <div class="col-6 border-end border-secondary d-flex flex-column justify-content-center">
+                            <span class="fs-4 mb-2">Totales</span>
+                            <span class="text-success">Activos</span>
+                            <span class="text-warning">Pendientes</span>
+                        </div>
+
+                        <div class="col-6 ps-4 d-flex flex-column justify-content-center">
+                            <!-- Búsqueda de cantidad de Clientes totales -->
+                            <span class="fs-4 mb-2" th:text="${totalClientes}"></span>
+                            <span class="text-success fw-bold">70</span>
+                            <span class="text-warning fw-bold">30</span>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <h4 class="section-title">Cantidad de Clientes</h4>
-            <div class="card custom-card p-3">
-                <div class="row align-items-center h-100">
+        <div class="row g-4">
 
-                    <div class="col-6 border-end border-secondary d-flex flex-column justify-content-center">
-                        <span class="fs-4 mb-2">Totales</span>
-                        <span class="text-success">Activos</span>
-                        <span class="text-warning">Pendientes</span>
-                    </div>
-
-                    <div class="col-6 ps-4 d-flex flex-column justify-content-center">
-                        <!-- Búsqueda de cantidad de Clientes totales -->
-                        <span class="fs-4 mb-2" th:text="${totalClientes}"></span>
-                        <span class="text-success fw-bold">70</span>
-                        <span class="text-warning fw-bold">30</span>
-                    </div>
-
+            <div class="col-md-5">
+                <h4 class="section-title">Acciones rápidas</h4>
+                <div class="d-grid gap-3 mt-3">
+                    <button class="btn btn-action btn-lg py-4">Tomar Asistencia 
+                        <span>
+                            <!--Día de hoy:  -->
+                            <i class="bi bi-calendar3 ms-5"></i>
+                            <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span>
+                        </span></button>
+                    <button class="btn btn-action btn-lg py-4">Ingresar Pago</button>
+                    <button class="btn btn-action btn-lg py-4">Importar Excel</button>
+                    <button class="btn btn-action btn-lg py-4">Exportar Excel</button>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="row g-4">
-
-        <div class="col-md-5">
-            <h4 class="section-title">Acciones rápidas</h4>
-            <div class="d-grid gap-3 mt-3">
-                <button class="btn btn-action btn-lg py-4">Tomar Asistencia 
-                    <span>
-                        <!--Día de hoy:  -->
-                        <i class="bi bi-calendar3 ms-5"></i>
-                        <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span>
-                    </span></button>
-                <button class="btn btn-action btn-lg py-4">Ingresar Pago</button>
-                <button class="btn btn-action btn-lg py-4">Importar Excel</button>
-                <button class="btn btn-action btn-lg py-4">Exportar Excel</button>
+            <div class="col-md-7">
+                <h4 class="section-title">Gráfico ingresos Mensuales</h4>
+                <div class="card custom-card p-3" style="height: 280px;">
+                    <div id="chart"></div>
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-7">
-            <h4 class="section-title">Gráfico ingresos Mensuales</h4>
-            <div class="card custom-card p-3" style="height: 280px;">
-                <div id="chart"></div>
-            </div>
         </div>
 
     </div>
-
-</div>

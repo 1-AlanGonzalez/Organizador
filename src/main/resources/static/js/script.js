@@ -91,6 +91,24 @@ function cerrarPanelEliminarCliente() {
 
 
 // Errores de inscripción a actividades
-function errorActividadYaRegistrada(actividad) {
+// function errorActividadYaRegistrada(actividad) {
     
+// }
+
+
+// Sidebar toggle
+function toggleSidebar() {
+    const sidebar = document.querySelector(".sidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    sidebar.classList.toggle("show");
+    overlay.classList.toggle("show");
+}
+
+function closeSidebar() {
+    const sidebar = document.querySelector(".sidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    sidebar.classList.remove("show");
+    overlay.classList.remove("show");
 }
