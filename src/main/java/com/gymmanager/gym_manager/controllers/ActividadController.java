@@ -21,14 +21,15 @@ public class ActividadController {
     private ActividadRepository actividadRepository;
     private InstructorRepository instructorRepository;
 
-    public ActividadController(ActividadRepository actividadRepository) {
+    public ActividadController(ActividadRepository actividadRepository, InstructorRepository instructorRepository) {
         this.actividadRepository = actividadRepository;
-        
+        this.instructorRepository = instructorRepository;
     }
 
     @GetMapping
     public String actividades(Model model) {
         model.addAttribute("actividades", actividadRepository.findAll());
+        model.addAttribute("instructores", instructorRepository.findAll());
 
         model.addAttribute("title", "Gym Manager | Actividades");
         model.addAttribute("header", "Panel de control / Actividades");
@@ -50,9 +51,11 @@ public class ActividadController {
 
     @PostMapping("/guardar")
         public String guardarActividad(
+            // Para guardar la actividad junto con el instructor seleccionado
                 @ModelAttribute Actividad actividad,
                 @RequestParam(required = false) Long instructorId
         ) {
+            // Si se seleccionó un instructor, lo buscamos y lo asignamos a la actividad
             if (instructorId != null) {
                 Instructor instructor = instructorRepository
                         .findById(instructorId)

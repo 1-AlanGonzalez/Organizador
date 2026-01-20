@@ -39,10 +39,11 @@
                 <div class="mb-4">
                     <label class="form-label">Instructor</label>
                     <select name="instructorId" class="form-select" required>
+                        
                         <option value="" disabled selected>Seleccionar instructor</option>
                         <option th:each="instr : ${instructores}"
                                 th:value="${instr.idInstructor}"
-                                th:text="${instr.nombre} + ' ' + ${instr.apellido}">
+                                th:text="${instr.nombre + ' ' + instr.apellido}">
                         </option>
                     </select>
                 </div>

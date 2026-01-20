@@ -41,7 +41,7 @@ public class InstructorController {
         model.addAttribute("vista", "instructores");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active", "instructores");
-        System.out.println("Actividades: " + actividadRepository.findAll().size());
+
 
         return "layouts/main";
     }
@@ -79,8 +79,8 @@ public class InstructorController {
 
     private void prepararModelo(Model model) {
         model.addAttribute("instructores", instructorRepository.findAll());
+        model.addAttribute("actividades", actividadRepository.findAll());
         model.addAttribute("instructor", new Instructor());
-    model.addAttribute("actividades", actividadRepository.findAll()); // 👈 CLAVE
         model.addAttribute("title", "Gym Manager | Instructores");
         model.addAttribute("header", "Panel de control / Instructores");
         model.addAttribute("vista", "instructores");

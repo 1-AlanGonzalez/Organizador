@@ -42,7 +42,7 @@
             <tbody>
                 <tr th:each="actividad : ${actividades}">
                     <td th:text="${actividad.nombre}"></td>
-                    <td></td>
+                    <td th:text="${actividad.instructor.nombre} + ' ' + ${actividad.instructor.apellido}"></td>
                     <td></td>
                     <td>
                     </td>
