@@ -101,7 +101,7 @@ Estilo para los botones de acción rápida
     transition: 0.2s ease;
 }
 /* Por defecto los botones de acciones están ocultos */
-.btn-editar,
+
 .btn-eliminar,
 .btn-ver {
     visibility: hidden;
@@ -134,6 +134,12 @@ body.modo-eliminar-activo .btn-modo-eliminar {
 .btn-action:hover {
     transform: translateY(-2px);
     transition: 0.2s ease;
+}
+body.modo-eliminar-activo .btn-editar {
+    pointer-events: none;   
+    opacity: 0;         
+    cursor: not-allowed;
+    position: absolute;
 }
 
 /* TABLAS */

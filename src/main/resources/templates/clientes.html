@@ -6,10 +6,10 @@
         <h4 class="section-title mb-0">Clientes</h4>
 
         <div class="ms-auto d-flex gap-2">
-            <button class="btn btn-outline-secondary btn-sm btn-modo-editar"
+            <!-- <button class="btn btn-outline-secondary btn-sm btn-modo-editar"
                     onclick="toggleModoEditar()">
                 Editar
-            </button>
+            </button> -->
 
             <button class="btn btn-outline-danger btn-sm btn-modo-eliminar"
                     onclick="toggleModoEliminar()">
@@ -82,39 +82,27 @@
                             <span th:if="${cliente.adeuda()}" class="badge bg-danger">Adeuda</span>
                             <span th:if="${!cliente.adeuda()}" class="badge bg-success">Al día</span>
                         </td>
-<td class="text-center">
-    <button type="button"
-        class="btn btn-sm btn-outline-primary btn-ver"
-        th:attr="
-            data-nombre=${cliente.nombre},
-            data-apellido=${cliente.apellido},
-            data-dni=${cliente.dni},
-            data-telefono=${cliente.telefono}
-        "
-        onclick="abrirPanelVerCliente(this)">
-    <i class="bi bi-eye"></i>
-</button>
-    <!-- Editar -->
-     
-    <button type="button"
-            class="btn btn-sm btn-outline-secondary btn-editar"
-            th:attr="data-id=${cliente.idCliente}, 
-                     data-nombre=${cliente.nombre}, 
-                     data-apellido=${cliente.apellido},
-                     data-dni=${cliente.dni}, 
-                     data-telefono=${cliente.telefono}"
-            onclick="abrirPanelEditarCliente(this)">
-        <i class="bi bi-pencil"></i>
-    </button>
+                        <td>
+                            <!-- Editar -->
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-secondary btn-editar"
+                                    th:attr="data-id=${cliente.idCliente}, 
+                                            data-nombre=${cliente.nombre}, 
+                                            data-apellido=${cliente.apellido},
+                                            data-dni=${cliente.dni}, 
+                                            data-telefono=${cliente.telefono}"
+                                    onclick="abrirPanelEditarCliente(this)">
+                                <i class="bi bi-pencil"></i>
+                            </button>
 
-    <!-- Eliminar -->
-    <button type="button"
-            class="btn btn-sm btn-outline-danger btn-eliminar"
-            th:attr="data-id=${cliente.idCliente}, data-nombre=${cliente.nombre}"
-            onclick="abrirPanelEliminarCliente(this)">
-        <i class="bi bi-x"></i>
-    </button>
-</td>
+                            <!-- Eliminar -->
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-danger btn-eliminar"
+                                    th:attr="data-id=${cliente.idCliente}, data-nombre=${cliente.nombre}"
+                                    onclick="abrirPanelEliminarCliente(this)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
 
                     </tr>
                 </tbody>

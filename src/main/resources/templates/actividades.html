@@ -5,12 +5,11 @@
         <h4 class="section-title mb-0">Actividades</h4>
 
         <div class="ms-auto d-flex gap-2">
-            <button class="btn btn-outline-secondary btn-sm">
-                Editar
+            <button class="btn btn-outline-danger btn-sm btn-modo-eliminar"
+                    onclick="toggleModoEliminar()">
+                Eliminar
             </button>
-            <button class="btn btn-outline-danger btn-sm">
-                - Eliminar
-            </button>
+
             <button class="btn btn-outline-success btn-sm" onclick="abrirPanelActividad()">
                 + Nueva actividad
             </button>
@@ -37,6 +36,8 @@
                     <th>Instructor</th>
                     <th>Días</th>
                     <th>Horario</th>
+                    <th class="text-center" style="width: 120px;">Acciones</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -44,7 +45,20 @@
                     <td th:text="${actividad.nombre}"></td>
                     <td th:text="${actividad.instructor.nombre} + ' ' + ${actividad.instructor.apellido}"></td>
                     <td></td>
+                    <td></td>
                     <td>
+                        <button type="button"
+                                class="btn btn-sm btn-outline-secondary btn-editar"
+                                onclick="abrirPanelEditarCliente(this)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+
+                        <!-- Eliminar -->
+                        <button type="button"
+                                class="btn btn-sm btn-outline-danger btn-eliminar"
+                                onclick="abrirPanelEliminarCliente(this)">
+                            <i class="bi bi-trash"></i>
+                        </button>
                     </td>
                 </tr>
             </tbody>

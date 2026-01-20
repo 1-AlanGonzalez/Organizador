@@ -176,3 +176,4 @@ function toggleModoEliminar() {
     body.classList.toggle("modo-eliminar-activo");
 }
 
+
