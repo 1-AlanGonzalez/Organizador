@@ -82,10 +82,11 @@
                             <span th:if="${cliente.adeuda()}" class="badge bg-danger">Adeuda</span>
                             <span th:if="${!cliente.adeuda()}" class="badge bg-success">Al día</span>
                         </td>
-                        <td>
+                    <td class="text-center">
+                        <div class="acciones-td">
                             <!-- Editar -->
                             <button type="button"
-                                    class="btn btn-sm btn-outline-secondary btn-editar"
+                                    class="btn btn-sm btn-outline-secondary btn-editar" 
                                     th:attr="data-id=${cliente.idCliente}, 
                                             data-nombre=${cliente.nombre}, 
                                             data-apellido=${cliente.apellido},
@@ -97,12 +98,13 @@
 
                             <!-- Eliminar -->
                             <button type="button"
-                                    class="btn btn-sm btn-outline-danger btn-eliminar"
+                                    class="btn btn-sm btn-outline-danger btn-eliminar position-absolute"
                                     th:attr="data-id=${cliente.idCliente}, data-nombre=${cliente.nombre}"
                                     onclick="abrirPanelEliminarCliente(this)">
                                 <i class="bi bi-trash"></i>
                             </button>
-                        </td>
+                        </div>
+                    </td>
 
                     </tr>
                 </tbody>

@@ -102,8 +102,7 @@ Estilo para los botones de acción rápida
 }
 /* Por defecto los botones de acciones están ocultos */
 
-.btn-eliminar,
-.btn-ver {
+.btn-eliminar {
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
@@ -112,17 +111,19 @@ Estilo para los botones de acción rápida
 }
 
 /* Cuando se activa el modo editar/acciones, se muestran */
-body.modo-editar .btn-editar,
-body.modo-eliminar-activo .btn-eliminar,
-body.modo-ver .btn-ver {
+
+body.modo-eliminar-activo .btn-eliminar {
     visibility: visible;
     opacity: 1;
     pointer-events: auto;
 }
-body.modo-editar .btn-modo-editar {
-    background-color: #e5e7eb;
-    border-color: #9ca3af;
+
+.acciones-td {
+    display: grid;
+    place-items: center; 
 }
+
+
 .d-none {
     display: none !important;
 }
@@ -139,7 +140,6 @@ body.modo-eliminar-activo .btn-editar {
     pointer-events: none;   
     opacity: 0;         
     cursor: not-allowed;
-    position: absolute;
 }
 
 /* TABLAS */
@@ -236,10 +236,7 @@ Panel de clientes
     margin-bottom: 15px;
 }
 
-/* 
-
-
-*/
+/*
 
 /* Fondo oscuro */
 .panel-overlay {
@@ -271,31 +268,6 @@ Panel de clientes
     }
 }
 
-
-/* ===============================
-   MODO ELIMINAR CLIENTES
-   =============================== */
-
-.modo-eliminar {
-    display: none;
-}
-
-body.modo-eliminar-activo .modo-eliminar {
-    display: inline-block;
-}
-
-body.modo-eliminar-activo .modo-normal {
-    display: none;
-}
-
-/* Feedback visual */
-body.modo-eliminar-activo table tr {
-    background-color: #fff5f5;
-}
-
-body.modo-eliminar-activo table tr:hover {
-    background-color: #ffe3e3;
-}
 
 
 /* RESPONSIVE */
