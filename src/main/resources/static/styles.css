@@ -33,6 +33,8 @@ main {
 .sidebar {
     width: 240px;
     background-color: var(--sidebar-bg);
+    height: 100vh;  
+    position: sticky;    
 }
 /* 
 Estilos para los enlaces de navegación en el sidebar

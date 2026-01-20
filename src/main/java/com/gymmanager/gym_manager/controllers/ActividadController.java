@@ -7,19 +7,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gymmanager.gym_manager.entity.Actividad;
-
+import com.gymmanager.gym_manager.entity.Instructor;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
+import com.gymmanager.gym_manager.repository.InstructorRepository;
 
 @Controller
 @RequestMapping("/actividades")
 public class ActividadController {
 
     private ActividadRepository actividadRepository;
+    private InstructorRepository instructorRepository;
 
     public ActividadController(ActividadRepository actividadRepository) {
         this.actividadRepository = actividadRepository;
+        
     }
 
     @GetMapping
@@ -38,11 +42,28 @@ public class ActividadController {
         return "layouts/main";
     }
 
+    // @PostMapping("/guardar")
+    // public String guardadActividad(@ModelAttribute Actividad actividad) {
+    //     actividadRepository.save(actividad);
+    //     return "redirect:/actividades";
+    // }
+
     @PostMapping("/guardar")
-    public String guardadActividad(@ModelAttribute Actividad actividad) {
-        actividadRepository.save(actividad);
-        return "redirect:/actividades";
-    }
+        public String guardarActividad(
+                @ModelAttribute Actividad actividad,
+                @RequestParam(required = false) Long instructorId
+        ) {
+            if (instructorId != null) {
+                Instructor instructor = instructorRepository
+                        .findById(instructorId)
+                        .orElseThrow(() -> new RuntimeException("Instructor no encontrado"));
+
+                actividad.setInstructor(instructor); 
+            }
+
+            actividadRepository.save(actividad);
+            return "redirect:/actividades";
+        }
 
     // Vista para el selector de actividades del cliente:
     // @GetMapping

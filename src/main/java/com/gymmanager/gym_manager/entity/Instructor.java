@@ -9,10 +9,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+// import jakarta.persistence.JoinColumn;
+// import jakarta.persistence.JoinTable;
+// import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -39,17 +39,12 @@ public class Instructor {
     // private Actividad actividad;
 
     // Muchos a muchos entre instructor y actividad
-    @ManyToMany
-    @JoinTable(
-        name = "INSTRUCTOR_ACTIVIDAD",
-        joinColumns = @JoinColumn(name = "ID_INSTRUCTOR"),
-        inverseJoinColumns = @JoinColumn(name = "ID_ACTIVIDAD")
-    )
+    @OneToMany(mappedBy = "instructor")
     private Set<Actividad> actividades = new HashSet<>();
-    
 
-public Instructor() {
-    }
+
+    public Instructor() {
+        }
 
     public Instructor(String nombre, String apellido, String dni, String telefono) {
         this.nombre = nombre;

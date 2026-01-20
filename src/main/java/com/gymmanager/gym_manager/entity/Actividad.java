@@ -34,7 +34,7 @@ public class Actividad {
     private BigDecimal precio;
 
     @ManyToOne
-    @JoinColumn(name = "ID_INSTRUCTOR")
+    @JoinColumn(name = "ID_INSTRUCTOR", nullable = true)
     private Instructor instructor;
 
     private Integer cuposActuales = 0;
@@ -86,6 +86,12 @@ public class Actividad {
         this.precio = precio;
     }
 
+    public Instructor getInstructor() {
+        return instructor;
+    }
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
     /* ================== LÓGICA DE ACTIVIDAD ================== */
 
     public void aumentoDeCuposActuales(){

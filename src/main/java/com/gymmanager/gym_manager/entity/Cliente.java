@@ -1,7 +1,7 @@
 package com.gymmanager.gym_manager.entity;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
+// import java.util.HashSet;
 import java.util.Set;
 
 
@@ -28,8 +28,12 @@ public class Cliente {
     @Column(name = "TELEFONO", nullable = false, length = 20)
     private String telefono;
 
-    @OneToMany
-    private Set<ActividadCliente> inscripciones = new HashSet<>();
+    // @OneToMany
+    // private Set<ActividadCliente> inscripciones = new HashSet<>();
+    // MappedBy: El atributo en la clase ActividadCliente que posee la referencia al cliente
+    // CascadeType.ALL: Si se elimina un cliente, se eliminan todas sus inscripciones
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private Set<ActividadCliente> inscripciones;
 
     public Cliente() {}
 

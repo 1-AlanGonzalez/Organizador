@@ -3,23 +3,25 @@ package com.gymmanager.gym_manager.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.gymmanager.gym_manager.repository.ClienteRepository;
+
 import org.springframework.ui.Model;
 
 @Controller
 public class DashboardController {
 
-    //  Importo el controlador de clientes para poder utilizar la función que cree "cantidadTotal()"
-    private final ClientesController clientesController;
+    // Inyectamos el repositorio de Cliente para obtener el total de clientes
+    private final ClienteRepository clienteRepository;
 
-    public DashboardController(ClientesController clientesController) {
-        this.clientesController = clientesController;
+    public DashboardController(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
     }
 
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
 
         // Total de clientes
-        model.addAttribute("totalClientes", clientesController.cantidadTotal());
+        model.addAttribute("totalClientes", clienteRepository.count());
 
 
         model.addAttribute("title", "Gym Manager | Inicio");

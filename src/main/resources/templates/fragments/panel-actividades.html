@@ -35,15 +35,18 @@
                            placeholder="Ej: 15000"
                            required>
                 </div>
-
-                <!-- <div class="mb-4">
+                <!-- Seleccionar instructor -->
+                <div class="mb-4">
                     <label class="form-label">Instructor</label>
-                    <input type="text"
-                           th:field="*{telefono}"
-                           class="form-control"
-                           placeholder="Ingrese el nombre del instructor"
-                           required>
-                </div> -->
+                    <select name="instructorId" class="form-select" required>
+                        <option value="" disabled selected>Seleccionar instructor</option>
+                        <option th:each="instr : ${instructores}"
+                                th:value="${instr.idInstructor}"
+                                th:text="${instr.nombre} + ' ' + ${instr.apellido}">
+                        </option>
+                    </select>
+                </div>
+
 
                 <div class="d-flex justify-content-end gap-2">
                     <a th:href="@{/actividades}" class="btn btn-outline-secondary">
