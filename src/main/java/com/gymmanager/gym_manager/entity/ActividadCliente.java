@@ -11,6 +11,8 @@ import java.util.Set;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,6 +35,10 @@ public class ActividadCliente {
     
     @Column(name = "COSTO", nullable = false)
     private BigDecimal costo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ESTADO", nullable = false)
+    private EstadoInscripcion estado = EstadoInscripcion.ACTIVA;
     
     @ManyToOne
     @JoinColumn(name = "id_cliente", nullable = false)
@@ -99,7 +105,22 @@ public class ActividadCliente {
         this.actividad = actividad;
     }
 
+    public EstadoInscripcion getEstado(){
+        return estado;
+    }
+
     /* ================== LÓGICA DE ACTIVIDADCLIENTE ================== */
+
+    public void activar(){
+        estado = EstadoInscripcion.ACTIVA;
+    }
+
+    public void darseDeBaja(){
+        if(this.estado == EstadoInscripcion.BAJA){
+        throw new RuntimeException("La inscripción ya está dada de baja");
+        }
+        this.estado = EstadoInscripcion.BAJA;
+    }
 
     /* El nucleo central de todo va a ser esta entidad */
     /* Aca vamos a guardar las asistencias, los pagos y demas */
@@ -113,6 +134,10 @@ public class ActividadCliente {
     /* asistencias por mes,porcentaje de asistencia, faltas consecutivas (a charlar para saber si lo agregamos) */
 
     public void tomarAsistencia(LocalDate fecha, Boolean presente){
+        if (estado == EstadoInscripcion.BAJA) {
+            throw new RuntimeException("No se puede tomar asistencia a una inscripción dada de baja");
+        }
+
         Asistencia asistencia = new Asistencia(fecha,presente,this);
         asistencias.add(asistencia);
     }
@@ -124,6 +149,10 @@ public class ActividadCliente {
     }
 
     public Pago generarPagoMensual(){
+        if (estado == EstadoInscripcion.BAJA) {
+            throw new RuntimeException("No se pueden generar pagos para una inscripción dada de baja");
+        }
+
         Boolean existePagoActivo = pagos.stream().anyMatch(p->p.getEstado() == EstadoPago.ADEUDA && !p.estaVencido());
         if(existePagoActivo){
             throw new RuntimeException("Ya existe un pago activo para esta inscripcion");
@@ -150,7 +179,7 @@ public class ActividadCliente {
     }
 
     public void pagarElMes(Pago pago){
-        if(pagos.contains(pago)){
+        if(!pagos.contains(pago)){
             throw new RuntimeException("El pago no pertenece a esta inscripción");
         }
         pago.pagar();

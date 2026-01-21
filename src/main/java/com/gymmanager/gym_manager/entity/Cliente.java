@@ -100,7 +100,7 @@ public class Cliente {
             throw new RuntimeException("La inscripcion que quiere darse de baja no esta en sus actividades");
         }
 
-        inscripciones.remove(inscripcion);    
+        inscripcion.darseDeBaja(); 
     }
 
     public boolean adeuda() {
