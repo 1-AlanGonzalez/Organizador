@@ -3,6 +3,8 @@ package com.gymmanager.gym_manager.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,17 +23,14 @@ public class Pago {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idPago;
 
-    @Column(name = "MES", nullable = false)
-    private int mes;
-
-    @Column(name = "ANIO", nullable = false)
-    private int anio;
-
     @Column(name = "FECHA_GENERACION", nullable = false)
     private LocalDate fechaGeneracion;
 
-    @Column(name = "ESTADO", nullable = false)
+    @Column(name = "FECHA_VENCIMIENTO", nullable = false)
+    private LocalDate fechaVencimiento;
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "ESTADO", nullable = false)
     private EstadoPago estado;
 
     @Column(name = "MONTO_A_PAGAR", nullable = false)
@@ -43,16 +42,19 @@ public class Pago {
 
     public Pago() {}
 
-    public Pago(int mes, int anio, BigDecimal monto, ActividadCliente actividadCliente) {
-        this.mes = mes;
-        this.anio = anio;
-        this.montoAPagar = monto;
-        this.estado = EstadoPago.ADEUDA;
+    public Pago(BigDecimal montoAPagar, ActividadCliente actividadCliente) {
         this.fechaGeneracion = LocalDate.now();
+        this.fechaVencimiento = this.fechaGeneracion.plusMonths(1);
+        this.estado = EstadoPago.ADEUDA;
+        this.montoAPagar = montoAPagar;
         this.actividadCliente = actividadCliente;
     }
 
+
+
     /* ================== Getters y Setters ================== */
+
+    
 
     public LocalDate getFechaGeneracion() {
         return fechaGeneracion;
@@ -78,26 +80,24 @@ public class Pago {
         this.montoAPagar = montoAPagar;
     }
 
-    
-    public int getMes() {
-            return mes;
-        }
+    public LocalDate getFechaVencimiento() {
+        return fechaVencimiento;
+    }
 
-    public void setMes(int mes) {
-            this.mes = mes;
-        }
-
-    public int getAnio() {
-            return anio;
-        }
-
-    public void setAnio(int anio) {
-            this.anio = anio;
-        }
+    public void setFechaVencimiento(LocalDate fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
 
     /* ================== LÓGICA DEL PAGO ================== */
 
+    /* Aca se pregunta si la fecha de hoy es igual a la fecha de vencimiento o un dia despues */
 
+    
+
+    public Boolean estaVencido(){
+        LocalDate hoy = LocalDate.now();
+        return estado == EstadoPago.ADEUDA && ( hoy.isEqual(fechaVencimiento) || hoy.isAfter(fechaVencimiento)) ;  
+    }
     
 
     public void pagar(){
