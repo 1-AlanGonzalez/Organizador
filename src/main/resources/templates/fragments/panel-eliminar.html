@@ -1,23 +1,23 @@
-<div th:fragment="panelEliminarCliente">
+<div th:fragment="panelEliminar">
 
     <div class="card custom-card" style="max-width: 450px;">
         <div class="card-body">
 
             <h4 class="text-danger mb-3">
-                Eliminar cliente
+                Eliminar
             </h4>
 
             <p>
-                ¿Seguro que querés eliminar a
-                <strong id="nombreClienteEliminar"></strong>?
+                ¿Seguro que querés eliminar
+                <strong id="nombreEliminar"></strong>?
             </p>
 
-            <form id="formEliminarCliente" method="post">
+            <form id="formEliminar" method="post">
                 <div class="d-flex justify-content-end gap-2 mt-4">
 
                     <button type="button"
                             class="btn btn-outline-secondary"
-                            onclick="cerrarPanelEliminarCliente()">
+                            onclick="cerrarPanelEliminar()">
                         Cancelar
                     </button>
 

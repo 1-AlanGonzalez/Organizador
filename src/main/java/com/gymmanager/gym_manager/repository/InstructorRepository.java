@@ -6,4 +6,5 @@ import com.gymmanager.gym_manager.entity.Instructor;
 
 public interface InstructorRepository extends JpaRepository<Instructor, Long> {
     boolean existsByDni(String dni);
+    // void deleteById(Integer id);
 }

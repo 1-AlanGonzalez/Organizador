@@ -1,0 +1,26 @@
+
+<div th:fragment="accionesBotones(
+        id,
+        nombre,
+        tipo,
+        onEditar,
+        onEliminar
+    )">
+
+    <div class="acciones-td">
+        <!-- Editar -->
+        <button type="button"
+                class="btn btn-sm btn-outline-secondary btn-editar"
+                th:attr="data-id=${id}, data-nombre=${nombre}"
+                th:onclick="${onEditar}">
+            <i class="bi bi-pencil"></i>
+        </button>
+
+        <!-- Eliminar -->
+        <button type="button"
+                class="btn btn-sm btn-outline-danger btn-eliminar"
+                th:attr="data-id=${id}, data-nombre=${nombre}"
+                th:onclick="${onEliminar}">
+            <i class="bi bi-trash"></i>
+        </button>
+    </div>

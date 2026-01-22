@@ -77,55 +77,35 @@ document.getElementById("filtroClientes").addEventListener("keyup", function () 
     });
 });
 
-
-// Eliminar clientes
-
-// Alternar modo eliminar:
-// Muestra u oculta la columna de acciones de eliminar
-function abrirPanelEliminarCliente(btn) {   
-    // Guardo en una constante la ID que guardé en el botón (data-id... y data-nombre..)
+// Función para abrir el panel de eliminar Cliente, activida e instructor.
+function abrirPanelEliminar(btn) {
+    // Guardo en una constante la ID de la entidad
+    // y el nombre que vienen en los data-attributes
+    // la url que guardo es la base para el action del form
     const id = btn.dataset.id;
     const nombre = btn.dataset.nombre;
+    const url = btn.dataset.url;
 
-    
-    document.getElementById('nombreClienteEliminar').innerText = nombre;
+    // Imprimo en la pantalla el nombre de la entidad a eliminar
+    document.getElementById("nombreEliminar").innerText = nombre;
 
-    const form = document.getElementById('formEliminarCliente');
-    form.action = `/clientes/eliminar/${id}`;
+    // Configuro el action del form de eliminación
+    // El action es la url base + la id de la entidad
+    const form = document.getElementById("formEliminar");
+    form.action = `${url}/${id}`;
 
+    // Abro el panel de eliminación eliminando con bootstrap la clase d-none
     document
-        .getElementById('panelEliminarClienteOverlay')
-        .classList.remove('d-none');
+        .getElementById("panelEliminarOverlay")
+        .classList.remove("d-none");
 }
 
-function cerrarPanelEliminarCliente() {
+// Función para cerrar el panel de eliminar Cliente, actividad e instructor.
+function cerrarPanelEliminar() {
+    // Con bootstrap añado la clase d-none para ocultar el panel
     document
-        .getElementById('panelEliminarClienteOverlay')
-        .classList.add('d-none');
-}
-
-
-// Errores de inscripción a actividades
-// function errorActividadYaRegistrada(actividad) {
-    
-// }
-
-
-// Sidebar toggle
-function toggleSidebar() {
-    const sidebar = document.querySelector(".sidebar");
-    const overlay = document.getElementById("sidebarOverlay");
-
-    sidebar.classList.toggle("show");
-    overlay.classList.toggle("show");
-}
-
-function closeSidebar() {
-    const sidebar = document.querySelector(".sidebar");
-    const overlay = document.getElementById("sidebarOverlay");
-
-    sidebar.classList.remove("show");
-    overlay.classList.remove("show");
+        .getElementById("panelEliminarOverlay")
+        .classList.add("d-none");
 }
 
 
@@ -156,6 +136,26 @@ function abrirPanelEditarCliente(btn) {
     form.querySelector("input[name='telefono']").value = btn.dataset.telefono || "";
 }
 
+
+
+// Funciones de modo editar y eliminar
+// Sidebar toggle
+function toggleSidebar() {
+    const sidebar = document.querySelector(".sidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    sidebar.classList.toggle("show");
+    overlay.classList.toggle("show");
+}
+
+function closeSidebar() {
+    const sidebar = document.querySelector(".sidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    sidebar.classList.remove("show");
+    overlay.classList.remove("show");
+}
+
 function toggleModoEditar() {
     const body = document.body;
 
@@ -175,5 +175,9 @@ function toggleModoEliminar() {
     // Alternamos eliminar
     body.classList.toggle("modo-eliminar-activo");
 }
+
+
+
+
 
 

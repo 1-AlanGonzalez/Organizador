@@ -49,21 +49,33 @@
                     <td>
                         <button type="button"
                                 class="btn btn-sm btn-outline-secondary btn-editar"
-                                onclick="abrirPanelEditarCliente(this)">
+                                onclick="abrirPanelEditarActividad(this)">
                             <i class="bi bi-pencil"></i>
                         </button>
 
                         <!-- Eliminar -->
                         <button type="button"
                                 class="btn btn-sm btn-outline-danger btn-eliminar"
-                                onclick="abrirPanelEliminarCliente(this)">
+                                th:attr="
+                                    data-id=${actividad.idActividad},
+                                    data-nombre=${actividad.nombre},
+                                    data-url='/actividades/eliminar'"
+                                onclick="abrirPanelEliminar(this)">
                             <i class="bi bi-trash"></i>
                         </button>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <div id="panelEliminarOverlay"
+            class="panel-overlay d-none"
+            onclick="cerrarPanelEliminar()">
 
+            <div class="panel-container"
+                onclick="event.stopPropagation()"
+                th:insert="fragments/panel-eliminar :: panelEliminar">
+            </div>
+        </div>
     </div>
 
 </div>

@@ -98,9 +98,12 @@
 
                             <!-- Eliminar -->
                             <button type="button"
-                                    class="btn btn-sm btn-outline-danger btn-eliminar position-absolute"
-                                    th:attr="data-id=${cliente.idCliente}, data-nombre=${cliente.nombre}"
-                                    onclick="abrirPanelEliminarCliente(this)">
+                                    class="btn btn-sm btn-outline-danger btn-eliminar"
+                                    th:attr="
+                                        data-id=${cliente.idCliente},
+                                        data-nombre=${cliente.nombre},
+                                        data-url='/clientes/eliminar'"
+                                    onclick="abrirPanelEliminar(this)">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
@@ -108,13 +111,22 @@
 
                     </tr>
                 </tbody>
-                <div id="panelEliminarClienteOverlay"
+                <!-- <div id="panelEliminarClienteOverlay"
                     class="panel-overlay d-none"
                     onclick="cerrarPanelEliminarCliente()">
 
                     <div class="panel-container"
                         onclick="event.stopPropagation()"
                         th:insert="~{fragments/eliminar-cliente :: panelEliminarCliente}">
+                    </div>
+                </div> -->
+                <div id="panelEliminarOverlay"
+                    class="panel-overlay d-none"
+                    onclick="cerrarPanelEliminar()">
+
+                    <div class="panel-container"
+                        onclick="event.stopPropagation()"
+                        th:insert="fragments/panel-eliminar :: panelEliminar">
                     </div>
                 </div>
             </table>
