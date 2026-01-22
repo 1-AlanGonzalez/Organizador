@@ -1,6 +1,5 @@
 package com.gymmanager.gym_manager.controllers;
 
-import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gymmanager.gym_manager.entity.Instructor;
@@ -48,45 +46,60 @@ public class InstructorController {
     }
     // Guardar instructor
 
-    @PostMapping("/guardar")
+  @PostMapping("/guardar")
     public String guardarInstructor(
             @ModelAttribute Instructor instructor,
-            @RequestParam(required = false) List<Long> actividadIds,
             Model model,
             RedirectAttributes redirectAttributes) {
 
         try {
-            if (instructorRepository.existsByDni(instructor.getDni())) {
-                // ERROR: No redireccionamos. Cargamos el modelo y devolvemos la vista.
+            boolean dniExiste = instructorRepository.existsByDni(instructor.getDni());
+
+            if (instructor.getIdInstructor() == null && dniExiste) {
                 prepararModelo(model);
-                model.addAttribute("error", "El DNI ya está registrado para otro instructor.");
-                model.addAttribute("abrirPanel", true); 
-                return "layouts/main"; 
+                model.addAttribute("error", "El DNI ya está registrado.");
+                model.addAttribute("abrirPanel", true);
+                return "layouts/main";
             }
 
-            instructorRepository.save(instructor);
-            
-            // ÉXITO: Aquí sí redireccionamos para limpiar el formulario y refrescar la tabla.
-            redirectAttributes.addFlashAttribute("success", "Instructor guardado con éxito.");
+            instructorRepository.save(instructor); // CREA o EDITA
+
+            redirectAttributes.addFlashAttribute("success", "Instructor guardado con éxito");
             return "redirect:/instructores";
 
         } catch (Exception e) {
             prepararModelo(model);
-            model.addAttribute("error", "Error inesperado: " + e.getMessage());
-            model.addAttribute("abrirPanelInstructor", true);
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("abrirPanel", true);
             return "layouts/main";
         }
     }
     // EndPoint para eliminar instructor
-    // @PostMapping("/eliminar/{id}")
-    // public String eliminarInstructor(
-    //         @PathVariable Integer id,
-    //         RedirectAttributes redirectAttributes) {
+    // Eliminar instructor
+@PostMapping("/eliminar/{id}")
+public String eliminarInstructor(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+// Buscar el instructor por ID
+    Instructor instructor = instructorRepository.findById(id).orElse(null);
 
-    //     instructorRepository.deleteById(id);
-    //     redirectAttributes.addFlashAttribute("success", "Instructor eliminado con éxito");
-    //     return "redirect:/instructores";
-    // }
+    // Verificar si el instructor existe
+    if (instructor == null) {
+        redirectAttributes.addFlashAttribute("error", "Instructor no encontrado.");
+        return "redirect:/instructores";
+    }
+    // Verificar si el instructor tiene actividades asignadas
+    // Si tiene actividades, no permitir la eliminación
+    if (!instructor.getActividades().isEmpty()) {
+        redirectAttributes.addFlashAttribute(
+            "error",
+            "No se puede eliminar el instructor porque tiene actividades asignadas."
+        );
+        return "redirect:/instructores";
+    }
+    // Eliminar el instructor
+    instructorRepository.delete(instructor);
+    redirectAttributes.addFlashAttribute("success", "Instructor eliminado correctamente.");
+    return "redirect:/instructores";
+}
     
     private void prepararModelo(Model model) {
         model.addAttribute("instructores", instructorRepository.findAll());

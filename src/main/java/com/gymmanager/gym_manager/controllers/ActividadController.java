@@ -53,7 +53,7 @@ public class ActividadController {
         public String guardarActividad(
             // Para guardar la actividad junto con el instructor seleccionado
                 @ModelAttribute Actividad actividad,
-                @RequestParam(required = false) Long instructorId
+                @RequestParam(required = false) Integer instructorId
         ) {
             // Si se seleccionó un instructor, lo buscamos y lo asignamos a la actividad
             if (instructorId != null) {

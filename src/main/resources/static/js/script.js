@@ -77,27 +77,24 @@ document.getElementById("filtroClientes").addEventListener("keyup", function () 
     });
 });
 
-// Función para abrir el panel de eliminar Cliente, activida e instructor.
 function abrirPanelEliminar(btn) {
-    // Guardo en una constante la ID de la entidad
-    // y el nombre que vienen en los data-attributes
-    // la url que guardo es la base para el action del form
     const id = btn.dataset.id;
     const nombre = btn.dataset.nombre;
     const url = btn.dataset.url;
+    const nombreEliminar = document.getElementById("nombreEliminar");
+    if (nombreEliminar) {
+        nombreEliminar.innerText = nombre;
+    }
 
-    // Imprimo en la pantalla el nombre de la entidad a eliminar
-    document.getElementById("nombreEliminar").innerText = nombre;
-
-    // Configuro el action del form de eliminación
-    // El action es la url base + la id de la entidad
     const form = document.getElementById("formEliminar");
-    form.action = `${url}/${id}`;
+    if (form) {
+        form.action = `${url}/${id}`;
+    }
 
-    // Abro el panel de eliminación eliminando con bootstrap la clase d-none
-    document
-        .getElementById("panelEliminarOverlay")
-        .classList.remove("d-none");
+    const panel = document.getElementById("panelEliminarOverlay");
+    if (panel) {
+        panel.classList.remove("d-none");
+    }
 }
 
 // Función para cerrar el panel de eliminar Cliente, actividad e instructor.
@@ -135,7 +132,27 @@ function abrirPanelEditarCliente(btn) {
     form.querySelector("input[name='dni']").value = btn.dataset.dni || "";
     form.querySelector("input[name='telefono']").value = btn.dataset.telefono || "";
 }
+// Editar instructor
 
+function abrirPanelEditarInstructor(btn) {
+    // Abrir el overlay del panel de instructor
+    // Rellenar el formulario con los datos del instructor
+    const overlay = document.getElementById("panelOverlayInstructor");
+    const form = overlay.querySelector("form");
+
+    // Abrimos el panel eliminando la clase d-none
+    overlay.classList.remove("d-none");
+
+    // Cambiar el título y el texto del botón submit
+    document.getElementById("panelInstructorTitulo").innerText = "Editar Instructor";
+    form.querySelector("button[type='submit']").innerText = "Guardar cambios";
+    // Rellenar los campos del formulario
+    form.querySelector("input[name='idInstructor']").value = btn.dataset.id;
+    form.querySelector("input[name='nombre']").value = btn.dataset.nombre;
+    form.querySelector("input[name='apellido']").value = btn.dataset.apellido;
+    form.querySelector("input[name='dni']").value = btn.dataset.dni;
+    form.querySelector("input[name='telefono']").value = btn.dataset.telefono;
+}
 
 
 // Funciones de modo editar y eliminar

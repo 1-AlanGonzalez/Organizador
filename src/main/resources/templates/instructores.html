@@ -7,7 +7,8 @@
 
         <div class="ms-auto d-flex gap-2">
 
-            <button class="btn btn-outline-danger btn-sm" onclick="toggleModoEliminarInstructor()">
+            <button class="btn btn-outline-danger btn-sm btn-modo-eliminar"
+                    onclick="toggleModoEliminar()">
                 Eliminar
             </button>
             <button class="btn btn-outline-success btn-sm" onclick="abrirPanelInstructor()">
@@ -65,7 +66,7 @@
                         <td class="text-center">
                             <!-- Editar -->
                             <button type="button"
-                                    class="btn btn-sm btn-outline-secondary btn-editar"
+                                    class="btn btn-sm btn-outline-secondary btn-editar position-absolute"
                                     th:attr="
                                         data-id=${instructor.idInstructor},
                                         data-nombre=${instructor.nombre},
@@ -78,7 +79,7 @@
 
                             <!-- Eliminar -->
                             <button type="button"
-                                    class="btn btn-sm btn-outline-danger"
+                                    class="btn btn-sm btn-outline-danger btn-eliminar"
                                     th:attr="
                                         data-id=${instructor.idInstructor},
                                         data-nombre=${instructor.nombre},
@@ -88,19 +89,19 @@
                             </button>
                         </td>
                     </tr>
+                    <div id="panelEliminarOverlay"
+                        class="panel-overlay d-none"
+                        onclick="cerrarPanelEliminar()">
+                    
+                        <div class="panel-container"
+                            onclick="event.stopPropagation()"
+                            th:insert="fragments/panel-eliminar :: panelEliminar">
+                        </div>
+                    </div>
                 </tbody>
 
             </table>
         </div>
     </div>
 
-</div>
-<div id="panelEliminarOverlay"
-     class="panel-overlay d-none"
-     onclick="cerrarPanelEliminar()">
-
-    <div class="panel-container"
-         onclick="event.stopPropagation()"
-         th:insert="fragments/panel-eliminar :: panelEliminar">
-    </div>
 </div>

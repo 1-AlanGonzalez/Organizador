@@ -86,7 +86,7 @@
                         <div class="acciones-td">
                             <!-- Editar -->
                             <button type="button"
-                                    class="btn btn-sm btn-outline-secondary btn-editar" 
+                                    class="btn btn-sm btn-outline-secondary btn-editar position-absolute" 
                                     th:attr="data-id=${cliente.idCliente}, 
                                             data-nombre=${cliente.nombre}, 
                                             data-apellido=${cliente.apellido},
@@ -111,15 +111,7 @@
 
                     </tr>
                 </tbody>
-                <!-- <div id="panelEliminarClienteOverlay"
-                    class="panel-overlay d-none"
-                    onclick="cerrarPanelEliminarCliente()">
 
-                    <div class="panel-container"
-                        onclick="event.stopPropagation()"
-                        th:insert="~{fragments/eliminar-cliente :: panelEliminarCliente}">
-                    </div>
-                </div> -->
                 <div id="panelEliminarOverlay"
                     class="panel-overlay d-none"
                     onclick="cerrarPanelEliminar()">

@@ -6,11 +6,15 @@
     <div class="card custom-card" style="max-width: 500px;">
         <div class="card-body">
 
-            <h4 class="section-title mb-4">Nuevo Instructor</h4>
+            <h4 id="panelInstructorTitulo" class="section-title mb-4">Nuevo Instructor</h4>
 
             <form th:action="@{/instructores/guardar}"
                   th:object="${instructor}"
                   method="post">
+                  <!-- 
+                    Campo oculto para el ID del instructor (en caso de edición)
+                  -->
+            <input type="hidden" th:field="*{idInstructor}">
 
                 <div class="mb-3">
                     <label class="form-label">Nombre</label>

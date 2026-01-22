@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.gymmanager.gym_manager.entity.Instructor;
 
-public interface InstructorRepository extends JpaRepository<Instructor, Long> {
+public interface InstructorRepository extends JpaRepository<Instructor, Integer> {
     boolean existsByDni(String dni);
-    // void deleteById(Integer id);
 }
