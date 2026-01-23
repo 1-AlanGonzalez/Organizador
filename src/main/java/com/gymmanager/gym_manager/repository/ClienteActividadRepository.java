@@ -30,6 +30,9 @@ public interface ClienteActividadRepository extends JpaRepository<ActividadClien
 
     Optional<ActividadCliente> findByClienteAndActividadAndEstado(Cliente cliente, Actividad actividad, EstadoInscripcion estado);
 
+
+
+
 }
 
 
