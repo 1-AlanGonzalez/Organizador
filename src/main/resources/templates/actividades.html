@@ -50,17 +50,23 @@
                     <td>20:00 - 21:00</td>
                     <td>
                         <div class="text-center">
-                                <button type="button"
-                                class="btn btn-sm btn-outline-secondary btn-editar position-absolute"
-                                onclick="abrirPanelEditarActividad(this)">
-                                <i class="bi bi-pencil"></i>
-                            </button>
+<button type="button"
+        class="btn btn-sm btn-outline-secondary btn-editar"
+        th:attr="data-id=${actividad.idActividad}, 
+                 data-nombre=${actividad.nombre}, 
+                 data-cupo-maximo=${actividad.cupoMaximo}, 
+                 data-precio=${actividad.precio}"
+        onclick="abrirPanelEditarActividad(this)">
+    <i class="bi bi-pencil"></i>
+</button>
                         <!-- Eliminar -->
                             <button type="button"
                             class="btn btn-sm btn-outline-danger btn-eliminar"
                             th:attr="
                             data-id=${actividad.idActividad},
                             data-nombre=${actividad.nombre},
+                            data-cupoMaximo=${actividad.cupoMaximo},
+                            data-precio=${actividad.precio},
                             data-url='/actividades/eliminar'"
                                     onclick="abrirPanelEliminar(this)">
                                     <i class="bi bi-trash"></i>
@@ -69,12 +75,7 @@
                     </td>
                 </tr>
             </tbody>
-        </table>
-
-    </div>
-
-</div>
-        <div id="panelEliminarOverlay"
+                    <div id="panelEliminarOverlay"
             class="panel-overlay d-none"
             onclick="cerrarPanelEliminar()">
 
@@ -83,3 +84,8 @@
                 th:insert="fragments/panel-eliminar :: panelEliminar">
             </div>
         </div>
+        </table>
+
+    </div>
+
+</div>

@@ -68,15 +68,6 @@ public class ActividadController {
             return "redirect:/actividades";
         }
 
-    // Vista para el selector de actividades del cliente:
-    // @GetMapping
-    // public String vista(Model model) {
-
-    //     model.addAttribute("actividades", actividadRepository.findAll());
-    //     model.addAttribute("cliente", new Cliente());
-
-    //     return "layouts/main";
-    // }
 }
 
 

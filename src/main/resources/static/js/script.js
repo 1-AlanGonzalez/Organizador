@@ -153,7 +153,21 @@ function abrirPanelEditarInstructor(btn) {
     form.querySelector("input[name='dni']").value = btn.dataset.dni;
     form.querySelector("input[name='telefono']").value = btn.dataset.telefono;
 }
+function abrirPanelEditarActividad(btn) {
+    const overlay = document.getElementById("panelOverlayActividad");
+    const form = overlay.querySelector("form");
+    
+    overlay.classList.remove("d-none");
+    document.getElementById("panelActividadTitulo").innerText = "Editar Actividad";
+    form.querySelector("button[type='submit']").innerText = "Guardar cambios";
 
+    // Rellenar campos
+    form.querySelector("input[name='idActividad']").value = btn.dataset.id;
+    form.querySelector("input[name='nombre']").value = btn.dataset.nombre;
+    form.querySelector("input[name='cupoMaximo']").value = btn.dataset.cupoMaximo;
+    form.querySelector("input[name='precio']").value = btn.dataset.precio;
+
+}
 
 // Funciones de modo editar y eliminar
 // Sidebar toggle
