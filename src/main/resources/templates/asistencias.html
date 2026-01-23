@@ -7,14 +7,21 @@
         <div class="ms-auto">
                 <button class="btn btn-outline-success btn-sm" onclick="abrirPanelAsistencia()">
                 Tomar asistencia
-            </button>
+                </button>
         </div>
     </div>
 
-    <!-- Filtros -->
-    <div class="d-flex gap-3 mb-3" style="max-width: 500px;">
+    <div class="d-flex gap-3 mb-3">
         <input type="date" class="form-control form-control-sm">
         <input type="text" class="form-control form-control-sm" placeholder="Buscar alumno">
+        <select name="actividades" class="form-select" required>
+            
+            <option value="" disabled selected>Filtrar por actividad</option>
+            <option th:each="actividad : ${actividades}"
+                    th:value="${actividad.idInstructor}"
+                    th:text="${actividad.Nombre}">
+            </option>
+        </select>
     </div>
 
 
@@ -42,20 +49,31 @@
                 </tr>
             </thead>
 
-            <tbody>
-                <tr>
-                    <td>Alan</td>
-                    <td>Gym</td>
-                    <td>12/01/2026</td>
-                    <td class="text-success">Presente</td>
+            <!-- Tabla de asistencias por día -->
+             <!-- Clientes que existen en la DB -->
+                <tbody>
+                <tr th:each="cliente : ${clientes}">
+                    <td th:text="${cliente.nombre} + ' ' + ${cliente.apellido}"></td>
+                    <td>
+                        <select name="actividad" class="form-select form-select-sm">
+                            <option value="" disabled selected>Seleccionar actividad</option>
+                            <option th:each="actividad : ${actividades}"
+                                    th:value="${actividad.idActividad}"
+                                    th:text="${actividad.nombre}">
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="date" name="fecha" class="form-control form-control-sm" th:value="${#dates.format(today, 'yyyy-MM-dd')}">
+                    </td>
+                    <td>
+                        <select name="estado" class="form-select form-select-sm">
+                            <option value="PRESENTE">Presente</option>
+                            <option value="AUSENTE" selected>Ausente</option>
+                        </select>
+                    </td>
                 </tr>
-                <tr>
-                    <td>Jonathan</td>
-                    <td>Boxeo</td>
-                    <td>12/01/2026</td>
-                    <td class="text-danger">Ausente</td>
-                </tr>
-            </tbody>
+                </tbody>
         </table>
 
     </div>

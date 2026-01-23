@@ -62,26 +62,33 @@
 
                 <tbody>
                     <tr th:each="cliente : ${clientes}">
-                        
-                        <td th:text="${cliente.nombre}">
-                        </td>
-                        <td th:text="${cliente.apellido}"> 
-                        </td>
-                        <!-- <td th:text="${cliente.dni}"> -->
-                        </td>
-                        <!-- <td th:text="${cliente.telefono}"> -->
-                        </td>
-                        <!-- actividad.. -->
-                        <td >
-                        </td>
-                        <td>
-                            fecha...
-                        </td>
-                        <!-- para el estado usar la funcion Adeuda() -->
+                        <td th:text="${cliente.nombre}"></td>
+                        <td th:text="${cliente.apellido}"></td>
+                        <td></td>
+                        <td></td>
+                        <!-- Actividades -->
+                        <!-- <td>
+                        <ul class="list-unstyled mb-0">
+                            <li th:each="inscripcion : ${cliente.inscripciones}" 
+                                th:text="${inscripcion.actividad.nombre}"></li>
+                        </ul>
+                        </td> -->
+
+                        <!-- Fecha del último pago -->
+                    <!-- <td>
+                    <ul class="list-unstyled mb-0">
+                        <li th:each="inscripcion : ${cliente.inscripciones}" 
+                            th:text="${#dates.format(inscripcion.pagos.stream().max(T(java.util.Comparator)).orElse(null)?.fechaGeneracion, 'dd/MM/yyyy')}">
+                        </li>
+                    </ul>
+                    </td> -->
+
+                        <!-- Estado -->
                         <td class="text-center">
-                            <span th:if="${cliente.adeuda()}" class="badge bg-danger">Adeuda</span>
-                            <span th:if="${!cliente.adeuda()}" class="badge bg-success">Al día</span>
+                        <span th:if="${cliente.adeuda()}" class="badge bg-danger">Adeuda</span>
+                        <span th:if="${!cliente.adeuda()}" class="badge bg-success">Al día</span>
                         </td>
+                        
                     <td class="text-center">
                         <div class="acciones-td">
                             <!-- Editar -->

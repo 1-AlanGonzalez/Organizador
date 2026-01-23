@@ -3,6 +3,7 @@ package com.gymmanager.gym_manager.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -184,5 +185,11 @@ public class ActividadCliente {
         }
         pago.pagar();
     }
-
+    // Obtiene la fecha del último pago realizado
+    public LocalDate getFechaUltimoPago() {
+    return pagos.stream()
+                .max(Comparator.comparing(Pago::getFechaGeneracion))
+                .map(Pago::getFechaGeneracion)
+                .orElse(null); // si no tiene pagos devuelve null
+}
 }

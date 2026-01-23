@@ -49,7 +49,8 @@
                            required>
                 </div>
 
-                <select name="idActividad" class="form-select">
+                <label class="form-label">Actividad</label>
+                <select name="idActividad" class="form-select mb-4">
                 <!-- Actividad -->
                     <option value="">Seleccionar actividad</option>
                     <option th:each="act : ${actividades}"
