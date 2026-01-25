@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import com.gymmanager.gym_manager.entity.Actividad;
-import com.gymmanager.gym_manager.entity.Instructor;
+
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.InstructorRepository;
 
@@ -48,7 +48,7 @@ public class ActividadController {
     //     actividadRepository.save(actividad);
     //     return "redirect:/actividades";
     // }
-
+    /* 
     @PostMapping("/guardar")
         public String guardarActividad(
             // Para guardar la actividad junto con el instructor seleccionado
@@ -67,6 +67,12 @@ public class ActividadController {
             actividadRepository.save(actividad);
             return "redirect:/actividades";
         }
+        */
+    @PostMapping("/guardar")
+    public String guardarActividad(@ModelAttribute Actividad actividad) {
+        actividadRepository.save(actividad);
+        return "redirect:/actividades";
+    }
 
 }
 

@@ -9,10 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 
 @Entity
@@ -33,13 +31,9 @@ public class Actividad {
     @Column(name = "PRECIO", nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_INSTRUCTOR", nullable = true)
-    private Instructor instructor;
+    @OneToMany(mappedBy = "actividad")
+    private Set<Dicta> dictados = new HashSet<>();
 
-    private Integer cuposActuales = 0;
-    @Transient
-    private Set<Dicta> dictados = new HashSet<>(); /* Esta mal la notacion es para cambiar luego */
 
     public Actividad() {
     }
@@ -86,24 +80,9 @@ public class Actividad {
         this.precio = precio;
     }
 
-    public Instructor getInstructor() {
-        return instructor;
-    }
-    public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
-    }
+    
     /* ================== LÓGICA DE ACTIVIDAD ================== */
 
-    public void aumentoDeCuposActuales(){
-        if(cuposActuales > cupoMaximo){
-            throw new RuntimeException("El cupo de la actividad esta lleno");
-        }
-
-        cuposActuales+=1;
-    }
-
-    public void liberacionDeCuposActuales(){
-        cuposActuales-=1;
-    }
+   
 }
 

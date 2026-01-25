@@ -21,10 +21,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 
 @Entity
-@Table(name = "ACTIVIDAD_CLIENTE")
+@Table(
+    name = "ACTIVIDAD_CLIENTE",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"ID_CLIENTE", "ID_ACTIVIDAD"})
+    }
+)
 public class ActividadCliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

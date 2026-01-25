@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gymmanager.gym_manager.entity.Instructor;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
+import com.gymmanager.gym_manager.repository.DictaRepository;
 import com.gymmanager.gym_manager.repository.InstructorRepository;
 
 
@@ -23,9 +25,16 @@ public class InstructorController {
     // Importo actividad para poder darle una o más al instructor al crearlo
     private final ActividadRepository actividadRepository;
 
-    public InstructorController(InstructorRepository instructorRepository, ActividadRepository actividadRepository) {
+    private final DictaRepository dictaRepository; /* Esto nuevo */
+
+    public InstructorController(
+            InstructorRepository instructorRepository,
+            ActividadRepository actividadRepository,
+            DictaRepository dictaRepository) {
+
         this.instructorRepository = instructorRepository;
         this.actividadRepository = actividadRepository;
+        this.dictaRepository = dictaRepository;
     }
 
 
@@ -33,10 +42,10 @@ public class InstructorController {
     public String instructores(Model model) {
         model.addAttribute("instructores", instructorRepository.findAll());
         model.addAttribute("actividades", actividadRepository.findAll()); 
-        
+        model.addAttribute("instructor", new Instructor());
+
         model.addAttribute("title", "Gym Manager | Instructores");
         model.addAttribute("header", "Panel de control / Instructores");
-        model.addAttribute("instructor", new Instructor());
         model.addAttribute("vista", "instructores");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active", "instructores");
@@ -45,7 +54,7 @@ public class InstructorController {
         return "layouts/main";
     }
     // Guardar instructor
-
+/* 
   @PostMapping("/guardar")
     public String guardarInstructor(
             @ModelAttribute Instructor instructor,
@@ -111,4 +120,54 @@ public String eliminarInstructor(@PathVariable Integer id, RedirectAttributes re
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active", "instructores");
     }
+        */
+
+    @PostMapping("/guardar")
+    public String guardarInstructor(
+        @ModelAttribute Instructor instructor,
+        RedirectAttributes redirectAttributes) {
+
+    boolean dniExiste = instructorRepository.existsByDni(instructor.getDni());
+
+    if (instructor.getIdInstructor() == null && dniExiste) {
+        redirectAttributes.addFlashAttribute("error", "El DNI ya está registrado.");
+        return "redirect:/instructores";
+    }
+
+    instructorRepository.save(instructor);
+    redirectAttributes.addFlashAttribute("success", "Instructor guardado con éxito");
+    return "redirect:/instructores";
+    }
+
+
+    @PostMapping("/eliminar/{id}")
+    public String eliminarInstructor(
+        @PathVariable Integer id,
+        RedirectAttributes redirectAttributes) {
+
+    Instructor instructor = instructorRepository.findById(id).orElse(null);
+
+    if (instructor == null) {
+        redirectAttributes.addFlashAttribute("error", "Instructor no encontrado.");
+        return "redirect:/instructores";
+    }
+
+    // ✔ la relación real está en Dicta
+    if (dictaRepository.existsByInstructor(instructor)) {
+        redirectAttributes.addFlashAttribute(
+            "error",
+            "No se puede eliminar el instructor porque tiene actividades asignadas."
+        );
+        return "redirect:/instructores";
+    }
+
+    instructorRepository.delete(instructor);
+    redirectAttributes.addFlashAttribute(
+        "success",
+        "Instructor eliminado correctamente."
+    );
+
+    return "redirect:/instructores";
 }
+} 
+

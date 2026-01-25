@@ -40,8 +40,7 @@ public class Instructor {
 
     // Muchos a muchos entre instructor y actividad
     @OneToMany(mappedBy = "instructor")
-    private Set<Actividad> actividades = new HashSet<>();
-
+    private Set<Dicta> dictados = new HashSet<>();
 
     public Instructor() {
         }
@@ -92,13 +91,7 @@ public class Instructor {
         this.telefono = telefono;
     }
 
-    public Set<Actividad> getActividades() {
-        return actividades;
-    }
-
-    public void setActividades(Set<Actividad> actividades) {
-        this.actividades = actividades;
-    }
+    
 
     
 }
