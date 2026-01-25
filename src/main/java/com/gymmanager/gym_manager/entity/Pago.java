@@ -109,5 +109,7 @@ public class Pago {
     
     }
 
+    /* Pagos de mas de un mes o año */
+
 
 }

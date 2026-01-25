@@ -92,6 +92,7 @@ public class Cliente {
 
     public void agregarInscripcion(ActividadCliente inscripcion){
         inscripciones.add(inscripcion);
+        inscripcion.activar();
         inscripcion.setCliente(this);
     }
 
