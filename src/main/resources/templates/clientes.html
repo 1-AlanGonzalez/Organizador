@@ -64,24 +64,14 @@
                     <tr th:each="cliente : ${clientes}">
                         <td th:text="${cliente.nombre}"></td>
                         <td th:text="${cliente.apellido}"></td>
-                        <td></td>
-                        <td></td>
-                        <!-- Actividades -->
-                        <!-- <td>
-                        <ul class="list-unstyled mb-0">
-                            <li th:each="inscripcion : ${cliente.inscripciones}" 
-                                th:text="${inscripcion.actividad.nombre}"></li>
+                        <td>
+                        <!-- <ul class="list-unstyled mb-0">
+                            <li th:each="inscripcion : ${cliente.inscripciones}"
+                                th:text="${inscripcion.actividad.nombre}">
+                            </li>
                         </ul>
                         </td> -->
 
-                        <!-- Fecha del último pago -->
-                    <!-- <td>
-                    <ul class="list-unstyled mb-0">
-                        <li th:each="inscripcion : ${cliente.inscripciones}" 
-                            th:text="${#dates.format(inscripcion.pagos.stream().max(T(java.util.Comparator)).orElse(null)?.fechaGeneracion, 'dd/MM/yyyy')}">
-                        </li>
-                    </ul>
-                    </td> -->
 
                         <!-- Estado -->
                         <td class="text-center">
@@ -119,16 +109,16 @@
                     </tr>
                 </tbody>
 
-                <div id="panelEliminarOverlay"
-                    class="panel-overlay d-none"
-                    onclick="cerrarPanelEliminar()">
-
-                    <div class="panel-container"
-                        onclick="event.stopPropagation()"
-                        th:insert="fragments/panel-eliminar :: panelEliminar">
-                    </div>
-                </div>
             </table>
+            <div id="panelEliminarOverlay"
+                class="panel-overlay d-none"
+                onclick="cerrarPanelEliminar()">
+
+                <div class="panel-container"
+                    onclick="event.stopPropagation()"
+                    th:insert="fragments/panel-eliminar :: panelEliminar">
+                </div>
+            </div>
         </div>
     </div>
 
