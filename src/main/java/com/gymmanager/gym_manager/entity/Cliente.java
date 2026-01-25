@@ -2,7 +2,6 @@ package com.gymmanager.gym_manager.entity;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-// import java.util.HashSet;
 import java.util.Set;
 
 
@@ -31,8 +30,8 @@ public class Cliente {
 
     
     // Relación con ActividadCliente
-
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    // orphanRemoval=true significa que si se elimina la inscripcion del cliente, se elimina de la base de datos
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ActividadCliente> inscripciones = new HashSet<>();
 
     public Cliente() {}
@@ -62,7 +61,12 @@ public class Cliente {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
+    public Set<ActividadCliente> getInscripciones() {
+        return inscripciones;
+    }
+    public void setInscripciones(Set<ActividadCliente> inscripciones) {
+        this.inscripciones = inscripciones;
+    }
     public String getApellido() {
         return apellido;
     }
@@ -105,6 +109,10 @@ public class Cliente {
     }
 
     public boolean adeuda() {
+        // Agrego un IF para evitar un NullPointerException (Error al intentar usar un stream en una lista nula)
+        if (inscripciones == null || inscripciones.isEmpty()) {
+        return false;
+    }       
         return inscripciones.stream().anyMatch(i -> i.tieneAdeudaVencida());
     }
 

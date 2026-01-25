@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +32,11 @@ public class Actividad {
     @Column(name = "PRECIO", nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
 
-    @OneToMany(mappedBy = "actividad")
+    @OneToMany(
+        mappedBy = "actividad",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
     private Set<Dicta> dictados = new HashSet<>();
 
 
@@ -47,6 +52,15 @@ public class Actividad {
 
     /* ================== Getters y Setters ================== */
 
+    public void agregarDictado(Dicta dicta) {
+    dictados.add(dicta);
+    dicta.setActividad(this);
+    }
+
+    public void quitarDictado(Dicta dicta) {
+        dictados.remove(dicta);
+        dicta.setActividad(null);
+    }
 
     public Integer getIdActividad() {
         return idActividad;
@@ -79,7 +93,12 @@ public class Actividad {
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
     }
-
+    public Set<Dicta> getDictados() {
+        return dictados;
+    }
+    public void setDictados(Set<Dicta> dictados) {
+        this.dictados = dictados;
+    }
     
     /* ================== LÓGICA DE ACTIVIDAD ================== */
 

@@ -14,7 +14,7 @@ import jakarta.persistence.UniqueConstraint;
 @Table(
     name = "INSTRUCTOR_ACTIVIDAD",
     uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"id_actividad", "id_instructor"})
+        @UniqueConstraint(columnNames = {"ID_ACTIVIDAD", "ID_INSTRUCTOR"})
     }
 )
 public class Dicta {
@@ -80,8 +80,10 @@ public class Dicta {
         this.horario = horario;
     }
     
-
-    
+    public Integer getIdInstructorActividad() {
+        return idInstructorActividad;
+    }
+        
 }
 
 

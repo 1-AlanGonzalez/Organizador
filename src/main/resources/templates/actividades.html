@@ -44,10 +44,20 @@
             <tbody>
                 <tr th:each="actividad : ${actividades}">
                     <td th:text="${actividad.nombre}"></td>
-                    <td th:text="${actividad.instructor.nombre} + ' ' + ${actividad.instructor.apellido}"></td>
-                    <td>33/40</td>
-                    <td>Lun - Vie</td>
-                    <td>20:00 - 21:00</td>
+                    <td>
+                    <span th:each="d, iter : ${actividad.dictados}">
+                        <span th:text="${d.instructor.nombre + ' ' + d.instructor.apellido}"></span>
+                        <span th:if="${!iter.last}">, </span>
+                    </span>
+                    </td>   
+                    <td
+                        th:text="${#lists.size(actividad.dictados) + '/' + actividad.cupoMaximo}"
+                    ></td>
+                    <td
+                    ></td>
+                    <td
+                        
+                    ></td>
                     <td class="text-center">
                         <div class="acciones-td">
                         <button type="button"
@@ -75,17 +85,16 @@
                     </td>
                 </tr>
             </tbody>
-                    <div id="panelEliminarOverlay"
+        </table>
+        
+    </div>
+        <div id="panelEliminarOverlay"
             class="panel-overlay d-none"
             onclick="cerrarPanelEliminar()">
 
             <div class="panel-container"
-                onclick="event.stopPropagation()"
-                th:insert="fragments/panel-eliminar :: panelEliminar">
-            </div>
+            onclick="event.stopPropagation()"
+            th:insert="fragments/panel-eliminar :: panelEliminar">
         </div>
-        </table>
-
     </div>
-
 </div>

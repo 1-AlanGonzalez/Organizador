@@ -72,6 +72,18 @@ public class ActividadCliente {
 
     /* ================== Getters y Setters ================== */
 
+
+public void setEstado(EstadoInscripcion estado) {
+    this.estado = estado;
+}
+
+public Set<Pago> getPagos() {
+    return pagos;
+}
+
+public Set<Asistencia> getAsistencias() {
+    return asistencias;
+}
     public Integer getIdActividadCliente() {
         return idActividadCliente;
     }

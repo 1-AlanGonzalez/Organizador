@@ -25,12 +25,18 @@ html, body {
     margin: 0;
 }
 main {
+    flex-direction: column;
     display: flex;
+    min-width: 0; /* Evita desbordamientos por tablas */
     flex-direction: column;
 }
 
 /* Sidebar */
 .sidebar {
+    min-width: 240px;
+    top: 0;
+    z-index: 1000;
+
     width: 240px;
     background-color: var(--sidebar-bg);
     height: 100vh;  
@@ -117,7 +123,12 @@ body.modo-eliminar-activo .btn-eliminar {
     opacity: 1;
     pointer-events: auto;
 }
-
+/* Asegura que el wrapper ocupe todo el alto */
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+}
 .acciones-td {
     display: grid;
     place-items: center; 
@@ -228,14 +239,20 @@ Panel de clientes
 .panel-cliente {
     padding: 20px;
 }
-
+.contenido {
+    flex-grow: 1; /* Esto hace que el área de contenido llene el alto disponible */
+    display: flex;
+    flex-direction: column;
+}
 .panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
 }
-
+.contenido > div {
+    flex-grow: 1;
+}
 /*
 
 /* Fondo oscuro */
@@ -300,4 +317,33 @@ Panel de clientes
     .sidebar.show {
         left: 0;
     }
+}
+
+
+/* Actividades en clientes */
+.activities-container {
+    border: 1px solid #dee2e6;
+    transition: border-color 0.2s;
+}
+
+.activities-container:focus-within {
+    border-color: #0d6efd; /* Color azul al interactuar */
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.custom-checkbox .form-check-input {
+    cursor: pointer;
+    width: 1.2em;
+    height: 1.2em;
+}
+
+.custom-checkbox .form-check-label {
+    cursor: pointer;
+    padding-left: 5px;
+    color: #495057;
+}
+
+.custom-checkbox .form-check-input:checked {
+    background-color: var(--sidebar-bg); /* O el color principal de tu gym */
+    border-color: var(--sidebar-bg);
 }

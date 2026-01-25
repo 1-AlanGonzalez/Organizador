@@ -6,18 +6,14 @@
         <h4 class="section-title mb-0">Clientes</h4>
 
         <div class="ms-auto d-flex gap-2">
-            <!-- <button class="btn btn-outline-secondary btn-sm btn-modo-editar"
-                    onclick="toggleModoEditar()">
-                Editar
-            </button> -->
 
             <button class="btn btn-outline-danger btn-sm btn-modo-eliminar"
                     onclick="toggleModoEliminar()">
                 Eliminar
             </button>
-            <button class="btn btn-outline-success btn-sm" onclick="abrirPanelCliente()">
+            <a th:href="@{/clientes/nuevo}" class="btn btn-outline-success btn-sm">
                 + Añadir Cliente
-            </button>
+            </a>
         </div>
     </div>
 
@@ -31,17 +27,6 @@
             placeholder="Filtrar clientes">
     </div>
 
-    <!-- Panel añadir cliente -->
-        <div id="panelOverlay"
-            class="panel-overlay"
-            th:classappend="${abrirPanel} ? '' : 'd-none'"
-            onclick="cerrarPanelCliente()">
-
-            <div class="panel-container"
-                onclick="event.stopPropagation()"
-                th:insert="fragments/panel-cliente :: panelCliente">
-            </div>
-        </div>
 
     <!-- Tabla -->
     <div class="card custom-card">
@@ -65,33 +50,36 @@
                         <td th:text="${cliente.nombre}"></td>
                         <td th:text="${cliente.apellido}"></td>
                         <td>
-                        <!-- <ul class="list-unstyled mb-0">
-                            <li th:each="inscripcion : ${cliente.inscripciones}"
-                                th:text="${inscripcion.actividad.nombre}">
-                            </li>
-                        </ul>
-                        </td> -->
+                            <span th:text="${cliente.inscripciones != null ? 
+                            #strings.listJoin(cliente.inscripciones.![actividad.nombre], ', ') : ''}">
+                            </span>                       
+                        </td>
+                        <!-- Fecha -->
+                        <td>
+                            <!-- Itero en las inscripciones del cliente -->
+                        <div th:each="insc : ${cliente.inscripciones}">
+                            <span th:if="${insc.fechaUltimoPago != null}"
+                                    th:text="${#temporals.format(insc.fechaUltimoPago, 'dd/MM/yyyy')}">
+                            </span>
 
-
-                        <!-- Estado -->
-                        <td class="text-center">
-                        <span th:if="${cliente.adeuda()}" class="badge bg-danger">Adeuda</span>
-                        <span th:if="${!cliente.adeuda()}" class="badge bg-success">Al día</span>
+                            <span th:if="${insc.fechaUltimoPago == null}"
+                                    class="text-muted">
+                                Sin pagos
+                            </span>
+                        </div>
+                        </td>                        <!-- Estado -->
+                        <td>
+                            <span th:if="${cliente.adeuda()}" class="badge bg-danger">Adeuda</span>
+                            <span th:if="${!cliente.adeuda()}" class="badge bg-success">Al día</span>
                         </td>
                         
                     <td class="text-center">
                         <div class="acciones-td">
                             <!-- Editar -->
-                            <button type="button"
-                                    class="btn btn-sm btn-outline-secondary btn-editar position-absolute" 
-                                    th:attr="data-id=${cliente.idCliente}, 
-                                            data-nombre=${cliente.nombre}, 
-                                            data-apellido=${cliente.apellido},
-                                            data-dni=${cliente.dni}, 
-                                            data-telefono=${cliente.telefono}"
-                                    onclick="abrirPanelEditarCliente(this)">
-                                <i class="bi bi-pencil"></i>
-                            </button>
+<a th:href="@{/clientes/editar/{id}(id=${cliente.idCliente})}" 
+   class="btn btn-sm btn-outline-secondary btn-editar position-absolute">
+    <i class="bi bi-pencil"></i>
+</a>
 
                             <!-- Eliminar -->
                             <button type="button"

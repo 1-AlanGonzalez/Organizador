@@ -52,7 +52,23 @@
                         </option>
                     </select>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label">Días</label>
+                    <input type="text"
+                        name="dias"
+                        class="form-control"
+                        placeholder="Ej: Lun - Mié - Vie"
+                        required>
+                </div>
 
+                <div class="mb-3">
+                    <label class="form-label">Horario</label>
+                    <input type="text"
+                        name="horario"
+                        class="form-control"
+                        placeholder="Ej: 20:00 - 21:00"
+                        required>
+                </div>
 
                 <div class="d-flex justify-content-end gap-2">
                     <a th:href="@{/actividades}" class="btn btn-outline-secondary">

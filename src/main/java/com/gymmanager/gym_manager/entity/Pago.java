@@ -53,8 +53,20 @@ public class Pago {
 
 
     /* ================== Getters y Setters ================== */
+    public ActividadCliente getActividadCliente() {
+        return actividadCliente;
+    }
 
-    
+    public void setActividadCliente(ActividadCliente actividadCliente) {
+        this.actividadCliente = actividadCliente;
+    }
+    public Integer getIdPago() {
+    return idPago;
+    }
+
+    public void setIdPago(Integer idPago) {
+        this.idPago = idPago;
+    }
 
     public LocalDate getFechaGeneracion() {
         return fechaGeneracion;

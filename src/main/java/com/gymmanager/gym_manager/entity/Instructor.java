@@ -50,11 +50,13 @@ public class Instructor {
         this.apellido = apellido;
         this.dni = dni;
         this.telefono = telefono; }
-
+    
     public Integer getIdInstructor() {
         return idInstructor;
     }
-
+    public Set<Dicta> getDictados() {
+        return dictados;
+    }
     public void setIdInstructor(Integer idInstructor) {
         this.idInstructor = idInstructor;
     }

@@ -1,99 +1,76 @@
 <div th:fragment="panelCliente">
+    <div class="card custom-card w-100">
+        <div class="card-body p-4">
+            <h4 class="section-title mb-4" id="panelClienteTitulo" 
+                th:text="${cliente.idCliente != null} ? 'Editar Cliente' : 'Nuevo Cliente'">
+                Nuevo Cliente
+            </h4>
 
-    <div class="card custom-card" style="max-width: 500px;">
-        <div class="card-body">
-            <!-- Le agrego una id para que el texto cambie si presiona el botón de editar -->
-            <h4 class="section-title mb-4" id="panelClienteTitulo">Nuevo Cliente</h4>
+            <form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post">
+                <input type="hidden" th:field="*{idCliente}">
 
-            <form th:action="@{/clientes/guardar}"
-                  th:object="${cliente}"
-                  method="post">
-                    <!-- 
-                    Campo oculto para el id del cliente (necesario para editar)
-                    -->
-                  <input type="hidden" th:field="*{idCliente}">
+                <div class="row"> 
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ingrese el nombre" required>
+                    </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Nombre</label>
-                    <input type="text"
-                           th:field="*{nombre}"
-                           class="form-control"
-                           placeholder="Ingrese el nombre"
-                           required>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Apellido</label>
+                        <input type="text" th:field="*{apellido}" class="form-control" placeholder="Ingrese el apellido" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">DNI</label>
+                        <input type="text" th:field="*{dni}" class="form-control" placeholder="Ej: 40123456" required>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" th:field="*{telefono}" class="form-control" placeholder="Ej: 11 1234 5678" required>
+                    </div>
+
+<div class="col-md-6 mb-3">
+    <label class="form-label d-block">Actividades disponibles</label>
+    <div class="activities-container p-3 border rounded bg-white" style="max-height: 200px; overflow-y: auto;">
+        <div th:each="act : ${actividades}" class="form-check mb-2 custom-checkbox">
+            <input class="form-check-input" 
+                   type="checkbox" 
+                   name="idActividades" 
+                   th:value="${act.idActividad}" 
+                   th:id="'act_' + ${act.idActividad}"
+                   th:checked="${cliente.inscripciones != null and #lists.contains(cliente.inscripciones.![actividad.idActividad], act.idActividad)}">
+            <label class="form-check-label" th:for="'act_' + ${act.idActividad}">
+                <span th:text="${act.nombre}" class="fw-medium">Nombre de Actividad</span>
+            </label>
+        </div>
+    </div>
+</div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Fecha de último pago</label>
+                        <input type="date" name="fechaPago" class="form-control" required>
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Apellido</label>
-                    <input type="text"
-                           th:field="*{apellido}"
-                           class="form-control"
-                           placeholder="Ingrese el apellido"
-                           required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">DNI</label>
-                    <input type="text"
-                           th:field="*{dni}"
-                           class="form-control"
-                           placeholder="Ej: 40123456"
-                           required>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label">Teléfono</label>
-                    <input type="text"
-                           th:field="*{telefono}"
-                           class="form-control"
-                           placeholder="Ej: 11 1234 5678"
-                           required>
-                </div>
-
-                <label class="form-label">Actividades</label>
-                <select name="idActividades"
-                        class="form-select mb-4"
-                        multiple
-                        size="5">
-                        
-                    <option th:each="act : ${actividades}"
-                            th:value="${act.idActividad}"
-                            th:text="${act.nombre}">
-                    </option>
-                </select>
-
-                <div class="mb-3">
-                    <label class="form-label">Fecha de último pago</label>
-                    <input type="date"
-                        name="fechaPago"
-                        class="form-control"
-                        required>
-                </div>
-
-                <div id="alert-error" 
-                    th:classappend="${error == null} ? 'd-none' : ''" 
-                    class="alert alert-danger shadow-sm">
+                <div id="alert-error" th:classappend="${error == null} ? 'd-none' : ''" class="alert alert-danger shadow-sm mt-3">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
                     <span th:text="${error}"></span>
                 </div>
 
-                <div id="alert-success" 
-                    th:classappend="${success == null} ? 'd-none' : ''" 
-                    class="alert alert-success shadow-sm">
+                <div id="alert-success" th:classappend="${success == null} ? 'd-none' : ''" class="alert alert-success shadow-sm mt-3">
                     <i class="bi bi-check-circle-fill me-2"></i>
                     <span th:text="${success}"></span>
                 </div>
-                <div class="d-flex justify-content-end gap-2">
-                    <a th:href="@{/clientes}" class="btn btn-outline-secondary">
-                        Cancelar
-                    </a>
-                    <button type="submit" class="btn btn-action">
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a th:href="@{/clientes}" class="btn btn-outline-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary px-4" 
+                            th:text="${cliente.idCliente != null} ? 'Actualizar Cliente' : 'Guardar Cliente'">
                         Guardar Cliente
                     </button>
                 </div>
-
             </form>
-
         </div>
     </div>
-
 </div>
