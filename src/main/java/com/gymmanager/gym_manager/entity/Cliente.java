@@ -124,7 +124,5 @@ public class Cliente {
     public void pagarTodo(){
         inscripciones.stream().forEach(ActividadCliente::pagarTodo);
     }
-
-    
 }
 

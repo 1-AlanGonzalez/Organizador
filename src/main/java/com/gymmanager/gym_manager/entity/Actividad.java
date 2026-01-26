@@ -102,6 +102,8 @@ public class Actividad {
     
     /* ================== LÓGICA DE ACTIVIDAD ================== */
 
+
+    
    
 }
 

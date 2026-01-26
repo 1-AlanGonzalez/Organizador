@@ -36,66 +36,57 @@
                     <tr class="text-muted small text-uppercase">
                         <th>Nombre</th>
                         <th>Apellido</th>
-                        <!-- <th>DNI</th> -->
-                        <!-- <th>Tel.</th> -->
                         <th>Actividad</th>
                         <th>Fecha de pago</th>
-                        <th class="text-center">Estado</th>
-                        <th class="text-center" style="width: 120px;">Acciones</th>
+                        <th>Estado</th>
+                        <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
 
-                <tbody>
-                    <tr th:each="cliente : ${clientes}">
-                        <td th:text="${cliente.nombre}"></td>
-                        <td th:text="${cliente.apellido}"></td>
-                        <td>
-                            <span th:text="${cliente.inscripciones != null ? 
-                            #strings.listJoin(cliente.inscripciones.![actividad.nombre], ', ') : ''}">
-                            </span>                       
-                        </td>
-                        <!-- Fecha -->
-                        <td>
-                            <!-- Itero en las inscripciones del cliente -->
-                        <div th:each="insc : ${cliente.inscripciones}">
-                            <span th:if="${insc.fechaUltimoPago != null}"
-                                    th:text="${#temporals.format(insc.fechaUltimoPago, 'dd/MM/yyyy')}">
-                            </span>
+               <tbody>
+    <tr th:each="c : ${clientes}"> <td th:text="${c.nombre}" class="fw-medium"></td>
+        <td th:text="${c.apellido}"></td>
+        
+        <td>
+            <div class="d-flex flex-wrap gap-1">
+                <span th:each="insc : ${c.inscripciones}" 
+                      class="badge bg-light text-dark border small"
+                      th:text="${insc.actividad.nombre}">
+                </span>
+            </div>
+        </td>
 
-                            <span th:if="${insc.fechaUltimoPago == null}"
-                                    class="text-muted">
-                                Sin pagos
-                            </span>
-                        </div>
-                        </td>                        <!-- Estado -->
-                        <td>
-                            <span th:if="${cliente.adeuda()}" class="badge bg-danger">Adeuda</span>
-                            <span th:if="${!cliente.adeuda()}" class="badge bg-success">Al día</span>
-                        </td>
-                        
-                    <td class="text-center">
-                        <div class="acciones-td">
-                            <!-- Editar -->
-<a th:href="@{/clientes/editar/{id}(id=${cliente.idCliente})}" 
-   class="btn btn-sm btn-outline-secondary btn-editar position-absolute">
-    <i class="bi bi-pencil"></i>
-</a>
+        <td>
+                <div th:each="insc : ${c.inscripciones}">
+                    <span class="small text-secondary"
+                          th:if="${insc.fechaUltimoPago != null}"
+                          th:text="${#temporals.format(insc.fechaUltimoPago, 'dd/MM/yyyy')}">
+                    </span>
+                </div>
+        </td>
 
-                            <!-- Eliminar -->
-                            <button type="button"
-                                    class="btn btn-sm btn-outline-danger btn-eliminar"
-                                    th:attr="
-                                        data-id=${cliente.idCliente},
-                                        data-nombre=${cliente.nombre},
-                                        data-url='/clientes/eliminar'"
-                                    onclick="abrirPanelEliminar(this)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                    </td>
+        <td>
+            <span th:if="${c.adeuda()}" class="badge bg-danger-light text-danger">Adeuda</span>
+            <span th:if="${!c.adeuda()}" class="badge bg-success-light text-success">Al día</span>
+        </td>
 
-                    </tr>
-                </tbody>
+        <td >
+            <div class="d-flex align-items-center gap-2">
+                <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" 
+                   class="btn btn-sm btn-outline-primary btn-editar-row">
+                    <i class="bi bi-pencil"></i>
+                </a>
+
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger btn-eliminar"
+                        th:attr="data-id=${c.idCliente}, data-nombre=${c.nombre}"
+                        onclick="abrirPanelEliminar(this)">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+</tbody>
 
             </table>
             <div id="panelEliminarOverlay"

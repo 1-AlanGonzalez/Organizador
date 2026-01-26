@@ -30,22 +30,22 @@
                         <input type="text" th:field="*{telefono}" class="form-control" placeholder="Ej: 11 1234 5678" required>
                     </div>
 
-<div class="col-md-6 mb-3">
-    <label class="form-label d-block">Actividades disponibles</label>
-    <div class="activities-container p-3 border rounded bg-white" style="max-height: 200px; overflow-y: auto;">
-        <div th:each="act : ${actividades}" class="form-check mb-2 custom-checkbox">
-            <input class="form-check-input" 
-                   type="checkbox" 
-                   name="idActividades" 
-                   th:value="${act.idActividad}" 
-                   th:id="'act_' + ${act.idActividad}"
-                   th:checked="${cliente.inscripciones != null and #lists.contains(cliente.inscripciones.![actividad.idActividad], act.idActividad)}">
-            <label class="form-check-label" th:for="'act_' + ${act.idActividad}">
-                <span th:text="${act.nombre}" class="fw-medium">Nombre de Actividad</span>
-            </label>
-        </div>
-    </div>
-</div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label d-block">Actividades disponibles</label>
+                        <div class="activities-container p-3 border rounded bg-white" style="max-height: 200px; overflow-y: auto;">
+                            <div th:each="act : ${actividades}" class="form-check mb-2 custom-checkbox">
+                                <input class="form-check-input" 
+                                    type="checkbox" 
+                                    name="idActividades" 
+                                    th:value="${act.idActividad}" 
+                                    th:id="'act_' + ${act.idActividad}"
+                                    th:checked="${cliente.inscripciones != null and #lists.contains(cliente.inscripciones.![actividad.idActividad], act.idActividad)}">
+                                <label class="form-check-label" th:for="'act_' + ${act.idActividad}">
+                                    <span th:text="${act.nombre}" class="fw-medium">Nombre de Actividad</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Fecha de último pago</label>

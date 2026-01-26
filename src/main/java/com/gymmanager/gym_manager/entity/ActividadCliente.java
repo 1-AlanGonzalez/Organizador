@@ -36,7 +36,6 @@ public class ActividadCliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_ACTIVIDAD_CLIENTE")
     private Integer idActividadCliente;
-        
     @Column(name = "FECHA_DE_INSCRIPCION", nullable = false)
     private LocalDate fechaDeInscripcion;
     
@@ -48,7 +47,7 @@ public class ActividadCliente {
     private EstadoInscripcion estado = EstadoInscripcion.ACTIVA;
     
     @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
+    @JoinColumn(name = "ID_CLIENTE", nullable = false)
     private Cliente cliente;
     
     @ManyToOne

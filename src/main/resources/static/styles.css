@@ -113,6 +113,7 @@ Estilo para los botones de acción rápida
     opacity: 0;
     pointer-events: none;
     width: 32px;
+    display: none; /* Por defecto no ocupa espacio */
     height: 32px;
 }
 
@@ -121,6 +122,7 @@ Estilo para los botones de acción rápida
 body.modo-eliminar-activo .btn-eliminar {
     visibility: visible;
     opacity: 1;
+    display: inline-block; /* Aparece en modo eliminar */
     pointer-events: auto;
 }
 /* Asegura que el wrapper ocupe todo el alto */
@@ -152,7 +154,9 @@ body.modo-eliminar-activo .btn-editar {
     opacity: 0;         
     cursor: not-allowed;
 }
-
+body.modo-eliminar-activo .btn-editar-row {
+    display: none; /* Desaparece el editar para dejar lugar al tacho */
+}
 /* TABLAS */
 .table th {
     font-size: 0.75rem;
@@ -162,7 +166,8 @@ body.modo-eliminar-activo .btn-editar {
 }
 
 .table td {
-    font-size: 0.85rem;
+    vertical-align: middle;
+    height: 50px; /* Altura fija para que no salte al cambiar botones */
 }
 
 .table tbody tr:hover {
@@ -347,3 +352,7 @@ Panel de clientes
     background-color: var(--sidebar-bg); /* O el color principal de tu gym */
     border-color: var(--sidebar-bg);
 }
+
+/* colores */
+.bg-danger-light { background-color: #fee2e2; color: #dc2626; }
+.bg-success-light { background-color: #dcfce7; color: #16a34a; }
