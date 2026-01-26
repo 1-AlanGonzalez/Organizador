@@ -40,6 +40,11 @@ public class Pago {
     @JoinColumn(name = "ID_ACTIVIDAD_CLIENTE", nullable = false)
     private ActividadCliente actividadCliente;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "METODO_PAGO")
+    
+    private MetodoDePago metodoPago = MetodoDePago.NO_ESPECIFICADO;
+
     public Pago() {}
 
     public Pago(BigDecimal montoAPagar, ActividadCliente actividadCliente) {
