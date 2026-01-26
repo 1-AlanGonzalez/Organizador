@@ -1,6 +1,7 @@
 package com.gymmanager.gym_manager.controllers;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,12 @@ private final PagoRepository pagoRepository;
     model.addAttribute("ingresosEfectivo", efectivo != null ? efectivo : BigDecimal.ZERO);
     model.addAttribute("ingresosTransferencia", transferencia != null ? transferencia : BigDecimal.ZERO);
     model.addAttribute("ingresosPendientes", pendientes != null ? pendientes : BigDecimal.ZERO);
+    // Para gráfico
+
+    // Añade esto para que el gráfico no falle en la sección de Ingresos
+    model.addAttribute("datosGrafico", pagoRepository.obtenerIngresosMensuales());
+    model.addAttribute("categoriasGrafico", Arrays.asList("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"));
+    
     // Datos de diseño
         model.addAttribute("title", "Gym Manager | Ingresos");
         model.addAttribute("header", "Contabilidad / Resumen de Ingresos");
