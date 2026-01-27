@@ -166,7 +166,7 @@ public Set<Asistencia> getAsistencias() {
         return actividad.getPrecio();
     }
 
-    public Pago generarPagoMensual(){
+    public Pago generarPagoMensual(LocalDate fechaBase){
         if (estado == EstadoInscripcion.BAJA) {
             throw new RuntimeException("No se pueden generar pagos para una inscripción dada de baja");
         }
@@ -177,7 +177,7 @@ public Set<Asistencia> getAsistencias() {
         }
 
         BigDecimal monto = calcularMontoMensual();
-        Pago pago = new Pago(monto, this);
+        Pago pago = new Pago(monto,fechaBase,fechaBase.plusMonths(1), this);
         pagos.add(pago);
         return pago;
     }

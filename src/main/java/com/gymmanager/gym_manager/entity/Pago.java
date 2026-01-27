@@ -45,9 +45,9 @@ public class Pago {
 
     public Pago() {}
 
-    public Pago(BigDecimal montoAPagar, ActividadCliente actividadCliente) {
-        this.fechaGeneracion = LocalDate.now();
-        this.fechaVencimiento = this.fechaGeneracion.plusMonths(1);
+    public Pago(BigDecimal montoAPagar, LocalDate fechaGeneracion,LocalDate fechaVencimiento, ActividadCliente actividadCliente) {
+        this.fechaGeneracion = fechaGeneracion;
+        this.fechaVencimiento = fechaVencimiento;
         this.estado = EstadoPago.ADEUDA;
         this.montoAPagar = montoAPagar;
         this.actividadCliente = actividadCliente;

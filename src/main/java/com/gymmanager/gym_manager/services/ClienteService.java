@@ -1,5 +1,6 @@
 package com.gymmanager.gym_manager.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class ClienteService {
 
     /* Solo registra al cliente y valida si existe */
     @Transactional /* transactional quiere decir:Todo lo que pase acá adentro es una sola operación- Si algo falla, volvé todo atrás */
-    public Cliente registrarClienteEInscribir(Cliente cliente, List<Integer> idActividades){
+    public Cliente registrarClienteEInscribir(Cliente cliente, List<Integer> idActividades, LocalDate fechaInicio){
     Boolean yaEstaElDni = clienteRepository.existsByDni(cliente.getDni());
 
     if (yaEstaElDni) {
@@ -47,7 +48,7 @@ public class ClienteService {
         Actividad actividad = actividadRepository.findById(idActividad)
                 .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
 
-        actividadClienteService.inscribirCliente(clienteGuardado, actividad); 
+        actividadClienteService.inscribirCliente(clienteGuardado, actividad,fechaInicio); 
     }
 
         return clienteGuardado;

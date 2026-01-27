@@ -1,6 +1,7 @@
 package com.gymmanager.gym_manager.controllers;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -59,11 +60,12 @@ public class ClientesController {
             @ModelAttribute Cliente cliente, 
             // RequestParam para la actividad seleccionada
             @RequestParam(required = false) List<Integer> idActividades,
+            @RequestParam LocalDate fechaInicio,
             Model model, 
             RedirectAttributes redirectAttributes) {
             try {
 
-                clienteService.registrarClienteEInscribir(cliente, idActividades);
+                clienteService.registrarClienteEInscribir(cliente, idActividades,fechaInicio);
 
                 redirectAttributes.addFlashAttribute("success", "Cliente guardado con éxito.");
                 return "redirect:/clientes";
@@ -109,9 +111,9 @@ private void prepararModeloBase(Model model, String title, String header) {
     }
     // Listado de clientes con inscripciones y actividades
 
-// Añado la página para editar cliente
-@GetMapping("/nuevo")
-public String nuevoCliente(Model model) {
+    // Añado la página para editar cliente
+    @GetMapping("/nuevo")
+    public String nuevoCliente(Model model) {
     // Definimos qué queremos ver en el contenido principal
     model.addAttribute("vista", "fragments/panel-cliente");
     model.addAttribute("fragmento", "panelCliente");

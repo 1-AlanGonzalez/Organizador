@@ -44,7 +44,7 @@ public class ActividadClienteService {
         Si las validaciones pasan, se crea una nueva inscripción activa y la añade a el conjunto de inscripciones del cliente (entidad)
     */
 
-    public ActividadCliente inscribirCliente(Cliente cliente, Actividad actividad){
+    public ActividadCliente inscribirCliente(Cliente cliente, Actividad actividad, LocalDate fechaInicio){
         boolean yaEstaInscripto = actividadClienteRepository.existsByClienteAndActividadAndEstado(cliente, actividad, EstadoInscripcion.ACTIVA);
 
         if(yaEstaInscripto){
@@ -56,13 +56,13 @@ public class ActividadClienteService {
             throw new RuntimeException("No hay cupos disponibles para esta actividad");
         }
 
-        ActividadCliente inscripcion = new ActividadCliente(LocalDate.now(), actividad.getPrecio(), cliente, actividad);
+        ActividadCliente inscripcion = new ActividadCliente(fechaInicio, actividad.getPrecio(), cliente, actividad);
         
         cliente.agregarInscripcion(inscripcion); 
         
         /* bueno agregado, a la hora de que inscribe al cliente luego el flujo es que se genere el pago */
         
-        inscripcion.generarPagoMensual();
+        inscripcion.generarPagoMensual(fechaInicio);
         /* Si genero la inscripcion */        
 
         return actividadClienteRepository.save(inscripcion);
