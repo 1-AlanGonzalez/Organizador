@@ -8,7 +8,6 @@ import com.gymmanager.gym_manager.entity.Actividad;
 import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.EstadoInscripcion;
-import com.gymmanager.gym_manager.entity.Pago;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
 
 
@@ -63,12 +62,8 @@ public class ActividadClienteService {
         
         /* bueno agregado, a la hora de que inscribe al cliente luego el flujo es que se genere el pago */
         
-        Pago pago = inscripcion.generarPagoMensual();
-        /* Si genero la inscripcion y el pago es por que imaginariamente el cliente ya paso asi que pongo .pagar() para que el pago */
-        /* pase de adeuda a pagado automaticamente */
-        pago.pagar();
-
-        
+        inscripcion.generarPagoMensual();
+        /* Si genero la inscripcion */        
 
         return actividadClienteRepository.save(inscripcion);
     }

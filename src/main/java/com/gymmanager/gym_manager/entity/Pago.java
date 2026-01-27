@@ -3,8 +3,6 @@ package com.gymmanager.gym_manager.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,6 +19,7 @@ import jakarta.persistence.Table;
 public class Pago {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_PAGO")
     private Integer idPago;
 
     @Column(name = "FECHA_GENERACION", nullable = false)
@@ -30,7 +29,7 @@ public class Pago {
     private LocalDate fechaVencimiento;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "ESTADO", nullable = false)
+    @Column(name = "ESTADO_PAGO", nullable = false)
     private EstadoPago estado;
 
     @Column(name = "MONTO_A_PAGAR", nullable = false)
@@ -41,8 +40,7 @@ public class Pago {
     private ActividadCliente actividadCliente;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "METODO_PAGO")
-    
+    @Column(name = "METODO_PAGO", nullable = true)
     private MetodoDePago metodoPago = MetodoDePago.NO_ESPECIFICADO;
 
     public Pago() {}
@@ -53,32 +51,27 @@ public class Pago {
         this.estado = EstadoPago.ADEUDA;
         this.montoAPagar = montoAPagar;
         this.actividadCliente = actividadCliente;
+        this.metodoPago = MetodoDePago.NO_ESPECIFICADO;
     }
 
 
 
     /* ================== Getters y Setters ================== */
-    public ActividadCliente getActividadCliente() {
-        return actividadCliente;
-    }
-
-    public void setActividadCliente(ActividadCliente actividadCliente) {
-        this.actividadCliente = actividadCliente;
-    }
-    public Integer getIdPago() {
-    return idPago;
-    }
-
-    public void setIdPago(Integer idPago) {
-        this.idPago = idPago;
-    }
-
-    public LocalDate getFechaGeneracion() {
+   
+public LocalDate getFechaGeneracion() {
         return fechaGeneracion;
     }
 
     public void setFechaGeneracion(LocalDate fechaGeneracion) {
         this.fechaGeneracion = fechaGeneracion;
+    }
+
+    public LocalDate getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(LocalDate fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
     }
 
     public EstadoPago getEstado() {
@@ -97,14 +90,21 @@ public class Pago {
         this.montoAPagar = montoAPagar;
     }
 
-    public LocalDate getFechaVencimiento() {
-        return fechaVencimiento;
+    public ActividadCliente getActividadCliente() {
+        return actividadCliente;
     }
 
-    public void setFechaVencimiento(LocalDate fechaVencimiento) {
-        this.fechaVencimiento = fechaVencimiento;
+    public void setActividadCliente(ActividadCliente actividadCliente) {
+        this.actividadCliente = actividadCliente;
     }
 
+    public MetodoDePago getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void setMetodoPago(MetodoDePago metodoPago) {
+        this.metodoPago = metodoPago;
+    }
     /* ================== LÓGICA DEL PAGO ================== */
 
     /* Aca se pregunta si la fecha de hoy es igual a la fecha de vencimiento o un dia despues */
@@ -115,6 +115,8 @@ public class Pago {
         LocalDate hoy = LocalDate.now();
         return estado == EstadoPago.ADEUDA && ( hoy.isEqual(fechaVencimiento) || hoy.isAfter(fechaVencimiento)) ;  
     }
+    
+
     
 
     public void pagar(){
@@ -129,4 +131,10 @@ public class Pago {
     /* Pagos de mas de un mes o año */
 
 
+    public void aplicarRecargo(BigDecimal recargo){
+        if (recargo == null || recargo.compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("Recargo invalido");
+        }
+        this.montoAPagar = this.montoAPagar.add(recargo);
+    }
 }
