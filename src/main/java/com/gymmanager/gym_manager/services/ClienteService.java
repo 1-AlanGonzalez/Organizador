@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.gymmanager.gym_manager.entity.Actividad;
 import com.gymmanager.gym_manager.entity.Cliente;
+import com.gymmanager.gym_manager.entity.EstadoInscripcion;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
 
@@ -49,6 +50,20 @@ public class ClienteService {
         actividadClienteService.inscribirCliente(clienteGuardado, actividad); 
     }
 
-    return clienteGuardado;
-}
+        return clienteGuardado;
+    }
+
+    @Transactional
+    public void eliminarCliente(Integer idCliente) {
+        Cliente cliente = clienteRepository.findById(idCliente)
+            .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+        // Dar de baja todas las inscripciones activas
+        cliente.getInscripciones().forEach(inscripcion -> {
+            if (inscripcion.getEstado() == EstadoInscripcion.ACTIVA) {
+                inscripcion.darseDeBaja();
+            }
+        });
+    }
+
 }

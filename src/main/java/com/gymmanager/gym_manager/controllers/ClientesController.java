@@ -93,8 +93,14 @@ private void prepararModeloBase(Model model, String title, String header) {
 }
     // Eliminar cliente
     @PostMapping("/eliminar/{id}")
-    public String eliminarCliente(@PathVariable Integer id) {
-        clienteRepository.deleteById(id);
+    public String eliminarCliente(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+        clienteService.eliminarCliente(id);
+        redirectAttributes.addFlashAttribute("success", "Cliente dado de baja correctamente");
+        } catch (Exception e) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
         return "redirect:/clientes";
     }
 

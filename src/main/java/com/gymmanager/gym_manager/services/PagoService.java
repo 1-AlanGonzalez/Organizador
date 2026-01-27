@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.stereotype.Service;
 
 import com.gymmanager.gym_manager.entity.ConfiguracionDePago;
+import com.gymmanager.gym_manager.entity.EstadoPago;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.Pago;
 import com.gymmanager.gym_manager.repository.ConfiguracionPagoRepository;
@@ -31,6 +32,10 @@ public class PagoService {
         
         Pago pago = pagoRepository.findById(idPago).orElseThrow(() -> new RuntimeException("Pago no encontrado"));
 
+        if (pago.getEstado() == EstadoPago.PAGADO) {
+            throw new RuntimeException("Este pago ya fue pagado");
+        }
+
         BigDecimal recargo = pago.getMontoAPagar().multiply(config.getPorcentajeRecargo()).divide(BigDecimal.valueOf(100));
 
         pago.aplicarRecargo(recargo);
@@ -38,6 +43,8 @@ public class PagoService {
         pago.setMetodoPago(metodoDePago);
 
         pago.pagar();
+
+        pagoRepository.save(pago);
     }
     
 }

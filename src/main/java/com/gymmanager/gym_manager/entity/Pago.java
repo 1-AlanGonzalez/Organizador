@@ -58,7 +58,7 @@ public class Pago {
 
     /* ================== Getters y Setters ================== */
    
-public LocalDate getFechaGeneracion() {
+    public LocalDate getFechaGeneracion() {
         return fechaGeneracion;
     }
 
