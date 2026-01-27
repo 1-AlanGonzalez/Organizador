@@ -27,7 +27,7 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
     // Devuelve una lista con los totales mensuales
     // Para mostrar en el gráfico del frontend
     @Query(value = "SELECT SUM(monto_a_pagar) FROM pago " +
-                "WHERE estado = 'PAGADO' " +
+                "WHERE estado_pago = 'PAGADO' " +
                 "GROUP BY MONTH(fecha_generacion) " +
                 "ORDER BY MONTH(fecha_generacion) ASC", nativeQuery = true)
     List<BigDecimal> obtenerIngresosMensuales();    
