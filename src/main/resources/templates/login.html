@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Manager | Iniciar Sesión</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Marko+One&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+
+    <div class="d-flex min-vh-100 w-100 overflow-hidden row m-0">
+        
+        <div class="col-md-5 col-lg-4 d-flex flex-column justify-content-center align-items-center bg-white p-5 position-relative shadow-end z-1">
+            
+            <div class="w-100 fade-in-up" style="max-width: 360px;">
+                
+                <div class="mb-5">
+                    <h2 class="fw-bold mb-1 text-dark-brand">Bienvenido</h2>
+                    <p class="text-muted small">Ingresa tus credenciales para administrar el gimnasio.</p>
+                </div>
+
+                <div th:if="${param.error}" class="alert alert-danger py-2 small border-0 bg-danger-subtle text-danger rounded-3 mb-4">
+                    <i class="bi bi-exclamation-octagon me-2"></i>Credenciales incorrectas
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success py-2 small border-0 bg-success-subtle text-success rounded-3 mb-4">
+                    <i class="bi bi-check-circle me-2"></i>Sesión finalizada
+                </div>
+
+                <form th:action="@{/login}" method="post">
+                    
+                    <div class="mb-4">
+                        <label for="username" class="form-label small text-uppercase text-muted fw-bold tracking-wide">Usuario</label>
+                        <div class="input-group-modern">
+                            <i class="bi bi-person text-muted"></i>
+                            <input type="text" class="form-control input-modern" id="username" name="username" placeholder="Ej. admin" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label for="password" class="form-label small text-uppercase text-muted fw-bold tracking-wide mb-0">Contraseña</label>
+                            <a href="#" class="small text-brand text-decoration-none fw-medium">¿Olvidaste?</a>
+                        </div>
+                        <div class="input-group-modern">
+                            <i class="bi bi-lock text-muted"></i>
+                            <input type="password" class="form-control input-modern" id="password" name="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-modern-primary py-3 rounded-3 fw-bold shadow-sm">
+                            ACCEDER AL SISTEMA
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="position-absolute bottom-0 mb-4 text-center text-muted small opacity-50">
+                &copy; 2024 Gym Manager System
+            </div>
+        </div>
+
+        <div class="col-md-7 col-lg-8 bg-brand  d-md-flex flex-column align-items-center justify-content-center text-white position-relative overflow-hidden">
+            <div class="decorative-circle circle-1"></div>
+            <div class="decorative-circle circle-2"></div>
+            
+            <div class="z-2 text-center fade-in">
+                <!-- Imagen logoSinFondo.png con thymeleaf -->
+                <img th:src="@{/images/logo/logo.png}" alt="Logo Gym Manager" class="img-fluid login-logo-img mb-4" width="350">
+                <p class="lead opacity-75 fw-light">Gestión profesional para tu centro deportivo</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

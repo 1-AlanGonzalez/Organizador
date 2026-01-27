@@ -12,7 +12,7 @@
                 Eliminar
             </button>
             <a th:href="@{/clientes/nuevo}" class="btn btn-outline-success btn-sm">
-                + Añadir Cliente
+                + Inscribir Cliente
             </a>
         </div>
     </div>
@@ -39,14 +39,14 @@
                         <th>Actividad</th>
                         <th>Fecha de pago</th>
                         <th>Estado</th>
-                        <th class="text-center">Acciones</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
 
                <tbody>
-    <tr th:each="c : ${clientes}"> <td th:text="${c.nombre}" class="fw-medium"></td>
+    <tr th:each="c : ${clientes}"> 
+        <td th:text="${c.nombre}" class="fw-medium"></td>
         <td th:text="${c.apellido}"></td>
-        
         <td>
             <div class="d-flex flex-wrap gap-1">
                 <span th:each="insc : ${c.inscripciones}" 

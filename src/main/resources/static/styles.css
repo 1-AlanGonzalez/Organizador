@@ -356,3 +356,149 @@ Panel de clientes
 /* colores */
 .bg-danger-light { background-color: #fee2e2; color: #dc2626; }
 .bg-success-light { background-color: #dcfce7; color: #16a34a; }
+
+/* Login */
+
+.login-body {
+    background-color: var(--main-bg);
+    min-height: 100vh;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem;
+    background: #fff;
+    /* Usamos tu variable de sombra */
+    box-shadow: var(--card-shadow); 
+    border-radius: 16px; 
+}
+
+/* Ajustes finos a los inputs del login para que se vean modernos */
+    :root {
+    --brand-dark: #263238;     
+    --brand-dark-grad: #1a2327;
+    --brand-accent: #37474F;  
+    --brand-primary: #263238; 
+    --text-muted: #94a3b8;
+    --input-bg: #f3f4f6;      
+    --input-focus-border: #263238;
+}
+
+/* Tipografía */
+.font-marko { font-family: 'Marko One', serif; letter-spacing: 1px; }
+.text-dark-brand { color: var(--brand-dark); }
+.tracking-wide { letter-spacing: 0.05em; font-size: 0.75rem; }
+.text-brand { color: var(--brand-dark); transition: color 0.2s; }
+.text-brand:hover { color: #000; text-decoration: underline; }
+
+/* 1. SECCIÓN DERECHA (BRANDING) */
+.bg-brand {
+    /* Gradiente moderno diagonal */
+    background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-dark-grad) 100%);
+    position: relative;
+}
+
+/* Círculos decorativos sutiles en el fondo */
+.decorative-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    z-index: 1;
+}
+.circle-1 { width: 400px; height: 400px; top: -100px; right: -50px; }
+.circle-2 { width: 600px; height: 600px; bottom: -150px; left: -100px; }
+
+/* Imagen del logo */
+.login-logo-img {
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); /* Sombra suave al logo */
+    /* Descomenta la siguiente línea si tu logo es negro y quieres volverlo blanco */
+}
+
+/* 2. SECCIÓN IZQUIERDA (FORMULARIO) */
+.shadow-end {
+    /* Sombra que cae sobre el lado derecho para dar profundidad */
+    box-shadow: 10px 0 30px rgba(0,0,0,0.05);
+}
+
+/* Inputs Modernos (Estilo "Filled" limpio) */
+.input-group-modern {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-group-modern i {
+    position: absolute;
+    left: 15px;
+    z-index: 4;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    transition: color 0.3s;
+}
+
+.input-modern {
+    background-color: var(--input-bg);
+    border: 2px solid transparent;
+    border-radius: 12px; /* Más redondeado */
+    padding: 14px 14px 14px 45px; /* Padding izquierdo para el icono */
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #334155;
+    transition: all 0.3s ease;
+}
+
+.input-modern:focus {
+    background-color: #ffffff;
+    border-color: var(--input-focus-border);
+    box-shadow: 0 4px 12px rgba(38, 50, 56, 0.08); /* Sombra suave del color de marca */
+}
+
+/* Cambiar color del icono cuando el input tiene foco */
+.input-modern:focus + i, 
+.input-group-modern:focus-within i {
+    color: var(--brand-dark);
+}
+
+/* Placeholder color */
+.input-modern::placeholder { color: #cbd5e1; font-weight: 400; }
+
+/* Botón Moderno */
+.btn-modern-primary {
+    background-color: var(--brand-primary);
+    color: white;
+    border: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-modern-primary:hover {
+    background-color: #1a2327; /* Un poco más oscuro */
+    color: white;
+    transform: translateY(-2px); /* Se levanta un poco */
+    box-shadow: 0 10px 20px rgba(38, 50, 56, 0.25);
+}
+
+.btn-modern-primary:active {
+    transform: translateY(0);
+}
+
+/* 3. ANIMACIONES */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+.fade-in { animation: fadeIn 1.2s ease-out forwards; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .d-flex.min-vh-100 { flex-direction: column; }
+    .col-md-5 { min-height: 100vh; padding: 2rem !important; }
+}

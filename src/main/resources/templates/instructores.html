@@ -49,24 +49,25 @@
                         <th>Apellido</th>
                         <th>DNI</th>
                         <th>Teléfono</th>
-                        <th class="text-center" style="width: 120px;">Acciones</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <tr th:each="instructor : ${instructores}">
-                        <td th:text="${instructor.nombre}">
+                        <td th:text="${instructor.nombre}" class="fw-medium">
                         </td>
-                        <td th:text="${instructor.apellido}"></strong>
+                        <td th:text="${instructor.apellido} " >
                         </td>
-                        <td th:text="${instructor.dni}"></strong>
+                        <td th:text="${instructor.dni}">
                         </td>
-                        <td th:text="${instructor.telefono}"></strong>
+                        <td th:text="${instructor.telefono}">
                         </td>
-                        <td class="text-center">
+                        <td>
                             <!-- Editar -->
-                            <button type="button"
-                                    class="btn btn-sm btn-outline-secondary btn-editar position-absolute"
+                            <div class="d-flex align-items-center gap-2">
+                                <button type="button"
+                                    class="btn btn-sm btn-outline-primary btn-editar-row"
                                     th:attr="
                                         data-id=${instructor.idInstructor},
                                         data-nombre=${instructor.nombre},
@@ -86,7 +87,8 @@
                                         data-url='/instructores/eliminar'"
                                     onclick="abrirPanelEliminar(this)">
                                 <i class="bi bi-trash"></i>
-                            </button>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <div id="panelEliminarOverlay"
@@ -103,5 +105,5 @@
             </table>
         </div>
     </div>
-
+</div>
 </div>
