@@ -11,7 +11,6 @@ import com.gymmanager.gym_manager.entity.Cliente;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     boolean existsByDni(String dni);
-
     // Query : traer todos los clientes con sus inscripciones y actividades asociadas
     // Select distinct para evitar duplicados
     // FETCH para cargar las inscripciones y actividades en la misma consulta

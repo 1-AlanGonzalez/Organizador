@@ -14,7 +14,8 @@
                                 <!-- Actualizar mes automaticamente -->
                                 <!-- Con la primer letra en mayúscula -->
                                 <h5 class="fw-light mb-3" th:text="${#dates.format(#dates.createNow(), 'MMMM')}"></h5>
-                            <h4 class="fw-semibold text-success">$100.000</h4>
+                            <!-- Ingresos totales -->
+                            <h4 class="fw-bold" th:text="${'$' + #numbers.formatDecimal(ingresosTotales, 1, 'POINT', 2, 'COMMA')}"></h4>
                         </div>
                     </div>
                 </div>
@@ -34,7 +35,7 @@
                         <div class="col-6 ps-4 d-flex flex-column justify-content-center">
                             <!-- Búsqueda de cantidad de Clientes totales -->
                             <span class="fs-4 mb-2" th:text="${totalClientes}"></span>
-                            <span class="text-success fw-bold">70</span>
+                            <span class="text-success fw-bold">..</span>
                             <span class="text-warning fw-bold">30</span>
                         </div>
 
@@ -63,10 +64,22 @@
             <div class="col-md-7">
                 <h4 class="section-title">Gráfico ingresos Mensuales</h4>
                 <div class="card custom-card p-3" style="height: 280px;">
-                    <div id="chart"></div>
+                    <div id="chart">
+                        
+                    </div>
                 </div>
+                    <script th:inline="javascript">
+        /*<![CDATA[*/
+        // El comentario /*[[...]]*/ hace que VS Code no vea error, 
+        // pero Thymeleaf sí lo reemplazará por los datos reales.
+        window.datosGrafico = /*[[${datosGrafico}]]*/ [];
+        window.categoriasGrafico = /*[[${categoriasGrafico}]]*/ [];
+        /*]]>*/
+    </script>
             </div>
 
         </div>
 
+        
+        <script th:src="@{/js/script.js}"></script>
     </div>

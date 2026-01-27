@@ -1,5 +1,6 @@
 package com.gymmanager.gym_manager.controllers;
 
+
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
+
 import com.gymmanager.gym_manager.services.ClienteService;
 
 @Controller
@@ -23,6 +25,7 @@ public class ClientesController {
     private final ClienteRepository clienteRepository;
     private final ActividadRepository actividadRepository;
     private final ClienteService clienteService;
+    
 
     public ClientesController(ClienteRepository clienteRepository, ActividadRepository actividadRepository,
             ClienteService clienteService) {
@@ -35,7 +38,7 @@ public class ClientesController {
     public String clientes(Model model) {
         // Añado las actividades para el panel de inscripciones
         model.addAttribute("actividades", actividadRepository.findAll());
-
+    
         model.addAttribute("clientes", clienteRepository.findAll());
         model.addAttribute("title", "Gym Manager | Clientes");
         model.addAttribute("header", "Panel de control / Clientes");
