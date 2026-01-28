@@ -23,9 +23,21 @@
                             
                             <div class="mb-3">
                                 <label for="cliente" class="form-label small text-muted fw-bold">CLIENTE</label>
-                                <select class="form-select form-control" id="cliente" name="clienteId" required>
-                                    <option value="" selected disabled>Seleccionar cliente...</option>
-                                    </select>
+                                <!-- Un input que encuentre los clientes y los muestre para seleccionar -->
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="cliente" 
+                                    name="clienteNombre" 
+                                    placeholder="Buscar cliente..." 
+                                    list="clientesList"
+                                    required>
+
+                                <datalist id="clientesList">
+                                    <option th:each="ac : ${clientesList}"
+                                            th:value="${ac.cliente.nombre + ' ' + ac.cliente.apellido}">
+                                    </option>
+                                </datalist>
                             </div>
 
                             <div class="mb-3">

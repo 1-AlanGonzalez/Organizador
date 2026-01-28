@@ -42,6 +42,21 @@ public class Pago {
     @Enumerated(EnumType.STRING)
     @Column(name = "METODO_PAGO", nullable = true)
     private MetodoDePago metodoPago = MetodoDePago.NO_ESPECIFICADO;
+    // AÑADO HOY 28/1
+
+    @Column(name = "MONTO_ABONADO")
+    private BigDecimal montoAbonado;
+
+    @Column(name = "DEUDA")
+    private BigDecimal deuda;
+
+    @Column(name = "FECHA_PAGO")
+    private LocalDate fechaPago;
+
+    @Column(name = "OBSERVACIONES")
+    private String observaciones;
+
+    // -------------------
 
     public Pago() {}
 
@@ -127,6 +142,10 @@ public class Pago {
         estado = EstadoPago.PAGADO; 
     
     }
+    // PAGO AGREGADO HOY 28/1
+
+
+    // ===================
 
     /* Pagos de mas de un mes o año */
 
