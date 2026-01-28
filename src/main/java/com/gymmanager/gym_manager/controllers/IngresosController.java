@@ -1,20 +1,20 @@
 package com.gymmanager.gym_manager.controllers;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+// import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+// import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gymmanager.gym_manager.entity.ActividadCliente;
-import com.gymmanager.gym_manager.entity.MetodoDePago;
-import com.gymmanager.gym_manager.entity.Pago;
+// import com.gymmanager.gym_manager.entity.MetodoDePago;
+
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
 import com.gymmanager.gym_manager.repository.PagoRepository;
 
@@ -73,15 +73,15 @@ private final ClienteActividadRepository clienteActividadRepository;
         return "layouts/main";
     }
 
-        @PostMapping("/guardar")
-        public String guardarIngreso(
-                @RequestParam Integer actividadClienteId,
-                @RequestParam BigDecimal monto,
-                @RequestParam MetodoDePago metodoPago
-        ) {
+        // @PostMapping("/guardar")
+        // public String guardarIngreso(
+        //         @RequestParam Integer actividadClienteId,
+        //         @RequestParam BigDecimal monto,
+        //         @RequestParam MetodoDePago metodoPago
+        // ) {
 
-            return "redirect:/ingresos";
-        }
+        //     return "redirect:/ingresos";
+        // }
 
 }
 

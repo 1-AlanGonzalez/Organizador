@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <div th:fragment="contenido">
+
+        <div class="d-flex align-items-center mb-4">
+            <div>
+                <h4 class="section-title mb-1">Tomar Asistencia</h4>
+                <p class="text-muted small mb-0">Registra la presencia de los alumnos del día.</p>
+            </div>
+            <div class="ms-auto">
+                <a th:href="@{/asistencias}" class="btn btn-outline-secondary btn-sm me-2">
+                    Cancelar
+                </a>
+                <button type="submit" form="formAsistencia" class="btn btn-success text-white fw-bold btn-sm shadow-sm">
+                    <i class="bi bi-check-lg me-1"></i> Guardar Planilla
+                </button>
+            </div>
+        </div>
+
+        <div class="card custom-card mb-4 p-3">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label small text-muted fw-bold">FECHA</label>
+                    <input type="date" class="form-control" name="fecha" form="formAsistencia" 
+                           th:value="${fechaHoy}" required>
+                </div>
+                
+                <div class="col-md-4">
+                    <label class="form-label small text-muted fw-bold">FILTRAR POR ACTIVIDAD</label>
+                    <select id="filtroActividad" class="form-select" onchange="filtrarTabla()">
+                        <option value="todos">Mostrar todas</option>
+                        <option th:each="act : ${actividades}" 
+                                th:value="${act.nombre}" 
+                                th:text="${act.nombre}"></option>
+                    </select>
+                </div>
+                
+                <div class="col-md-5 text-end">
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Marcados: <span id="contadorPresentes">0</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <form id="formAsistencia" th:action="@{/asistencias/guardar}" method="post">
+            <div class="card custom-card">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="tablaAsistencia">
+                        <thead class="bg-light">
+                            <tr class="text-muted small text-uppercase">
+                                <th style="width: 40%;">Alumno</th>
+                                <th style="width: 30%;">Actividad</th>
+                                <th style="width: 30%;" class="text-center">Asistencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item : ${suscripciones}" class="fila-alumno" th:data-actividad="${item.actividad.nombre}">
+                                
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span class="fw-bold text-dark" 
+                                              th:text="${item.cliente.nombre + ' ' + item.cliente.apellido}">
+                                            Nombre Alumno
+                                        </span>
+                                        <small class="text-muted" style="font-size: 0.75rem;">
+                                            ID: <span th:text="${item.cliente.idCliente}">#</span>
+                                        </small>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-light text-dark border" 
+                                          th:text="${item.actividad.nombre}">
+                                        Actividad
+                                    </span>
+                                </td>
+
+                                <td class="text-center">
+                                    <div class="form-check form-switch d-flex justify-content-center">
+                                        <input class="form-check-input input-asistencia" 
+                                               type="checkbox" 
+                                               name="presentes" 
+                                               th:value="${item.idActividadCliente}" 
+                                               style="width: 3em; height: 1.5em; cursor: pointer;"
+                                               onchange="actualizarContador()">
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr th:if="${#lists.isEmpty(suscripciones)}">
+                                <td colspan="3" class="text-center text-muted py-4">
+                                    No hay alumnos inscritos en actividades.
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+
+        <script>
+            function filtrarTabla() {
+                const filtro = document.getElementById('filtroActividad').value;
+                const filas = document.querySelectorAll('.fila-alumno');
+
+                filas.forEach(fila => {
+                    const actividadFila = fila.getAttribute('data-actividad');
+                    
+                    if (filtro === 'todos' || actividadFila === filtro) {
+                        fila.style.display = ''; 
+                    } else {
+                        fila.style.display = 'none'; 
+                    }
+                });
+            }
+
+            function actualizarContador() {
+                const checkboxes = document.querySelectorAll('.input-asistencia:checked');
+                document.getElementById('contadorPresentes').innerText = checkboxes.length;
+            }
+        </script>
+
+    </div>
+
+</body>
+</html>
