@@ -46,6 +46,18 @@ private final PagoRepository pagoRepository;
 
         return "layouts/main";
     }
+    // /nuevo
+
+    @GetMapping("/nuevo")
+    public String nuevoIngreso(Model model) {
+        // Datos de diseño
+        model.addAttribute("title", "Gym Manager | Nuevo Ingreso");
+        model.addAttribute("header", "Contabilidad / Nuevo Ingreso");
+        model.addAttribute("vista", "ingresos-nuevo");
+        model.addAttribute("fragmento", "contenido");
+        model.addAttribute("active", "ingresos");
+        return "layouts/main";
+    }
 }
 
 

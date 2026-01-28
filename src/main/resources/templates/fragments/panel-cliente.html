@@ -48,12 +48,51 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Fecha de último pago</label>
-                        <input type="date" name="fechaPago" class="form-control" required>
+                    <label class="form-label d-block">Pago abonado</label>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" 
+                            type="radio" 
+                            name="pagoAbonado" 
+                            id="pagoSi" 
+                            value="true"
+                            checked
+                            onchange="toggleFechaPago(true)">
+                        <label class="form-check-label" for="pagoSi">Sí</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" 
+                            type="radio" 
+                            name="pagoAbonado" 
+                            id="pagoNo" 
+                            value="false"
+                            onchange="toggleFechaPago(false)">
+                        <label class="form-check-label" for="pagoNo">No</label>
                     </div>
                 </div>
-                <!-- Método de pago -->
+                <!-- Precio de la actividad -->
+                <!-- Monto abonado (Opción de escribir cuánto para poner cuánto debe el cliente
+                u opción de marcar el total de la actividad) -->
+          
 
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Fecha de pago</label>
+                    <input type="date" 
+                        name="fechaInicio" 
+                        id="fechaPago"
+                        class="form-control"
+                        required>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label class="form-label">Observaciones</label>
+                    <textarea name="observaciones" 
+                            class="form-control" 
+                            rows="3"
+                            placeholder="Ej: paga en dos partes, descuento especial, etc."></textarea>
+                </div>
+                
 
                 <div id="alert-error" th:classappend="${error == null} ? 'd-none' : ''" class="alert alert-danger shadow-sm mt-3">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>

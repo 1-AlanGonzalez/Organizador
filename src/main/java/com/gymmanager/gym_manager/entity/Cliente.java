@@ -36,7 +36,6 @@ public class Cliente {
 
     public Cliente() {}
 
-
     public Cliente(String nombre, String apellido, String dni, String telefono) {
         this.nombre = nombre;
         this.apellido = apellido;

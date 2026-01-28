@@ -28,6 +28,8 @@ public class DashboardController {
         BigDecimal total = pagoRepository.sumTotalRecaudado();
         model.addAttribute("ingresosTotales", total != null ? total : BigDecimal.ZERO);
         model.addAttribute("totalClientes", clienteRepository.count());
+        // model.addAttribute("clientesActivos", clienteRepository.countByActivoTrue());
+
         // Datos para el gráfico
         model.addAttribute("datosGrafico", pagoRepository.obtenerIngresosMensuales());
         model.addAttribute("categoriasGrafico", Arrays.asList("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"));

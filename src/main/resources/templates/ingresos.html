@@ -2,9 +2,7 @@
 
     <div class="d-flex align-items-center mb-4">
         <h4 class="section-title mb-0">Ingresos</h4>
-        <div class="ms-auto">
-            <input type="month" class="form-control form-control-sm">
-        </div>
+        
     </div>
 
     <div class="row g-3 mb-4">
@@ -21,14 +19,14 @@
                 <h4 class="fw-bold mt-2 text-warning" th:text="${'$' + #numbers.formatDecimal(ingresosPendientes, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
             </div>
         </div>
-
+        
         <div class="col-md-4">
             <div class="card custom-card p-3 border-start border-success border-4">
                 <span class="text-muted small text-uppercase">Pagos en Efectivo</span>
                 <h4 class="fw-bold mt-2 text-success" th:text="${'$' + #numbers.formatDecimal(ingresosEfectivo, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
             </div>
         </div>
-
+        
         <div class="col-md-4">
             <div class="card custom-card p-3 border-start border-info border-4">
                 <span class="text-muted small text-uppercase">Transferencias</span>
@@ -37,6 +35,14 @@
         </div>
     </div>
 
+    <div class="ms-auto d-flex gap-2">
+        <input type="month" class="form-control form-control-sm">
+
+        <a th:href="@{/ingresos/nuevo}" class="btn btn-sm btn-success">
+            <i class="bi bi-cash-coin me-1"></i> Ingresar pago
+        </a>
+    </div>
+    
     <div class="card custom-card">
         <div class="table-responsive">
             <table class="table table-hover table-sm align-middle mb-0">

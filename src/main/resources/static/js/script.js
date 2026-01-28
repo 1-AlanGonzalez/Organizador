@@ -203,8 +203,17 @@ function toggleModoEliminar() {
     body.classList.toggle("modo-eliminar-activo");
 }
 
+// Habilitar o deshabilitar campo fechaPago según estado de pagoAbonado
 
+  function toggleFechaPago(pagoAbonado) {
+        const fechaPago = document.getElementById('fechaPago');
 
-
-
-
+        if (pagoAbonado) {
+            fechaPago.disabled = false;
+            fechaPago.required = true;
+        } else {
+            fechaPago.value = '';
+            fechaPago.disabled = true;
+            fechaPago.required = false;
+        }
+    }

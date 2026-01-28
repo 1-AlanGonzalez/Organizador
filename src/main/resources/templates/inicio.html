@@ -35,7 +35,8 @@
                         <div class="col-6 ps-4 d-flex flex-column justify-content-center">
                             <!-- Búsqueda de cantidad de Clientes totales -->
                             <span class="fs-4 mb-2" th:text="${totalClientes}"></span>
-                            <span class="text-success fw-bold">..</span>
+                            <!-- Búsqueda de cantidad de Clientes activos -->
+                            <span class="text-success fw-bold" th:text="${clientesActivos}"></span>
                             <span class="text-warning fw-bold">30</span>
                         </div>
 
@@ -49,15 +50,21 @@
             <div class="col-md-5">
                 <h4 class="section-title">Acciones rápidas</h4>
                 <div class="d-grid gap-3 mt-3">
-                    <button class="btn btn-action btn-lg py-4">Tomar Asistencia 
-                        <span>
-                            <!--Día de hoy:  -->
-                            <i class="bi bi-calendar3 ms-5"></i>
-                            <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span>
-                        </span></button>
-                    <button class="btn btn-action btn-lg py-4">Ingresar Pago</button>
-                    <button class="btn btn-action btn-lg py-4">Importar Excel</button>
-                    <button class="btn btn-action btn-lg py-4">Exportar Excel</button>
+                    <a th:href="@{/asistencias}" class="btn btn-action btn-lg py-4">
+                        <i class="bi bi-calendar3 "></i>
+                        Tomar Asistencia 
+                        <!-- <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span> -->
+                    </a>
+
+                    <a th:href="@{/ingresos/nuevo}" class="btn btn-action btn-lg py-4">
+                        <i class="bi bi-cash-coin me-2"></i>
+                        Registrar Nuevo Pago</a>
+                    <button class="btn btn-action btn-lg py-4">
+                        <i class="bi bi-file-earmark-spreadsheet me-2"></i>
+                        Importar Excel</button>
+                    <button class="btn btn-action btn-lg py-4">
+                        <i class="bi bi-file-earmark-spreadsheet-fill me-2"></i>
+                        Exportar Excel</button>
                 </div>
             </div>
 
