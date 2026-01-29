@@ -50,9 +50,10 @@
                         <td class="ps-4 fw-medium" th:text="${actividad.nombre}"></td>
                         
                         <td>
-                            <div class="d-flex flex-wrap gap-1">
+                            <div class="d-flex flex-column gap-1">
                                 <span class="badge bg-light text-dark border fw-normal" 
-                                      th:each="d : ${actividad.dictados}">
+                                    th:each="d : ${actividad.dictados}">
+                                    <i class="bi bi-person me-1 text-secondary"></i>
                                     <span th:text="${d.instructor.nombre + ' ' + d.instructor.apellido}"></span>
                                 </span>
                             </div>
@@ -60,14 +61,30 @@
 
                         <td>
                             <span class="badge bg-success-light text-success border border-success border-opacity-25"
-                                  th:text="${#lists.size(actividad.dictados) + '/' + actividad.cupoMaximo}">
+                                th:with="inscriptosActivos=${actividad.inscripciones.?[estado.name() == 'ACTIVA']}">
+                                
+                                <span th:text="${inscriptosActivos.size()}">0</span>
+                                <span th:text="'/' + ${actividad.cupoMaximo}"></span>
                             </span>
                         </td>
 
-                        <td></td>
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                <small class="text-muted fw-bold" th:each="d : ${actividad.dictados}">
+                                    <i class="bi bi-calendar4-week me-1"></i>
+                                    <span th:text="${d.dias}"></span>
+                                </small>
+                            </div>
+                        </td>
 
-                        <td></td>
-
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                <small class="text-muted fw-bold" th:each="d : ${actividad.dictados}">
+                                    <i class="bi bi-clock me-1"></i>
+                                    <span th:text="${d.horario}"></span>
+                                </small>
+                            </div>
+                        </td>
                         <td class="pe-4 text-center">
                             <div class="acciones-td position-relative d-flex justify-content-center align-items-center">
                                 <button type="button"

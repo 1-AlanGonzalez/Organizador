@@ -1,8 +1,8 @@
 <div th:fragment="contenido" >
-<!-- 
-    <div class="d-flex align-items-center justify-content-between mb-4">
 
+    <!-- <div class="d-flex align-items-center justify-content-between mb-4">
         <div class="bg-white px-3 py-2 rounded-pill shadow-sm border position-absolute">
+            
             <i class="bi bi-calendar-event text-primary me-2"></i>
             <span class="fw-bold text-dark" th:text="${#dates.format(#dates.createNow(), 'd MMMM, yyyy')}"></span>
         </div>
@@ -47,19 +47,20 @@
                                 <i class="bi bi-person-check-fill"></i>
                             </div>
                             <div>
-                                <h4 class="mb-0 fw-bold text-dark">4</h4>
+                                <h4 class="mb-0 fw-bold text-dark" th:text="${clientesActivos}">0</h4>
                                 <small class="text-muted fw-bold" style="font-size: 0.75rem;">ACTIVOS</small>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-6">
                         <div class="p-3 rounded-3 bg-light border d-flex align-items-center gap-3">
                             <div class="icon-box-light icon-bg-orange flex-shrink-0">
                                 <i class="bi bi-person-exclamation"></i>
                             </div>
                             <div>
-                                <h4 class="mb-0 fw-bold text-dark">30</h4> <small class="text-muted fw-bold" style="font-size: 0.75rem;">PENDIENTES</small>
+                                <h4 class="mb-0 fw-bold text-dark" th:text="${clientesPendientes}">0</h4> 
+                                <small class="text-muted fw-bold" style="font-size: 0.75rem;">PENDIENTES</small>
                             </div>
                         </div>
                     </div>

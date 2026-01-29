@@ -28,8 +28,18 @@ public class DashboardController {
         BigDecimal total = pagoRepository.sumTotalRecaudado();
         model.addAttribute("ingresosTotales", total != null ? total : BigDecimal.ZERO);
         model.addAttribute("totalClientes", clienteRepository.count());
-        // model.addAttribute("clientesActivos", clienteRepository.countByActivoTrue());
+//   TOTAL DE CLIENTES
 
+        model.addAttribute("totalClientes", clienteRepository.count());
+
+        // 3. Lógica de Activos vs Pendientes
+        long totalInscriptos = clienteRepository.countClientesConInscripcionActiva();
+        long totalDeudores = clienteRepository.countClientesDeudores();
+    // "Activos" en la caja verde serán los que NO deben nada
+        long activosAlDia = totalInscriptos - totalDeudores;
+
+        model.addAttribute("clientesActivos", activosAlDia);     // Caja Verde (Sin deuda)
+        model.addAttribute("clientesPendientes", totalDeudores); // Caja Naranja (Con deuda)
         // Datos para el gráfico
         model.addAttribute("datosGrafico", pagoRepository.obtenerIngresosMensuales());
         model.addAttribute("categoriasGrafico", Arrays.asList("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"));

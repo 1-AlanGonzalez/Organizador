@@ -39,6 +39,9 @@ public class Actividad {
     )
     private Set<Dicta> dictados = new HashSet<>();
 
+    // Agrego una lista de inscripciones para poder manejar el cupo máximo
+    @OneToMany(mappedBy = "actividad")
+    private Set<ActividadCliente> inscripciones = new HashSet<>();
 
     public Actividad() {
     }
@@ -51,7 +54,12 @@ public class Actividad {
     }
 
     /* ================== Getters y Setters ================== */
-
+    public Set<ActividadCliente> getInscripciones() {
+        return inscripciones;
+    }
+    public void setInscripciones(Set<ActividadCliente> inscripciones) {
+        this.inscripciones = inscripciones;
+    }
     public void agregarDictado(Dicta dicta) {
     dictados.add(dicta);
     dicta.setActividad(this);
