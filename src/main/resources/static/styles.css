@@ -502,3 +502,174 @@ Panel de clientes
     .d-flex.min-vh-100 { flex-direction: column; }
     .col-md-5 { min-height: 100vh; padding: 2rem !important; }
 }
+
+
+/* CARDS PARA INGRESOS */
+
+
+.card-stat {
+    border: none;
+    border-radius: 16px; /* Bordes más redondeados */
+    position: relative;
+    overflow: hidden; /* Para recortar los círculos decorativos */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    color: #fff; /* Texto blanco por defecto */
+}
+
+/* Efecto Hover: Se levanta un poco */
+.card-stat:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Títulos y Subtítulos dentro de la tarjeta */
+.card-stat .stat-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85); /* Blanco semi-transparente */
+    margin-bottom: 5px;
+    display: block;
+}
+
+.card-stat .stat-value {
+    font-size: 1.75rem; /* Números grandes */
+    font-weight: 700;
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Decoración de fondo (Círculos sutiles) */
+.card-stat::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15); /* Círculo transparente */
+    z-index: 0;
+    pointer-events: none;
+}
+
+.card-stat::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    left: -30px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.10);
+    z-index: 0;
+}
+
+/* Aseguramos que el contenido esté por encima de la decoración */
+.card-stat .card-body-content {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* 1. Ingresos Totales: Azul Profundo (Elegante y serio) */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+/* 2. Pendientes: Naranja/Ámbar (Llamativo pero no agresivo) */
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+/* 3. Efectivo: Verde Esmeralda (Dinero, éxito) */
+.bg-gradient-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* 4. Transferencias: Cyan/Celeste (Digital, moderno) */
+.bg-gradient-info {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+}
+
+
+/* ESTILOS NUEVOS PARA EL DASHBOARD */
+
+/* Hero Card (Ingresos) - Gradiente atractivo */
+.bg-gradient-hero {
+    background: linear-gradient(135deg, var(--sidebar-active) 0%, var(--brand-primary) 100%); /* Indigo moderno */
+    color: #fff;
+}
+
+/* Iconos con fondo translúcido */
+.icon-box-glass {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.2); /* Efecto vidrio */
+    backdrop-filter: blur(5px);
+    color: #fff;
+}
+
+/* Iconos para tarjetas claras */
+.icon-box-light {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.5rem;
+}
+.icon-bg-green { background-color: #dcfce7; color: #16a34a; }
+.icon-bg-orange { background-color: #ffedd5; color: #ea580c; }
+.icon-bg-blue { background-color: #dbeafe; color: #2563eb; }
+
+/* Botones de Acción (Widgets) */
+.btn-widget {
+    background: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: left;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.btn-widget:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    background: #fff; 
+    color: #4f46e5; 
+}
+
+.btn-widget i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #64748b; /* Gris azulado */
+    transition: color 0.3s;
+}
+
+.btn-widget:hover i {
+    color: #4f46e5; /* El icono se enciende al hover */
+}
+
+.section-subtitle {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}

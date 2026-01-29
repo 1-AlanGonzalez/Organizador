@@ -1,109 +1,111 @@
+<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2">
 
-<div th:fragment="contenido">
+    <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
+        <div>
+            <h4 class="fw-bold text-dark mb-0">Instructores</h4>
+            <p class="text-muted small mb-0">Gestión del personal docente</p>
+        </div>
 
-    <!-- Header -->
-    <div class="d-flex align-items-center mb-4">
-        <h4 class="section-title mb-0">Instructores</h4>
-
-        <div class="ms-auto d-flex gap-2">
-
-            <button class="btn btn-outline-danger btn-sm btn-modo-eliminar"
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-danger btn-sm btn-modo-eliminar"
                     onclick="toggleModoEliminar()">
-                Eliminar
-            </button>
-            <button class="btn btn-outline-success btn-sm" onclick="abrirPanelInstructor()">
-                + Añadir Instructor
-            </button>
+                <span>Eliminar</span>
+            </a>
+            
+            <a class="btn btn-primary btn-sm shadow-sm" onclick="abrirPanelInstructor()">
+                <span>Añadir Instructor</span>
+            </a>
         </div>
     </div>
 
-    <!-- Filtro -->
-    <div class="mb-3 d-flex justify-content-between">
-        <input 
-            id="filtroInstructores"
-            type="text"
-            class="form-control form-control-sm"
-            style="max-width: 250px;"
-            placeholder="Filtrar instructores">
+    <div class="mb-3 flex-shrink-0">
+        <div class="input-group input-group-sm" style="max-width: 300px;">
+            <span class="input-group-text bg-light border-end-0 text-muted">
+                <i class="bi bi-search"></i>
+            </span>
+            <input id="filtroInstructores"
+                   type="text"
+                   class="form-control border-start-0 ps-0 bg-light"
+                   placeholder="Buscar por nombre, DNI...">
+        </div>
     </div>
 
-    <!-- Panel añadir instructor -->
     <div id="panelOverlayInstructor"
          class="panel-overlay"
          th:classappend="${abrirPanelInstructor} ? '' : 'd-none'"
          onclick="cerrarPanelInstructor()">
-
         <div class="panel-container"
              onclick="event.stopPropagation()"
              th:insert="fragments/panel-instructor :: panelInstructor">
         </div>
     </div>
 
-    <!-- Tabla -->
-    <div class="card custom-card">
-        <div class="table-responsive">
-            <table id="tablaInstructores" class="table table-hover table-sm align-middle mb-0">
-                <thead>
-                    <tr class="text-muted small text-uppercase">
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>DNI</th>
-                        <th>Teléfono</th>
-                        <th>Acciones</th>
+    <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
+        
+        <div class="table-responsive h-100 w-100 custom-scrollbar">
+            <table id="tablaInstructores" class="table table-hover align-middle mb-0" style="width: 100%;">
+                
+                <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
+                    <tr class="text-secondary small text-uppercase">
+                        <th class="ps-4 py-3 bg-light border-bottom">Nombre</th> <th class="py-3 bg-light border-bottom">Apellido</th>
+                        <th class="py-3 bg-light border-bottom">DNI</th>
+                        <th class="py-3 bg-light border-bottom">Teléfono</th>
+                        <th class="pe-4 py-3 bg-light border-bottom text-center" style="width: 120px;">Acciones</th>
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody class="border-top-0">
                     <tr th:each="instructor : ${instructores}">
-                        <td th:text="${instructor.nombre}" class="fw-medium">
-                        </td>
-                        <td th:text="${instructor.apellido} " >
-                        </td>
-                        <td th:text="${instructor.dni}">
-                        </td>
-                        <td th:text="${instructor.telefono}">
-                        </td>
+                        
+                        <td class="ps-4 fw-medium" th:text="${instructor.nombre}"></td>
+                        <td th:text="${instructor.apellido}"></td>
+                        
                         <td>
-                            <!-- Editar -->
-                            <div class="d-flex align-items-center gap-2">
-                                <button type="button"
-                                    class="btn btn-sm btn-outline-primary btn-editar-row"
-                                    th:attr="
-                                        data-id=${instructor.idInstructor},
-                                        data-nombre=${instructor.nombre},
-                                        data-apellido=${instructor.apellido},
-                                        data-dni=${instructor.dni},
-                                        data-telefono=${instructor.telefono}"
-                                    onclick="abrirPanelEditarInstructor(this)">
-                                <i class="bi bi-pencil"></i>
-                            </button>
+                            <span class="badge bg-light text-dark border fw-normal" th:text="${instructor.dni}"></span>
+                        </td>
+                        
+                        <td class="text-secondary small">
+                            <i class="bi bi-telephone me-1"></i>
+                            <span th:text="${instructor.telefono}"></span>
+                        </td>
 
-                            <!-- Eliminar -->
-                            <button type="button"
-                                    class="btn btn-sm btn-outline-danger btn-eliminar"
-                                    th:attr="
-                                        data-id=${instructor.idInstructor},
-                                        data-nombre=${instructor.nombre},
-                                        data-url='/instructores/eliminar'"
-                                    onclick="abrirPanelEliminar(this)">
-                                <i class="bi bi-trash"></i>
+                        <td class="pe-4 text-center">
+                            <div class="acciones-td position-relative d-flex justify-content-center align-items-center">
+                                
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-primary btn-editar-row"
+                                        th:attr="data-id=${instructor.idInstructor},
+                                                 data-nombre=${instructor.nombre},
+                                                 data-apellido=${instructor.apellido},
+                                                 data-dni=${instructor.dni},
+                                                 data-telefono=${instructor.telefono}"
+                                        onclick="abrirPanelEditarInstructor(this)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger btn-eliminar position-absolute"
+                                        th:attr="data-id=${instructor.idInstructor},
+                                                 data-nombre=${instructor.nombre},
+                                                 data-url='/instructores/eliminar'"
+                                        onclick="abrirPanelEliminar(this)">
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </div>
                         </td>
                     </tr>
-                    <div id="panelEliminarOverlay"
-                        class="panel-overlay d-none"
-                        onclick="cerrarPanelEliminar()">
-                    
-                        <div class="panel-container"
-                            onclick="event.stopPropagation()"
-                            th:insert="fragments/panel-eliminar :: panelEliminar">
-                        </div>
-                    </div>
                 </tbody>
-
             </table>
         </div>
     </div>
-</div>
+
+    <div id="panelEliminarOverlay"
+         class="panel-overlay d-none"
+         onclick="cerrarPanelEliminar()">
+        <div class="panel-container"
+             onclick="event.stopPropagation()"
+             th:insert="fragments/panel-eliminar :: panelEliminar">
+        </div>
+    </div>
+
 </div>

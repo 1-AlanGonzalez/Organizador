@@ -1,92 +1,123 @@
-    <div th:fragment="contenido">
+<div th:fragment="contenido" >
+<!-- 
+    <div class="d-flex align-items-center justify-content-between mb-4">
 
-        <div class="row g-4 mb-4">
+        <div class="bg-white px-3 py-2 rounded-pill shadow-sm border position-absolute">
+            <i class="bi bi-calendar-event text-primary me-2"></i>
+            <span class="fw-bold text-dark" th:text="${#dates.format(#dates.createNow(), 'd MMMM, yyyy')}"></span>
+        </div>
+    </div> -->
 
-            <div class="col-md-6">
-                <h4 class="section-title mb-3">Ingreso Mensual</h4>
-                <div class="card custom-card p-4">
-                    <div class="row align-items-center h-100">
-                        <div class="col-6 border-end border-secondary">
-                            <h5 class="fw-normal mb-2">Mes actual</h5>
-                            <h4 class="mb-0">Ingresos</h4>
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100 bg-gradient-hero overflow-hidden position-relative">
+                <div style="position: absolute; top: -20px; right: -20px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+                <div style="position: absolute; bottom: -40px; left: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+                
+                <div class="card-body p-4 d-flex flex-column justify-content-between position-relative">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="text-white-50 text-uppercase small fw-bold ls-1">Ingresos del Mes</span>
+                            <h5 class="text-white mt-1 fw-bold" th:text="${#strings.capitalize(#dates.format(#dates.createNow(), 'MMMM'))}"></h5>
                         </div>
-                        <div class="col-6 ps-4">
-                                <!-- Actualizar mes automaticamente -->
-                                <!-- Con la primer letra en mayúscula -->
-                                <h5 class="fw-light mb-3" th:text="${#dates.format(#dates.createNow(), 'MMMM')}"></h5>
-                            <!-- Ingresos totales -->
-                            <h4 class="fw-bold" th:text="${'$' + #numbers.formatDecimal(ingresosTotales, 1, 'POINT', 2, 'COMMA')}"></h4>
+                        <div class="icon-box-glass">
+                            <i class="bi bi-wallet2"></i>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <h4 class="section-title">Cantidad de Clientes</h4>
-                <div class="card custom-card p-3">
-                    <div class="row align-items-center h-100">
-
-                        <div class="col-6 border-end border-secondary d-flex flex-column justify-content-center">
-                            <span class="fs-4 mb-2">Totales</span>
-                            <span class="text-success">Activos</span>
-                            <span class="text-warning">Pendientes</span>
-                        </div>
-
-                        <div class="col-6 ps-4 d-flex flex-column justify-content-center">
-                            <!-- Búsqueda de cantidad de Clientes totales -->
-                            <span class="fs-4 mb-2" th:text="${totalClientes}"></span>
-                            <!-- Búsqueda de cantidad de Clientes activos -->
-                            <span class="text-success fw-bold" th:text="${clientesActivos}"></span>
-                            <span class="text-warning fw-bold">30</span>
-                        </div>
-
+                    <div>
+                        <h2 class="display-5 fw-bold mb-0" th:text="${'$' + #numbers.formatDecimal(ingresosTotales, 1, 'POINT', 2, 'COMMA')}">$0.00</h2>
+                        <small class="text-white-50"><i class="bi bi-arrow-up-circle me-1"></i>Acumulado actual</small>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row g-4">
-
-            <div class="col-md-5">
-                <h4 class="section-title">Acciones rápidas</h4>
-                <div class="d-grid gap-3 mt-3">
-                    <a th:href="@{/asistencias}" class="btn btn-action btn-lg py-4">
-                        <i class="bi bi-calendar3 "></i>
-                        Tomar Asistencia 
-                        <!-- <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span> -->
-                    </a>
-
-                    <a th:href="@{/ingresos/nuevo}" class="btn btn-action btn-lg py-4">
-                        <i class="bi bi-cash-coin me-2"></i>
-                        Registrar Nuevo Pago</a>
-                    <button class="btn btn-action btn-lg py-4">
-                        <i class="bi bi-file-earmark-spreadsheet me-2"></i>
-                        Importar Excel</button>
-                    <button class="btn btn-action btn-lg py-4">
-                        <i class="bi bi-file-earmark-spreadsheet-fill me-2"></i>
-                        Exportar Excel</button>
+        <div class="col-md-6">
+            <div class="card custom-card h-100 p-4 border-0">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title fw-bold mb-0">Estado de Clientes</h5>
+                    <span class="badge bg-light text-dark border fs-6 rounded-pill px-3" th:text="${totalClientes + ' Total'}">0 Total</span>
                 </div>
-            </div>
-
-            <div class="col-md-7">
-                <h4 class="section-title">Gráfico ingresos Mensuales</h4>
-                <div class="card custom-card p-3" style="height: 280px;">
-                    <div id="chart">
-                        
+                
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="p-3 rounded-3 bg-light border d-flex align-items-center gap-3">
+                            <div class="icon-box-light icon-bg-green flex-shrink-0">
+                                <i class="bi bi-person-check-fill"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0 fw-bold text-dark">4</h4>
+                                <small class="text-muted fw-bold" style="font-size: 0.75rem;">ACTIVOS</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-6">
+                        <div class="p-3 rounded-3 bg-light border d-flex align-items-center gap-3">
+                            <div class="icon-box-light icon-bg-orange flex-shrink-0">
+                                <i class="bi bi-person-exclamation"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0 fw-bold text-dark">30</h4> <small class="text-muted fw-bold" style="font-size: 0.75rem;">PENDIENTES</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                    <script th:inline="javascript">
-        /*<![CDATA[*/
-        // El comentario /*[[...]]*/ hace que VS Code no vea error, 
-        // pero Thymeleaf sí lo reemplazará por los datos reales.
-        window.datosGrafico = /*[[${datosGrafico}]]*/ [];
-        window.categoriasGrafico = /*[[${categoriasGrafico}]]*/ [];
-        /*]]>*/
-    </script>
             </div>
-
         </div>
-
-        
-        <script th:src="@{/js/script.js}"></script>
     </div>
+
+    <div class="row g-4">
+        
+        <div class="col-lg-5">
+            <h6 class="section-subtitle">Accesos Directos</h6>
+            
+            <div class="row g-3">
+                <div class="col-6">
+                    <a th:href="@{/asistencias}" class="btn-widget text-decoration-none">
+                        <i class="bi bi-qr-code-scan"></i>
+                        <span class="fw-bold text-dark">Asistencia</span>
+                        <span class="small text-muted">Tomar asistencia</span>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a th:href="@{/ingresos/nuevo}" class="btn-widget text-decoration-none">
+                        <i class="bi bi-cash-coin text-success-emphasis"></i> <span class="fw-bold text-dark">Cobrar</span>
+                        <span class="small text-muted">Registrar pago</span>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <button class="btn-widget w-100">
+                        <i class="bi bi-person-plus"></i>
+                        <span class="fw-bold text-dark">Nuevo</span>
+                        <span class="small text-muted">Alta alumno</span>
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button class="btn-widget w-100">
+                        <i class="bi bi-file-earmark-spreadsheet"></i>
+                        <span class="fw-bold text-dark">Reportes</span>
+                        <span class="small text-muted">Exportar Excel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <h6 class="section-subtitle">Tendencia de Ingresos</h6>
+            <div class="card custom-card p-4 border-0 ">
+                <div id="chart" style="min-height: 250px;"></div>
+                
+                <script th:inline="javascript">
+                    /*<![CDATA[*/
+                    window.datosGrafico = /*[[${datosGrafico}]]*/ [];
+                    window.categoriasGrafico = /*[[${categoriasGrafico}]]*/ [];
+                    /*]]>*/
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/script.js}"></script>
+</div>

@@ -1,72 +1,157 @@
 <div th:fragment="contenido">
 
     <div class="d-flex align-items-center mb-4">
-        <h4 class="section-title mb-0">Ingresos</h4>
-        
+        <div>
+            <h4 class="section-title mb-0">Tablero Financiero</h4>
+            <p class="text-muted small mb-0">Resumen de movimientos y facturación</p>
+        </div>
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card custom-card p-3 border-start border-primary border-4">
-                <span class="text-muted small text-uppercase">Ingresos Totales</span>
-                <h4 class="fw-bold mt-2" th:text="${'$' + #numbers.formatDecimal(ingresosTotales, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+        <div class="col-md-3">
+            <div class="card card-stat bg-gradient-primary p-3 h-100">
+                <div class="card-body-content">
+                    <span class="stat-title">Ingresos Totales</span>
+                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosTotales, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <i class="bi bi-wallet2 position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
+                </div>
             </div>
         </div>
-        <!-- Pendientes -->
-        <div class="col-md-4">
-            <div class="card custom-card p-3 border-start border-warning border-4">
-                <span class="text-muted small text-uppercase">Pagos Pendientes</span>
-                <h4 class="fw-bold mt-2 text-warning" th:text="${'$' + #numbers.formatDecimal(ingresosPendientes, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+        <div class="col-md-3">
+            <div class="card card-stat bg-gradient-warning p-3 h-100">
+                <div class="card-body-content">
+                    <span class="stat-title">Pagos Pendientes</span>
+                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosPendientes, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <i class="bi bi-clock-history position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
+                </div>
             </div>
         </div>
-        
-        <div class="col-md-4">
-            <div class="card custom-card p-3 border-start border-success border-4">
-                <span class="text-muted small text-uppercase">Pagos en Efectivo</span>
-                <h4 class="fw-bold mt-2 text-success" th:text="${'$' + #numbers.formatDecimal(ingresosEfectivo, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+        <div class="col-md-3">
+            <div class="card card-stat bg-gradient-success p-3 h-100">
+                <div class="card-body-content">
+                    <span class="stat-title">Pagos en Efectivo</span>
+                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosEfectivo, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <i class="bi bi-cash-stack position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
+                </div>
             </div>
         </div>
-        
-        <div class="col-md-4">
-            <div class="card custom-card p-3 border-start border-info border-4">
-                <span class="text-muted small text-uppercase">Transferencias</span>
-                <h4 class="fw-bold mt-2 text-info" th:text="${'$' + #numbers.formatDecimal(ingresosTransferencia, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+        <div class="col-md-3">
+            <div class="card card-stat bg-gradient-info p-3 h-100">
+                <div class="card-body-content">
+                    <span class="stat-title">Transferencias</span>
+                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosTransferencia, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <i class="bi bi-bank position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="ms-auto d-flex gap-2">
-        <input type="month" class="form-control form-control-sm">
+  
+    <div class="card custom-card mb-4">
+        <div class="card-body p-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
+            
+            <div class="input-group" style="max-width: 300px;">
+                <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" id="buscadorTabla" class="form-control bg-light border-0" placeholder="Buscar pago por alumno...">
+            </div>
 
-        <a th:href="@{/ingresos/nuevo}" class="btn btn-sm btn-success">
-            <i class="bi bi-cash-coin me-1"></i> Ingresar pago
-        </a>
+            <div class="d-flex align-items-center gap-3">
+                
+                <div class="d-flex align-items-center bg-light rounded px-2 border">
+                    <i class="bi bi-calendar-month text-muted me-2"></i>
+                    <input type="month" class="form-control bg-transparent border-0 shadow-none text-muted fw-bold" style="max-width: 160px;">
+                </div>
+
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-3 fw-bold d-flex align-items-center gap-2">
+                    <i class="bi bi-file-earmark-excel"></i>
+                    <span>Exportar</span>
+                </button>
+
+                <a th:href="@{/ingresos/nuevo}" class="btn btn-primary btn-lg rounded-pill shadow-sm px-4 fw-bold d-flex align-items-center gap-2">
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Nuevo Pago</span>
+                </a>
+            </div>
+        </div>
     </div>
     
-    <div class="card custom-card">
-        <div class="table-responsive">
-            <table class="table table-hover table-sm align-middle mb-0">
-                <thead>
-                    <tr class="text-muted small text-uppercase">
-                        <th>Cliente</th>
+    <div class="card custom-card border-0 shadow-sm">
+        
+        <div class="card-header bg-white border-0 pt-3 pb-0">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="card-title mb-0 fw-bold text-dark">Últimos Movimientos</h5>
+            </div>
+            
+            <ul class="nav nav-tabs card-header-tabs" id="paymentTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active fw-bold text-dark" onclick="filtrarEstado('todos')" data-bs-toggle="tab">Todos</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold text-success" onclick="filtrarEstado('pagado')" data-bs-toggle="tab">Pagados</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold text-warning" onclick="filtrarEstado('pendiente')" data-bs-toggle="tab">Pendientes / Deudores</button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="table-responsive mt-2">
+            <table class="table table-hover align-middle mb-0" id="tablaPagos">
+                <thead class="bg-light">
+                    <tr class="text-muted small text-uppercase fw-bold">
+                        <th class="ps-4">Cliente</th>
                         <th>Actividad</th>
                         <th>Fecha</th>
-                        <th>Monto</th>
-                        <th>Método</th>
+                        <th>Método / Estado</th>
+                        <th class="text-end pe-4">Monto</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="pago : ${pagosRecientes}">
-                        <td th:text="${pago.actividadCliente.cliente.nombre + ' ' + pago.actividadCliente.cliente.apellido}"></td>
-                        <td th:text="${pago.actividadCliente.actividad.nombre}"></td>
-                        <td th:text="${#temporals.format(pago.fechaGeneracion, 'dd/MM/yyyy')}"></td>
-                        <td class="fw-bold" th:text="${'$' + pago.montoAPagar}"></td>
+                    <tr th:each="pago : ${pagosRecientes}" 
+                        th:data-estado="${pago.metodoPago != null ? 'pagado' : 'pendiente'}" class="fila-pago">
+                        
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: bold;">
+                                    <span th:text="${#strings.substring(pago.actividadCliente.cliente.nombre,0,1)}">A</span>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark" th:text="${pago.actividadCliente.cliente.nombre + ' ' + pago.actividadCliente.cliente.apellido}">Nombre</h6>
+                                    <small class="text-muted" style="font-size: 0.75rem;">ID: <span th:text="${pago.actividadCliente.cliente.idCliente}">123</span></small>
+                                </div>
+                            </div>
+                        </td>
+                        
                         <td>
-                            <span class="badge rounded-pill bg-light text-dark border" th:text="${pago.metodoPago}"></span>
+                            <span class="badge bg-light text-secondary border fw-normal" th:text="${pago.actividadCliente.actividad.nombre}">Boxeo</span>
+                        </td>
+                        
+                        <td class="text-muted">
+                            <i class="bi bi-calendar2-event me-1"></i>
+                            <span th:text="${#temporals.format(pago.fechaGeneracion, 'dd/MM/yyyy')}">01/01/2024</span>
+                        </td>
+
+                        <td>
+                            <div th:if="${pago.metodoPago == 'Efectivo'}" class="d-flex align-items-center text-success small fw-bold">
+                                <i class="bi bi-cash-stack me-1"></i> Efectivo
+                            </div>
+                            <div th:if="${pago.metodoPago == 'Transferencia'}" class="d-flex align-items-center text-info small fw-bold">
+                                <i class="bi bi-bank me-1"></i> Transf.
+                            </div>
+                             <div th:if="${pago.metodoPago == null}" class="d-flex align-items-center text-warning small fw-bold">
+                                <i class="bi bi-hourglass-split me-1"></i> Pendiente
+                            </div>
+                        </td>
+
+                        <td class="text-end pe-4">
+                            <h6 class="mb-0 fw-bold text-dark" th:text="${'$' + pago.montoAPagar}">$5000</h6>
                         </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="card-footer bg-white border-0 py-3 text-end">
+            <a href="#" class="text-decoration-none text-primary small fw-bold">Ver historial completo <i class="bi bi-arrow-right"></i></a>
         </div>
     </div>
 </div>

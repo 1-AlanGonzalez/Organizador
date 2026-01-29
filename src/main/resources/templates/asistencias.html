@@ -1,82 +1,95 @@
-<div th:fragment="contenido">
-
-    <!-- Header -->
-    <div class="d-flex align-items-center mb-4">
-        <h4 class="section-title mb-0">Asistencias</h4>
-
-        <div class="ms-auto">
-                <a class="btn btn-outline-success btn-sm" th:href="@{/asistencias/tomar}">
-                    <i class="bi bi-plus me-1"></i>
-                Tomar asistencia
-                </a>
+<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2"> <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
+        <div>
+            <h4 class="fw-bold text-dark mb-0">Gestión de Asistencias</h4>
+            <p class="text-muted small mb-0">Control diario de alumnos</p>
+        </div>
+        <div>
+            <a class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2" th:href="@{/asistencias/tomar}">
+                <i class="bi bi-plus-lg"></i>
+                <span>Tomar Asistencia</span>
+            </a>
         </div>
     </div>
 
-    <div class="d-flex gap-3 mb-3">
-        <input type="date" class="form-control form-control-sm">
-        <input type="text" class="form-control form-control-sm" placeholder="Buscar alumno">
-        <select name="actividades" class="form-select" required>
-            
-            <option value="" disabled selected>Filtrar por actividad</option>
-            <option th:each="actividad : ${actividades}"
-                    th:value="${actividad.idInstructor}"
-                    th:text="${actividad.Nombre}">
-            </option>
-        </select>
-    </div>
-
-
-    <div id="panelOverlayAsistencia"
-        class="panel-overlay d-none"
-        onclick="cerrarPanelAsistencia()">
-
-        <!-- Panel -->
-        <div class="panel-container"
-            onclick="event.stopPropagation()"
-            th:insert="fragments/panel-asistencia :: panelAsistencia">
+    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
+        <div class="row g-2 align-items-center">
+            <div class="col-md-3">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-calendar"></i></span>
+                    <input type="date" class="form-control border-start-0 ps-0 bg-light focus-ring-none">
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0 bg-light" placeholder="Buscar alumno...">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select name="actividades" class="form-select form-select-sm bg-light text-muted" required>
+                    <option value="" disabled selected>Filtrar por actividad...</option>
+                    <option th:each="actividad : ${actividades}"
+                            th:value="${actividad.idInstructor}"
+                            th:text="${actividad.Nombre}">
+                    </option>
+                </select>
+            </div>
         </div>
     </div>
 
-    <!-- Tabla -->
-    <div class="card custom-card">
+    <div id="panelOverlayAsistencia" class="panel-overlay d-none" onclick="cerrarPanelAsistencia()">
+        <div class="panel-container" onclick="event.stopPropagation()" th:insert="fragments/panel-asistencia :: panelAsistencia"></div>
+    </div>
 
-        <table class="table table-sm align-middle mb-0">
-            <thead>
-                <tr class="text-muted">
-                    <th>Alumno</th>
-                    <th>Actividad</th>
-                    <th>Fecha</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-
-            <!-- Tabla de asistencias por día -->
-             <!-- Clientes que existen en la DB -->
-                <tbody>
-                <tr th:each="cliente : ${clientes}">
-                    <td th:text="${cliente.nombre} + ' ' + ${cliente.apellido}"></td>
-                    <td>
-                        <select name="actividad" class="form-select form-select-sm">
-                            <option value="" disabled selected>Seleccionar actividad</option>
-                            <option th:each="actividad : ${actividades}"
-                                    th:value="${actividad.idActividad}"
-                                    th:text="${actividad.nombre}">
-                            </option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="date" name="fecha" class="form-control form-control-sm" th:value="${#dates.format(today, 'yyyy-MM-dd')}">
-                    </td>
-                    <td>
-                        <select name="estado" class="form-select form-select-sm">
-                            <option value="PRESENTE">Presente</option>
-                            <option value="AUSENTE" selected>Ausente</option>
-                        </select>
-                    </td>
-                </tr>
+    <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
+        <div class="table-responsive h-100 w-100 custom-scrollbar">
+            <table class="table table-hover align-middle mb-0" style="width: 100%;">
+                <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
+                    <tr class="text-secondary small text-uppercase">
+                        <th class="ps-4 py-3 bg-light border-bottom">Alumno</th>
+                        <th class="py-3 bg-light border-bottom">Actividad</th>
+                        <th class="py-3 bg-light border-bottom">Fecha</th>
+                        <th class="py-3 bg-light border-bottom">Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="border-top-0">
+                    <tr th:each="cliente : ${clientes}">
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle me-3 bg-gradient-primary text-white small fw-bold d-flex align-items-center justify-content-center" 
+                                     style="width: 32px; height: 32px; border-radius: 50%;">
+                                    <span th:text="${#strings.substring(cliente.nombre,0,1)}">A</span>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark" th:text="${cliente.nombre} + ' ' + ${cliente.apellido}">Nombre</div>
+                                    <div class="small text-muted" style="font-size: 0.75rem;">ID: #<span th:text="${cliente.id}">001</span></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <select name="actividad" class="form-select form-select-sm border-0 bg-light" style="max-width: 150px;">
+                                <option value="" disabled selected>Seleccionar...</option>
+                                <option th:each="actividad : ${actividades}"
+                                        th:value="${actividad.idActividad}"
+                                        th:text="${actividad.nombre}">
+                                </option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="date" name="fecha" class="form-control form-control-sm border-0 bg-light" 
+                                   th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" style="max-width: 130px;">
+                        </td>
+                        <td class="pe-4">
+                            <select name="estado" class="form-select form-select-sm badge-select" 
+                                    onchange="updateBadgeColor(this)" 
+                                    style="max-width: 120px; font-weight: 600;">
+                                <option value="PRESENTE" class="text-success">Presente</option>
+                                <option value="AUSENTE" selected class="text-danger">Ausente</option>
+                            </select>
+                        </td>
+                    </tr>
                 </tbody>
-        </table>
-
+            </table>
+        </div>
     </div>
-
 </div>

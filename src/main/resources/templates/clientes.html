@@ -1,103 +1,129 @@
-<div th:fragment="contenido">
 
-    <!-- Header -->
-    <div class="d-flex align-items-center mb-4">
+<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2">
 
-        <h4 class="section-title mb-0">Clientes</h4>
-
-        <div class="ms-auto d-flex gap-2">
-
-            <button class="btn btn-outline-danger btn-sm btn-modo-eliminar"
+    <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
+        <div>
+            <h4 class="fw-bold text-dark mb-0">Directorio de Clientes</h4>
+            <p class="text-muted small mb-0">Gestión de inscripciones y estados</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2 btn-modo-eliminar"
                     onclick="toggleModoEliminar()">
-                Eliminar
+                <i class="bi bi-trash"></i>
+                <span>Eliminar</span>
             </button>
-            <a th:href="@{/clientes/nuevo}" class="btn btn-outline-success btn-sm">
-                + Inscribir Cliente
+            
+            <a th:href="@{/clientes/nuevo}" class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+                <i class="bi bi-person-plus-fill"></i>
+                <span>Nuevo Cliente</span>
             </a>
         </div>
     </div>
 
-    <!-- Filtro -->
-    <div class="mb-3 d-flex justify-content-between">
-        <input 
-            id="filtroClientes"
-            type="text"
-            class="form-control form-control-sm"
-            style="max-width: 250px;"
-            placeholder="Filtrar clientes">
+    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
+        <div class="row">
+            <div class="col-md-4"> <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input id="filtroClientes" 
+                           type="text" 
+                           class="form-control border-start-0 ps-0 bg-light" 
+                           placeholder="Buscar por nombre, apellido o ID...">
+                </div>
+            </div>
+        </div>
     </div>
 
-
-    <!-- Tabla -->
-    <div class="card custom-card">
-        <div class="table-responsive">
-            <table id="tablaClientes" class="table table-hover table-sm align-middle mb-0">
-                <thead>
-                    <tr class="text-muted small text-uppercase">
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Actividad</th>
-                        <th>Fecha de pago</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
+    <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
+        
+        <div class="table-responsive h-100 w-100 custom-scrollbar">
+            <table id="tablaClientes" class="table table-hover align-middle mb-0" style="width: 100%;">
+                
+                <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
+                    <tr class="text-secondary small text-uppercase">
+                        <th class="ps-4 py-3 bg-light border-bottom">Cliente</th> <th class="py-3 bg-light border-bottom">Actividades</th>
+                        <th class="py-3 bg-light border-bottom">Último Pago</th>
+                        <th class="py-3 bg-light border-bottom">Estado</th>
+                        <th class="pe-4 py-3 bg-light border-bottom text-center">Acciones</th>
                     </tr>
                 </thead>
 
-               <tbody>
-    <tr th:each="c : ${clientes}"> 
-        <td th:text="${c.nombre}" class="fw-medium"></td>
-        <td th:text="${c.apellido}"></td>
-        <td>
-            <div class="d-flex flex-wrap gap-1">
-                <span th:each="insc : ${c.inscripciones}" 
-                      class="badge bg-light text-dark border small"
-                      th:text="${insc.actividad.nombre}">
-                </span>
-            </div>
-        </td>
+                <tbody class="border-top-0">
+                    <tr th:each="c : ${clientes}">
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                  
+                                <div>
+                                    <div class="fw-bold text-dark" th:text="${c.nombre} + ' ' + ${c.apellido}">Nombre</div>
+                                    </div>
+                            </div>
+                        </td>
 
-        <td>
-                <div th:each="insc : ${c.inscripciones}">
-                    <span class="small text-secondary"
-                          th:if="${insc.fechaUltimoPago != null}"
-                          th:text="${#temporals.format(insc.fechaUltimoPago, 'dd/MM/yyyy')}">
-                    </span>
-                </div>
-        </td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-1">
+                                <span th:each="insc : ${c.inscripciones}" 
+                                      class="badge bg-light text-dark border fw-normal"
+                                      th:text="${insc.actividad.nombre}">
+                                </span>
+                                <span th:if="${#lists.isEmpty(c.inscripciones)}" class="text-muted small fst-italic">
+                                    Sin actividad
+                                </span>
+                            </div>
+                        </td>
 
-        <td>
-            <span th:if="${c.adeuda()}" class="badge bg-danger-light text-danger">Adeuda</span>
-            <span th:if="${!c.adeuda()}" class="badge bg-success-light text-success">Al día</span>
-        </td>
+                        <td>
+                            <div th:each="insc : ${c.inscripciones}">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <i class="bi bi-calendar-check text-muted small"></i>
+                                    <span class="small text-secondary"
+                                          th:if="${insc.fechaUltimoPago != null}"
+                                          th:text="${#temporals.format(insc.fechaUltimoPago, 'dd/MM/yyyy')}">
+                                    </span>
+                                    <span class="small text-muted fst-italic" th:unless="${insc.fechaUltimoPago != null}">
+                                        Nunca
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
 
-        <td >
-            <div class="d-flex align-items-center gap-2">
-                <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" 
-                   class="btn btn-sm btn-outline-primary btn-editar-row">
-                    <i class="bi bi-pencil"></i>
-                </a>
+                        <td>
+                            <span th:if="${c.adeuda()}" class="badge bg-danger-light text-danger border border-danger border-opacity-25">
+                                <i class="bi bi-exclamation-circle me-1"></i> Adeuda
+                            </span>
+                            <span th:if="${!c.adeuda()}" class="badge bg-success-light text-success border border-success border-opacity-25">
+                                <i class="bi bi-check-circle me-1"></i> Al día
+                            </span>
+                        </td>
 
-                <button type="button"
-                        class="btn btn-sm btn-outline-danger btn-eliminar"
-                        th:attr="data-id=${c.idCliente}, data-nombre=${c.nombre}"
-                        onclick="abrirPanelEliminar(this)">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-        </td>
-    </tr>
-</tbody>
+                        <td class="pe-4">
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" 
+                                    class="btn btn-sm btn-outline-primary btn-editar-row">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
 
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger btn-eliminar"
+                                        th:attr="data-id=${c.idCliente}, data-nombre=${c.nombre}"
+                                        onclick="abrirPanelEliminar(this)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                
+                        </td>
+                    </tr>
+                </tbody>
             </table>
-            <div id="panelEliminarOverlay"
-                class="panel-overlay d-none"
-                onclick="cerrarPanelEliminar()">
+        </div>
+    </div>
 
-                <div class="panel-container"
-                    onclick="event.stopPropagation()"
-                    th:insert="fragments/panel-eliminar :: panelEliminar">
-                </div>
-            </div>
+    <div id="panelEliminarOverlay"
+         class="panel-overlay d-none"
+         onclick="cerrarPanelEliminar()">
+        <div class="panel-container"
+             onclick="event.stopPropagation()"
+             th:insert="fragments/panel-eliminar :: panelEliminar">
         </div>
     </div>
 

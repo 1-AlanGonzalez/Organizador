@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const options = {
             chart: { 
                 type: 'area',
-                height: 280,
+                height: '100%',
                 toolbar: { show: false },
                 zoom: { enabled: false },
                 dropShadow: {
