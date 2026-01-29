@@ -219,3 +219,51 @@ function toggleModoEliminar() {
     }
 
  
+    // PANEL CLIENTE
+    function calcularTotal() {
+            let total = 0;
+            // Selecciona todos los checkboxes marcados
+            const checkboxes = document.querySelectorAll('.activity-checkbox:checked');
+            
+            checkboxes.forEach(chk => {
+                // Obtiene el precio del atributo data-precio
+                let precio = parseFloat(chk.getAttribute('data-precio')) || 0;
+                total += precio;
+            });
+
+            // Actualiza el input de Total
+            document.getElementById('totalEstimado').value = total;
+            calcularDeuda();
+        }
+
+        function pagarTotal() {
+            // Copia el valor del Total al campo Monto Abonado
+            const total = document.getElementById('totalEstimado').value;
+            const inputAbonado = document.getElementById('montoAbonado');
+            inputAbonado.value = total;
+            calcularDeuda();
+        }
+
+        function calcularDeuda() {
+            const total = parseFloat(document.getElementById('totalEstimado').value) || 0;
+            const abonado = parseFloat(document.getElementById('montoAbonado').value) || 0;
+            const deuda = total - abonado;
+            
+            const textoDeuda = document.getElementById('textoDeuda');
+            const spanDeuda = document.getElementById('montoDeuda');
+
+            if (deuda > 0) {
+                textoDeuda.classList.remove('d-none');
+                spanDeuda.innerText = deuda;
+            } else {
+                textoDeuda.classList.add('d-none');
+            }
+        }
+
+        // Listener para calcular deuda mientras escribes
+        document.getElementById('montoAbonado').addEventListener('input', calcularDeuda);
+
+        // Ejecutar al cargar por si es edición
+        document.addEventListener("DOMContentLoaded", function() {
+            calcularTotal();
+        });

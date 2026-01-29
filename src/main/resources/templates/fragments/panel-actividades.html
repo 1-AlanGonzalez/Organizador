@@ -1,87 +1,97 @@
 <div th:fragment="panelActividad">
 
-    <div class="card custom-card" style="max-width: 500px;">
-        <div class="card-body">
+    <div class="card custom-card border-0 shadow-sm" style="max-width: 650px;">
+        <div class="card-body p-4">
 
-            <h4 class="section-title mb-4" id="panelActividadTitulo">Nueva Actividad</h4>
+            <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
+                <div class="bg-warning bg-opacity-10 p-2 rounded me-3 text-warning">
+                    <i class="bi bi-activity fs-4"></i>
+                </div>
+                <div>
+                    <h4 class="fw-bold mb-0" th:text="${actividad.idActividad != null} ? 'Editar Actividad' : 'Nueva Actividad'">
+                        Nueva Actividad
+                    </h4>
+                    <small class="text-muted">Gestión de precios y horarios</small>
+                </div>
+            </div>
 
-            <form  th:action="@{/actividades/guardar}"
-                  th:object="${actividad}"
-                  method="post">
-            <input type="hidden" th:field="*{idActividad}" name="idActividad">
+            <form th:action="@{/actividades/guardar}" th:object="${actividad}" method="post">
+                
+                <input type="hidden" th:field="*{idActividad}">
 
                 <div class="mb-3">
-                    <label class="form-label">Nombre</label>
-                    <input type="text"
-                           id="nombre"
-                           name="nombre"
-                           th:field="*{nombre}"
-                           class="form-control"
-                           placeholder="Ingrese el nombre de la actividad"
-                           required>
+                    <label class="form-label small fw-bold text-secondary">Nombre</label>
+                    <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ej: Yoga" required>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Cupo Máximo</label>
-                    <input type="number"
-                            name="cupoMaximo"
-                           th:field="*{cupoMaximo}"
-                           class="form-control"
-                           placeholder="Ingrese el cupo máximo de la actividad"
-                           required>
+                <div class="bg-light p-3 rounded-3 mb-4 border">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-tag-fill text-success me-2"></i>
+                        <h6 class="fw-bold mb-0 text-dark">Esquema de Cobro</h6>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Precio Mensual</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white text-primary fw-bold">$</span>
+                                <input type="number" 
+                                       th:field="*{precio}" 
+                                       class="form-control fw-bold" 
+                                       placeholder="0.00" 
+                                       step="0.01"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Precio por Clase (Opcional)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white text-success">$</span>
+                                <input type="number" 
+                                       name="precioDiarioDummy" 
+                                       class="form-control" 
+                                       placeholder="Ej: 2000">
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Precio</label>
-                    <input type="number"
-                            name="precio"
-                           th:field="*{precio}"
-                           class="form-control"
-                           placeholder="Ej: 15000"
-                           required>
+                <div class="row mb-3">
+                     <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary">Cupo Máximo</label>
+                        <input type="number" th:field="*{cupoMaximo}" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary">Instructor</label>
+                        <select name="instructorId" class="form-select" required>
+                            <option value="" disabled selected>Seleccionar...</option>
+                             <option th:each="instr : ${instructores}"
+                                     th:value="${instr.idInstructor}"
+                                     th:text="${instr.nombre + ' ' + instr.apellido}"
+                                     th:selected="${actividad.dictados != null and !actividad.dictados.empty and actividad.dictados[0].instructor.idInstructor == instr.idInstructor}">
+                            </option>
+                        </select>
+                    </div>
                 </div>
-                <!-- Seleccionar instructor -->
-                <div class="mb-4">
-                    <label class="form-label">Instructor</label>
-                    <select name="instructorId" class="form-select" required>
-                        
-                        <option value="" disabled selected>Seleccionar instructor</option>
-                        <option th:each="instr : ${instructores}"
-                                th:value="${instr.idInstructor}"
-                                th:text="${instr.nombre + ' ' + instr.apellido}">
-                        </option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Días</label>
-                    <input type="text"
-                        name="dias"
-                        class="form-control"
-                        placeholder="Ej: Lun - Mié - Vie"
-                        required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Horario</label>
-                    <input type="text"
-                        name="horario"
-                        class="form-control"
-                        placeholder="Ej: 20:00 - 21:00"
-                        required>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary">Días</label>
+                        <input type="text" name="dias" class="form-control" placeholder="Lun - Mie" required> 
+                        </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary">Horario</label>
+                        <input type="text" name="horario" class="form-control" placeholder="18:00" required>
+                         </div>
                 </div>
 
-                <div class="d-flex justify-content-end gap-2">
-                    <a th:href="@{/actividades}" class="btn btn-outline-secondary">
-                        Cancelar
-                    </a>
-                    <button  type="submit" class="btn btn-action">
-                        Guardar Actividad
-                    </button>
+                <div class="d-flex justify-content-end gap-2 border-top pt-3">
+                    <a th:href="@{/actividades}" class="btn btn-light border">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
-
             </form>
-
         </div>
     </div>
-
 </div>
