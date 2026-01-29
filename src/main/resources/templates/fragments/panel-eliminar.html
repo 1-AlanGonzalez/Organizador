@@ -1,35 +1,28 @@
 <div th:fragment="panelEliminar">
-
     <div class="card custom-card" style="max-width: 450px;">
         <div class="card-body">
-
-            <h4 class="text-danger mb-3">
-                Eliminar
-            </h4>
-
+            <h4 class="text-danger mb-3">Eliminar</h4>
+            
             <p>
-                ¿Seguro que querés eliminar
+                ¿Seguro que querés eliminar a 
                 <strong id="nombreEliminar"></strong>?
             </p>
 
-            <form id="formEliminar" method="post">
+            <form id="formEliminar" method="post" action="">
+                
                 <div class="d-flex justify-content-end gap-2 mt-4">
-
-                    <button type="button"
+                    <button type="button" 
                             class="btn btn-outline-secondary"
                             onclick="cerrarPanelEliminar()">
                         Cancelar
                     </button>
 
-                    <button type="submit"
-                            class="btn btn-danger">
+                    <button type="submit" class="btn btn-danger">
                         Eliminar
                     </button>
-
                 </div>
             </form>
 
         </div>
     </div>
-
 </div>

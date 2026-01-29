@@ -4,6 +4,7 @@ package com.gymmanager.gym_manager.controllers;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,28 +56,36 @@ public class ClientesController {
      Bueno le saque peso de codeo al guardarCliente ahora se encarga de la verificaciones y logica los servicios 
      tanto de cliente service y la relacion clienteActividad service para que esto funcione
      */
-    @PostMapping("/guardar")
-        public String guardarCliente(
-            @ModelAttribute Cliente cliente, 
-            // RequestParam para la actividad seleccionada
+   @PostMapping("/guardar")
+    public String guardarCliente(
+            @ModelAttribute Cliente cliente,
             @RequestParam(required = false) List<Integer> idActividades,
-            @RequestParam LocalDate fechaInicio,
-            Model model, 
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaInicio,
+            Model model,
             RedirectAttributes redirectAttributes) {
-            try {
+        try {
 
-                clienteService.registrarClienteEInscribir(cliente, idActividades,fechaInicio);
-
-                redirectAttributes.addFlashAttribute("success", "Cliente guardado con éxito.");
-                return "redirect:/clientes";
-
-            } catch (Exception e) {
-                prepararModelo(model);
-                model.addAttribute("error", e.getMessage());
-                model.addAttribute("abrirPanel", true);
-                return "layouts/main";
+            if (cliente.getIdCliente() != null && cliente.getIdCliente() > 0) {
+                clienteService.actualizarCliente(cliente, idActividades, fechaInicio);
+                redirectAttributes.addFlashAttribute("success", "Cliente actualizado con éxito.");
+            } else {
+                if (fechaInicio == null) {
+                    throw new RuntimeException("La fecha de inicio es obligatoria para nuevos clientes.");
+                }
+                clienteService.registrarClienteEInscribir(cliente, idActividades, fechaInicio);
+                redirectAttributes.addFlashAttribute("success", "Cliente guardado e inscripto con éxito.");
             }
+
+            return "redirect:/clientes";
+
+        } catch (Exception e) {
+            prepararModelo(model);
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("cliente", cliente);
+            model.addAttribute("abrirPanel", true);
+            return "layouts/main";
         }
+    }
 
 // Método auxiliar para evitar repetir código en los métodos del controlador
 private void prepararModelo(Model model) {

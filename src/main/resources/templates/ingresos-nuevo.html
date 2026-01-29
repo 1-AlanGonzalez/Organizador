@@ -22,28 +22,33 @@
                     </div>
 
                     <form th:action="@{/ingresos/guardar}" method="post">
-                        
-                        <div class="mb-4">
-                            <label for="cliente" class="form-label small fw-bold text-secondary">Cliente</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light text-muted"><i class="bi bi-search"></i></span>
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="cliente" 
-                                       name="clienteNombre" 
-                                       placeholder="Escriba para buscar cliente..." 
-                                       list="clientesList"
-                                       autocomplete="off"
-                                       required>
-                                
+                                            
+                    <div class="mb-4">
+                        <label for="cliente" class="form-label small fw-bold text-secondary">Cliente</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted"><i class="bi bi-search"></i></span>
+                            
+                            <input type="text" 
+                                class="form-control" 
+                                id="cliente" 
+                                name="clienteNombre" 
+                                placeholder="Escriba para buscar cliente..." 
+                                list="clientesList"
+                                autocomplete="off"
+                                required>
+        
+                  <input type="hidden" id="idCliente" name="idCliente">
+
                                 <datalist id="clientesList">
                                     <option th:each="ac : ${clientesList}"
-                                            th:value="${ac.cliente.nombre + ' ' + ac.cliente.apellido}">
+                                            th:value="${ac.cliente.nombre + ' ' + ac.cliente.apellido}"
+                                            th:data-id="${ac.cliente.idCliente}">
                                     </option>
                                 </datalist>
                             </div>
                             <div class="form-text small">Seleccione el cliente del listado sugerido.</div>
                         </div>
+
 
                         <div class="row mb-3">
                             <div class="col-md-6">

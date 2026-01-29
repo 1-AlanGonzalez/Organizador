@@ -267,3 +267,5 @@ function toggleModoEliminar() {
         document.addEventListener("DOMContentLoaded", function() {
             calcularTotal();
         });
+
+// 

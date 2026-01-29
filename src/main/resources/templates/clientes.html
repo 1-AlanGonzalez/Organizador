@@ -104,11 +104,13 @@
                                 </a>
 
                                 <button type="button"
-                                        class="btn btn-sm btn-outline-danger btn-eliminar"
-                                        th:attr="data-id=${c.idCliente}, data-nombre=${c.nombre}"
-                                        onclick="abrirPanelEliminar(this)">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                    class="btn btn-sm btn-outline-danger btn-eliminar"
+                                    th:attr="data-id=${c.idCliente}, 
+                                            data-nombre=${c.nombre},
+                                            data-url='/clientes/eliminar'" 
+                                    onclick="abrirPanelEliminar(this)">
+                                <i class="bi bi-trash"></i>
+                            </button>
                             </div>
                 
                         </td>

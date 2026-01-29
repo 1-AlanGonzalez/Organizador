@@ -1,22 +1,28 @@
 package com.gymmanager.gym_manager.controllers;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 // import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 // import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 // import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gymmanager.gym_manager.entity.ActividadCliente;
 // import com.gymmanager.gym_manager.entity.MetodoDePago;
-
+import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
 import com.gymmanager.gym_manager.repository.PagoRepository;
+import com.gymmanager.gym_manager.services.PagoService;
 
 @Controller
 @RequestMapping("/ingresos")
@@ -25,8 +31,7 @@ public class IngresosController {
 private final PagoRepository pagoRepository;
 // clientesList
 private final ClienteActividadRepository clienteActividadRepository;
-
-    public IngresosController(PagoRepository pagoRepository, ClienteActividadRepository clienteActividadRepository) {
+    public IngresosController(PagoService pagoService, PagoRepository pagoRepository, ClienteActividadRepository clienteActividadRepository) {
         this.pagoRepository = pagoRepository;
         this.clienteActividadRepository = clienteActividadRepository;
     }
@@ -73,15 +78,22 @@ private final ClienteActividadRepository clienteActividadRepository;
         return "layouts/main";
     }
 
-        // @PostMapping("/guardar")
-        // public String guardarIngreso(
-        //         @RequestParam Integer actividadClienteId,
-        //         @RequestParam BigDecimal monto,
-        //         @RequestParam MetodoDePago metodoPago
-        // ) {
+    @PostMapping("/ingresos/guardar")
+    public String guardarIngreso(
+            @RequestParam Integer idCliente, // Recibimos el ID oculto
+            @RequestParam BigDecimal monto,
+            @RequestParam MetodoDePago metodoPago,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha,
+            RedirectAttributes flash) {
 
-        //     return "redirect:/ingresos";
-        // }
+        try {
+            flash.addFlashAttribute("success", "Pago registrado correctamente.");
+        } catch (Exception e) {
+            flash.addFlashAttribute("error", "Error al registrar pago: " + e.getMessage());
+        }
+
+        return "redirect:/ingresos";
+    }
 
 }
 
