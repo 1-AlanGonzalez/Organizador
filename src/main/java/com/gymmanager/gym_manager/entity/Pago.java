@@ -53,8 +53,8 @@ public class Pago {
     @Column(name = "FECHA_PAGO")
     private LocalDate fechaPago;
 
-    // @Column(name = "OBSERVACIONES", nullable = false, columnDefinition = "TEXT")
-    // private String observaciones;
+    @Column(name = "OBSERVACIONES", nullable = true, columnDefinition = "TEXT")
+    private String observaciones;
 
     // -------------------
 
@@ -121,6 +121,14 @@ public class Pago {
 
     public void setMetodoPago(MetodoDePago metodoPago) {
         this.metodoPago = metodoPago;
+    }
+
+    public String getObservaciones(){
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones){
+        this.observaciones = observaciones;
     }
     /* ================== LÓGICA DEL PAGO ================== */
 

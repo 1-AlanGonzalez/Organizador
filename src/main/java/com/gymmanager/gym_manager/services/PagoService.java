@@ -25,7 +25,7 @@ public class PagoService {
     }
 
 
-    public void procesarPago(Integer idPago, MetodoDePago metodoDePago){
+    public void procesarPago(Integer idPago, MetodoDePago metodoDePago, String observaciones){
         ConfiguracionDePago config = configuracionPagoRepository
         .findByMetodoDePagoAndActivoTrue(metodoDePago)
         .orElseThrow(() -> new RuntimeException("No hay configuración para ese método"));
@@ -41,6 +41,10 @@ public class PagoService {
         pago.aplicarRecargo(recargo);
 
         pago.setMetodoPago(metodoDePago);
+
+        if (observaciones != null && !observaciones.isBlank()) {
+            pago.setObservaciones(observaciones);
+        }
 
         pago.pagar();
 
