@@ -53,20 +53,22 @@ public class Pago {
     @Column(name = "FECHA_PAGO")
     private LocalDate fechaPago;
 
-    @Column(name = "OBSERVACIONES")
-    private String observaciones;
+    // @Column(name = "OBSERVACIONES", nullable = false, columnDefinition = "TEXT")
+    // private String observaciones;
 
     // -------------------
 
     public Pago() {}
 
-    public Pago(BigDecimal montoAPagar, LocalDate fechaGeneracion,LocalDate fechaVencimiento, ActividadCliente actividadCliente) {
+    public Pago(BigDecimal montoAPagar, LocalDate fechaGeneracion,LocalDate fechaVencimiento, 
+        ActividadCliente actividadCliente) {
         this.fechaGeneracion = fechaGeneracion;
         this.fechaVencimiento = fechaVencimiento;
         this.estado = EstadoPago.ADEUDA;
         this.montoAPagar = montoAPagar;
         this.actividadCliente = actividadCliente;
         this.metodoPago = MetodoDePago.NO_ESPECIFICADO;
+        
     }
 
 
