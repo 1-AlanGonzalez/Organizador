@@ -97,6 +97,13 @@
                         </td>
 
                         <td class="pe-4">
+                            <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+                            <!-- Para ver la informacion del cliente -->
+                            <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" 
+                            class="btn btn-sm btn-outline-info" 
+                            title="Ver historial y perfil">
+                                <i class="bi bi-eye"></i>
+                            </a>
                             <div class="d-flex align-items-center justify-content-center gap-2">
                                 <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" 
                                     class="btn btn-sm btn-outline-primary btn-editar-row">
