@@ -28,6 +28,8 @@ public class Cliente {
     @Column(name = "TELEFONO", nullable = false, length = 20)
     private String telefono;
 
+    // @Column(name = "OBSERVACIONES", nullable = false, columnDefinition = "TEXT")
+    // private String observaciones;
 
     // Relación con ActividadCliente
     // orphanRemoval=true significa que si se elimina la inscripcion del cliente, se elimina de la base de datos

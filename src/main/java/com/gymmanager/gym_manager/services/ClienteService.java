@@ -11,6 +11,7 @@ import com.gymmanager.gym_manager.entity.Actividad;
 import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.EstadoInscripcion;
+import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
 
@@ -34,7 +35,7 @@ public class ClienteService {
 
     /* Solo registra al cliente y valida si existe */
     @Transactional /* transactional quiere decir:Todo lo que pase acá adentro es una sola operación- Si algo falla, volvé todo atrás */
-    public Cliente registrarClienteEInscribir(Cliente cliente, List<Integer> idActividades, LocalDate fechaInicio){
+    public Cliente registrarClienteEInscribir(Cliente cliente, List<Integer> idActividades, LocalDate fechaInicio, TipoDeCobro tipoDeCobro){
     Boolean yaEstaElDni = clienteRepository.existsByDni(cliente.getDni());
 
     if (yaEstaElDni) {
@@ -51,7 +52,7 @@ public class ClienteService {
         Actividad actividad = actividadRepository.findById(idActividad)
                 .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
 
-        actividadClienteService.inscribirCliente(clienteGuardado, actividad,fechaInicio); 
+        actividadClienteService.inscribirCliente(clienteGuardado, actividad,fechaInicio, tipoDeCobro); 
     }
 
         return clienteGuardado;

@@ -32,6 +32,9 @@ public class Actividad {
     @Column(name = "PRECIO", nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
 
+    @Column(name = "PRECIO_DIARIO", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precioDiario;
+
     @OneToMany(
         mappedBy = "actividad",
         cascade = CascadeType.ALL,
@@ -47,10 +50,11 @@ public class Actividad {
     }
 
     
-    public Actividad(String nombre, Integer cupoMaximo, BigDecimal precio) {
+    public Actividad(String nombre, Integer cupoMaximo, BigDecimal precio, BigDecimal precioDiario) {
         this.nombre = nombre;
         this.cupoMaximo = cupoMaximo;
         this.precio = precio;
+        this.precioDiario = precioDiario;
     }
 
     /* ================== Getters y Setters ================== */
@@ -108,6 +112,13 @@ public class Actividad {
         this.dictados = dictados;
     }
     
+    public BigDecimal getPrecioDiario(){
+        return precioDiario;
+    }
+
+    public void setPrecioDiario(BigDecimal precioDiario){
+        this.precioDiario = precioDiario;
+    }
     /* ================== LÓGICA DE ACTIVIDAD ================== */
 
 

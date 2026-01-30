@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,6 +44,10 @@ public class ActividadCliente {
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO", nullable = false)
     private EstadoInscripcion estado = EstadoInscripcion.ACTIVA;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TIPO_DE_COBRO", nullable = false)
+    private TipoDeCobro tipoDecobro;
     
     @ManyToOne
     @JoinColumn(name = "ID_CLIENTE", nullable = false)
@@ -62,11 +65,13 @@ public class ActividadCliente {
 
     public ActividadCliente() { }
 
-    public ActividadCliente(LocalDate fechaDeInscripcion, BigDecimal costo, Cliente cliente, Actividad actividad) {
+    public ActividadCliente(LocalDate fechaDeInscripcion, BigDecimal costo, Cliente cliente, 
+        Actividad actividad, TipoDeCobro tipoDeCobro) {
         this.fechaDeInscripcion = fechaDeInscripcion;
         this.costo = costo;
         this.cliente = cliente;
         this.actividad = actividad;
+        this.tipoDecobro = tipoDeCobro;
     }
 
     /* ================== Getters y Setters ================== */
@@ -127,7 +132,17 @@ public Set<Asistencia> getAsistencias() {
         return estado;
     }
 
+    public TipoDeCobro getTipoDeCobro(){
+        return tipoDecobro;
+    }
+
+    public void setTipoDeCobro(TipoDeCobro tipoDeCobroNuevo){
+        this.tipoDecobro = tipoDeCobroNuevo;
+    }
+
     /* ================== LÓGICA DE ACTIVIDADCLIENTE ================== */
+
+    
 
     public void activar(){
         estado = EstadoInscripcion.ACTIVA;
@@ -166,6 +181,10 @@ public Set<Asistencia> getAsistencias() {
         return actividad.getPrecio();
     }
 
+    public BigDecimal calcularMontoDiario(){
+        return actividad.getPrecioDiario();
+    }
+
     public Pago generarPagoMensual(LocalDate fechaBase){
         if (estado == EstadoInscripcion.BAJA) {
             throw new RuntimeException("No se pueden generar pagos para una inscripción dada de baja");
@@ -178,6 +197,47 @@ public Set<Asistencia> getAsistencias() {
 
         BigDecimal monto = calcularMontoMensual();
         Pago pago = new Pago(monto,fechaBase,fechaBase.plusMonths(1), this);
+        pagos.add(pago);
+        return pago;
+    }
+
+    public Pago generarPagoDiario() {
+        if (estado == EstadoInscripcion.BAJA) {
+            throw new RuntimeException("No se pueden generar pagos para una inscripción dada de baja");
+        }
+
+        Boolean existePagoActivo = pagos.stream().anyMatch(p->p.getEstado() == EstadoPago.ADEUDA && !p.estaVencido());
+        if(existePagoActivo){
+            throw new RuntimeException("Ya existe un pago activo para esta inscripcion");
+        }
+
+        BigDecimal monto = calcularMontoDiario();
+        Pago pago = new Pago(monto,LocalDate.now(), LocalDate.now(),this);
+        pagos.add(pago);
+        return pago;
+    }
+
+    public Pago generarPago(LocalDate fechaBase) {
+
+        if (estado == EstadoInscripcion.BAJA) {
+            throw new RuntimeException("No se pueden generar pagos para una inscripción dada de baja");
+        }
+
+        boolean existePagoActivo = pagos.stream()
+        .anyMatch(p -> p.getEstado() == EstadoPago.ADEUDA && !p.estaVencido());
+
+        if (existePagoActivo) {
+        throw new RuntimeException("Ya existe un pago activo para esta inscripción");
+        }
+
+        Pago pago;
+    
+        if (tipoDecobro == TipoDeCobro.MENSUAL) {
+        pago = generarPagoMensual(fechaBase);
+        } else {
+        pago = generarPagoDiario();
+        }
+
         pagos.add(pago);
         return pago;
     }

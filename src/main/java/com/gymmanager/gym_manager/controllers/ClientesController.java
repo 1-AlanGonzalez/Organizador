@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.Cliente;
-import com.gymmanager.gym_manager.entity.Pago;
+import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
 
@@ -65,18 +65,19 @@ public class ClientesController {
             @ModelAttribute Cliente cliente,
             @RequestParam(required = false) List<Integer> idActividades,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaInicio,
+            @RequestParam TipoDeCobro tipoDeCobro,
             Model model,
             RedirectAttributes redirectAttributes) {
         try {
 
             if (cliente.getIdCliente() != null && cliente.getIdCliente() > 0) {
-                clienteService.actualizarCliente(cliente, idActividades, fechaInicio);
+                clienteService.actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
                 redirectAttributes.addFlashAttribute("success", "Cliente actualizado con éxito.");
             } else {
                 if (fechaInicio == null) {
                     throw new RuntimeException("La fecha de inicio es obligatoria para nuevos clientes.");
                 }
-                clienteService.registrarClienteEInscribir(cliente, idActividades, fechaInicio);
+                clienteService.registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
                 redirectAttributes.addFlashAttribute("success", "Cliente guardado e inscripto con éxito.");
             }
 

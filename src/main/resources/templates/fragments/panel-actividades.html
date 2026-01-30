@@ -48,10 +48,15 @@
                             <label class="form-label small fw-bold text-secondary">Precio por Clase (Opcional)</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white text-success">$</span>
-                                <input type="number" 
-                                       name="precioDiarioDummy" 
+                                <input type="number"
+                                        th:field="*{precioDiario}"
+                                        class="form-control"
+                                        step="0.01"
+                                        placeholder="Ej: 2000"
+                                        required> 
+                                       <!-- name="precioDiarioDummy" 
                                        class="form-control" 
-                                       placeholder="Ej: 2000">
+                                       placeholder="Ej: 2000"> -->
                             </div>
                         </div>
                     </div>
