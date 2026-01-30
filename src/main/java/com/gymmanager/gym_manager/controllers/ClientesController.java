@@ -2,6 +2,7 @@ package com.gymmanager.gym_manager.controllers;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.Cliente;
+import com.gymmanager.gym_manager.entity.Pago;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
 
@@ -152,6 +156,24 @@ public String editarCliente(@PathVariable Integer id, Model model) {
     prepararModeloBase(model, "Editar Cliente", "Clientes / Editar " + cliente.getNombre());
     return "layouts/main";
 }
+
+    @GetMapping("/ver/{id}") // O la ruta que estés usando
+    public String verCliente(@PathVariable Integer id, Model model) {
+        // ... lógica para buscar cliente y pagos ...
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+        // Variables de datos
+        model.addAttribute("cliente", cliente);
+        // model.addAttribute("historialPagos", pagos);
+        
+        // Variables para el Layout
+        model.addAttribute("titulo", "Detalle de Cliente");
+        model.addAttribute("header", "Información del Cliente");
+        
+        model.addAttribute("vista", "clientes/ver_cliente"); // Ruta al archivo hijo
+        model.addAttribute("fragmento", "detalle_cliente");  // Nombre del th:fragment dentro del hijo
+        return "layouts/main"; // Nombre del archivo PADRE (layout.html)
+    }
 }
 
 
