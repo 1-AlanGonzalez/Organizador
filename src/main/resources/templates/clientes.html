@@ -39,91 +39,76 @@
         
         <div class="table-responsive h-100 w-100 custom-scrollbar">
             <table id="tablaClientes" class="table table-hover align-middle mb-0" style="width: 100%;">
-                
-                <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
-                    <tr class="text-secondary small text-uppercase">
-                        <th class="ps-4 py-3 bg-light border-bottom">Cliente</th> <th class="py-3 bg-light border-bottom">Actividades</th>
-                        <th class="py-3 bg-light border-bottom">Último Pago</th>
-                        <th class="py-3 bg-light border-bottom">Estado</th>
-                        <th class="pe-4 py-3 bg-light border-bottom text-center">Acciones</th>
-                    </tr>
-                </thead>
+    
+    <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
+        <tr class="text-secondary small text-uppercase">
+            <th class="ps-4 py-3 bg-light border-bottom">Cliente</th>
+            
+            <th class="py-3 bg-light border-bottom" style="min-width: 250px;">Suscripciones</th>
+            
+            <th class="py-3 bg-light border-bottom">Estado</th>
+            <th class="pe-4 py-3 bg-light border-bottom text-center">Acciones</th>
+        </tr>
+    </thead>
 
-                <tbody class="border-top-0">
-                    <tr th:each="c : ${clientes}">
-                        <td class="ps-4">
-                            <div class="d-flex align-items-center">
-                  
-                                <div>
-                                    <div class="fw-bold text-dark" th:text="${c.nombre} + ' ' + ${c.apellido}">Nombre</div>
-                                    </div>
-                            </div>
-                        </td>
+    <tbody class="border-top-0">
+        <tr th:each="c : ${clientes}">
+            <td class="ps-4">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <div class="fw-bold text-dark" th:text="${c.nombre} + ' ' + ${c.apellido}">Nombre</div>
+                        </div>
+                </div>
+            </td>
 
-                        <td>
-                            <div class="d-flex flex-wrap gap-1">
-                                <span th:each="insc : ${c.inscripciones}" 
-                                      class="badge bg-light text-dark border fw-normal"
-                                      th:text="${insc.actividad.nombre}">
+            <td>
+                <div class="d-flex flex-column gap-1" th:if="${!#lists.isEmpty(c.inscripciones)}">
+                    
+                    <div th:each="insc : ${c.inscripciones}" 
+                         class="d-flex align-items-center justify-content-between p-1 px-2 rounded-3 border bg-light activity-row">
+                        
+                        <span class="fw-bold text-dark small" th:text="${insc.actividad.nombre}">
+                            Boxeo
+                        </span>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-white text-secondary border fw-normal d-flex align-items-center gap-1">
+                                <i class="bi bi-calendar-check text-muted" style="font-size: 0.7rem;"></i>
+                                <span th:if="${insc.fechaUltimoPago != null}"
+                                      th:text="${#temporals.format(insc.fechaUltimoPago, 'dd/MM/yyyy')}">
+                                    29/01/2026
                                 </span>
-                                <span th:if="${#lists.isEmpty(c.inscripciones)}" class="text-muted small fst-italic">
-                                    Sin actividad
-                                </span>
-                            </div>
-                        </td>
-
-                        <td>
-                            <div th:each="insc : ${c.inscripciones}">
-                                <div class="d-flex align-items-center gap-2 mb-1">
-                                    <i class="bi bi-calendar-check text-muted small"></i>
-                                    <span class="small text-secondary"
-                                          th:if="${insc.fechaUltimoPago != null}"
-                                          th:text="${#temporals.format(insc.fechaUltimoPago, 'dd/MM/yyyy')}">
-                                    </span>
-                                    <span class="small text-muted fst-italic" th:unless="${insc.fechaUltimoPago != null}">
-                                        Nunca
-                                    </span>
-                                </div>
-                            </div>
-                        </td>
-
-                        <td>
-                            <span th:if="${c.adeuda()}" class="badge bg-danger-light text-danger border border-danger border-opacity-25">
-                                <i class="bi bi-exclamation-circle me-1"></i> Adeuda
+                                <span th:unless="${insc.fechaUltimoPago != null}">Nunca</span>
                             </span>
-                            <span th:if="${!c.adeuda()}" class="badge bg-success-light text-success border border-success border-opacity-25">
-                                <i class="bi bi-check-circle me-1"></i> Al día
-                            </span>
-                        </td>
+                        </div>
+                    </div>
 
-                        <td class="pe-4">
-                            <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
-                            <!-- Para ver la informacion del cliente -->
-                            <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" 
-                            class="btn btn-sm btn-outline-info" 
-                            title="Ver historial y perfil">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <div class="d-flex align-items-center justify-content-center gap-2">
-                                <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" 
-                                    class="btn btn-sm btn-outline-primary btn-editar-row">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
+                </div>
 
-                                <button type="button"
-                                    class="btn btn-sm btn-outline-danger btn-eliminar"
-                                    th:attr="data-id=${c.idCliente}, 
-                                            data-nombre=${c.nombre},
-                                            data-url='/clientes/eliminar'" 
-                                    onclick="abrirPanelEliminar(this)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                            </div>
-                
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                <span th:if="${#lists.isEmpty(c.inscripciones)}" class="text-muted small fst-italic ps-1">
+                    Sin actividad registrada
+                </span>
+            </td>
+
+            <td>
+                <span th:if="${c.adeuda()}" class="badge bg-danger-light text-danger border border-danger border-opacity-25">
+                    <i class="bi bi-exclamation-circle me-1"></i> Adeuda
+                </span>
+                <span th:if="${!c.adeuda()}" class="badge bg-success-light text-success border border-success border-opacity-25">
+                    <i class="bi bi-check-circle me-1"></i> Al día
+                </span>
+            </td>
+
+            <td class="pe-4">
+               <div class="d-flex align-items-center justify-content-center gap-2">
+                    <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
+                    <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-primary btn-editar-row"><i class="bi bi-pencil"></i></a>
+                    <button class="btn btn-sm btn-outline-danger btn-eliminar" th:attr="data-id=${c.idCliente}" onclick="abrirPanelEliminar(this)"><i class="bi bi-trash"></i></button>
+               </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
         </div>
     </div>
 

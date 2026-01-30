@@ -673,3 +673,26 @@ Panel de clientes
     margin-bottom: 1rem;
     font-weight: 700;
 }
+
+
+/* CLIENTES */
+/* Estilo para la micro-fila de actividad */
+.activity-row {
+    transition: all 0.2s ease;
+    border: 1px solid #f1f5f9; /* Borde muy sutil */
+}
+
+/* Efecto hover suave al pasar por encima de una actividad específica */
+.activity-row:hover {
+    background-color: #fff !important;
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* Ajuste para que la fecha se vea técnica y limpia */
+.activity-row .badge {
+    font-family: 'Inter', sans-serif; /* Usar tu fuente sans, no la Marko One */
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: #64748b !important;
+}

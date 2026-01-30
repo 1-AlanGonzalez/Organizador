@@ -1,5 +1,6 @@
 package com.gymmanager.gym_manager.services;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
@@ -56,9 +57,26 @@ public class ActividadClienteService {
         if(inscriptosActuales >= actividad.getCupoMaximo()){
             throw new RuntimeException("No hay cupos disponibles para esta actividad");
         }
-
-        ActividadCliente inscripcion = new ActividadCliente(fechaInicio, actividad.getPrecio(), cliente, actividad, tipoCobro);
         
+        // Ésta línea no me permitía agregar clientes que pagaran el plan DIARIO por actividad.getPrecio()
+        // ActividadCliente inscripcion = new ActividadCliente(fechaInicio, actividad.getPrecio(), cliente, actividad, tipoCobro);
+
+        BigDecimal costoDeterminado;
+        /*
+         * Determino si el tipoCobro asignado es el diario para obtener su precio
+         * Si no lo es, y por casualidad no se cargó, atuomaticamente hago un fallback al precio mensual
+         */
+        if (tipoCobro == TipoDeCobro.DIARIO) {
+            costoDeterminado = actividad.getPrecioDiario(); 
+            
+            if (costoDeterminado == null) {
+                costoDeterminado = actividad.getPrecio(); 
+            }
+        } else {
+            costoDeterminado = actividad.getPrecio();
+        }
+        ActividadCliente inscripcion = new ActividadCliente(fechaInicio, costoDeterminado, cliente, actividad, tipoCobro);
+
         cliente.agregarInscripcion(inscripcion); 
         
         /* bueno agregado, a la hora de que inscribe al cliente luego el flujo es que se genere el pago */

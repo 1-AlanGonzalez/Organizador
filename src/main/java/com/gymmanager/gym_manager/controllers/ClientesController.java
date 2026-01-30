@@ -60,37 +60,43 @@ public class ClientesController {
      Bueno le saque peso de codeo al guardarCliente ahora se encarga de la verificaciones y logica los servicios 
      tanto de cliente service y la relacion clienteActividad service para que esto funcione
      */
-   @PostMapping("/guardar")
-    public String guardarCliente(
-            @ModelAttribute Cliente cliente,
-            @RequestParam(required = false) List<Integer> idActividades,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaInicio,
-            @RequestParam TipoDeCobro tipoDeCobro,
-            Model model,
-            RedirectAttributes redirectAttributes) {
-        try {
+@PostMapping("/guardar")
+public String guardarCliente(
+        @ModelAttribute Cliente cliente,
+        @RequestParam(required = false) List<Integer> idActividades,
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaInicio,
+        @RequestParam("tipoDeCobro") String tipoDeCobroString, 
+        Model model,
+        RedirectAttributes redirectAttributes) {
+    
+    try {
+        TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
 
-            if (cliente.getIdCliente() != null && cliente.getIdCliente() > 0) {
-                clienteService.actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
-                redirectAttributes.addFlashAttribute("success", "Cliente actualizado con éxito.");
-            } else {
-                if (fechaInicio == null) {
-                    throw new RuntimeException("La fecha de inicio es obligatoria para nuevos clientes.");
-                }
-                clienteService.registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
-                redirectAttributes.addFlashAttribute("success", "Cliente guardado e inscripto con éxito.");
+        if (cliente.getIdCliente() != null && cliente.getIdCliente() > 0) {
+            clienteService.actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
+            redirectAttributes.addFlashAttribute("success", "Cliente actualizado y plan procesado.");
+        } else {
+            if (fechaInicio == null) {
+                throw new RuntimeException("La fecha de inicio es obligatoria.");
             }
-
-            return "redirect:/clientes";
-
-        } catch (Exception e) {
-            prepararModelo(model);
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("cliente", cliente);
-            model.addAttribute("abrirPanel", true);
-            return "layouts/main";
+            clienteService.registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
+            redirectAttributes.addFlashAttribute("success", "Cliente registrado e inscripto.");
         }
+
+        return "redirect:/clientes";
+
+    } catch (IllegalArgumentException e) {
+        model.addAttribute("error", "Tipo de cobro no válido.");
+        prepararModelo(model); 
+        return "layouts/main";
+    } catch (Exception e) {
+        prepararModelo(model);
+        model.addAttribute("error", e.getMessage());
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("abrirPanel", true);
+        return "layouts/main";
     }
+}
 
 // Método auxiliar para evitar repetir código en los métodos del controlador
 private void prepararModelo(Model model) {

@@ -220,52 +220,36 @@ function toggleModoEliminar() {
 
  
     // PANEL CLIENTE
-    function calcularTotal() {
+function calcularTotal() {
             let total = 0;
-            // Selecciona todos los checkboxes marcados
+            const esMensual = document.getElementById('cobroMensual').checked;
             const checkboxes = document.querySelectorAll('.activity-checkbox:checked');
-            
+
             checkboxes.forEach(chk => {
-                // Obtiene el precio del atributo data-precio
-                let precio = parseFloat(chk.getAttribute('data-precio')) || 0;
-                total += precio;
+                // Selecciona el atributo data dependiendo del radio button
+                let precio = esMensual ? 
+                             parseFloat(chk.getAttribute('data-precio')) : 
+                             parseFloat(chk.getAttribute('data-precio-diario'));
+                
+                if (!isNaN(precio)) {
+                    total += precio;
+                }
             });
 
-            // Actualiza el input de Total
             document.getElementById('totalEstimado').value = total;
-            calcularDeuda();
+            document.getElementById('totalEstimadoDisplay').innerText = total;
+            
+            // Opcional: calcular deuda en tiempo real si ya escribió un monto
+            // verificarDeuda(); 
         }
 
         function pagarTotal() {
-            // Copia el valor del Total al campo Monto Abonado
-            const total = document.getElementById('totalEstimado').value;
-            const inputAbonado = document.getElementById('montoAbonado');
-            inputAbonado.value = total;
-            calcularDeuda();
+            let total = document.getElementById('totalEstimado').value;
+            document.getElementById('montoAbonado').value = total;
         }
 
-        function calcularDeuda() {
-            const total = parseFloat(document.getElementById('totalEstimado').value) || 0;
-            const abonado = parseFloat(document.getElementById('montoAbonado').value) || 0;
-            const deuda = total - abonado;
-            
-            const textoDeuda = document.getElementById('textoDeuda');
-            const spanDeuda = document.getElementById('montoDeuda');
-
-            if (deuda > 0) {
-                textoDeuda.classList.remove('d-none');
-                spanDeuda.innerText = deuda;
-            } else {
-                textoDeuda.classList.add('d-none');
-            }
-        }
-
-        // Listener para calcular deuda mientras escribes
-        document.getElementById('montoAbonado').addEventListener('input', calcularDeuda);
-
-        // Ejecutar al cargar por si es edición
+        // Ejecutar al cargar por si es edición y ya tiene checkboxes marcados
         document.addEventListener("DOMContentLoaded", function() {
             calcularTotal();
         });
-
 // 
