@@ -3,7 +3,7 @@ package com.gymmanager.gym_manager.services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 import org.springframework.stereotype.Service;
 
@@ -73,7 +73,7 @@ public class ClienteService {
         //     }
         // });
     }
-public void actualizarCliente(Cliente clienteForm, List<Integer> idsActividadesForm, LocalDate fechaInicioForm) {
+public void actualizarCliente(Cliente clienteForm, List<Integer> idsActividadesForm, LocalDate fechaInicioForm,TipoDeCobro tipoDeCobro) {
     // 1. Buscamos al cliente original en la BD
     Cliente clienteDb = clienteRepository.findById(clienteForm.getIdCliente())
             .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
@@ -119,7 +119,7 @@ public void actualizarCliente(Cliente clienteForm, List<Integer> idsActividadesF
             LocalDate fechaAlta = (fechaInicioForm != null) ? fechaInicioForm : LocalDate.now();
 
             // Llamamos a tu servicio de inscripción (esto genera el pago y guarda)
-            actividadClienteService.inscribirCliente(clienteDb, actividad, fechaAlta);
+            actividadClienteService.inscribirCliente(clienteDb, actividad, fechaAlta, tipoDeCobro);
         }
     }
 
