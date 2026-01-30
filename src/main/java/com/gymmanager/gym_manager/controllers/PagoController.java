@@ -23,10 +23,11 @@ public class PagoController {
     public String pagar(
         @RequestParam Integer idPago,
         @RequestParam MetodoDePago metodoDePago,
+        @RequestParam(required = false) String observaciones,
         RedirectAttributes redirectAttributes
     ){
         try{
-            pagoService.procesarPago(idPago, metodoDePago);
+            pagoService.procesarPago(idPago, metodoDePago, observaciones);
             redirectAttributes.addFlashAttribute("succes", "Pago registrado correctamente");
             return "redirect:/clientes";
         } catch(Exception e){
