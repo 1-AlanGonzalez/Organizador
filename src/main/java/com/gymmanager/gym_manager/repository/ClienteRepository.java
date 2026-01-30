@@ -21,4 +21,15 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     LEFT JOIN FETCH i.actividad
     """)
     List<Cliente> findAllConInscripciones();
+
+
+    // AGREGADO HOY 29/1
+    // 1. Cuenta clientes que tienen AL MENOS una inscripción ACTIVA
+    @Query("SELECT COUNT(DISTINCT c) FROM Cliente c JOIN c.inscripciones i WHERE i.estado = 'ACTIVA'")
+    long countClientesConInscripcionActiva();
+
+    // 2. Cuenta clientes que tienen inscripción ACTIVA y pagos PENDIENTES (Adeuda o Vencido)
+    @Query("SELECT COUNT(DISTINCT c) FROM Cliente c JOIN c.inscripciones i JOIN i.pagos p " +
+           "WHERE i.estado = 'ACTIVA' AND (p.estado = 'ADEUDA' OR p.estado = 'VENCIDO')")
+    long countClientesDeudores();
 }
