@@ -2,7 +2,7 @@ package com.gymmanager.gym_manager.controllers;
 
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.gymmanager.gym_manager.entity.ActividadCliente;
+
 import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
