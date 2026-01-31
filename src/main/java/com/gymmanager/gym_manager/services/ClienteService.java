@@ -79,65 +79,65 @@ public class ClienteService {
         // });
     }
     
-@Transactional // Importante para que los cambios se guarden
+@Transactional 
     public void actualizarCliente(Cliente clienteForm, List<Integer> idsActividadesForm, LocalDate fechaInicioForm, TipoDeCobro tipoDeCobro) {
         
-        // 1. Buscamos al cliente original en la BD
+        // 1. Buscamos al cliente original
         Cliente clienteDb = clienteRepository.findById(clienteForm.getIdCliente())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
-        // 2. Actualizamos datos personales básicos
+        // 2. Actualizamos datos personales
         clienteDb.setNombre(clienteForm.getNombre());
         clienteDb.setApellido(clienteForm.getApellido());
         clienteDb.setDni(clienteForm.getDni());
         clienteDb.setTelefono(clienteForm.getTelefono());
-        // clienteDb.setObservaciones(clienteForm.getObservaciones());
+        clienteDb.setObservaciones(clienteForm.getObservaciones());
 
         // 3. MANEJO DE ACTIVIDADES
         List<Integer> idsNuevos = (idsActividadesForm != null) ? idsActividadesForm : new ArrayList<>();
 
         // A. DETECTAR LO QUE SE QUITÓ (BAJAS)
+        // Creamos una copia de la lista para poder iterar sin errores de concurrencia
         List<ActividadCliente> inscripcionesActuales = new ArrayList<>(clienteDb.getInscripciones());
-        
+
         for (ActividadCliente inscripcion : inscripcionesActuales) {
+            // Si la inscripción está ACTIVA y su ID de actividad NO está en la nueva lista que viene del form...
             if (inscripcion.getEstado() == EstadoInscripcion.ACTIVA 
                 && !idsNuevos.contains(inscripcion.getActividad().getIdActividad())) {
                 
-                // Dar de baja
-                actividadClienteService.darseDeBaja(clienteDb, inscripcion.getActividad());
+                // --- CAMBIO CLAVE AQUÍ ---
+                // Usamos el método de TU entidad.
+                // Como 'inscripcion' es el objeto EXACTO que está dentro de 'clienteDb',
+                // al modificarlo aquí, Hibernate sabe que es parte del grafo de objetos a guardar.
+                
+                clienteDb.darseDeBajaAInscripcion(inscripcion);
             }
         }
 
         // B. DETECTAR LO QUE SE AGREGÓ O SE ACTUALIZÓ (ALTAS Y CAMBIOS DE PLAN)
         for (Integer idActividadNueva : idsNuevos) {
             
-            // Buscamos la actividad entidad
             Actividad actividad = actividadRepository.findById(idActividadNueva)
                     .orElseThrow(() -> new RuntimeException("Actividad no encontrada ID: " + idActividadNueva));
 
-            // Verificamos si ya tiene esta inscripción ACTIVA
             Optional<ActividadCliente> inscripcionExistente = clienteDb.getInscripciones().stream()
                     .filter(i -> i.getActividad().getIdActividad().equals(idActividadNueva) 
                               && i.getEstado() == EstadoInscripcion.ACTIVA)
                     .findFirst();
 
             if (inscripcionExistente.isPresent()) {
-                // CASO 1: YA EXISTE -> VERIFICAR SI CAMBIÓ EL TIPO DE COBRO
+                // CASO 1: YA EXISTE -> ACTUALIZAR SI CAMBIÓ TIPO COBRO
                 ActividadCliente inscripcion = inscripcionExistente.get();
-                
                 if (inscripcion.getTipoDeCobro() != tipoDeCobro) {
-                    // Actualizamos el tipo
                     inscripcion.setTipoDeCobro(tipoDeCobro);
                     
-                    // Actualizamos el precio acorde al nuevo tipo
                     if (tipoDeCobro == TipoDeCobro.DIARIO) {
-                        inscripcion.setCosto(actividad.getPrecioDiario());
+                        inscripcion.setCosto(actividad.getPrecioDiario() != null ? actividad.getPrecioDiario() : actividad.getPrecio());
                     } else {
                         inscripcion.setCosto(actividad.getPrecio());
                     }
-                    
-                    // Guardamos la actualización de la inscripción explícitamente
-                    clienteActividadRepository.save(inscripcion);
+                    // No hace falta llamar a clienteActividadRepository.save(inscripcion) explícitamente
+                    // porque el CascadeType.ALL del cliente se encargará al final.
                 }
 
             } else {
@@ -147,7 +147,6 @@ public class ClienteService {
             }
         }
 
-        // 4. Guardamos los cambios del cliente (datos personales)
         clienteRepository.save(clienteDb);
     }
 }
