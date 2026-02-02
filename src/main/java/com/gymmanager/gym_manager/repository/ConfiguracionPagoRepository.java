@@ -9,4 +9,8 @@ import com.gymmanager.gym_manager.entity.MetodoDePago;
 
 public interface ConfiguracionPagoRepository extends JpaRepository<ConfiguracionDePago, Integer> {
     Optional<ConfiguracionDePago> findByMetodoDePagoAndActivoTrue(MetodoDePago metodoDePago);
+
+    boolean existsByMetodoDePagoAndActivoTrue(MetodoDePago metodoDePago);
+
+    
 }

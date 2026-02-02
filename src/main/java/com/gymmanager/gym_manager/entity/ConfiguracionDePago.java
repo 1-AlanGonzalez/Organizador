@@ -25,10 +25,10 @@ public class ConfiguracionDePago {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "METODO_DE_PAGO", nullable = false)
+    @Column(name = "METODO_PAGO", nullable = false)
     private MetodoDePago metodoDePago;
 
-    @Column(name = "PROCENTAJE_RECARGO", nullable = false, precision = 5, scale = 2)
+    @Column(name = "PORCENTAJE_RECARGO", nullable = false, precision = 5, scale = 2)
     private BigDecimal porcentajeRecargo;
 
     @Column(name = "ACTIVO", nullable = false)

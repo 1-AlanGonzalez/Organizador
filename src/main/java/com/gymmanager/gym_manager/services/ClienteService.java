@@ -35,6 +35,52 @@ public class ClienteService {
         this.actividadClienteService = actividadClienteService;
     }
 
+
+    // Como me pediste le saque peso al controller de guardar cliente, las validaciones y el guardar o actualizar se hace en un metodo general
+    // Donde pregunta si se trata de una edicion entra al if y  primero valida la edicion y actualiza al cliente y sino valida el alta y registra el cliente
+    @Transactional
+    public void guardarOActualizarCliente(Cliente cliente,List<Integer> idActividades,LocalDate fechaInicio,TipoDeCobro tipoDeCobro) {
+        if (esEdicion(cliente)) {
+            validarEdicion(cliente);
+            actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
+        } else {
+            validarAlta(cliente, fechaInicio, tipoDeCobro, idActividades);
+            registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
+        }
+    }
+
+
+    // Metodo para validar que no se deje ningun campo vacio a la hora de crear al cliente
+    private void validarAlta(Cliente cliente,LocalDate fechaInicio,TipoDeCobro tipoDeCobro,List<Integer> idActividades) {
+        if (fechaInicio == null) {
+            throw new RuntimeException("La fecha de inicio es obligatoria.");
+        }
+
+        if (tipoDeCobro == null) {
+            throw new RuntimeException("Debe seleccionar un tipo de cobro.");
+        }
+
+        if (idActividades == null || idActividades.isEmpty()) {
+            throw new RuntimeException("Debe seleccionar al menos una actividad.");
+        }
+
+        if (clienteRepository.existsByDni(cliente.getDni())) {
+            throw new RuntimeException("Ya existe un cliente con ese DNI.");
+        }
+    }
+
+    // La consulta es para saber unicamente si se trata de un actualizar cliente
+    private boolean esEdicion(Cliente cliente) {
+        return cliente.getIdCliente() != null && cliente.getIdCliente() > 0;
+    }
+
+    // metodo para validar que no estas editando un cliente no existente
+    private void validarEdicion(Cliente cliente) {
+        if (!clienteRepository.existsById(cliente.getIdCliente())) {
+            throw new RuntimeException("El cliente que intenta editar no existe.");
+        }
+    }
+
     /* Solo registra al cliente y valida si existe */
     @Transactional /* transactional quiere decir:Todo lo que pase acá adentro es una sola operación- Si algo falla, volvé todo atrás */
     public Cliente registrarClienteEInscribir(Cliente cliente, List<Integer> idActividades, LocalDate fechaInicio, TipoDeCobro tipoDeCobro){

@@ -66,6 +66,7 @@ public class ClientesController {
     Para editar, solo se recibe el ID + campos simples
     La entidad SIEMPRE se trabaja desde la DB
      */
+
     @PostMapping("/guardar")
     public String guardarCliente(
             @ModelAttribute Cliente cliente,
@@ -77,21 +78,25 @@ public class ClientesController {
             RedirectAttributes redirectAttributes) {
         
         try {
-            // Acá transformé el tipoDeCobro que traje como String para que no hayan errores (Según entendí, venía como string).
-            TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
+            // // Acá transformé el tipoDeCobro que traje como String para que no hayan errores (Según entendí, venía como string).
+             TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
 
-            // Si existe el cliente -> Editar (actualizarCliente) -> Llevando consigo al cliente traído desde el formulario Editar
-            //  las actividades que estoy guardando, la fecha de inicio y el tipoDeCobro por si es modificado
-            if (cliente.getIdCliente() != null && cliente.getIdCliente() > 0) {
-                clienteService.actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
-                redirectAttributes.addFlashAttribute("success", "Cliente actualizado y plan procesado.");
-            } else {
-                if (fechaInicio == null) {
-                    throw new RuntimeException("La fecha de inicio es obligatoria.");
-                }
-                clienteService.registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
-                redirectAttributes.addFlashAttribute("success", "Cliente registrado e inscripto.");
-            }
+            // // Si existe el cliente -> Editar (actualizarCliente) -> Llevando consigo al cliente traído desde el formulario Editar
+            // //  las actividades que estoy guardando, la fecha de inicio y el tipoDeCobro por si es modificado
+            // if (cliente.getIdCliente() != null && cliente.getIdCliente() > 0) {
+            //     clienteService.actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
+            //     redirectAttributes.addFlashAttribute("success", "Cliente actualizado y plan procesado.");
+            // } else {
+            //     if (fechaInicio == null) {
+            //         throw new RuntimeException("La fecha de inicio es obligatoria.");
+            //     }
+            //     clienteService.registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
+            //     redirectAttributes.addFlashAttribute("success", "Cliente registrado e inscripto.");
+            // }
+
+            clienteService.guardarOActualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
+            redirectAttributes.addFlashAttribute("succes", 
+                cliente.getIdCliente() != null ? "Cliente actualizado y plan procesado." : "Cliente registrado e incripto.");
 
             return "redirect:/clientes";
 

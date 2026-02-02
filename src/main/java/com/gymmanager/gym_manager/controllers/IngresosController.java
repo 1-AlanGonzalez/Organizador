@@ -1,12 +1,12 @@
 package com.gymmanager.gym_manager.controllers;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
 // import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,11 +29,15 @@ import com.gymmanager.gym_manager.services.PagoService;
 public class IngresosController {
     
 private final PagoRepository pagoRepository;
+private final PagoService pagoService;
 // clientesList
 private final ClienteActividadRepository clienteActividadRepository;
-    public IngresosController(PagoService pagoService, PagoRepository pagoRepository, ClienteActividadRepository clienteActividadRepository) {
+
+public IngresosController(PagoService pagoService, PagoRepository pagoRepository, ClienteActividadRepository clienteActividadRepository) {
         this.pagoRepository = pagoRepository;
+        this.pagoService = pagoService;
         this.clienteActividadRepository = clienteActividadRepository;
+        
     }
 
     @GetMapping
@@ -78,22 +82,39 @@ private final ClienteActividadRepository clienteActividadRepository;
         return "layouts/main";
     }
 
-    @PostMapping("/ingresos/guardar")
+    // @PostMapping("/guardar")
+    // public String guardarIngreso(
+    //         @RequestParam Integer  idCliente, // Recibimos el ID oculto
+    //         @RequestParam BigDecimal monto,
+    //         @RequestParam MetodoDePago metodoPago,
+    //         @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha,
+    //         RedirectAttributes flash) {
+
+    //     try {
+    //         flash.addFlashAttribute("success", "Pago registrado correctamente.");
+    //     } catch (Exception e) {
+    //         flash.addFlashAttribute("error", "Error al registrar pago: " + e.getMessage());
+    //     }
+
+    //     return "redirect:/ingresos";
+    // }
+
+    @PostMapping("/guardar")
     public String guardarIngreso(
-            @RequestParam Integer idCliente, // Recibimos el ID oculto
-            @RequestParam BigDecimal monto,
-            @RequestParam MetodoDePago metodoPago,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha,
-            RedirectAttributes flash) {
+        @RequestParam Integer idPago,
+        @RequestParam MetodoDePago metodoPago,
+        @RequestParam(required = false) String observaciones,
+        RedirectAttributes flash) {
 
-        try {
-            flash.addFlashAttribute("success", "Pago registrado correctamente.");
-        } catch (Exception e) {
-            flash.addFlashAttribute("error", "Error al registrar pago: " + e.getMessage());
-        }
-
-        return "redirect:/ingresos";
+    try {
+        pagoService.procesarPago(idPago, metodoPago, observaciones);
+        flash.addFlashAttribute("success", "Pago registrado correctamente.");
+    } catch (Exception e) {
+        flash.addFlashAttribute("error", e.getMessage());
     }
+
+    return "redirect:/ingresos";
+}
 
 }
 
