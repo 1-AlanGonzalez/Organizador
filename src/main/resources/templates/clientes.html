@@ -65,8 +65,8 @@
             <td>
                 <div class="d-flex flex-column gap-1" th:if="${!#lists.isEmpty(c.inscripciones)}">
                     
-                    <div th:each="insc : ${c.inscripciones}" 
-                         class="d-flex align-items-center justify-content-start gap-2 p-1 px-2 rounded-3 border bg-light activity-row"
+                    <div th:each="insc : ${c.inscripcionesActivas}"
+                           class="d-flex align-items-center justify-content-start gap-2 p-1 px-2 rounded-3 border bg-light activity-row"
                          style="width: fit-content;"> <span class="fw-bold text-dark small" th:text="${insc.actividad.nombre}">
                         </span>
 

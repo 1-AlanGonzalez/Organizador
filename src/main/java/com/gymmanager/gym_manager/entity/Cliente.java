@@ -3,8 +3,7 @@ package com.gymmanager.gym_manager.entity;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-
-
+import java.util.stream.Collectors;
 
 import jakarta.persistence.*;
 @Entity
@@ -25,7 +24,7 @@ public class Cliente {
     @Column(name = "DNI", nullable = false, length = 15)
     private String dni;
 
-    @Column(name = "TELEFONO", nullable = false, length = 20)
+    @Column(name = "TELEFONO", nullable = true, length = 20)
     private String telefono;
 
     @Column(name = "OBSERVACIONES", nullable = true, columnDefinition = "TEXT")
@@ -99,7 +98,14 @@ public class Cliente {
     public void setObservaciones(String observaciones){
         this.observaciones = observaciones;
     }
+    // Añado un GETTER de inscripciones activas para no tener esta lógica en el frontend
+    public Set<ActividadCliente> getInscripcionesActivas() {
+        if (inscripciones == null) return Set.of();
 
+        return inscripciones.stream()
+                .filter(i -> i.getEstado() == EstadoInscripcion.ACTIVA)
+                .collect(Collectors.toSet());
+    }
     /* ================== LÓGICA DEL CLIENTE ================== */
 
 

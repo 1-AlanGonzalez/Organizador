@@ -74,14 +74,19 @@
                             <label class="form-label small fw-bold text-secondary">Seleccionar Actividades</label>
                             <div class="activities-container p-2 border rounded bg-white custom-scrollbar" style="max-height: 200px; overflow-y: auto;">
                                 <div th:each="act : ${actividades}" class="form-check p-2 border-bottom">
-                                    <input class="form-check-input activity-checkbox" 
-                                           type="checkbox" 
-                                           name="idActividades" 
-                                           th:value="${act.idActividad}" 
-                                           th:id="'act_' + ${act.idActividad}"
-                                           th:attr="data-precio=${act.precio}, data-precio-diario=${act.precioDiario}"
-                                           th:checked="${cliente.inscripciones != null and #lists.contains(cliente.inscripciones.![actividad.idActividad], act.idActividad)}"
-                                           onchange="calcularTotal()">
+                                   <input class="form-check-input activity-checkbox" 
+       type="checkbox" 
+       name="idActividades" 
+       th:value="${act.idActividad}" 
+       th:id="'act_' + ${act.idActividad}"
+       th:attr="data-precio=${act.precio}, data-precio-diario=${act.precioDiario}"
+       th:checked="${cliente.inscripciones
+                    .?[estado.name() == 'ACTIVA']
+                    .![actividad.idActividad]
+                    .contains(act.idActividad)}"
+       onchange="calcularTotal()">
+       <span th:text="${cliente.inscripciones.?[estado.name() == 'ACTIVA']
+               .![actividad.idActividad]}"></span>
                                     
                                     <label class="form-check-label w-100 d-flex justify-content-between cursor-pointer" th:for="'act_' + ${act.idActividad}">
                                         <span th:text="${act.nombre}" class="fw-medium text-dark">Nombre</span>

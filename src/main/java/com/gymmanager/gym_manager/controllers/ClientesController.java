@@ -57,46 +57,56 @@ public class ClientesController {
         return "layouts/main";
     }
     /*
-     Bueno le saque peso de codeo al guardarCliente ahora se encarga de la verificaciones y logica los servicios 
-     tanto de cliente service y la relacion clienteActividad service para que esto funcione
+     CAMBIOS EN EL /GUARDAR ---> Solución para EDITAR un cliente
+     El problema está en cómo Spring bindea el formulario (@ModelAttribute Cliente cliente) cuando editás, 
+     combinado con @Transactional y colecciones JPA.
+     Cuando editás un cliente, Spring crea una nueva instancia de Cliente incompleta
+
+     NO usar @ModelAttribute Cliente para editar
+    Para editar, solo se recibe el ID + campos simples
+    La entidad SIEMPRE se trabaja desde la DB
      */
-@PostMapping("/guardar")
-public String guardarCliente(
-        @ModelAttribute Cliente cliente,
-        @RequestParam(required = false) List<Integer> idActividades,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaInicio,
-        @RequestParam("tipoDeCobro") String tipoDeCobroString, 
-        Model model,
-        RedirectAttributes redirectAttributes) {
-    
-    try {
-        TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
+    @PostMapping("/guardar")
+    public String guardarCliente(
+            @ModelAttribute Cliente cliente,
+            @RequestParam(required = false) List<Integer> idActividades,
+            // DateTimeFormat lo utilicé para transformar el localdate porque no me lo reconocía como tal
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaInicio,
+            @RequestParam("tipoDeCobro") String tipoDeCobroString, 
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        
+        try {
+            // Acá transformé el tipoDeCobro que traje como String para que no hayan errores (Según entendí, venía como string).
+            TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
 
-        if (cliente.getIdCliente() != null && cliente.getIdCliente() > 0) {
-            clienteService.actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
-            redirectAttributes.addFlashAttribute("success", "Cliente actualizado y plan procesado.");
-        } else {
-            if (fechaInicio == null) {
-                throw new RuntimeException("La fecha de inicio es obligatoria.");
+            // Si existe el cliente -> Editar (actualizarCliente) -> Llevando consigo al cliente traído desde el formulario Editar
+            //  las actividades que estoy guardando, la fecha de inicio y el tipoDeCobro por si es modificado
+            if (cliente.getIdCliente() != null && cliente.getIdCliente() > 0) {
+                clienteService.actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
+                redirectAttributes.addFlashAttribute("success", "Cliente actualizado y plan procesado.");
+            } else {
+                if (fechaInicio == null) {
+                    throw new RuntimeException("La fecha de inicio es obligatoria.");
+                }
+                clienteService.registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
+                redirectAttributes.addFlashAttribute("success", "Cliente registrado e inscripto.");
             }
-            clienteService.registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
-            redirectAttributes.addFlashAttribute("success", "Cliente registrado e inscripto.");
+
+            return "redirect:/clientes";
+
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", "Tipo de cobro no válido.");
+            prepararModelo(model); 
+            return "layouts/main";
+        } catch (Exception e) {
+            prepararModelo(model);
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("cliente", cliente);
+            model.addAttribute("abrirPanel", true);
+            return "layouts/main";
         }
-
-        return "redirect:/clientes";
-
-    } catch (IllegalArgumentException e) {
-        model.addAttribute("error", "Tipo de cobro no válido.");
-        prepararModelo(model); 
-        return "layouts/main";
-    } catch (Exception e) {
-        prepararModelo(model);
-        model.addAttribute("error", e.getMessage());
-        model.addAttribute("cliente", cliente);
-        model.addAttribute("abrirPanel", true);
-        return "layouts/main";
     }
-}
 
 // Método auxiliar para evitar repetir código en los métodos del controlador
 private void prepararModelo(Model model) {
@@ -149,21 +159,27 @@ private void prepararModeloBase(Model model, String title, String header) {
 
 @GetMapping("/editar/{id}")
 public String editarCliente(@PathVariable Integer id, Model model) {
+
     Cliente cliente = clienteRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-
-    // Definimos el fragmento del formulario
-    // panelClienteTitulo
+    // 🔍 DEBUG: ver estados reales
+    cliente.getInscripciones().forEach(i ->
+        System.out.println(
+            "Actividad ID: " + i.getActividad().getIdActividad()
+            + " | Estado: " + i.getEstado()
+        )
+    );
     model.addAttribute("vista", "fragments/panel-cliente");
     model.addAttribute("fragmento", "panelCliente");
-    
+
+    // ✅ ACÁ MISMO
     model.addAttribute("cliente", cliente);
+
     model.addAttribute("actividades", actividadRepository.findAll());
-    
+
     prepararModeloBase(model, "Editar Cliente", "Clientes / Editar " + cliente.getNombre());
     return "layouts/main";
 }
-
     @GetMapping("/ver/{id}") // O la ruta que estés usando
     public String verCliente(@PathVariable Integer id, Model model) {
         // ... lógica para buscar cliente y pagos ...
