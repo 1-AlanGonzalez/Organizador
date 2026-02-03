@@ -253,3 +253,121 @@ function calcularTotal() {
             calcularTotal();
         });
 // 
+
+
+// NUEVO PANEL CLIENTE
+function actualizarModoPlan() {
+    const radioSeleccionado = document.querySelector('input[name="tipoDeCobro"]:checked');
+    if (!radioSeleccionado) return; // Protección por si no hay selección
+
+    const modo = radioSeleccionado.value;
+    const lblPlan = document.getElementById('lblPlanSeleccionado');
+    
+    // Obtenemos todos los checkboxes de actividades
+    const inputs = document.querySelectorAll('.activity-checkbox');
+
+    inputs.forEach((input) => {
+        const idActividad = input.value; // El value es el ID
+        const badge = document.getElementById('badge_price_' + idActividad);
+        
+        // Obtenemos precios de los atributos data-
+        const precioMensual = input.getAttribute('data-precio-mensual');
+        const precioDiario = input.getAttribute('data-precio-diario');
+
+        if (modo === 'MENSUAL') {
+            if(lblPlan) lblPlan.textContent = "Plan Mensual Estándar";
+            if(badge) {
+                badge.innerHTML = `<i class="bi bi-calendar-month"></i> $${precioMensual}`;
+                badge.className = "badge bg-light text-secondary border price-badge";
+            }
+        } else if (modo === 'DIARIO') {
+            if(lblPlan) lblPlan.textContent = "Pase Diario (Un día)";
+            if(badge) {
+                badge.innerHTML = `<i class="bi bi-calendar-day"></i> $${precioDiario}`;
+                badge.className = "badge bg-info bg-opacity-10 text-info border border-info price-badge";
+            }
+        } else if (modo === 'LIBRE') {
+            if(lblPlan) lblPlan.textContent = "Promoción Libre (Sin cargo)";
+            if(badge) {
+                badge.innerHTML = `<i class="bi bi-gift"></i> $0`;
+                badge.className = "badge bg-success bg-opacity-10 text-success border border-success price-badge";
+            }
+        }
+    });
+
+    // Recalcular el total monetario con los nuevos precios
+    calcularTotal();
+}
+function procesarSeleccion(checkbox) {
+    const idActividad = checkbox.value;
+    const dateInput = document.getElementById('date_' + idActividad);
+    
+    // Habilitar input de fecha si está marcado, deshabilitar si no
+    if (dateInput) {
+        dateInput.disabled = !checkbox.checked;
+        
+        // Opcional: Si se marca, poner fecha de hoy por defecto si está vacía
+        if (checkbox.checked && !dateInput.value) {
+            dateInput.value = new Date().toISOString().split('T')[0];
+        }
+    }
+
+    calcularTotal();
+}
+
+// 3. Calcula la suma total basándose en los checkboxes marcados y el modo actual
+function calcularTotal() {
+    let total = 0;
+    const radioSeleccionado = document.querySelector('input[name="tipoDeCobro"]:checked');
+    const modo = radioSeleccionado ? radioSeleccionado.value : 'MENSUAL';
+    
+    // Solo sumamos los checkboxes que estén CHECKED
+    const checkboxes = document.querySelectorAll('.activity-checkbox:checked');
+
+    checkboxes.forEach(cb => {
+        let precio = 0;
+        if (modo === 'MENSUAL') {
+            precio = parseFloat(cb.getAttribute('data-precio-mensual')) || 0;
+        } else if (modo === 'DIARIO') {
+            precio = parseFloat(cb.getAttribute('data-precio-diario')) || 0;
+        } else {
+            precio = 0; // Libre
+        }
+        total += precio;
+    });
+
+    // Actualizar vista (Input oculto y Texto visible)
+    const inputTotal = document.getElementById('totalEstimado');
+    const displayTotal = document.getElementById('totalEstimadoDisplay');
+
+    if (inputTotal) inputTotal.value = total;
+    if (displayTotal) displayTotal.innerText = total.toLocaleString('es-AR'); 
+    // Usamos toLocaleString para que ponga puntos de mil si es necesario
+}
+
+// 4. Botón "Copiar Total" al input de pago
+function pagarTotal() {
+    const total = document.getElementById('totalEstimado').value;
+    const inputAbonado = document.getElementById('montoAbonado');
+    if (inputAbonado) inputAbonado.value = total;
+}
+
+// 5. Inicialización al cargar la página (Importante para Edición)
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // 1. Configurar precios visuales iniciales
+    actualizarModoPlan(); 
+
+    // 2. Verificar qué checkboxes vienen marcados (Edición) y habilitar sus fechas
+    const checkboxes = document.querySelectorAll('.activity-checkbox');
+    checkboxes.forEach(cb => {
+        const dateInput = document.getElementById('date_' + cb.value);
+        if (dateInput) {
+            // Si está marcado, habilita fecha. Si no, deshabilita.
+            dateInput.disabled = !cb.checked;
+        }
+    });
+
+    // 3. Calcular total inicial
+    calcularTotal();
+});
