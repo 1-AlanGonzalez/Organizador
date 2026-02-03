@@ -22,8 +22,26 @@
                     </div>
 
                     <form th:action="@{/ingresos/guardar}" method="post">
-                                            
+                    
                     <div class="mb-4">
+                    <label class="form-label small fw-bold text-secondary">
+                        Inscripción / Cliente
+                    </label>
+
+                    <select class="form-select" name="idPago" required>
+                    <option value="" disabled selected>Seleccione...</option>
+
+                        <option th:each="ac : ${clientesList}"
+                            th:value="${ac.idActividadCliente}"
+                            th:text="${ac.cliente.nombre + ' ' + ac.cliente.apellido + ' - ' + ac.actividad.nombre}">
+                        </option>
+                    </select>
+
+                        <div class="form-text small">
+                            Seleccione la inscripción que desea cobrar.
+                        </div>
+                    </div>
+                    <!-- <div class="mb-4">
                         <label for="cliente" class="form-label small fw-bold text-secondary">Cliente</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light text-muted"><i class="bi bi-search"></i></span>
@@ -47,7 +65,7 @@
                                 </datalist>
                             </div>
                             <div class="form-text small">Seleccione el cliente del listado sugerido.</div>
-                        </div>
+                        </div> -->
 
 
                         <div class="row mb-3">
@@ -69,9 +87,12 @@
                                 <label for="metodo" class="form-label small fw-bold text-secondary">Método de Pago</label>
                                 <select class="form-select" id="metodo" name="metodoPago" required>
                                     <option value="" disabled selected>Seleccione...</option>
-                                    <option value="Efectivo">Efectivo</option>
+                                    <!-- <option value="Efectivo">Efectivo</option>
                                     <option value="Transferencia">Transferencia</option>
-                                    <option value="Tarjeta">Tarjeta Débito/Crédito</option>
+                                    <option value="Tarjeta">Tarjeta Débito/Crédito</option> -->
+                                    <option value="EFECTIVO">Efectivo</option>
+                                    <option value="TRANSFERENCIA">Transferencia</option>
+                                    <option value="TARJETA">Tarjeta Débito/Crédito</option>
                                 </select>
                             </div>
                         </div>
