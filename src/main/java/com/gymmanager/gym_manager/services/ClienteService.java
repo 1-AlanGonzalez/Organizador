@@ -100,7 +100,8 @@ public class ClienteService {
         Actividad actividad = actividadRepository.findById(idActividad)
                 .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
 
-        actividadClienteService.inscribirCliente(clienteGuardado, actividad,fechaInicio, tipoDeCobro); 
+        actividadClienteService.inscribirCliente(clienteGuardado, actividad,fechaInicio, tipoDeCobro);
+        
     }
 
         return clienteGuardado;

@@ -60,7 +60,7 @@ public class ActividadCliente {
     @OneToMany(mappedBy = "actividadCliente", cascade = CascadeType.ALL)
     private Set<Pago> pagos = new HashSet<>();
 
-    @OneToMany(mappedBy = "actividadCliente", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "actividadCliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Asistencia> asistencias = new HashSet<>();
 
     public ActividadCliente() { }
@@ -166,15 +166,23 @@ public Set<Asistencia> getAsistencias() {
     /* Cosas a agregar a futuro :  */
     /* asistencias por mes,porcentaje de asistencia, faltas consecutivas (a charlar para saber si lo agregamos) */
 
-    public void tomarAsistencia(LocalDate fecha, Boolean presente){
+    public void tomarAsistencia(LocalDate fecha, Boolean presente) {
+
         if (estado == EstadoInscripcion.BAJA) {
             throw new RuntimeException("No se puede tomar asistencia a una inscripción dada de baja");
         }
 
-        Asistencia asistencia = new Asistencia(fecha,presente,this);
-        asistencias.add(asistencia);
-    }
+        boolean yaExiste = asistencias.stream()
+                .anyMatch(a -> a.getFecha().equals(fecha));
 
+        if (yaExiste) {
+            throw new RuntimeException("La asistencia ya fue registrada para este día");
+        }
+
+        Asistencia asistencia = new Asistencia(fecha,presente,this);
+
+        this.asistencias.add(asistencia);
+    }
     /* Como juan se inscribio a boxeo en el mes, Esta inscripcion primero q se genera el pago y luego tambien guarda como dijimos historial de pagos */
 
     public BigDecimal calcularMontoMensual(){

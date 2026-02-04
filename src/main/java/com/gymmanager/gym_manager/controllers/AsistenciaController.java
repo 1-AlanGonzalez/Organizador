@@ -1,6 +1,8 @@
 package com.gymmanager.gym_manager.controllers;
 
 import java.time.LocalDate;
+import java.util.List;
+
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,17 +11,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
+import com.gymmanager.gym_manager.services.AsistenciaService;
 
 @Controller
 @RequestMapping("/asistencias")
 public class AsistenciaController {
     ActividadRepository actividadRepository; 
     ClienteActividadRepository clienteActividadRepository;
-public AsistenciaController(ActividadRepository actividadRepository, ClienteActividadRepository clienteActividadRepository) {
+    AsistenciaService asistenciaService;
+    public AsistenciaController(ActividadRepository actividadRepository, ClienteActividadRepository clienteActividadRepository, AsistenciaService asistenciaService) {
         this.actividadRepository = actividadRepository;
         this.clienteActividadRepository = clienteActividadRepository;
+        this.asistenciaService = asistenciaService;
     }
     @GetMapping
     public String asistencias(Model model) {
@@ -53,12 +59,33 @@ public AsistenciaController(ActividadRepository actividadRepository, ClienteActi
         return "layouts/main";
     }
 
-    // Endpoint para guardar (Solo el esqueleto para que el form no de error)
+    // // Endpoint para guardar (Solo el esqueleto para que el form no de error)
+    // @PostMapping("/guardar")
+    // public String guardarAsistencia(@RequestParam("fecha") String fecha) {
+    //     // Aquí iría la lógica para guardar los presentes
+    //     System.out.println("Guardando asistencia del día: " + fecha);
+    //     return "redirect:/asistencias?exito=true";
+    // }
+
     @PostMapping("/guardar")
-    public String guardarAsistencia(@RequestParam("fecha") String fecha) {
-        // Aquí iría la lógica para guardar los presentes
-        System.out.println("Guardando asistencia del día: " + fecha);
-        return "redirect:/asistencias?exito=true";
+    public String guardarAsistencia(
+        @RequestParam LocalDate fecha,
+        @RequestParam(name = "presentes", required = false) List<Integer> actividadesClientesIds
+    ) {
+        //Validamos que al menos haya una asistencia marcada
+        // Igualmente esta logica iria en service, tengo que cambiarlo luego
+        if (actividadesClientesIds != null) {
+            //Recorremos cada inscripción marcada como presente
+            for (Integer id : actividadesClientesIds) {
+                // - Delegamos la lógica al service:
+                // - busca la inscripción (ActividadCliente)
+                // - valida reglas del sistema
+                // - registra la asistencia
+                // - Entra en la base de datos
+                asistenciaService.registrarAsistencia(id, fecha, true);
+            }
+        }
+        return "redirect:/asistencias";
     }
 }
 

@@ -1,8 +1,10 @@
 package com.gymmanager.gym_manager.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.gymmanager.gym_manager.entity.Actividad;
 import com.gymmanager.gym_manager.entity.ActividadCliente;
@@ -30,8 +32,9 @@ public interface ClienteActividadRepository extends JpaRepository<ActividadClien
 
     Optional<ActividadCliente> findByClienteAndActividadAndEstado(Cliente cliente, Actividad actividad, EstadoInscripcion estado);
 
-
-
+    // Te trae todas las incripciones en estado Activo.
+    @Query("SELECT ac FROM ActividadCliente ac WHERE ac.estado = 'ACTIVA'")
+    List<ActividadCliente> findAllActivas();
 
 }
 
