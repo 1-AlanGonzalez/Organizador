@@ -70,6 +70,11 @@ en cada link usé th:href para que cada "click" redirija a la ruta correspondien
                     Ingresos </a>
             </li>
             <li>
+                <a th:href="@{/configuracion}" class="nav-link" th:classappend="${active == 'configuracion'} ? 'active'"> 
+                    <i class="bi bi-currency-dollar me-2"></i>
+                    Configuracion </a>
+            </li>
+            <li>
         </ul>
     </div>
 

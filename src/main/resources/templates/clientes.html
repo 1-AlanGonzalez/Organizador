@@ -47,7 +47,7 @@
             
             <th class="py-3 bg-light border-bottom">Última Asistencia</th>
 
-            <th class="py-3 bg-light border-bottom">Estado</th>
+            <th class="py-3 bg-light border-bottom">Estado de pago</th>
             <th class="pe-4 py-3 bg-light border-bottom text-center">Acciones</th>
         </tr>
     </thead>
@@ -65,10 +65,43 @@
             <td>
                 <div class="d-flex flex-column gap-1" th:if="${!#lists.isEmpty(c.inscripciones)}">
                     
-                    <div th:each="insc : ${c.inscripcionesActivas}"
-                           class="d-flex align-items-center justify-content-start gap-2 p-1 px-2 rounded-3 border bg-light activity-row"
-                         style="width: fit-content;"> <span class="fw-bold text-dark small" th:text="${insc.actividad.nombre}">
+                    <div th:each="insc : ${c.inscripciones}"
+                        th:classappend="${insc.estado.name() == 'BAJA'} ? 'opacity-50'"
+                        class="d-flex align-items-center justify-content-start gap-2 p-1 px-2 rounded-3 border bg-light activity-row"
+                        style="width: fit-content;">
+                        
+                        <span class="fw-bold text-dark small" th:text="${insc.actividad.nombre}"></span>
+
+                        <span th:switch="${insc.estado.name()}">
+
+                        <!-- ACTIVA -->
+                        <span th:case="'ACTIVA'"
+                            class="badge d-flex align-items-center gap-1
+                                    bg-success-subtle text-success border border-success-subtle"
+                            style="font-size: 0.65rem;">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Activa
                         </span>
+
+                        <!-- BAJA -->
+                        <span th:case="'BAJA'"
+                            class="badge d-flex align-items-center gap-1
+                                    bg-light text-muted border border-secondary-subtle"
+                            style="font-size: 0.65rem;">
+                            <i class="bi bi-dash-circle"></i>
+                            Baja
+                        </span>
+
+                        <!-- INACTIVA (fallback / futuro) -->
+                        <span th:case="*"
+                            class="badge d-flex align-items-center gap-1
+                                    bg-warning-subtle text-warning border border-warning-subtle"
+                            style="font-size: 0.65rem;">
+                            <i class="bi bi-pause-circle-fill"></i>
+                            Inactiva
+                        </span>
+
+                    </span>
 
                         <span class="text-muted small">|</span>
 
