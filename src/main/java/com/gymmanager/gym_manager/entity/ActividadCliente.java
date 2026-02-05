@@ -252,7 +252,20 @@ public Set<Asistencia> getAsistencias() {
 
 
     public Boolean tieneAdeudaVencida(){
-        return pagos.stream().anyMatch(p->p.estaVencido());
+        // CAMBIOS HOY 5/2
+        // Si pagos es vacío o null anyMatch SIEMPRE devuelve false:
+        // Eso hace que si un cliente tiene una actividad ya pagada, si tiene otra actividad más igual va a decir que no debe.
+        // Por eso en la tabla de clientes me muestra 4 clientes AL DÍA aunque los 4 deban 
+        
+        // return pagos.stream().anyMatch(p->p.estaVencido());
+        if (pagos == null || pagos.isEmpty()) {
+            return false;
+        }
+
+        return pagos.stream()
+                .anyMatch(Pago::estaVencido);
+
+
     }
 
 

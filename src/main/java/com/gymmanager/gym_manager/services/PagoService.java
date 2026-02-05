@@ -31,7 +31,7 @@ public class PagoService {
         .orElseThrow(() -> new RuntimeException("No hay configuración para ese método"));
         
         Pago pago = pagoRepository.findById(idPago).orElseThrow(() -> new RuntimeException("Pago no encontrado"));
-
+        
         if (pago.getEstado() == EstadoPago.PAGADO) {
             throw new RuntimeException("Este pago ya fue pagado");
         }

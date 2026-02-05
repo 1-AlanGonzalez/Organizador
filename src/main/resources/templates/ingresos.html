@@ -102,14 +102,14 @@
                     <tr class="text-muted small text-uppercase fw-bold">
                         <th class="ps-4">Cliente</th>
                         <th>Actividad</th>
-                        <th>Fecha</th>
+                        <th>Fecha de ingreso</th>
                         <th>Método / Estado</th>
                         <th class="text-end pe-4">Monto</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="pago : ${pagosRecientes}" 
-                        th:data-estado="${pago.metodoPago != null ? 'pagado' : 'pendiente'}" class="fila-pago">
+                        th:data-estado="${pago.estado.name() == 'PAGADO'}" class="fila-pago">
                         
                         <td class="ps-4">
                             <div class="d-flex align-items-center">
@@ -132,17 +132,18 @@
                             <span th:text="${#temporals.format(pago.fechaGeneracion, 'dd/MM/yyyy')}">01/01/2024</span>
                         </td>
 
-                        <td>
-                            <div th:if="${pago.metodoPago == 'Efectivo'}" class="d-flex align-items-center text-success small fw-bold">
-                                <i class="bi bi-cash-stack me-1"></i> Efectivo
-                            </div>
-                            <div th:if="${pago.metodoPago == 'Transferencia'}" class="d-flex align-items-center text-info small fw-bold">
-                                <i class="bi bi-bank me-1"></i> Transf.
-                            </div>
-                             <div th:if="${pago.metodoPago == null}" class="d-flex align-items-center text-warning small fw-bold">
-                                <i class="bi bi-hourglass-split me-1"></i> Pendiente
-                            </div>
-                        </td>
+                    <td>
+                        <div th:if="${pago.estado.name() == 'PAGADO'}"
+                            class="d-flex align-items-center text-success small fw-bold">
+                            <i class="bi bi-check-circle me-1"></i>
+                            <span th:text="${pago.metodoPago}"></span>
+                        </div>
+
+                        <div th:if="${pago.estado.name() == 'ADEUDA'}"
+                            class="d-flex align-items-center text-danger small fw-bold">
+                            <i class="bi bi-hourglass-split me-1"></i> ADEUDA
+                        </div>
+                    </td>
 
                         <td class="text-end pe-4">
                             <h6 class="mb-0 fw-bold text-dark" th:text="${'$' + pago.montoAPagar}">$5000</h6>

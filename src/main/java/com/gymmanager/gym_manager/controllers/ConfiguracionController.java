@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.gymmanager.gym_manager.entity.Configuracion;
+
 
 @Controller
 @RequestMapping("/configuracion")
@@ -12,6 +14,7 @@ public class ConfiguracionController {
 
     @GetMapping
     public String configuracion(Model model) {
+        model.addAttribute("config", new Configuracion());
 
         model.addAttribute("title", "Gym Manager | Configuración");
         model.addAttribute("header", "Panel de control / Configuración");

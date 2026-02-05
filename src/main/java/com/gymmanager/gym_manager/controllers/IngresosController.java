@@ -40,31 +40,6 @@ public IngresosController(PagoService pagoService, PagoRepository pagoRepository
         
     }
 
-    // @GetMapping
-    // public String ingresos(Model model) {
-    // BigDecimal total = pagoRepository.sumTotalRecaudado();
-    // BigDecimal pendientes = pagoRepository.sumTotalPendiente();
-    // BigDecimal efectivo = pagoRepository.sumEfectivo();
-    // BigDecimal transferencia = pagoRepository.sumTransferencia();
-    
-    // model.addAttribute("ingresosTotales", total != null ? total : BigDecimal.ZERO);
-    // model.addAttribute("ingresosEfectivo", efectivo != null ? efectivo : BigDecimal.ZERO);
-    // model.addAttribute("ingresosTransferencia", transferencia != null ? transferencia : BigDecimal.ZERO);
-    // model.addAttribute("ingresosPendientes", pendientes != null ? pendientes : BigDecimal.ZERO);
-
-    // // Añade esto para que el gráfico no falle en la sección de Ingresos
-    // model.addAttribute("datosGrafico", pagoRepository.obtenerIngresosMensuales());
-    // model.addAttribute("categoriasGrafico", Arrays.asList("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"));
-    
-    // // Datos de diseño
-    //     model.addAttribute("title", "Gym Manager | Ingresos");
-    //     model.addAttribute("header", "Contabilidad / Resumen de Ingresos");
-    //     model.addAttribute("vista", "ingresos");
-    //     model.addAttribute("fragmento", "contenido");
-    //     model.addAttribute("active", "ingresos");
-
-    //     return "layouts/main";
-    // }
 
     @GetMapping
     public String ingresos(Model model) {
@@ -111,22 +86,6 @@ public IngresosController(PagoService pagoService, PagoRepository pagoRepository
         return "layouts/main";
     }
 
-    // @PostMapping("/guardar")
-    // public String guardarIngreso(
-    //         @RequestParam Integer  idCliente, // Recibimos el ID oculto
-    //         @RequestParam BigDecimal monto,
-    //         @RequestParam MetodoDePago metodoPago,
-    //         @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha,
-    //         RedirectAttributes flash) {
-
-    //     try {
-    //         flash.addFlashAttribute("success", "Pago registrado correctamente.");
-    //     } catch (Exception e) {
-    //         flash.addFlashAttribute("error", "Error al registrar pago: " + e.getMessage());
-    //     }
-
-    //     return "redirect:/ingresos";
-    // }
 
     @PostMapping("/guardar")
     public String guardarIngreso(

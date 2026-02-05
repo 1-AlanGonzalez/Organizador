@@ -1,6 +1,7 @@
 package com.gymmanager.gym_manager.controllers;
 
 
+// import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import java.util.List;
@@ -32,6 +33,11 @@ public class ClientesController {
     private final ActividadRepository actividadRepository;
     private final ClienteService clienteService;
     
+    // NUEVO HOY 4/2 
+    /* Al crear un cliente hay un botón de "registrar pago"
+     * Para poder registrarlo necesito que en el controller existan variables y datos para enviar y recibir datos del pago
+     */
+
 
     public ClientesController(ClienteRepository clienteRepository, ActividadRepository actividadRepository,
             ClienteService clienteService) {
@@ -43,6 +49,7 @@ public class ClientesController {
     @GetMapping
     public String clientes(Model model) {
         // Añado las actividades para el panel de inscripciones
+
         model.addAttribute("actividades", actividadRepository.findAll());
     
         model.addAttribute("clientes", clienteRepository.findAll());
@@ -78,21 +85,7 @@ public class ClientesController {
             RedirectAttributes redirectAttributes) {
         
         try {
-            // // Acá transformé el tipoDeCobro que traje como String para que no hayan errores (Según entendí, venía como string).
              TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
-
-            // // Si existe el cliente -> Editar (actualizarCliente) -> Llevando consigo al cliente traído desde el formulario Editar
-            // //  las actividades que estoy guardando, la fecha de inicio y el tipoDeCobro por si es modificado
-            // if (cliente.getIdCliente() != null && cliente.getIdCliente() > 0) {
-            //     clienteService.actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
-            //     redirectAttributes.addFlashAttribute("success", "Cliente actualizado y plan procesado.");
-            // } else {
-            //     if (fechaInicio == null) {
-            //         throw new RuntimeException("La fecha de inicio es obligatoria.");
-            //     }
-            //     clienteService.registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
-            //     redirectAttributes.addFlashAttribute("success", "Cliente registrado e inscripto.");
-            // }
 
             clienteService.guardarOActualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
             redirectAttributes.addFlashAttribute("succes", 
@@ -177,7 +170,6 @@ public String editarCliente(@PathVariable Integer id, Model model) {
     model.addAttribute("vista", "fragments/panel-cliente");
     model.addAttribute("fragmento", "panelCliente");
 
-    // ✅ ACÁ MISMO
     model.addAttribute("cliente", cliente);
 
     model.addAttribute("actividades", actividadRepository.findAll());
