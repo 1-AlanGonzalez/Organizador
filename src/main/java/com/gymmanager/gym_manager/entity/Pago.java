@@ -138,7 +138,8 @@ public class Pago {
 
     public Boolean estaVencido(){
         LocalDate hoy = LocalDate.now();
-        return estado == EstadoPago.ADEUDA && ( hoy.isEqual(fechaVencimiento) || hoy.isAfter(fechaVencimiento)) ;  
+        return estado == EstadoPago.ADEUDA;
+        //  && ( hoy.isEqual(fechaVencimiento) || hoy.isAfter(fechaVencimiento)) ;  
     }
     
 

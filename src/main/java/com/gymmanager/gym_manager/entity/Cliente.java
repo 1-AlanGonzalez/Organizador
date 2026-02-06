@@ -124,28 +124,18 @@ public class Cliente {
     }
 
     public boolean adeuda() {
-    // ADEUDA QUE UTILIZABAMOS: 
-    
-    //     if (inscripciones == null || inscripciones.isEmpty()) {
-    //     return false;
-    // }       
-    //     return inscripciones.stream().anyMatch(i -> i.tieneAdeudaVencida());
-
-    // ADEUDA QUE AGREGUÉ HOY 5/2
-    // // CAMBIOS: Itero solamente en las inscripciones ACTIVAS (no como en el código anterior)
-    // return inscripciones.stream()
-    //         .filter(i -> i.getEstado() == EstadoInscripcion.ACTIVA)
-    //         .anyMatch(ActividadCliente::tieneAdeudaVencida);
-
-    if (inscripciones == null || inscripciones.isEmpty()) {
-        return false;
-    }
-
+        
+        if (inscripciones == null || inscripciones.isEmpty()) {
+            return false;
+        }
+        return inscripciones.stream().anyMatch(i -> i.tieneAdeudaVencida());
+       
+        
     // Usé el mismo criterio que se usa en la tabla de Pagos en ingresos... Así la tabla de clientes directamente filtra por estado ADEUDA
     // y me muestra en la tabla los que adeudan y los que no..
-    return inscripciones.stream()
-        .flatMap(insc -> insc.getPagos().stream())
-        .anyMatch(p -> p.getEstado() == EstadoPago.ADEUDA);
+    // return inscripciones.stream()
+    //     .flatMap(insc -> insc.getPagos().stream())
+    //     .anyMatch(p -> p.getEstado() == EstadoPago.ADEUDA);
     }
 
 
