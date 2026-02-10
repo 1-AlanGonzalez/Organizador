@@ -1,7 +1,9 @@
-<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2"> <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
+<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2">
+    
+    <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
         <div>
             <h4 class="fw-bold text-dark mb-0">Gestión de Asistencias</h4>
-            <p class="text-muted small mb-0">Control diario de alumnos</p>
+            <p class="text-muted small mb-0">Control diario de alumnos activos</p>
         </div>
         <div>
             <a class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2" th:href="@{/asistencias/tomar}">
@@ -12,33 +14,36 @@
     </div>
 
     <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
-        <div class="row g-2 align-items-center">
-            <div class="col-md-3">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-calendar"></i></span>
-                    <input type="date" class="form-control border-start-0 ps-0 bg-light focus-ring-none">
+        <form th:action="@{/asistencias}" method="get" id="filtroForm">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-calendar"></i></span>
+                        <input type="date" name="fecha" class="form-control border-start-0 ps-0 bg-light" 
+                               th:value="${fechaSeleccionada}" onchange="document.getElementById('filtroForm').submit()">
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-5">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control border-start-0 ps-0 bg-light" placeholder="Buscar alumno...">
+                
+                <div class="col-md-5">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0 bg-light" placeholder="Buscar alumno en pantalla...">
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <select name="actividades" class="form-select form-select-sm bg-light text-muted" required>
-                    <option value="" disabled selected>Filtrar por actividad...</option>
-                    <option th:each="actividad : ${actividades}"
-                            th:value="${actividad.idInstructor}"
-                            th:text="${actividad.Nombre}">
-                    </option>
-                </select>
-            </div>
-        </div>
-    </div>
 
-    <div id="panelOverlayAsistencia" class="panel-overlay d-none" onclick="cerrarPanelAsistencia()">
-        <div class="panel-container" onclick="event.stopPropagation()" th:insert="fragments/panel-asistencia :: panelAsistencia"></div>
+                <div class="col-md-4">
+                    <select name="idActividad" class="form-select form-select-sm bg-light text-muted" 
+                            onchange="document.getElementById('filtroForm').submit()">
+                        <option value="" th:selected="${actividadSeleccionada == null}">Todas las actividades</option>
+                        <option th:each="actividad : ${actividades}"
+                                th:value="${actividad.idActividad}"
+                                th:text="${actividad.nombre}"
+                                th:selected="${actividadSeleccionada == actividad.idActividad}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
@@ -53,39 +58,38 @@
                     </tr>
                 </thead>
                 <tbody class="border-top-0">
-                    <tr th:each="cliente : ${clientes}">
+                    <tr th:each="item : ${reporteAsistencia}">
                         <td class="ps-4">
                             <div class="d-flex align-items-center">
                                 <div class="avatar-circle me-3 bg-gradient-primary text-white small fw-bold d-flex align-items-center justify-content-center" 
                                      style="width: 32px; height: 32px; border-radius: 50%;">
-                                    <span th:text="${#strings.substring(cliente.nombre,0,1)}">A</span>
+                                    <span th:text="${item.avatarLetra}">A</span>
                                 </div>
                                 <div>
-                                    <div class="fw-bold text-dark" th:text="${cliente.nombre} + ' ' + ${cliente.apellido}">Nombre</div>
-                                    <div class="small text-muted" style="font-size: 0.75rem;">ID: #<span th:text="${cliente.id}">001</span></div>
+                                    <div class="fw-bold text-dark" th:text="${item.nombreCliente} + ' ' + ${item.apellidoCliente}">Nombre</div>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <select name="actividad" class="form-select form-select-sm border-0 bg-light" style="max-width: 150px;">
-                                <option value="" disabled selected>Seleccionar...</option>
-                                <option th:each="actividad : ${actividades}"
-                                        th:value="${actividad.idActividad}"
-                                        th:text="${actividad.nombre}">
-                                </option>
-                            </select>
+                            <span class="badge bg-light text-dark border" th:text="${item.nombreActividad}">Actividad</span>
                         </td>
-                        <td>
-                            <input type="date" name="fecha" class="form-control form-control-sm border-0 bg-light" 
-                                   th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" style="max-width: 130px;">
+                        <td class="text-muted small">
+                            <span th:text="${#temporals.format(item.fecha, 'dd/MM/yyyy')}">01/01/2024</span>
                         </td>
                         <td class="pe-4">
-                            <select name="estado" class="form-select form-select-sm badge-select" 
-                                    onchange="updateBadgeColor(this)" 
-                                    style="max-width: 120px; font-weight: 600;">
-                                <option value="PRESENTE" class="text-success">Presente</option>
-                                <option value="AUSENTE" selected class="text-danger">Ausente</option>
-                            </select>
+                            <span th:if="${item.estado == 'PRESENTE'}" class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                                <i class="bi bi-check-circle-fill me-1"></i> Presente
+                            </span>
+                            <span th:if="${item.estado == 'AUSENTE'}" class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">
+                                <i class="bi bi-x-circle me-1"></i> Ausente
+                            </span>
+                        </td>
+                    </tr>
+                    
+                    <tr th:if="${#lists.isEmpty(reporteAsistencia)}">
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bi bi-people fs-1 d-block mb-2"></i>
+                            No hay inscripciones activas para los filtros seleccionados.
                         </td>
                     </tr>
                 </tbody>

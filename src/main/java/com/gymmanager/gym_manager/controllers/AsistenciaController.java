@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
+import com.gymmanager.gym_manager.entity.EstadoInscripcion;
+import com.gymmanager.gym_manager.entity.dto.ReporteAsistenciaDTO;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
+import com.gymmanager.gym_manager.repository.AsistenciaRepository;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
 import com.gymmanager.gym_manager.services.AsistenciaService;
 
@@ -22,19 +24,25 @@ public class AsistenciaController {
     ActividadRepository actividadRepository; 
     ClienteActividadRepository clienteActividadRepository;
     AsistenciaService asistenciaService;
-    public AsistenciaController(ActividadRepository actividadRepository, ClienteActividadRepository clienteActividadRepository, AsistenciaService asistenciaService) {
+    AsistenciaRepository asistenciaRepository;
+
+    public AsistenciaController(AsistenciaRepository asistenciaRepository, ActividadRepository actividadRepository, ClienteActividadRepository clienteActividadRepository, AsistenciaService asistenciaService) {
         this.actividadRepository = actividadRepository;
         this.clienteActividadRepository = clienteActividadRepository;
         this.asistenciaService = asistenciaService;
+        this.asistenciaRepository = asistenciaRepository;
     }
     @GetMapping
-    public String asistencias(Model model) {
+    public String asistencias(Model model, Integer idActividad) {
         model.addAttribute("title", "Gym Manager | Asistencias");
         model.addAttribute("header", "Panel de control / Asistencias");
+        model.addAttribute("asistencias", asistenciaRepository.findAll());
 
         model.addAttribute("vista", "asistencias");
         model.addAttribute("fragmento", "contenido");
-
+        LocalDate fechaReporte = LocalDate.now();
+        List<ReporteAsistenciaDTO> reporte = asistenciaService.generarReporteDiario(fechaReporte, idActividad);
+            model.addAttribute("reporteAsistencia", reporte);
         model.addAttribute("active", "asistencias");
         return "layouts/main";
     }
@@ -54,18 +62,12 @@ public class AsistenciaController {
         model.addAttribute("actividades", actividadRepository.findAll());
         
         // Traemos las suscripciones activas para armar la lista
-        model.addAttribute("suscripciones", clienteActividadRepository.findAll()); 
-        
+        model.addAttribute("inscripciones",
+                clienteActividadRepository.findByEstado(EstadoInscripcion.ACTIVA));
+            
         return "layouts/main";
     }
 
-    // // Endpoint para guardar (Solo el esqueleto para que el form no de error)
-    // @PostMapping("/guardar")
-    // public String guardarAsistencia(@RequestParam("fecha") String fecha) {
-    //     // Aquí iría la lógica para guardar los presentes
-    //     System.out.println("Guardando asistencia del día: " + fecha);
-    //     return "redirect:/asistencias?exito=true";
-    // }
 
     @PostMapping("/guardar")
     public String guardarAsistencia(

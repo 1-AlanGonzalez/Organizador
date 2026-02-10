@@ -58,7 +58,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="item : ${suscripciones}" class="fila-alumno" th:data-actividad="${item.actividad.nombre}">
+                            <tr th:each="item : ${inscripciones}" class="fila-alumno" th:data-actividad="${item.actividad.nombre}">
                                 
                                 <td>
                                     <div class="d-flex flex-column">
@@ -91,7 +91,7 @@
                                 </td>
                             </tr>
                             
-                            <tr th:if="${#lists.isEmpty(suscripciones)}">
+                            <tr th:if="${#lists.isEmpty(inscripciones)}">
                                 <td colspan="3" class="text-center text-muted py-4">
                                     No hay alumnos inscritos en actividades.
                                 </td>

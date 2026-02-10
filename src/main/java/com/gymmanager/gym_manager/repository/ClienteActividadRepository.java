@@ -26,6 +26,8 @@ public interface ClienteActividadRepository extends JpaRepository<ActividadClien
  
     */
     
+    List<ActividadCliente> findByEstado(EstadoInscripcion estado);
+
     Integer countByActividadAndEstado(Actividad actividad, EstadoInscripcion estado);
 
     boolean existsByClienteAndActividadAndEstado(Cliente cliente,Actividad actividad,EstadoInscripcion estado);
