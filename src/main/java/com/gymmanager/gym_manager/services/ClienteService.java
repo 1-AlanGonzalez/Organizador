@@ -1,5 +1,6 @@
 package com.gymmanager.gym_manager.services;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,207 +12,158 @@ import com.gymmanager.gym_manager.entity.Actividad;
 import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.EstadoInscripcion;
+import com.gymmanager.gym_manager.entity.EstadoPago;
+import com.gymmanager.gym_manager.entity.MetodoDePago;
+import com.gymmanager.gym_manager.entity.Pago;
 import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
+import com.gymmanager.gym_manager.repository.PagoRepository;
 
 import jakarta.transaction.Transactional;
 
 @Service
 public class ClienteService {
-    private final ClienteRepository clienteRepository;
+private final ClienteRepository clienteRepository;
     private final ActividadRepository actividadRepository;
     private final ActividadClienteService actividadClienteService;
-    
+    private final ClienteActividadRepository clienteActividadRepository;
+    private final PagoRepository pagoRepository; // <--- NECESARIO AGREGAR ESTO
+
     public ClienteService(
         ClienteRepository clienteRepository,
         ActividadRepository actividadRepository,
         ActividadClienteService actividadClienteService,
-        ClienteActividadRepository clienteActividadRepository
+        ClienteActividadRepository clienteActividadRepository,
+        PagoRepository pagoRepository // <--- INYECTAR EN CONSTRUCTOR
     ) {
         this.clienteRepository = clienteRepository;
         this.actividadRepository = actividadRepository;
         this.actividadClienteService = actividadClienteService;
+        this.clienteActividadRepository = clienteActividadRepository;
+        this.pagoRepository = pagoRepository;
     }
-
-
-    // Como me pediste le saque peso al controller de guardar cliente, las validaciones y el guardar o actualizar se hace en un metodo general
-    // Donde pregunta si se trata de una edicion entra al if y  primero valida la edicion y actualiza al cliente y sino valida el alta y registra el cliente
+    
     @Transactional
-    public void guardarOActualizarCliente(Cliente cliente,List<Integer> idActividades,LocalDate fechaInicio,TipoDeCobro tipoDeCobro) {
+    public void guardarOActualizarCliente(
+            Cliente cliente, 
+            List<Integer> idActividades, 
+            LocalDate fechaInicio, 
+            TipoDeCobro tipoDeCobro,
+            Boolean registrarPago,
+            Double montoAbonado,
+            String metodoPagoStr,
+            String observacionPago) {
+
+        // 1. Validaciones previas
         if (esEdicion(cliente)) {
             validarEdicion(cliente);
             actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
         } else {
             validarAlta(cliente, fechaInicio, tipoDeCobro, idActividades);
-            registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
+            // Validar datos de pago si el checkbox está marcado
+            if (Boolean.TRUE.equals(registrarPago)) {
+                validarDatosPago(montoAbonado, metodoPagoStr);
+            }
+            // 2. Guardar Cliente e Inscripciones
+            Cliente clienteGuardado = registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
+            // 3. Registrar el Pago (si corresponde)
+            if (Boolean.TRUE.equals(registrarPago)) {
+                // imputarPagoInicial(clienteGuardado, idActividades, montoAbonado, metodoPagoStr, observacionPago);
+                // pagoService.procesarPago(pagoPendiente, metodo, observacionPago);
+            }
         }
     }
 
-
-    // Metodo para validar que no se deje ningun campo vacio a la hora de crear al cliente
-    private void validarAlta(Cliente cliente,LocalDate fechaInicio,TipoDeCobro tipoDeCobro,List<Integer> idActividades) {
-        if (fechaInicio == null) {
-            throw new RuntimeException("La fecha de inicio es obligatoria.");
+    private void validarDatosPago(Double monto, String metodoStr) {
+        if (monto == null || monto <= 0) {
+            throw new RuntimeException("El monto abonado debe ser mayor a 0.");
         }
-
-        if (tipoDeCobro == null) {
-            throw new RuntimeException("Debe seleccionar un tipo de cobro.");
-        }
-
-        if (idActividades == null || idActividades.isEmpty()) {
-            throw new RuntimeException("Debe seleccionar al menos una actividad.");
-        }
-
-        if (clienteRepository.existsByDni(cliente.getDni())) {
-            throw new RuntimeException("Ya existe un cliente con ese DNI.");
+        if (metodoStr == null || metodoStr.trim().isEmpty()) {
+            throw new RuntimeException("Debe seleccionar un método de pago.");
         }
     }
 
-    // La consulta es para saber unicamente si se trata de un actualizar cliente
+    // --- MÉTODOS EXISTENTES (validarAlta, esEdicion, validarEdicion, etc.) ---
+    // (Mantenlos tal cual los tenías en tu código original)
+    
+    private void validarAlta(Cliente cliente, LocalDate fechaInicio, TipoDeCobro tipoDeCobro, List<Integer> idActividades) {
+        if (fechaInicio == null) throw new RuntimeException("La fecha de inicio es obligatoria.");
+        if (tipoDeCobro == null) throw new RuntimeException("Debe seleccionar un tipo de cobro.");
+        if (idActividades == null || idActividades.isEmpty()) throw new RuntimeException("Debe seleccionar al menos una actividad.");
+        if (clienteRepository.existsByDni(cliente.getDni())) throw new RuntimeException("Ya existe un cliente con ese DNI.");
+    }
+
     private boolean esEdicion(Cliente cliente) {
         return cliente.getIdCliente() != null && cliente.getIdCliente() > 0;
     }
 
-    // metodo para validar que no estas editando un cliente no existente
     private void validarEdicion(Cliente cliente) {
         if (!clienteRepository.existsById(cliente.getIdCliente())) {
             throw new RuntimeException("El cliente que intenta editar no existe.");
         }
     }
 
-    /* Solo registra al cliente y valida si existe */
-    @Transactional /* transactional quiere decir:Todo lo que pase acá adentro es una sola operación- Si algo falla, volvé todo atrás */
-    public Cliente registrarClienteEInscribir(Cliente cliente, List<Integer> idActividades, LocalDate fechaInicio, TipoDeCobro tipoDeCobro){
-    Boolean yaEstaElDni = clienteRepository.existsByDni(cliente.getDni());
+    @Transactional
+    public Cliente registrarClienteEInscribir(Cliente cliente, List<Integer> idActividades, LocalDate fechaInicio, TipoDeCobro tipoDeCobro) {
+        if (clienteRepository.existsByDni(cliente.getDni())) {
+            throw new RuntimeException("El cliente ya existe.");
+        }
 
-    if (yaEstaElDni) {
-        throw new RuntimeException("El cliente que quiere registrar ya está cargado en el sistema");
-    }
+        Cliente clienteGuardado = clienteRepository.save(cliente);
 
-    Cliente clienteGuardado = clienteRepository.save(cliente);
-
-    if (idActividades == null || idActividades.isEmpty()) {
-        throw new RuntimeException("Debe seleccionar al menos una actividad");
-    }
-
-    for (Integer idActividad : idActividades) {
-        Actividad actividad = actividadRepository.findById(idActividad)
-                .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
-
-        actividadClienteService.inscribirCliente(clienteGuardado, actividad,fechaInicio, tipoDeCobro);
+        for (Integer idActividad : idActividades) {
+            Actividad actividad = actividadRepository.findById(idActividad)
+                    .orElseThrow(() -> new RuntimeException("Actividad no encontrada ID: " + idActividad));
+            
+            actividadClienteService.inscribirCliente(clienteGuardado, actividad, fechaInicio, tipoDeCobro);
+        }
         
-    }
-
         return clienteGuardado;
     }
 
-    @Transactional
-    public void eliminarCliente(Integer idCliente) {
-        Cliente cliente = clienteRepository.findById(idCliente)
-            .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-
-        // AGREGADO HOY 29/1
-        clienteRepository.delete(cliente);
-
-        // // Dar de baja todas las inscripciones activas
-        // cliente.getInscripciones().forEach(inscripcion -> {
-        //     if (inscripcion.getEstado() == EstadoInscripcion.ACTIVA) {
-        //         inscripcion.darseDeBaja();
-        //     }
-        // });
-    }
-// Este era el método que utilizaba para actualizar cliente. Como era un embole decidí separarlo en SUBCODIGOS todas las partes para hacer un código más entendible y encontrar el error
-// @Transactional 
-//     public void actualizarCliente(Cliente clienteForm, List<Integer> idsActividadesForm, LocalDate fechaInicioForm, TipoDeCobro tipoDeCobro) {
+    // --- NUEVA LÓGICA DE PAGO ADAPTADA A TU ENTIDAD ---
+    private void registrarPagoInicial(Cliente cliente, List<Integer> idActividades, Double monto, String metodoStr, String observacion) {
         
-//         // 1. Buscamos al cliente original
-//         Cliente clienteDb = clienteRepository.findById(clienteForm.getIdCliente())
-//                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+        // TU ENTIDAD PAGO REQUIERE UNA 'ActividadCliente'.
+        // Buscamos una de las inscripciones activas que acabamos de crear para asignarle el pago.
+        // (Generalmente la primera de la lista de actividades seleccionadas).
+        
+        Integer idActividadPrincipal = idActividades.get(0); // Tomamos la primera ID seleccionada
 
-//         // 2. Actualizamos datos personales
-//         clienteDb.setNombre(clienteForm.getNombre());
-//         clienteDb.setApellido(clienteForm.getApellido());
-//         clienteDb.setDni(clienteForm.getDni());
-//         clienteDb.setTelefono(clienteForm.getTelefono());
-//         clienteDb.setObservaciones(clienteForm.getObservaciones());
+        ActividadCliente inscripcion = cliente.getInscripciones().stream()
+            .filter(ac -> ac.getActividad().getIdActividad().equals(idActividadPrincipal) 
+                       && ac.getEstado() == EstadoInscripcion.ACTIVA)
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("No se encontró la inscripción para asociar el pago."));
 
-//         // 3. MANEJO DE ACTIVIDADES
-//         List<Integer> idsNuevos = (idsActividadesForm != null) ? idsActividadesForm : new ArrayList<>();
-
-//         // A. DETECTAR LO QUE SE QUITÓ (BAJAS)
-//         // Creamos una copia de la lista para poder iterar sin errores de concurrencia
-//         List<ActividadCliente> inscripcionesActuales = new ArrayList<>(clienteDb.getInscripciones());
-
-//         for (ActividadCliente inscripcion : inscripcionesActuales) {
-//             // Si la inscripción está ACTIVA y su ID de actividad NO está en la nueva lista que viene del form...
-//             if (inscripcion.getEstado() == EstadoInscripcion.ACTIVA 
-//                 && !idsNuevos.contains(inscripcion.getActividad().getIdActividad())) {
-                
-//                 // --- CAMBIO CLAVE AQUÍ ---
-//                 // Usamos el método de TU entidad.
-//                 // Como 'inscripcion' es el objeto EXACTO que está dentro de 'clienteDb',
-//                 // al modificarlo aquí, Hibernate sabe que es parte del grafo de objetos a guardar.
-                
-//                 clienteDb.darseDeBajaAInscripcion(inscripcion);
-//             }
-//         }
-
-//         // B. DETECTAR LO QUE SE AGREGÓ O SE ACTUALIZÓ (ALTAS Y CAMBIOS DE PLAN)
-//         for (Integer idActividadNueva : idsNuevos) {
-            
-//             Actividad actividad = actividadRepository.findById(idActividadNueva)
-//                     .orElseThrow(() -> new RuntimeException("Actividad no encontrada ID: " + idActividadNueva));
-
-//             Optional<ActividadCliente> inscripcionExistente = clienteDb.getInscripciones().stream()
-//                     .filter(i -> i.getActividad().getIdActividad().equals(idActividadNueva) 
-//                               && i.getEstado() == EstadoInscripcion.ACTIVA)
-//                     .findFirst();
-
-//             if (inscripcionExistente.isPresent()) {
-//                 // CASO 1: YA EXISTE -> ACTUALIZAR SI CAMBIÓ TIPO COBRO
-//                 ActividadCliente inscripcion = inscripcionExistente.get();
-//                 if (inscripcion.getTipoDeCobro() != tipoDeCobro) {
-//                     inscripcion.setTipoDeCobro(tipoDeCobro);
-                    
-//                     if (tipoDeCobro == TipoDeCobro.DIARIO) {
-//                         inscripcion.setCosto(actividad.getPrecioDiario() != null ? actividad.getPrecioDiario() : actividad.getPrecio());
-//                     } else {
-//                         inscripcion.setCosto(actividad.getPrecio());
-//                     }
-//                     // No hace falta llamar a clienteActividadRepository.save(inscripcion) explícitamente
-//                     // porque el CascadeType.ALL del cliente se encargará al final.
-//                 }
-
-//             } else {
-//                 // CASO 2: ES NUEVA -> INSCRIBIR
-//                 LocalDate fechaAlta = (fechaInicioForm != null) ? fechaInicioForm : LocalDate.now();
-//                 actividadClienteService.inscribirCliente(clienteDb, actividad, fechaAlta, tipoDeCobro);
-//             }
-//         }
-
-//         clienteRepository.save(clienteDb);
-//     }
-
-// Motivo por el cual cambié el método:
-// Al inscribir el cliente en por ejemplo BOXEO y GYM: en la DB el cliente tiene 2 inscripciones ACTIVAS.
-// Al editar el cliente y darle de baja una inscripción (por ejemplo BOXEO) en la DB el cliente tiene 2 inscripciones, una ACTIVA y una BAJA.
-// Entonces con el método anterior, si queríamos volver a poner en ACTIVA la actividad BAJA no era posible porque no estaba manejando bien todos los posibles casos.
-
-// Actualizar el cliente.
-// Como parámetro traemos: 
-// los datos del cliente que vienen del formulario panel-cliente llegados desde el endpoint /editar/{id}
-// Las ID de las nuevas actividades 
-// La nueva fecha 
-// el tipo de cobro (todo esto por si lo cambia)  
-@Transactional
+        Pago nuevoPago = new Pago();
+        
+        // Seteo de datos según tu Entidad PAGO
+        nuevoPago.setActividadCliente(inscripcion); // Relación obligatoria
+        nuevoPago.setFechaGeneracion(LocalDate.now());
+        
+        // Convertimos Double a BigDecimal como usa tu entidad
+        BigDecimal montoBig = BigDecimal.valueOf(monto);
+        nuevoPago.setMontoAPagar(montoBig); // Asumimos que paga lo que debe, o ajusta esto según tu lógica de deuda
+        
+        nuevoPago.setMetodoPago(MetodoDePago.valueOf(metodoStr)); // Convertir String a Enum
+        nuevoPago.setObservaciones(observacion != null ? observacion : "Pago inicial al registrar");
+        
+        // Lógica de estado y vencimiento
+        nuevoPago.setEstado(EstadoPago.PAGADO);
+        nuevoPago.setFechaVencimiento(LocalDate.now().plusMonths(1)); // O tu lógica de vencimiento
+        
+        pagoRepository.save(nuevoPago);
+    }
+    @Transactional
     public void actualizarCliente(
-            Cliente clienteForm,
-            List<Integer> idsActividadesForm,
+        Cliente clienteForm,
+        List<Integer> idsActividadesForm,
             LocalDate fechaInicioForm,
             TipoDeCobro tipoDeCobro
-    ) {
+            ) {
         // Obtengo los datos del cliente antes de ser editados (el que se encuentra en la base de datos)
         Cliente clienteDb = obtenerCliente(clienteForm.getIdCliente());
         // Actualizo sus datos con los nuevos del formulario
@@ -226,13 +178,12 @@ public class ClienteService {
         // Guardamos el cliente en la DB
         clienteRepository.save(clienteDb);
     }
-
+    
     // SUBMÉTODOS 
-
-
+    
+    
     private Cliente obtenerCliente(Integer idCliente) {
-    return clienteRepository.findById(idCliente)
-            .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+        return clienteRepository.findById(idCliente).orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
     }
 
     private void actualizarDatosPersonales(Cliente db, Cliente form) {
@@ -245,85 +196,88 @@ public class ClienteService {
 
     // Normalizar IDS -> Si la lista de IDS nuevos es vacía (es decir, se dieron de baja todas las inscripciones) devolvemos un array vacío
     // Esto sirve y hace que no se rompa el programa debido a que antes hacía un null.contains(...) y ahora hace [].contains
-
+    
     private List<Integer> normalizarIds(List<Integer> ids) {
         return (ids != null) ? ids : new ArrayList<>();
     }
-
+    
     private void darDeBajaInscripcionesQuitadas(Cliente cliente, List<Integer> idsNuevos) {
         List<ActividadCliente> actuales = new ArrayList<>(cliente.getInscripciones());
-
+        
         for (ActividadCliente insc : actuales) {
             if (insc.getEstado() == EstadoInscripcion.ACTIVA
-                    && !idsNuevos.contains(insc.getActividad().getIdActividad())) {
-
+            && !idsNuevos.contains(insc.getActividad().getIdActividad())) {
+                
                 cliente.darseDeBajaAInscripcion(insc);
             }
         }
     }
-
+    
     private void procesarAltasYReactivaciones(
-            Cliente cliente,
-            List<Integer> idsNuevos,
-            LocalDate fechaInicio,
-            TipoDeCobro tipoDeCobro
-    ) {
-        // Itero cada actividad NUEVA (con los ids normalizados)
-        for (Integer idActividad : idsNuevos) {
-
-            Actividad actividad = actividadRepository.findById(idActividad)
-                    .orElseThrow(() -> new RuntimeException("Actividad no encontrada ID: " + idActividad));
-            
-            // EXISTENTE = True solo si la actividad nueva ya existía en el cliente
-            Optional<ActividadCliente> existente = cliente.getInscripciones().stream()
-                    .filter(i -> i.getActividad().getIdActividad().equals(idActividad))
-                    .findFirst();
-            if (existente.isPresent()) {
-                manejarInscripcionExistente(existente.get(), actividad, tipoDeCobro);
-            } else {
-                inscribirNueva(cliente, actividad, fechaInicio, tipoDeCobro);
+        Cliente cliente,
+        List<Integer> idsNuevos,
+        LocalDate fechaInicio,
+        TipoDeCobro tipoDeCobro
+        ) {
+            // Itero cada actividad NUEVA (con los ids normalizados)
+            for (Integer idActividad : idsNuevos) {
+                
+                Actividad actividad = actividadRepository.findById(idActividad)
+                .orElseThrow(() -> new RuntimeException("Actividad no encontrada ID: " + idActividad));
+                
+                // EXISTENTE = True solo si la actividad nueva ya existía en el cliente
+                Optional<ActividadCliente> existente = cliente.getInscripciones().stream()
+                .filter(i -> i.getActividad().getIdActividad().equals(idActividad))
+                .findFirst();
+                if (existente.isPresent()) {
+                    manejarInscripcionExistente(existente.get(), actividad, tipoDeCobro);
+                } else {
+                    inscribirNueva(cliente, actividad, fechaInicio, tipoDeCobro);
+                }
             }
         }
-    }
-    private void manejarInscripcionExistente(
+        private void manejarInscripcionExistente(
             ActividadCliente inscripcion,
             Actividad actividad,
             TipoDeCobro tipoDeCobro
-    ) {
-        // Si la actividad ya existe en el cliente pero está dada de BAJA
-        if (inscripcion.getEstado() == EstadoInscripcion.BAJA) {
-            inscripcion.setEstado(EstadoInscripcion.ACTIVA);
-            inscripcion.setFechaDeInscripcion(LocalDate.now());
+            ) {
+                // Si la actividad ya existe en el cliente pero está dada de BAJA
+                if (inscripcion.getEstado() == EstadoInscripcion.BAJA) {
+                    inscripcion.setEstado(EstadoInscripcion.ACTIVA);
+                    inscripcion.setFechaDeInscripcion(LocalDate.now());
+                }
+                // También actualizamos el tipoDeCobro en caso de haber cambiado.
+                if (inscripcion.getTipoDeCobro() != tipoDeCobro) {
+                    inscripcion.setTipoDeCobro(tipoDeCobro);
+                }
+                // Y actualizamos el costo por si es MENSUAL o DIARIO
+                actualizarCosto(inscripcion, actividad);
+            }
+
+        private void actualizarCosto(ActividadCliente inscripcion, Actividad actividad) {
+            if (inscripcion.getTipoDeCobro() == TipoDeCobro.DIARIO) {
+                inscripcion.setCosto(
+                    // Acá por si ocurre algún error de por medio, siempre devuelvo la mensualidad en caso de no existir el precio diario (a analizar)
+                    actividad.getPrecioDiario() != null
+                    ? actividad.getPrecioDiario()
+                    : actividad.getPrecio()
+                    );
+                } else {
+                    // Si no, devuelvo el precio mensual
+                    inscripcion.setCosto(actividad.getPrecio());
+                }
+            }
+        
+    private void inscribirNueva(Cliente cliente, Actividad actividad, LocalDate fechaInicio, TipoDeCobro tipoDeCobro) {
+            LocalDate fechaAlta = (fechaInicio != null) ? fechaInicio : LocalDate.now();
+            actividadClienteService.inscribirCliente(cliente, actividad, fechaAlta, tipoDeCobro);
         }
 
-        // También actualizamos el tipoDeCobro en caso de haber cambiado.
-        if (inscripcion.getTipoDeCobro() != tipoDeCobro) {
-            inscripcion.setTipoDeCobro(tipoDeCobro);
-        }
-        // Y actualizamos el costo por si es MENSUAL o DIARIO
-        actualizarCosto(inscripcion, actividad);
-    }
-    private void actualizarCosto(ActividadCliente inscripcion, Actividad actividad) {
-        if (inscripcion.getTipoDeCobro() == TipoDeCobro.DIARIO) {
-            inscripcion.setCosto(
-                // Acá por si ocurre algún error de por medio, siempre devuelvo la mensualidad en caso de no existir el precio diario (a analizar)
-                    actividad.getPrecioDiario() != null
-                            ? actividad.getPrecioDiario()
-                            : actividad.getPrecio()
-            );
-        } else {
-            // Si no, devuelvo el precio mensual
-            inscripcion.setCosto(actividad.getPrecio());
-        }
-    }
+    @Transactional
+    public void eliminarCliente(Integer idCliente) {
+        Cliente cliente = clienteRepository.findById(idCliente)
+            .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
     
-    private void inscribirNueva(
-            Cliente cliente,
-            Actividad actividad,
-            LocalDate fechaInicio,
-            TipoDeCobro tipoDeCobro
-    ) {
-        LocalDate fechaAlta = (fechaInicio != null) ? fechaInicio : LocalDate.now();
-        actividadClienteService.inscribirCliente(cliente, actividad, fechaAlta, tipoDeCobro);
+        clienteRepository.delete(cliente);
     }
 }

@@ -143,8 +143,6 @@ public class Pago {
     }
     
 
-    
-
     public void pagar(){
         if(estado == EstadoPago.PAGADO){
             throw new RuntimeException("El pago ya esta realizado");

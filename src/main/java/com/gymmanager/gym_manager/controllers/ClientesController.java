@@ -74,47 +74,69 @@ public class ClientesController {
     La entidad SIEMPRE se trabaja desde la DB
      */
 
-    @PostMapping("/guardar")
-    public String guardarCliente(
-            @ModelAttribute Cliente cliente,
-            @RequestParam(required = false) List<Integer> idActividades,
-            // DateTimeFormat lo utilicé para transformar el localdate porque no me lo reconocía como tal
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaInicio,
-            @RequestParam("tipoDeCobro") String tipoDeCobroString, 
-            Model model,
-            RedirectAttributes redirectAttributes) {
-        
-        try {
-             TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
+@PostMapping("/guardar")
+public String guardarCliente(
+        @ModelAttribute Cliente cliente,
+        @RequestParam(required = false) List<Integer> idActividades,
+        // Recibimos una lista porque en el HTML el input date está dentro del th:each
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") List<LocalDate> fechaInicio,
+        @RequestParam("tipoDeCobro") String tipoDeCobroString,
+        // Nuevos campos para el pago
+        @RequestParam(required = false) Boolean registrarPago,
+        @RequestParam(required = false) Double montoAbonado,
+        @RequestParam(required = false) String metodoPago,
+        @RequestParam(required = false) String observacionPago,
+        Model model,
+        RedirectAttributes redirectAttributes) {
 
-            clienteService.guardarOActualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
-            redirectAttributes.addFlashAttribute("succes", 
-                cliente.getIdCliente() != null ? "Cliente actualizado y plan procesado." : "Cliente registrado e incripto.");
+    try {
+        TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
 
-            return "redirect:/clientes";
-
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Tipo de cobro no válido.");
-            prepararModelo(model); 
-            return "layouts/main";
-        } catch (Exception e) {
-            prepararModelo(model);
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("cliente", cliente);
-            model.addAttribute("abrirPanel", true);
-            return "layouts/main";
+        LocalDate fechaInicioReal = LocalDate.now();
+        if (fechaInicio != null) {
+            fechaInicioReal = fechaInicio.stream()
+                .filter(java.util.Objects::nonNull)
+                .findFirst()
+                .orElse(LocalDate.now());
         }
+        clienteService.guardarOActualizarCliente(
+            cliente, 
+            idActividades, 
+            fechaInicioReal, 
+            tipoDeCobro,
+            registrarPago,
+            montoAbonado,
+            metodoPago,
+            observacionPago
+        );
+
+        redirectAttributes.addFlashAttribute("success", 
+            cliente.getIdCliente() != null ? "Cliente actualizado correctamente." : "Cliente registrado e inscripto.");
+
+        return "redirect:/clientes";
+
+    } catch (IllegalArgumentException e) {
+        model.addAttribute("error", "Datos incorrectos: " + e.getMessage());
+        return "layouts/main";
+    } catch (Exception e) {
+        e.printStackTrace();
+        model.addAttribute("error", e.getMessage());
+        model.addAttribute("cliente", cliente);
+        // Importante: volver a cargar las actividades si falla para que el form se vea bien
+        // model.addAttribute("actividades", actividadRepository.findAll()); 
+        return "layouts/main"; // Asegúrate de retornar la vista correcta donde está el formulario
     }
+}
 
 // Método auxiliar para evitar repetir código en los métodos del controlador
-private void prepararModelo(Model model) {
-    model.addAttribute("clientes", clienteRepository.findAll());
-    model.addAttribute("title", "Gym Manager | Clientes");
-    model.addAttribute("header", "Panel de control / Clientes");
-    model.addAttribute("vista", "clientes");
-    model.addAttribute("fragmento", "contenido");
-    model.addAttribute("active", "clientes");
-}
+// private void prepararModelo(Model model) {
+//     model.addAttribute("clientes", clienteRepository.findAll());
+//     model.addAttribute("title", "Gym Manager | Clientes");
+//     model.addAttribute("header", "Panel de control / Clientes");
+//     model.addAttribute("vista", "clientes");
+//     model.addAttribute("fragmento", "contenido");
+//     model.addAttribute("active", "clientes");
+// }
 // Método auxiliar limpio para el layout
 private void prepararModeloBase(Model model, String title, String header) {
     model.addAttribute("title", "Gym Manager | " + title);

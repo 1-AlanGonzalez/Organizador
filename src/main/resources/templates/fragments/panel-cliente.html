@@ -121,7 +121,7 @@
                                                        class="form-control form-control-sm date-input"
                                                        th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
                                                        disabled> -->
-                                                       <input type="date" name="fechaInicio">
+                                                     <input type="date" name="fechaInicio">
 
                                             </td>
                                         </tr>
@@ -208,4 +208,6 @@
             </form>
         </div>
     </div>
+    <script th:src="@{/js/clientes.js}"></script>
+
 </div>
