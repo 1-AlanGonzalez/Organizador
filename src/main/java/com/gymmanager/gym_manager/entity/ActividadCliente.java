@@ -193,7 +193,7 @@ public Set<Asistencia> getAsistencias() {
         return actividad.getPrecioDiario();
     }
 
-    public Pago generarPagoMensual(LocalDate fechaBase){
+    public Pago generarPagoMensual(LocalDate fechaBase, MetodoDePago metodoDePago){
         if (estado == EstadoInscripcion.BAJA) {
             throw new RuntimeException("No se pueden generar pagos para una inscripción dada de baja");
         }
@@ -204,12 +204,12 @@ public Set<Asistencia> getAsistencias() {
         }
 
         BigDecimal monto = calcularMontoMensual();
-        Pago pago = new Pago(monto,fechaBase,fechaBase.plusMonths(1), this);
+        Pago pago = new Pago(monto,fechaBase,fechaBase.plusMonths(1), this, metodoDePago);
         pagos.add(pago);
         return pago;
     }
 
-    public Pago generarPagoDiario() {
+    public Pago generarPagoDiario(MetodoDePago metodoDePago) {
         if (estado == EstadoInscripcion.BAJA) {
             throw new RuntimeException("No se pueden generar pagos para una inscripción dada de baja");
         }
@@ -220,12 +220,12 @@ public Set<Asistencia> getAsistencias() {
         }
 
         BigDecimal monto = calcularMontoDiario();
-        Pago pago = new Pago(monto,LocalDate.now(), LocalDate.now(),this);
+        Pago pago = new Pago(monto,LocalDate.now(), LocalDate.now(),this, metodoDePago);
         pagos.add(pago);
         return pago;
     }
 
-    public Pago generarPago(LocalDate fechaBase) {
+    public Pago generarPago(LocalDate fechaBase, MetodoDePago metodoDePago) {
 
         if (estado == EstadoInscripcion.BAJA) {
             throw new RuntimeException("No se pueden generar pagos para una inscripción dada de baja");
@@ -241,9 +241,9 @@ public Set<Asistencia> getAsistencias() {
         Pago pago;
     
         if (tipoDecobro == TipoDeCobro.MENSUAL) {
-        pago = generarPagoMensual(fechaBase);
+        pago = generarPagoMensual(fechaBase,metodoDePago);
         } else {
-        pago = generarPagoDiario();
+        pago = generarPagoDiario(metodoDePago);
         }
 
         pagos.add(pago);

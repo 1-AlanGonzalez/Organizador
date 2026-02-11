@@ -12,5 +12,7 @@ public interface ConfiguracionPagoRepository extends JpaRepository<Configuracion
 
     boolean existsByMetodoDePagoAndActivoTrue(MetodoDePago metodoDePago);
 
+    boolean existsByMetodoDePago(MetodoDePago metodoDePago);
     
+
 }

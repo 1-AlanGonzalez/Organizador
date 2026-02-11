@@ -39,19 +39,19 @@ public class Pago {
     @JoinColumn(name = "ID_ACTIVIDAD_CLIENTE", nullable = false)
     private ActividadCliente actividadCliente;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "METODO_PAGO", nullable = true)
-    private MetodoDePago metodoPago = MetodoDePago.NO_ESPECIFICADO;
+    @ManyToOne
+    @JoinColumn(name = "ID_METODO", nullable = true)
+    private MetodoDePago metodoPago;
     // AÑADO HOY 28/1
 
-    @Column(name = "MONTO_ABONADO")
-    private BigDecimal montoAbonado;
+    // @Column(name = "MONTO_ABONADO")
+    // private BigDecimal montoAbonado;
 
-    @Column(name = "DEUDA")
-    private BigDecimal deuda;
+    // @Column(name = "DEUDA")
+    // private BigDecimal deuda;
 
-    @Column(name = "FECHA_PAGO")
-    private LocalDate fechaPago;
+    // @Column(name = "FECHA_PAGO")
+    // private LocalDate fechaPago;
 
     @Column(name = "OBSERVACIONES", nullable = true, columnDefinition = "TEXT")
     private String observaciones;
@@ -61,13 +61,13 @@ public class Pago {
     public Pago() {}
 
     public Pago(BigDecimal montoAPagar, LocalDate fechaGeneracion,LocalDate fechaVencimiento, 
-        ActividadCliente actividadCliente) {
+        ActividadCliente actividadCliente, MetodoDePago metodoDePago) {
         this.fechaGeneracion = fechaGeneracion;
         this.fechaVencimiento = fechaVencimiento;
         this.estado = EstadoPago.ADEUDA;
         this.montoAPagar = montoAPagar;
         this.actividadCliente = actividadCliente;
-        this.metodoPago = MetodoDePago.NO_ESPECIFICADO;
+        this.metodoPago = metodoDePago;
         
     }
 

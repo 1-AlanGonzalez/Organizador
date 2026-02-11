@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import com.gymmanager.gym_manager.entity.Cliente;
+import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
@@ -84,7 +85,7 @@ public String guardarCliente(
         // Nuevos campos para el pago
         @RequestParam(required = false) Boolean registrarPago,
         @RequestParam(required = false) Double montoAbonado,
-        @RequestParam(required = false) String metodoPago,
+        @RequestParam(required = false) MetodoDePago metodoPago,
         @RequestParam(required = false) String observacionPago,
         Model model,
         RedirectAttributes redirectAttributes) {

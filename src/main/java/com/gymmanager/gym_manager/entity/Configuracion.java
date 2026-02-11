@@ -3,6 +3,7 @@ package com.gymmanager.gym_manager.entity;
 import java.math.BigDecimal;
 
     public class Configuracion {
+    
     private String nombreGimnasio;
     private String direccion;
     private String telefono;
@@ -71,7 +72,5 @@ import java.math.BigDecimal;
     public void setBloquearMorososAutomaticamente(Boolean bloquearMorososAutomaticamente) {
         this.bloquearMorososAutomaticamente = bloquearMorososAutomaticamente;
     }
-
-
     
 }

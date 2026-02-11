@@ -24,10 +24,10 @@ public interface ClienteActividadRepository extends JpaRepository<ActividadClien
         - Contar inscripciones activas (cupo)
         - Obtener una inscripción puntual para modificarla (baja, pagos, etc.)
  
-    */
-    
-    List<ActividadCliente> findByEstado(EstadoInscripcion estado);
+    */ 
 
+    
+    
     Integer countByActividadAndEstado(Actividad actividad, EstadoInscripcion estado);
 
     boolean existsByClienteAndActividadAndEstado(Cliente cliente,Actividad actividad,EstadoInscripcion estado);
@@ -37,6 +37,8 @@ public interface ClienteActividadRepository extends JpaRepository<ActividadClien
     // Te trae todas las incripciones en estado Activo.
     @Query("SELECT ac FROM ActividadCliente ac WHERE ac.estado = 'ACTIVA'")
     List<ActividadCliente> findAllActivas();
+
+    List<ActividadCliente> findByEstado(EstadoInscripcion estadoInscripcion);
 
 }
 

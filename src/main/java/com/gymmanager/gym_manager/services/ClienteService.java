@@ -53,7 +53,7 @@ private final ClienteRepository clienteRepository;
             TipoDeCobro tipoDeCobro,
             Boolean registrarPago,
             Double montoAbonado,
-            String metodoPagoStr,
+            MetodoDePago metodoPago,
             String observacionPago) {
 
         // 1. Validaciones previas
@@ -64,7 +64,7 @@ private final ClienteRepository clienteRepository;
             validarAlta(cliente, fechaInicio, tipoDeCobro, idActividades);
             // Validar datos de pago si el checkbox está marcado
             if (Boolean.TRUE.equals(registrarPago)) {
-                validarDatosPago(montoAbonado, metodoPagoStr);
+                validarDatosPago(montoAbonado, metodoPago);
             }
             // 2. Guardar Cliente e Inscripciones
             Cliente clienteGuardado = registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
@@ -76,11 +76,11 @@ private final ClienteRepository clienteRepository;
         }
     }
 
-    private void validarDatosPago(Double monto, String metodoStr) {
+    private void validarDatosPago(Double monto, MetodoDePago metodoPago) {
         if (monto == null || monto <= 0) {
             throw new RuntimeException("El monto abonado debe ser mayor a 0.");
         }
-        if (metodoStr == null || metodoStr.trim().isEmpty()) {
+        if (metodoPago == null) {
             throw new RuntimeException("Debe seleccionar un método de pago.");
         }
     }
@@ -124,7 +124,7 @@ private final ClienteRepository clienteRepository;
     }
 
     // --- NUEVA LÓGICA DE PAGO ADAPTADA A TU ENTIDAD ---
-    private void registrarPagoInicial(Cliente cliente, List<Integer> idActividades, Double monto, String metodoStr, String observacion) {
+    private void registrarPagoInicial(Cliente cliente, List<Integer> idActividades, Double monto, MetodoDePago metodoDePago, String observacion) {
         
         // TU ENTIDAD PAGO REQUIERE UNA 'ActividadCliente'.
         // Buscamos una de las inscripciones activas que acabamos de crear para asignarle el pago.
@@ -148,7 +148,7 @@ private final ClienteRepository clienteRepository;
         BigDecimal montoBig = BigDecimal.valueOf(monto);
         nuevoPago.setMontoAPagar(montoBig); // Asumimos que paga lo que debe, o ajusta esto según tu lógica de deuda
         
-        nuevoPago.setMetodoPago(MetodoDePago.valueOf(metodoStr)); // Convertir String a Enum
+        nuevoPago.setMetodoPago(metodoDePago); // Convertir String a Enum
         nuevoPago.setObservaciones(observacion != null ? observacion : "Pago inicial al registrar");
         
         // Lógica de estado y vencimiento

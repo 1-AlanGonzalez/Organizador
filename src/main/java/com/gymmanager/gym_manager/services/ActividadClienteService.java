@@ -9,8 +9,10 @@ import com.gymmanager.gym_manager.entity.Actividad;
 import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.EstadoInscripcion;
+import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
+import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
 
 
 /*
@@ -30,10 +32,11 @@ import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
 @Service
 public class ActividadClienteService {
     private final ClienteActividadRepository actividadClienteRepository;
-    
+    private final MetodoDePagoRepository metodoDePagoRepository;
 
-    public ActividadClienteService(ClienteActividadRepository actividadClienteRepository){
+    public ActividadClienteService(ClienteActividadRepository actividadClienteRepository, MetodoDePagoRepository metodoDePagoRepository){
         this.actividadClienteRepository = actividadClienteRepository;
+        this.metodoDePagoRepository = metodoDePagoRepository;
     }
 
 
@@ -81,7 +84,11 @@ public class ActividadClienteService {
         
         /* bueno agregado, a la hora de que inscribe al cliente luego el flujo es que se genere el pago */
         
-        inscripcion.generarPago(fechaInicio);
+        MetodoDePago metodoPago = metodoDePagoRepository
+        .findByNombre("NO_ESPECIFICADO")
+        .orElseThrow(() -> new RuntimeException("Metodo de pago no encontrado"));
+
+        inscripcion.generarPago(fechaInicio,metodoPago);
         /* Si genero la inscripcion */        
 
         return actividadClienteRepository.save(inscripcion);

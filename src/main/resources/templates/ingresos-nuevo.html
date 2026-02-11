@@ -28,7 +28,7 @@
                         Inscripción / Cliente
                     </label>
 
-                    <select class="form-select" name="idPago" required>
+                    <select class="form-select" name="idActividadCliente" required>
                     <option value="" disabled selected>Seleccione...</option>
 
                         <option th:each="ac : ${clientesList}"
@@ -85,14 +85,23 @@
 
                             <div class="col-md-6">
                                 <label for="metodo" class="form-label small fw-bold text-secondary">Método de Pago</label>
-                                <select class="form-select" id="metodo" name="metodoPago" required>
+                                <!-- 
+                                Select dinámico de métodos de pago.
+                                A diferencia de antes (cuando era enum),
+                                ahora los métodos vienen de la base de datos.
+                                -->
+                                <select class="form-select" id="metodo" name="metodoPagoId" required>
                                     <option value="" disabled selected>Seleccione...</option>
-                                    <!-- <option value="Efectivo">Efectivo</option>
-                                    <option value="Transferencia">Transferencia</option>
-                                    <option value="Tarjeta">Tarjeta Débito/Crédito</option> -->
-                                    <option value="EFECTIVO">Efectivo</option>
-                                    <option value="TRANSFERENCIA">Transferencia</option>
-                                    <option value="TARJETA">Tarjeta Débito/Crédito</option>
+                                    <!-- 
+                                    Recorremos la lista 'metodosPago' enviada desde el controller.
+                                    Cada opción:
+                                    - value: ID del método (clave primaria en la BD)
+                                    - text: nombre visible del método (Efectivo, Transferencia, etc.)
+                                    -->
+                                    <option th:each="m : ${metodosPago}"
+                                            th:value="${m.idMetodoDePago}"
+                                            th:text="${m.nombre}">
+                                    </option>
                                 </select>
                             </div>
                         </div>

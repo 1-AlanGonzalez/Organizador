@@ -4,16 +4,18 @@ import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 /* Esta entidad tendra la logica de los pagos
  * por transferencia / tarjeta / efectivo
  */
+
+ // 5/2/26 METODO DE PAGO CAMBIO NO ES ENUM, AHORA ES UNA CLASE
 
 @Entity
 @Table(name = "CONFIGURACIONPAGO")
@@ -24,8 +26,8 @@ public class ConfiguracionDePago {
     @Column(name = "ID_CONFIGURACION_PAGO")
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "METODO_PAGO", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "ID_METODO", nullable = false)
     private MetodoDePago metodoDePago;
 
     @Column(name = "PORCENTAJE_RECARGO", nullable = false, precision = 5, scale = 2)
@@ -68,4 +70,15 @@ public class ConfiguracionDePago {
         this.activo = activo;
     }
 
+    public void cambiarOAgregarRecargo(BigDecimal recargo){
+        porcentajeRecargo = recargo;
+    }
+
+    public void darDeBajaAlMetodo(){
+        activo = Boolean.FALSE;
+    }
+
+    public void activarMetodo(){
+        activo = Boolean.TRUE;
+    }
 }
