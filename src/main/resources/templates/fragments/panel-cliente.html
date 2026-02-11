@@ -1,4 +1,4 @@
-<div th:fragment="panelCliente">
+<div th:fragment="panelCliente(metodosPago)">
     <div class="card custom-card w-100 border-0 shadow-sm">
         <div class="card-body p-4">
             
@@ -167,13 +167,13 @@
                                 <div id="bloquePago" class="d-none">
                                     <div class="mb-2">
                                         <label class="form-label small fw-bold text-secondary">Método de Pago</label>
-                                        <select name="metodoPago"
+                                        <select name="metodoPagoId"
                                                 class="form-select form-select-sm"
-                                                disabled>
-                                            <option value="">Seleccionar</option>
-                                            <option value="EFECTIVO">Efectivo</option>
-                                            <option value="TRANSFERENCIA">Transferencia</option>
-                                            <option value="TARJETA">Tarjeta</option>
+                                                >
+                                            <option th:each="m : ${metodosPago}"
+                                                th:value="${m.idMetodoDePago}"
+                                                th:text="${m.nombre}">
+                                            </option>
                                         </select>
                                     </div>
 

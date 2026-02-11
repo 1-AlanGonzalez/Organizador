@@ -23,7 +23,7 @@ import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
-
+import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
 import com.gymmanager.gym_manager.services.ClienteService;
 
 @Controller
@@ -33,6 +33,7 @@ public class ClientesController {
     private final ClienteRepository clienteRepository;
     private final ActividadRepository actividadRepository;
     private final ClienteService clienteService;
+    private final MetodoDePagoRepository metodoDePagoRepository;
     
     // NUEVO HOY 4/2 
     /* Al crear un cliente hay un botón de "registrar pago"
@@ -41,10 +42,11 @@ public class ClientesController {
 
 
     public ClientesController(ClienteRepository clienteRepository, ActividadRepository actividadRepository,
-            ClienteService clienteService) {
+            ClienteService clienteService, MetodoDePagoRepository metodoDePagoRepository) {
         this.clienteRepository = clienteRepository;
         this.actividadRepository = actividadRepository;
         this.clienteService = clienteService;
+        this.metodoDePagoRepository = metodoDePagoRepository;
     }
 
     @GetMapping
@@ -62,6 +64,9 @@ public class ClientesController {
         model.addAttribute("fragmento", "contenido");
 
         model.addAttribute("active", "clientes");
+
+        model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
+
         return "layouts/main";
     }
     /*
@@ -85,7 +90,7 @@ public String guardarCliente(
         // Nuevos campos para el pago
         @RequestParam(required = false) Boolean registrarPago,
         @RequestParam(required = false) Double montoAbonado,
-        @RequestParam(required = false) MetodoDePago metodoPago,
+        @RequestParam(required = false) MetodoDePago metodoPagoId,
         @RequestParam(required = false) String observacionPago,
         Model model,
         RedirectAttributes redirectAttributes) {
@@ -107,7 +112,7 @@ public String guardarCliente(
             tipoDeCobro,
             registrarPago,
             montoAbonado,
-            metodoPago,
+            metodoPagoId,
             observacionPago
         );
 
