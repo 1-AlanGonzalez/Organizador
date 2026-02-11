@@ -21,8 +21,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(
     name = "ACTIVIDAD_CLIENTE",
@@ -47,7 +52,7 @@ public class ActividadCliente {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TIPO_DE_COBRO", nullable = false)
-    private TipoDeCobro tipoDecobro;
+    private TipoDeCobro tipoDeCobro;
     
     @ManyToOne
     @JoinColumn(name = "ID_CLIENTE", nullable = false)
@@ -63,7 +68,6 @@ public class ActividadCliente {
     @OneToMany(mappedBy = "actividadCliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Asistencia> asistencias = new HashSet<>();
 
-    public ActividadCliente() { }
 
     public ActividadCliente(LocalDate fechaDeInscripcion, BigDecimal costo, Cliente cliente, 
         Actividad actividad, TipoDeCobro tipoDeCobro) {
@@ -71,73 +75,7 @@ public class ActividadCliente {
         this.costo = costo;
         this.cliente = cliente;
         this.actividad = actividad;
-        this.tipoDecobro = tipoDeCobro;
-    }
-
-    /* ================== Getters y Setters ================== */
-
-
-public void setEstado(EstadoInscripcion estado) {
-    this.estado = estado;
-}
-
-public Set<Pago> getPagos() {
-    return pagos;
-}
-
-public Set<Asistencia> getAsistencias() {
-    return asistencias;
-}
-    public Integer getIdActividadCliente() {
-        return idActividadCliente;
-    }
-
-    public void setIdActividadCliente(Integer idActividadCliente) {
-        this.idActividadCliente = idActividadCliente;
-    }
-
-    public LocalDate getFechaDeInscripcion() {
-        return fechaDeInscripcion;
-    }
-
-    public void setFechaDeInscripcion(LocalDate fechaDeInscripcion) {
-        this.fechaDeInscripcion = fechaDeInscripcion;
-    }
-
-    public BigDecimal getCosto() {
-        return costo;
-    }
-
-    public void setCosto(BigDecimal costo) {
-        this.costo = costo;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Actividad getActividad() {
-        return actividad;
-    }
-
-    public void setActividad(Actividad actividad) {
-        this.actividad = actividad;
-    }
-
-    public EstadoInscripcion getEstado(){
-        return estado;
-    }
-
-    public TipoDeCobro getTipoDeCobro(){
-        return tipoDecobro;
-    }
-
-    public void setTipoDeCobro(TipoDeCobro tipoDeCobroNuevo){
-        this.tipoDecobro = tipoDeCobroNuevo;
+        this.tipoDeCobro = tipoDeCobro;
     }
 
     /* ================== LÓGICA DE ACTIVIDADCLIENTE ================== */
@@ -240,7 +178,7 @@ public Set<Asistencia> getAsistencias() {
 
         Pago pago;
     
-        if (tipoDecobro == TipoDeCobro.MENSUAL) {
+        if (tipoDeCobro == TipoDeCobro.MENSUAL) {
         pago = generarPagoMensual(fechaBase,metodoDePago);
         } else {
         pago = generarPagoDiario(metodoDePago);

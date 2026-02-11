@@ -6,7 +6,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table
 public class MetodoDePago {
@@ -19,21 +26,8 @@ public class MetodoDePago {
     @Column(unique = true, nullable = false)
     private String nombre;
 
-    public MetodoDePago(){}
 
     public MetodoDePago(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Integer getIdMetodoDePago() {
-        return idMetodoDePago;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 

@@ -2,7 +2,7 @@ package com.gymmanager.gym_manager.entity;
 
 import java.math.BigDecimal;
 
-    public class Configuracion {
+public class Configuracion {
     
     private String nombreGimnasio;
     private String direccion;

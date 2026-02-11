@@ -9,7 +9,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(
     name = "INSTRUCTOR_ACTIVIDAD",
@@ -38,9 +45,6 @@ public class Dicta {
     private String horario;
 
 
-
-    public Dicta(){}
-
     public Dicta(Actividad actividad, Instructor instructor, String dias, String horario) {
         this.actividad = actividad;
         this.instructor = instructor;
@@ -48,42 +52,6 @@ public class Dicta {
         this.horario = horario;
     }
 
-    public Actividad getActividad() {
-        return actividad;
-    }
-
-    public void setActividad(Actividad actividad) {
-        this.actividad = actividad;
-    }
-
-    public Instructor getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
-    }
-
-    public String getDias() {
-        return dias;
-    }
-
-    public void setDias(String dias) {
-        this.dias = dias;
-    }
-
-    public String getHorario() {
-        return horario;
-    }
-
-    public void setHorario(String horario) {
-        this.horario = horario;
-    }
-    
-    public Integer getIdInstructorActividad() {
-        return idInstructorActividad;
-    }
-        
 }
 
 

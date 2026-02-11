@@ -10,6 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /* Esta entidad tendra la logica de los pagos
  * por transferencia / tarjeta / efectivo
@@ -17,6 +20,9 @@ import jakarta.persistence.Table;
 
  // 5/2/26 METODO DE PAGO CAMBIO NO ES ENUM, AHORA ES UNA CLASE
 
+ @Getter
+ @Setter
+ @NoArgsConstructor
 @Entity
 @Table(name = "CONFIGURACIONPAGO")
 public class ConfiguracionDePago {
@@ -37,36 +43,9 @@ public class ConfiguracionDePago {
     private Boolean activo;
 
 
-    public ConfiguracionDePago(){}
-
     public ConfiguracionDePago(MetodoDePago metodoDePago, BigDecimal porcentajeRecargo, Boolean activo) {
         this.metodoDePago = metodoDePago;
         this.porcentajeRecargo = porcentajeRecargo;
-        this.activo = activo;
-    }
-
-    
-    public MetodoDePago getMetodoDePago() {
-        return metodoDePago;
-    }
-
-    public void setMetodoDePago(MetodoDePago metodoDePago) {
-        this.metodoDePago = metodoDePago;
-    }
-
-    public BigDecimal getPorcentajeRecargo() {
-        return porcentajeRecargo;
-    }
-
-    public void setPorcentajeRecargo(BigDecimal porcentajeRecargo) {
-        this.porcentajeRecargo = porcentajeRecargo;
-    }
-
-    public Boolean getActivo() {
-        return activo;
-    }
-
-    public void setActivo(Boolean activo) {
         this.activo = activo;
     }
 

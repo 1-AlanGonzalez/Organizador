@@ -13,7 +13,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "PAGO")
 public class Pago {
@@ -57,9 +64,6 @@ public class Pago {
     private String observaciones;
 
     // -------------------
-
-    public Pago() {}
-
     public Pago(BigDecimal montoAPagar, LocalDate fechaGeneracion,LocalDate fechaVencimiento, 
         ActividadCliente actividadCliente, MetodoDePago metodoDePago) {
         this.fechaGeneracion = fechaGeneracion;
@@ -71,73 +75,12 @@ public class Pago {
         
     }
 
-
-
-    /* ================== Getters y Setters ================== */
-   
-    public LocalDate getFechaGeneracion() {
-        return fechaGeneracion;
-    }
-
-    public void setFechaGeneracion(LocalDate fechaGeneracion) {
-        this.fechaGeneracion = fechaGeneracion;
-    }
-
-    public LocalDate getFechaVencimiento() {
-        return fechaVencimiento;
-    }
-
-    public void setFechaVencimiento(LocalDate fechaVencimiento) {
-        this.fechaVencimiento = fechaVencimiento;
-    }
-
-    public EstadoPago getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoPago estado) {
-        this.estado = estado;
-    }
-
-    public BigDecimal getMontoAPagar() {
-        return montoAPagar;
-    }
-
-    public void setMontoAPagar(BigDecimal montoAPagar) {
-        this.montoAPagar = montoAPagar;
-    }
-
-    public ActividadCliente getActividadCliente() {
-        return actividadCliente;
-    }
-
-    public void setActividadCliente(ActividadCliente actividadCliente) {
-        this.actividadCliente = actividadCliente;
-    }
-
-    public MetodoDePago getMetodoPago() {
-        return metodoPago;
-    }
-
-    public void setMetodoPago(MetodoDePago metodoPago) {
-        this.metodoPago = metodoPago;
-    }
-
-    public String getObservaciones(){
-        return observaciones;
-    }
-
-    public void setObservaciones(String observaciones){
-        this.observaciones = observaciones;
-    }
     /* ================== LÓGICA DEL PAGO ================== */
 
     /* Aca se pregunta si la fecha de hoy es igual a la fecha de vencimiento o un dia despues */
 
-    
-
     public Boolean estaVencido(){
-        LocalDate hoy = LocalDate.now();
+        //LocalDate hoy = LocalDate.now();
         return estado == EstadoPago.ADEUDA;
         //  && ( hoy.isEqual(fechaVencimiento) || hoy.isAfter(fechaVencimiento)) ;  
     }
@@ -151,14 +94,7 @@ public class Pago {
         estado = EstadoPago.PAGADO; 
     
     }
-    // PAGO AGREGADO HOY 28/1
-
-
-    // ===================
-
-    /* Pagos de mas de un mes o año */
-
-
+ 
     public void aplicarRecargo(BigDecimal recargo){
         if (recargo == null || recargo.compareTo(BigDecimal.ZERO) < 0) {
             throw new RuntimeException("Recargo invalido");

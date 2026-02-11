@@ -12,8 +12,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "ACTIVIDAD")
 public class Actividad {
@@ -46,23 +51,11 @@ public class Actividad {
     @OneToMany(mappedBy = "actividad")
     private Set<ActividadCliente> inscripciones = new HashSet<>();
 
-    public Actividad() {
-    }
-
-    
     public Actividad(String nombre, Integer cupoMaximo, BigDecimal precio, BigDecimal precioDiario) {
         this.nombre = nombre;
         this.cupoMaximo = cupoMaximo;
         this.precio = precio;
         this.precioDiario = precioDiario;
-    }
-
-    /* ================== Getters y Setters ================== */
-    public Set<ActividadCliente> getInscripciones() {
-        return inscripciones;
-    }
-    public void setInscripciones(Set<ActividadCliente> inscripciones) {
-        this.inscripciones = inscripciones;
     }
     public void agregarDictado(Dicta dicta) {
     dictados.add(dicta);
@@ -74,51 +67,6 @@ public class Actividad {
         dicta.setActividad(null);
     }
 
-    public Integer getIdActividad() {
-        return idActividad;
-    }
-
-    public void setIdActividad(Integer idActividad) {
-        this.idActividad = idActividad;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Integer getCupoMaximo() {
-        return cupoMaximo;
-    }
-
-    public void setCupoMaximo(Integer cupoMaximo) {
-        this.cupoMaximo = cupoMaximo;
-    }
-
-    public BigDecimal getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(BigDecimal precio) {
-        this.precio = precio;
-    }
-    public Set<Dicta> getDictados() {
-        return dictados;
-    }
-    public void setDictados(Set<Dicta> dictados) {
-        this.dictados = dictados;
-    }
-    
-    public BigDecimal getPrecioDiario(){
-        return precioDiario;
-    }
-
-    public void setPrecioDiario(BigDecimal precioDiario){
-        this.precioDiario = precioDiario;
-    }
     /* ================== LÓGICA DE ACTIVIDAD ================== */
 
 

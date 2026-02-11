@@ -14,7 +14,13 @@ import jakarta.persistence.Id;
 // import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "INSTRUCTOR")
 public class Instructor {
@@ -32,18 +38,9 @@ public class Instructor {
     @Column(name = "TELEFONO", nullable = false, length = 20)
     private String telefono;
 
-    
-    // Comento esto que ya estaba implementado porque me tira error al crear el instructor
-    // @ManyToOne
-    // @JoinColumn(name = "ID_ACTIVIDAD", nullable = false)
-    // private Actividad actividad;
-
     // Muchos a muchos entre instructor y actividad
     @OneToMany(mappedBy = "instructor")
     private Set<Dicta> dictados = new HashSet<>();
-
-    public Instructor() {
-        }
 
     public Instructor(String nombre, String apellido, String dni, String telefono) {
         this.nombre = nombre;
@@ -51,49 +48,5 @@ public class Instructor {
         this.dni = dni;
         this.telefono = telefono; }
     
-    public Integer getIdInstructor() {
-        return idInstructor;
-    }
-    public Set<Dicta> getDictados() {
-        return dictados;
-    }
-    public void setIdInstructor(Integer idInstructor) {
-        this.idInstructor = idInstructor;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    
-
     
 }

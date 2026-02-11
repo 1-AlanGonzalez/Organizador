@@ -10,7 +10,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "ASISTENCIA")
 public class Asistencia {
@@ -30,47 +36,12 @@ public class Asistencia {
     @JoinColumn(name = "ID_ACTIVIDAD_CLIENTE", nullable = false)
     private ActividadCliente actividadCliente;
 
-    public Asistencia() {
-    }
-
-    
-
-    /* ================== Getters y Setters ================== */
-
-    public Asistencia(LocalDate fecha, Boolean presente, ActividadCliente actividadCliente) {
+  
+     public Asistencia(LocalDate fecha, Boolean presente, ActividadCliente actividadCliente) {
         this.fecha = fecha;
         this.presente = presente;
         this.actividadCliente = actividadCliente;
     }
-
-
-    // public Long getId() {
-    //     return id;
-    // }
-    // public void setId(Long id) {
-    //     this.id = id;
-    // }
-    public LocalDate getFecha() {
-        return fecha;
-    }
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-    public Boolean getPresente() {
-        return presente;
-    }
-    public void setPresente(Boolean presente) {
-        this.presente = presente;
-    }
-
-    public ActividadCliente getActividadCliente() {
-        return actividadCliente;
-    }
-
-    public void setActividadCliente(ActividadCliente actividadCliente) {
-        this.actividadCliente = actividadCliente;
-    }
-    
 
     /* ================== LÓGICA DE ASISTENCIA ================== */
 

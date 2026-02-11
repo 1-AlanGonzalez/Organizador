@@ -6,6 +6,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "CLIENTE")
 public class Cliente {
@@ -35,8 +42,6 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ActividadCliente> inscripciones = new HashSet<>();
 
-    public Cliente() {}
-
     public Cliente(String nombre, String apellido, String dni, String telefono) {
         this.nombre = nombre;
         this.apellido = apellido;
@@ -44,60 +49,6 @@ public class Cliente {
         this.telefono = telefono;
     }
 
-    /* ================== Getters y Setters ================== */
-
-    public Integer getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-    public Set<ActividadCliente> getInscripciones() {
-        return inscripciones;
-    }
-    public void setInscripciones(Set<ActividadCliente> inscripciones) {
-        this.inscripciones = inscripciones;
-    }
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getObservaciones(){
-        return observaciones;
-    }
-
-    public void setObservaciones(String observaciones){
-        this.observaciones = observaciones;
-    }
     // Añado un GETTER de inscripciones activas para no tener esta lógica en el frontend
     public Set<ActividadCliente> getInscripcionesActivas() {
         if (inscripciones == null) return Set.of();
