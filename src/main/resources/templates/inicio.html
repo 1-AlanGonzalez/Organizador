@@ -1,114 +1,117 @@
-<div th:fragment="contenido" >
+<div th:fragment="contenido" class="h-100 d-flex flex-column p-2" style="overflow: hidden;">
 
-    <!-- <div class="d-flex align-items-center justify-content-between mb-4">
-        <div class="bg-white px-3 py-2 rounded-pill shadow-sm border position-absolute">
-            
-            <i class="bi bi-calendar-event text-primary me-2"></i>
-            <span class="fw-bold text-dark" th:text="${#dates.format(#dates.createNow(), 'd MMMM, yyyy')}"></span>
+    <div class="d-flex align-items-center justify-content-between mb-2 flex-shrink-0 animate-fade-up">
+        <div>
+            <h4 class="fw-bold text-dark mb-0">Inicio</h4> 
+            <p class="text-muted small mb-0">Resumen general del gimnasio</p>
         </div>
-    </div> -->
+    </div>
 
-    <div class="row g-4 mb-4">
+    <div class="row g-2 mb-3 flex-shrink-0 animate-fade-up delay-1">
+        
+    <div class="col-lg-7">
+        <div class="card custom-card bg-gradient-hero border-0 h-100 p-3 position-relative overflow-hidden">
+            <div class="position-absolute rounded-circle bg-white" style="width: 120px; height: 120px; top: -40px; right: -20px; opacity: 0.1;"></div>
+            <div class="position-absolute rounded-circle bg-white" style="width: 80px; height: 80px; bottom: -20px; left: -20px; opacity: 0.05;"></div>
 
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm h-100 bg-gradient-hero overflow-hidden position-relative">
-                <div style="position: absolute; top: -20px; right: -20px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
-                <div style="position: absolute; bottom: -40px; left: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+            <div class="d-flex justify-content-between align-items-start position-relative" style="z-index: 2;">
+                <div>
+                    <span class="text-white-50 text-uppercase small fw-bold ls-1" style="font-size: 0.7rem;">Ingresos del Mes</span>
+                    <h6 class="text-white mt-1 fw-bold fs-5" th:text="${#strings.capitalize(#dates.format(#dates.createNow(), 'MMMM'))}">Mes</h6>
+                </div>
+                <div class="icon-box-glass" style="width: 42px; height: 42px; font-size: 1.2rem;">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+            </div>
+            
+            <div class="mt-2 position-relative" style="z-index: 2;">
+                <h1 class="text-white fw-bold display-6 mb-0" 
+                    th:text="${'$' + #numbers.formatDecimal(ingresosTotales, 1, 'POINT', 2, 'COMMA')}">$0.00</h1>
                 
-                <div class="card-body p-4 d-flex flex-column justify-content-between position-relative">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <span class="text-white-50 text-uppercase small fw-bold ls-1">Ingresos del Mes</span>
-                            <h5 class="text-white mt-1 fw-bold" th:text="${#strings.capitalize(#dates.format(#dates.createNow(), 'MMMM'))}"></h5>
-                        </div>
-                        <div class="icon-box-glass">
-                            <i class="bi bi-wallet2"></i>
-                        </div>
-                    </div>
-                    <div>
-                        <h2 class="display-5 fw-bold mb-0" th:text="${'$' + #numbers.formatDecimal(ingresosTotales, 1, 'POINT', 2, 'COMMA')}">$0.00</h2>
-                        <small class="text-white-50"><i class="bi bi-arrow-up-circle me-1"></i>Acumulado actual</small>
-                    </div>
+                <div class="d-flex align-items-center gap-2 text-white-50 small mt-1">
+                    <i class="bi bi-arrow-up-circle-fill text-white"></i>
+                    <span>Acumulado actual</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-md-6">
-            <div class="card custom-card h-100 p-4 border-0">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="card-title fw-bold mb-0">Estado de Clientes</h5>
-                    <span class="badge bg-light text-dark border fs-6 rounded-pill px-3" th:text="${totalClientes + ' Total'}">0 Total</span>
-                </div>
-                
-                <div class="row g-3">
-                    <div class="col-6">
-                        <div class="p-3 rounded-3 bg-light border d-flex align-items-center gap-3">
-                            <div class="icon-box-light icon-bg-green flex-shrink-0">
-                                <i class="bi bi-person-check-fill"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0 fw-bold text-dark" th:text="${clientesActivos}">0</h4>
-                                <small class="text-muted fw-bold" style="font-size: 0.75rem;">ACTIVOS</small>
-                            </div>
+    <div class="col-lg-5">
+        <div class="card custom-card border-0 h-100 p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="fw-bold text-dark mb-0 small text-uppercase">Estado Clientes</h6>
+                <span class="badge bg-light text-dark border rounded-pill px-2 py-1" style="font-size: 0.7rem;" th:text="${totalClientes + ' Total'}">0 Total</span>
+            </div>
+
+            <div class="row g-2 h-100">
+                <div class="col-6">
+                    <div class="p-2 border rounded-3 bg-light d-flex flex-column justify-content-center align-items-center gap-1 h-100 text-center">
+                        <div class="icon-box-light icon-bg-green rounded-circle" style="width: 36px; height: 36px;">
+                            <i class="bi bi-person-check-fill small"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0 text-dark" th:text="${clientesActivos}">0</h5>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 0.6rem;">Activos</small>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-6">
-                        <div class="p-3 rounded-3 bg-light border d-flex align-items-center gap-3">
-                            <div class="icon-box-light icon-bg-orange flex-shrink-0">
-                                <i class="bi bi-person-exclamation"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0 fw-bold text-dark" th:text="${clientesPendientes}">0</h4> 
-                                <small class="text-muted fw-bold" style="font-size: 0.75rem;">PENDIENTES</small>
-                            </div>
+                <div class="col-6">
+                    <div class="p-2 border rounded-3 bg-light d-flex flex-column justify-content-center align-items-center gap-1 h-100 text-center">
+                        <div class="icon-box-light icon-bg-orange rounded-circle" style="width: 36px; height: 36px;">
+                            <i class="bi bi-person-exclamation small"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0 text-dark" th:text="${clientesPendientes}">0</h5>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 0.6rem;">Pendientes</small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="row g-4">
+    <div class="row g-3 flex-grow-1 pb-2 animate-fade-up delay-2" style="min-height: 0;">
         
-        <div class="col-lg-5">
-            <h6 class="section-subtitle">Accesos Directos</h6>
-            
-            <div class="row g-3">
-                <div class="col-6">
-                    <a th:href="@{/asistencias}" class="btn-widget text-decoration-none">
-                        <i class="bi bi-qr-code-scan"></i>
-                        <span class="fw-bold text-dark">Asistencia</span>
-                        <span class="small text-muted">Tomar asistencia</span>
+        <div class="col-lg-5 d-flex flex-column h-100">
+            <h6 class="section-subtitle flex-shrink-0">Accesos Directos</h6>
+            <div class="row g-3 h-100">
+                <div class="col-6 h-50">
+                    <a th:href="@{/asistencias}" class="btn-widget text-decoration-none h-100 w-100 d-flex flex-column justify-content-center align-items-center text-center p-2">
+                        <i class="bi bi-qr-code-scan mb-2 text-primary fs-4"></i>
+                        <span class="fw-bold text-dark d-block">Asistencia</span>
+                        <small class="text-muted">Tomar asistencia</small>
                     </a>
                 </div>
-                <div class="col-6">
-                    <a th:href="@{/ingresos/nuevo}" class="btn-widget text-decoration-none">
-                        <i class="bi bi-cash-coin text-success-emphasis"></i> <span class="fw-bold text-dark">Cobrar</span>
-                        <span class="small text-muted">Registrar pago</span>
+                <div class="col-6 h-50">
+                    <a th:href="@{/ingresos/nuevo}" class="btn-widget text-decoration-none h-100 w-100 d-flex flex-column justify-content-center align-items-center text-center p-2">
+                        <i class="bi bi-cash-coin mb-2 text-success fs-4"></i>
+                        <span class="fw-bold text-dark d-block">Cobrar</span>
+                        <small class="text-muted">Registrar pago</small>
                     </a>
                 </div>
-                <div class="col-6">
-                    <button class="btn-widget w-100">
-                        <i class="bi bi-person-plus"></i>
-                        <span class="fw-bold text-dark">Nuevo</span>
-                        <span class="small text-muted">Alta alumno</span>
-                    </button>
+                <div class="col-6 h-50">
+                    <a th:href="@{/clientes/nuevo}" class="btn-widget text-decoration-none h-100 w-100 d-flex flex-column justify-content-center align-items-center text-center p-2">
+                        <i class="bi bi-person-plus mb-2 text-info fs-4"></i>
+                        <span class="fw-bold text-dark d-block">Nuevo</span>
+                        <small class="text-muted">Alta alumno</small>
+                    </a>
                 </div>
-                <div class="col-6">
-                    <button class="btn-widget w-100">
-                        <i class="bi bi-file-earmark-spreadsheet"></i>
-                        <span class="fw-bold text-dark">Reportes</span>
-                        <span class="small text-muted">Exportar Excel</span>
-                    </button>
+                <div class="col-6 h-50">
+                    <a th:href="@{/reportes}" class="btn-widget text-decoration-none h-100 w-100 d-flex flex-column justify-content-center align-items-center text-center p-2">
+                        <i class="bi bi-file-earmark-spreadsheet mb-2 text-secondary fs-4"></i>
+                        <span class="fw-bold text-dark d-block">Reportes</span>
+                        <small class="text-muted">Exportar Excel</small>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-7">
-            <h6 class="section-subtitle">Tendencia de Ingresos</h6>
-            <div class="card custom-card p-4 border-0 ">
-                <div id="chart" style="min-height: 250px;"></div>
+        <div class="col-lg-7 d-flex flex-column h-100">
+            <h6 class="section-subtitle flex-shrink-0">Tendencia de Ingresos</h6>
+            <div class="card custom-card border-0 h-100 w-100 p-3">
+                <div id="chart" class="w-100 h-100"></div>
                 
                 <script th:inline="javascript">
                     /*<![CDATA[*/
@@ -118,7 +121,7 @@
                 </script>
             </div>
         </div>
-        
+
     </div>
 
     <script th:src="@{/js/script.js}"></script>
