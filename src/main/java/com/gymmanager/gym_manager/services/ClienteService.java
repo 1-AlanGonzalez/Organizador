@@ -28,10 +28,12 @@ public class ClienteService {
 private final ClienteRepository clienteRepository;
     private final ActividadRepository actividadRepository;
     private final ActividadClienteService actividadClienteService;
+    private final PagoService pagoService;
     private final ClienteActividadRepository clienteActividadRepository;
     private final PagoRepository pagoRepository; // <--- NECESARIO AGREGAR ESTO
 
     public ClienteService(
+        PagoService pagoService,
         ClienteRepository clienteRepository,
         ActividadRepository actividadRepository,
         ActividadClienteService actividadClienteService,
@@ -43,6 +45,7 @@ private final ClienteRepository clienteRepository;
         this.actividadClienteService = actividadClienteService;
         this.clienteActividadRepository = clienteActividadRepository;
         this.pagoRepository = pagoRepository;
+        this.pagoService = pagoService;
     }
     
     @Transactional
@@ -63,15 +66,30 @@ private final ClienteRepository clienteRepository;
         } else {
             validarAlta(cliente, fechaInicio, tipoDeCobro, idActividades);
             // Validar datos de pago si el checkbox está marcado
+            // 2. Guardar Cliente e Inscripciones
+            Cliente clienteGuardado = registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
+
+            if (!Boolean.TRUE.equals(registrarPago)) {
+                return;
+            }
+
             if (Boolean.TRUE.equals(registrarPago)) {
                 validarDatosPago(montoAbonado, metodoPago);
             }
-            // 2. Guardar Cliente e Inscripciones
-            Cliente clienteGuardado = registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
             // 3. Registrar el Pago (si corresponde)
             if (Boolean.TRUE.equals(registrarPago)) {
-                // imputarPagoInicial(clienteGuardado, idActividades, montoAbonado, metodoPagoStr, observacionPago);
-                // pagoService.procesarPago(pagoPendiente, metodo, observacionPago);
+
+                for (ActividadCliente inscripcion : clienteGuardado.getInscripciones()) {
+
+                    if (inscripcion.getEstado() == EstadoInscripcion.ACTIVA) {
+
+                        pagoService.procesarPago(
+                            inscripcion.getIdActividadCliente(),
+                            metodoPago.getIdMetodoDePago(),
+                            observacionPago
+                        );
+                    }
+                }
             }
         }
     }
@@ -123,40 +141,7 @@ private final ClienteRepository clienteRepository;
         return clienteGuardado;
     }
 
-    // --- NUEVA LÓGICA DE PAGO ADAPTADA A TU ENTIDAD ---
-    private void registrarPagoInicial(Cliente cliente, List<Integer> idActividades, Double monto, MetodoDePago metodoDePago, String observacion) {
-        
-        // TU ENTIDAD PAGO REQUIERE UNA 'ActividadCliente'.
-        // Buscamos una de las inscripciones activas que acabamos de crear para asignarle el pago.
-        // (Generalmente la primera de la lista de actividades seleccionadas).
-        
-        Integer idActividadPrincipal = idActividades.get(0); // Tomamos la primera ID seleccionada
 
-        ActividadCliente inscripcion = cliente.getInscripciones().stream()
-            .filter(ac -> ac.getActividad().getIdActividad().equals(idActividadPrincipal) 
-                       && ac.getEstado() == EstadoInscripcion.ACTIVA)
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("No se encontró la inscripción para asociar el pago."));
-
-        Pago nuevoPago = new Pago();
-        
-        // Seteo de datos según tu Entidad PAGO
-        nuevoPago.setActividadCliente(inscripcion); // Relación obligatoria
-        nuevoPago.setFechaGeneracion(LocalDate.now());
-        
-        // Convertimos Double a BigDecimal como usa tu entidad
-        BigDecimal montoBig = BigDecimal.valueOf(monto);
-        nuevoPago.setMontoAPagar(montoBig); // Asumimos que paga lo que debe, o ajusta esto según tu lógica de deuda
-        
-        nuevoPago.setMetodoPago(metodoDePago); // Convertir String a Enum
-        nuevoPago.setObservaciones(observacion != null ? observacion : "Pago inicial al registrar");
-        
-        // Lógica de estado y vencimiento
-        nuevoPago.setEstado(EstadoPago.PAGADO);
-        nuevoPago.setFechaVencimiento(LocalDate.now().plusMonths(1)); // O tu lógica de vencimiento
-        
-        pagoRepository.save(nuevoPago);
-    }
     @Transactional
     public void actualizarCliente(
         Cliente clienteForm,

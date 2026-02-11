@@ -177,7 +177,8 @@ private void prepararModeloBase(Model model, String title, String header) {
     // Datos necesarios para el formulario
     model.addAttribute("cliente", new Cliente());
     model.addAttribute("actividades", actividadRepository.findAll());
-    
+    model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
+
     // Datos del layout
     prepararModeloBase(model, "Añadir Cliente", "Clientes / Nuevo");
     return "layouts/main";
