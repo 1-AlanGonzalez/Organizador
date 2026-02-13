@@ -28,45 +28,19 @@
                         Inscripción / Cliente
                     </label>
 
-                    <select class="form-select" name="idActividadCliente" required>
-                    <option value="" disabled selected>Seleccione...</option>
-
-                        <option th:each="ac : ${clientesList}"
-                            th:value="${ac.idActividadCliente}"
-                            th:text="${ac.cliente.nombre + ' ' + ac.cliente.apellido + ' - ' + ac.actividad.nombre}">
+                    <select class="form-select" id="clienteSelect" required onchange="cargarDeudas()">
+                        <option value="" disabled selected>Seleccione cliente...</option>
+                        <option th:each="c : ${clientes}"
+                                th:value="${c.idCliente}"
+                                th:text="${c.nombre + ' ' + c.apellido}">
                         </option>
                     </select>
 
                         <div class="form-text small">
                             Seleccione la inscripción que desea cobrar.
                         </div>
+                        <div id="deudasContainer" class="mt-4"></div>
                     </div>
-                    <!-- <div class="mb-4">
-                        <label for="cliente" class="form-label small fw-bold text-secondary">Cliente</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light text-muted"><i class="bi bi-search"></i></span>
-                            
-                            <input type="text" 
-                                class="form-control" 
-                                id="cliente" 
-                                name="clienteNombre" 
-                                placeholder="Escriba para buscar cliente..." 
-                                list="clientesList"
-                                autocomplete="off"
-                                required>
-        
-                  <input type="hidden" id="idCliente" name="idCliente">
-
-                                <datalist id="clientesList">
-                                    <option th:each="ac : ${clientesList}"
-                                            th:value="${ac.cliente.nombre + ' ' + ac.cliente.apellido}"
-                                            th:data-id="${ac.cliente.idCliente}">
-                                    </option>
-                                </datalist>
-                            </div>
-                            <div class="form-text small">Seleccione el cliente del listado sugerido.</div>
-                        </div> -->
-
 
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -135,5 +109,7 @@
             
         </div>
     </div>
+<script th:src="@{/js/pagos.js}"></script>
+
 
 </div>
