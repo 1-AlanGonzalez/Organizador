@@ -12,7 +12,7 @@
             <div class="card card-stat bg-gradient-primary p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Ingresos Totales</span>
-                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosTotales, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <h4 class="stat-value"     th:text="${'$' + #numbers.formatDecimal(ingresosTotales ?: 0, 1, 'POINT', 2, 'COMMA')}">>$0,00</h4>
                     <i class="bi bi-wallet2 position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
                 </div>
             </div>
@@ -22,7 +22,7 @@
             <div class="card card-stat bg-gradient-success p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Pagos en Efectivo</span>
-                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosEfectivo, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <h4 class="stat-value"     th:text="${'$' + #numbers.formatDecimal(ingresosEfectivo ?: 0, 1, 'POINT', 2, 'COMMA')}">>$0,00</h4>
                     <i class="bi bi-cash-stack position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
                 </div>
             </div>
@@ -31,7 +31,7 @@
             <div class="card card-stat bg-gradient-info p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Transferencias</span>
-                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosTransferencia, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosTransferencia ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
                     <i class="bi bi-bank position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
                 </div>
             </div>
@@ -40,7 +40,7 @@
             <div class="card card-stat bg-gradient-warning p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Pagos Pendientes</span>
-                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosPendientes, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosPendientes ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
                     <i class="bi bi-clock-history position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
                 </div>
             </div>

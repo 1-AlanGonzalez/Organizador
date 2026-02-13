@@ -16,7 +16,11 @@
                     </div>
                 </div>
             </div>
-
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
             <form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post" id="formCliente">
                 <input type="hidden" th:field="*{idCliente}">
 

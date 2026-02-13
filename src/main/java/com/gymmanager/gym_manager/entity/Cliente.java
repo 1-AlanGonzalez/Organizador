@@ -1,6 +1,7 @@
 package com.gymmanager.gym_manager.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -96,6 +97,28 @@ public class Cliente {
     
     public void pagarTodo(){
         inscripciones.stream().forEach(ActividadCliente::pagarTodo);
+    }
+    
+    // Agregado hoy 13/2
+
+    public LocalDate getFechaUltimaAsistencia() {
+        // Si no tiene inscripciones no existe.
+        if (inscripciones == null || inscripciones.isEmpty()) {
+            return null;
+        }
+        /*
+        Filtra solo inscripciones ACTIVAS
+        Junta todas las asistencias de todas esas inscripciones
+        Extrae solo la fecha
+        Busca la más reciente
+        Si no hay ninguna → devuelve null
+         */
+        return inscripciones.stream()
+                .filter(i -> i.getEstado() == EstadoInscripcion.ACTIVA)
+                .flatMap(i -> i.getAsistencias().stream())
+                .map(Asistencia::getFecha)
+                .max(LocalDate::compareTo)
+                .orElse(null);
     }
 }
 

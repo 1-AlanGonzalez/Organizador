@@ -128,7 +128,15 @@
                         <i class="bi bi-clock small"></i>
                     </div>
                     
-                    <span class="small text-muted fst-italic">--/--/----</span>
+                    <span class="small text-muted"
+                        th:if="${c.fechaUltimaAsistencia != null}"
+                        th:text="${#temporals.format(c.fechaUltimaAsistencia, 'dd/MM/yyyy')}">
+                    </span>
+
+                    <span class="small text-muted fst-italic"
+                        th:unless="${c.fechaUltimaAsistencia != null}">
+                        Sin registros
+                    </span>
                 </div>
             </td>
 

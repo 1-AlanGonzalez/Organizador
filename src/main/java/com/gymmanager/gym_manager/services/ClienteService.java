@@ -1,6 +1,5 @@
 package com.gymmanager.gym_manager.services;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +11,7 @@ import com.gymmanager.gym_manager.entity.Actividad;
 import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.EstadoInscripcion;
-import com.gymmanager.gym_manager.entity.EstadoPago;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
-import com.gymmanager.gym_manager.entity.Pago;
 import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
@@ -30,22 +27,19 @@ private final ClienteRepository clienteRepository;
     private final ActividadClienteService actividadClienteService;
     private final PagoService pagoService;
     private final ClienteActividadRepository clienteActividadRepository;
-    private final PagoRepository pagoRepository; // <--- NECESARIO AGREGAR ESTO
-
     public ClienteService(
         PagoService pagoService,
         ClienteRepository clienteRepository,
         ActividadRepository actividadRepository,
         ActividadClienteService actividadClienteService,
         ClienteActividadRepository clienteActividadRepository,
-        PagoRepository pagoRepository // <--- INYECTAR EN CONSTRUCTOR
+        PagoRepository pagoRepository
     ) {
         this.clienteRepository = clienteRepository;
         this.actividadRepository = actividadRepository;
         this.actividadClienteService = actividadClienteService;
-        this.clienteActividadRepository = clienteActividadRepository;
-        this.pagoRepository = pagoRepository;
         this.pagoService = pagoService;
+        this.clienteActividadRepository = clienteActividadRepository;
     }
     
     @Transactional
@@ -67,6 +61,8 @@ private final ClienteRepository clienteRepository;
             validarAlta(cliente, fechaInicio, tipoDeCobro, idActividades);
             // Validar datos de pago si el checkbox está marcado
             // 2. Guardar Cliente e Inscripciones
+            // Antes de guardar cliente verifico si el cupo está lleno
+            validarCuposDisponibles(idActividades);
             Cliente clienteGuardado = registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
 
             if (!Boolean.TRUE.equals(registrarPago)) {
@@ -93,7 +89,33 @@ private final ClienteRepository clienteRepository;
             }
         }
     }
+    // Método para validar los cupos antes de guardar un cliente
+    private void validarCuposDisponibles(List<Integer> idActividades) {
+        // Validación 1.
+        if (idActividades == null || idActividades.isEmpty()) {
+            return; // nada que validar
+        }
+        // Validación 2.
+        // Itero en cada actividad.
+        for (Integer idActividad : idActividades) {
+            Actividad actividad = actividadRepository.findById(idActividad)
+                    .orElseThrow(() -> 
+                        new IllegalArgumentException("Actividad no encontrada ID: " + idActividad)
+                    );
 
+            int inscriptosActuales =
+                    clienteActividadRepository.countByActividadAndEstado(
+                            actividad,
+                            EstadoInscripcion.ACTIVA
+                    );
+
+            if (inscriptosActuales >= actividad.getCupoMaximo()) {
+                throw new IllegalArgumentException(
+                    "No hay cupos disponibles para la actividad: " + actividad.getNombre()
+                );
+            }
+        }
+    }
     private void validarDatosPago(Double monto, MetodoDePago metodoPago) {
         if (monto == null || monto <= 0) {
             throw new RuntimeException("El monto abonado debe ser mayor a 0.");
@@ -128,9 +150,9 @@ private final ClienteRepository clienteRepository;
         if (clienteRepository.existsByDni(cliente.getDni())) {
             throw new RuntimeException("El cliente ya existe.");
         }
-
+        
         Cliente clienteGuardado = clienteRepository.save(cliente);
-
+        
         for (Integer idActividad : idActividades) {
             Actividad actividad = actividadRepository.findById(idActividad)
                     .orElseThrow(() -> new RuntimeException("Actividad no encontrada ID: " + idActividad));

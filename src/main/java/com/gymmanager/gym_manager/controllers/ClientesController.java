@@ -123,26 +123,29 @@ public String guardarCliente(
 
     } catch (IllegalArgumentException e) {
         model.addAttribute("error", "Datos incorrectos: " + e.getMessage());
-        return "layouts/main";
+        return volverFormulario(model, cliente, e.getMessage());
+
     } catch (Exception e) {
         e.printStackTrace();
         model.addAttribute("error", e.getMessage());
         model.addAttribute("cliente", cliente);
-        // Importante: volver a cargar las actividades si falla para que el form se vea bien
-        // model.addAttribute("actividades", actividadRepository.findAll()); 
-        return "layouts/main"; // Asegúrate de retornar la vista correcta donde está el formulario
+        return volverFormulario(model, cliente, e.getMessage());
     }
-}
+    }
+    private String volverFormulario(Model model, Cliente cliente, String errorMsg) {
+        model.addAttribute("error", errorMsg);
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("actividades", actividadRepository.findAll());
+        model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
 
-// Método auxiliar para evitar repetir código en los métodos del controlador
-// private void prepararModelo(Model model) {
-//     model.addAttribute("clientes", clienteRepository.findAll());
-//     model.addAttribute("title", "Gym Manager | Clientes");
-//     model.addAttribute("header", "Panel de control / Clientes");
-//     model.addAttribute("vista", "clientes");
-//     model.addAttribute("fragmento", "contenido");
-//     model.addAttribute("active", "clientes");
-// }
+        model.addAttribute("vista", "fragments/panel-cliente");
+        model.addAttribute("fragmento", "panelCliente");
+
+        prepararModeloBase(model, "Añadir Cliente", "Clientes / Nuevo");
+
+        return "layouts/main";
+    }
+
 // Método auxiliar limpio para el layout
 private void prepararModeloBase(Model model, String title, String header) {
     model.addAttribute("title", "Gym Manager | " + title);

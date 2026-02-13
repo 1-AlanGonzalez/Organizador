@@ -81,12 +81,13 @@
 
                                 <td class="text-center">
                                     <div class="form-check form-switch d-flex justify-content-center">
-                                        <input class="form-check-input input-asistencia" 
-                                               type="checkbox" 
-                                               name="presentes" 
-                                               th:value="${item.idActividadCliente}" 
-                                               style="width: 3em; height: 1.5em; cursor: pointer;"
-                                               onchange="actualizarContador()">
+                                        <input class="form-check-input input-asistencia"
+                                            type="checkbox"
+                                            name="presentes"
+                                            th:value="${item.idActividadCliente}"
+                                            th:checked="${item.tieneAsistenciaEnFecha(fechaHoy)}"
+                                            style="width: 3em; height: 1.5em; cursor: pointer;"
+                                            onchange="actualizarContador()">
                                     </div>
                                 </td>
                             </tr>
@@ -102,30 +103,7 @@
                 </div>
             </div>
         </form>
-
-        <script>
-            function filtrarTabla() {
-                const filtro = document.getElementById('filtroActividad').value;
-                const filas = document.querySelectorAll('.fila-alumno');
-
-                filas.forEach(fila => {
-                    const actividadFila = fila.getAttribute('data-actividad');
-                    
-                    if (filtro === 'todos' || actividadFila === filtro) {
-                        fila.style.display = ''; 
-                    } else {
-                        fila.style.display = 'none'; 
-                    }
-                });
-            }
-
-            function actualizarContador() {
-                const checkboxes = document.querySelectorAll('.input-asistencia:checked');
-                document.getElementById('contadorPresentes').innerText = checkboxes.length;
-            }
-        </script>
-
     </div>
-
+    <script th:src="@{/js/asistencias.js}"></script>
 </body>
 </html>

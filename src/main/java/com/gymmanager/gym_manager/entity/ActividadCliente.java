@@ -211,11 +211,24 @@ public class ActividadCliente {
         }
         pago.pagar();
     }
+    // Agregado hoy 13/2
     // Obtiene la fecha del último pago realizado
     public LocalDate getFechaUltimoPago() {
-    return pagos.stream()
-                .max(Comparator.comparing(Pago::getFechaGeneracion))
-                .map(Pago::getFechaGeneracion)
-                .orElse(null); // si no tiene pagos devuelve null
-}
+        return pagos.stream()
+                    .max(Comparator.comparing(Pago::getFechaGeneracion))
+                    .map(Pago::getFechaGeneracion)
+                    .orElse(null); // si no tiene pagos devuelve null
+    }
+    /*
+    Busca si existe asistencia en esa fecha
+    Verifica que esté marcada como presente
+    Devuelve true o false */
+    public boolean tieneAsistenciaEnFecha(LocalDate fecha) {
+        if (asistencias == null || asistencias.isEmpty()) {
+            return false;
+        }
+
+        return asistencias.stream()
+                .anyMatch(a -> a.getFecha().equals(fecha) && Boolean.TRUE.equals(a.getPresente()));
+    }
 }

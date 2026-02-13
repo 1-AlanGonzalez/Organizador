@@ -8,11 +8,6 @@ function cerrarPanelAsistencia() {
     document.getElementById("panelOverlayAsistencia").classList.add("d-none");
 }
 
-// Cerrar panel de asistencia con el Escape 
-document.addEventListener("keydown", function(e) {
-    if (e.key === "Escape") cerrarPanelAsistencia();
-});
-    
 // Panel de actividad:
 function abrirPanelActividad() {
     document.getElementById("panelOverlayActividad").classList.remove("d-none");
@@ -28,7 +23,6 @@ function abrirPanelInstructor() {
 function cerrarPanelInstructor() {
     document.getElementById("panelOverlayInstructor").classList.add("d-none");
 }
-
 
 function abrirPanelEliminar(btn) {
     const id = btn.dataset.id;
@@ -128,18 +122,18 @@ function toggleModoEliminar() {
 
 // Habilitar o deshabilitar campo fechaPago según estado de pagoAbonado
 
-  function toggleFechaPago(pagoAbonado) {
-        const fechaPago = document.getElementById('fechaPago');
+function toggleFechaPago(pagoAbonado) {
+    const fechaPago = document.getElementById('fechaPago');
 
-        if (pagoAbonado) {
-            fechaPago.disabled = false;
-            fechaPago.required = true;
-        } else {
-            fechaPago.value = '';
-            fechaPago.disabled = true;
-            fechaPago.required = false;
-        }
+    if (pagoAbonado) {
+        fechaPago.disabled = false;
+        fechaPago.required = true;
+    } else {
+        fechaPago.value = '';
+        fechaPago.disabled = true;
+        fechaPago.required = false;
     }
+}
 
 
 // INGRESOS 

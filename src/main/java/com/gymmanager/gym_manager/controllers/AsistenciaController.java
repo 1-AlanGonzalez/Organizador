@@ -54,14 +54,10 @@ public class AsistenciaController {
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active", "asistencias");
 
-        // Fecha de hoy por defecto
         model.addAttribute("fechaHoy", LocalDate.now());
         
-        // Listas para el formulario
-        // AHORA SÍ FUNCIONARÁ porque actividadRepository ya no es null
         model.addAttribute("actividades", actividadRepository.findAll());
         
-        // Traemos las suscripciones activas para armar la lista
         model.addAttribute("inscripciones",
                 clienteActividadRepository.findByEstado(EstadoInscripcion.ACTIVA));
             
