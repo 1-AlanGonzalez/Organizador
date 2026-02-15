@@ -20,10 +20,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
+import com.gymmanager.gym_manager.entity.Pago;
 import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
 import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
+import com.gymmanager.gym_manager.repository.PagoRepository;
 import com.gymmanager.gym_manager.services.ClienteService;
 
 @Controller
@@ -34,19 +36,21 @@ public class ClientesController {
     private final ActividadRepository actividadRepository;
     private final ClienteService clienteService;
     private final MetodoDePagoRepository metodoDePagoRepository;
-    
+    private final PagoRepository pagoRepository;
+
     // NUEVO HOY 4/2 
     /* Al crear un cliente hay un botón de "registrar pago"
      * Para poder registrarlo necesito que en el controller existan variables y datos para enviar y recibir datos del pago
      */
 
 
-    public ClientesController(ClienteRepository clienteRepository, ActividadRepository actividadRepository,
+    public ClientesController(PagoRepository pagoRepository, ClienteRepository clienteRepository, ActividadRepository actividadRepository,
             ClienteService clienteService, MetodoDePagoRepository metodoDePagoRepository) {
         this.clienteRepository = clienteRepository;
         this.actividadRepository = actividadRepository;
         this.clienteService = clienteService;
         this.metodoDePagoRepository = metodoDePagoRepository;
+        this.pagoRepository = pagoRepository;
     }
 
     @GetMapping
@@ -146,12 +150,12 @@ public String guardarCliente(
         return "layouts/main";
     }
 
-// Método auxiliar limpio para el layout
-private void prepararModeloBase(Model model, String title, String header) {
-    model.addAttribute("title", "Gym Manager | " + title);
-    model.addAttribute("header", header);
-    model.addAttribute("active", "clientes");
-}
+    // Método auxiliar limpio para el layout
+    private void prepararModeloBase(Model model, String title, String header) {
+        model.addAttribute("title", "Gym Manager | " + title);
+        model.addAttribute("header", header);
+        model.addAttribute("active", "clientes");
+    }
     // Eliminar cliente
     @PostMapping("/eliminar/{id}")
     public String eliminarCliente(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
@@ -172,59 +176,69 @@ private void prepararModeloBase(Model model, String title, String header) {
 
     // Añado la página para editar cliente
     @GetMapping("/nuevo")
-    public String nuevoCliente(Model model) {
-    // Definimos qué queremos ver en el contenido principal
-    model.addAttribute("vista", "fragments/panel-cliente");
-    model.addAttribute("fragmento", "panelCliente");
-    
-    // Datos necesarios para el formulario
-    model.addAttribute("cliente", new Cliente());
-    model.addAttribute("actividades", actividadRepository.findAll());
-    model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
+        public String nuevoCliente(Model model) {
+        // Definimos qué queremos ver en el contenido principal
+        model.addAttribute("vista", "fragments/panel-cliente");
+        model.addAttribute("fragmento", "panelCliente");
+        
+        // Datos necesarios para el formulario
+        model.addAttribute("cliente", new Cliente());
+        model.addAttribute("actividades", actividadRepository.findAll());
+        model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
 
-    // Datos del layout
-    prepararModeloBase(model, "Añadir Cliente", "Clientes / Nuevo");
-    return "layouts/main";
-}
+        // Datos del layout
+        prepararModeloBase(model, "Añadir Cliente", "Clientes / Nuevo");
+        return "layouts/main";
+    }
 
-@GetMapping("/editar/{id}")
-public String editarCliente(@PathVariable Integer id, Model model) {
+    @GetMapping("/editar/{id}")
+    public String editarCliente(@PathVariable Integer id, Model model) {
 
-    Cliente cliente = clienteRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-    // 🔍 DEBUG: ver estados reales
-    cliente.getInscripciones().forEach(i ->
-        System.out.println(
-            "Actividad ID: " + i.getActividad().getIdActividad()
-            + " | Estado: " + i.getEstado()
-        )
-    );
-    model.addAttribute("vista", "fragments/panel-cliente");
-    model.addAttribute("fragmento", "panelCliente");
-
-    model.addAttribute("cliente", cliente);
-
-    model.addAttribute("actividades", actividadRepository.findAll());
-
-    prepararModeloBase(model, "Editar Cliente", "Clientes / Editar " + cliente.getNombre());
-    return "layouts/main";
-}
-    @GetMapping("/ver/{id}") // O la ruta que estés usando
-    public String verCliente(@PathVariable Integer id, Model model) {
-        // ... lógica para buscar cliente y pagos ...
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-        // Variables de datos
+        // 🔍 DEBUG: ver estados reales
+        cliente.getInscripciones().forEach(i ->
+            System.out.println(
+                "Actividad ID: " + i.getActividad().getIdActividad()
+                + " | Estado: " + i.getEstado()
+            )
+        );
+        model.addAttribute("vista", "fragments/panel-cliente");
+        model.addAttribute("fragmento", "panelCliente");
+
         model.addAttribute("cliente", cliente);
-        // model.addAttribute("historialPagos", pagos);
+
+        model.addAttribute("actividades", actividadRepository.findAll());
+
+        prepararModeloBase(model, "Editar Cliente", "Clientes / Editar " + cliente.getNombre());
+        return "layouts/main";
+    }
+
+  @GetMapping("/ver/{id}")
+    public String verCliente(@PathVariable Integer id, Model model) {
         
-        // Variables para el Layout
-        model.addAttribute("titulo", "Detalle de Cliente");
-        model.addAttribute("header", "Información del Cliente");
+        // 1. Buscamos el cliente
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
         
-        model.addAttribute("vista", "clientes/ver_cliente"); // Ruta al archivo hijo
-        model.addAttribute("fragmento", "detalle_cliente");  // Nombre del th:fragment dentro del hijo
-        return "layouts/main"; // Nombre del archivo PADRE (layout.html)
+        // 2. Cargamos el cliente al modelo
+        model.addAttribute("cliente", cliente);
+        
+        // 3. CARGAR EL HISTORIAL REAL
+        // Nota: Asegúrate que tu PagoRepository tenga un método para buscar por cliente.
+        // Si usas Spring Data JPA estándar, esto busca navegando por las relaciones:
+        List<Pago> pagos = pagoRepository.findByActividadCliente_Cliente_IdClienteOrderByFechaGeneracionDesc(id);
+        
+        model.addAttribute("historialPagos", pagos);
+        
+        // 4. Configuración del Layout
+        model.addAttribute("title", "Gym Manager | Detalle Cliente");
+        model.addAttribute("header", "Clientes / " + cliente.getNombre() + " " + cliente.getApellido());
+        model.addAttribute("active", "clientes");
+        model.addAttribute("vista", "clientes/ver_cliente"); 
+        model.addAttribute("fragmento", "detalle_cliente"); 
+        
+        return "layouts/main"; 
     }
 }
 

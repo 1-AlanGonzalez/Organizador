@@ -75,4 +75,7 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
     Optional<Pago> findByActividadCliente_IdActividadClienteAndEstado(
         Integer idActividadCliente,
         EstadoPago estado);
+
+    // Para el ver_clientes añado este método
+    List<Pago> findByActividadCliente_Cliente_IdClienteOrderByFechaGeneracionDesc(Integer idCliente);
 }  
