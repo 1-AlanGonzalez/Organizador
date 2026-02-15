@@ -78,18 +78,20 @@
                                         Actividad
                                     </span>
                                 </td>
+                            <td class="text-center">
+                                <div class="form-check form-switch d-flex justify-content-center">
+                                    
+                                    <input type="hidden" name="todosLosIds" th:value="${item.idActividadCliente}" />
 
-                                <td class="text-center">
-                                    <div class="form-check form-switch d-flex justify-content-center">
-                                        <input class="form-check-input input-asistencia"
-                                            type="checkbox"
-                                            name="presentes"
-                                            th:value="${item.idActividadCliente}"
-                                            th:checked="${item.tieneAsistenciaEnFecha(fechaHoy)}"
-                                            style="width: 3em; height: 1.5em; cursor: pointer;"
-                                            onchange="actualizarContador()">
-                                    </div>
-                                </td>
+                                    <input class="form-check-input input-asistencia"
+                                        type="checkbox"
+                                        name="presentes" 
+                                        th:value="${item.idActividadCliente}"
+                                        th:checked="${item.tieneAsistenciaEnFecha(fechaHoy)}"
+                                        style="width: 3em; height: 1.5em; cursor: pointer;"
+                                        onchange="actualizarContador()">
+                                </div>
+                            </td>
                             </tr>
                             
                             <tr th:if="${#lists.isEmpty(inscripciones)}">
@@ -103,7 +105,7 @@
                 </div>
             </div>
         </form>
+        <script th:src="@{/js/asistencias.js}"></script>
     </div>
-    <script th:src="@{/js/asistencias.js}"></script>
 </body>
 </html>

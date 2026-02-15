@@ -9,5 +9,5 @@ import com.gymmanager.gym_manager.entity.Asistencia;
 
 public interface AsistenciaRepository extends JpaRepository<Asistencia, Integer> {
         boolean existsByFechaAndActividadCliente(LocalDate fecha, ActividadCliente actividadCliente);
-
+        Asistencia findByFechaAndActividadCliente(LocalDate fecha, ActividadCliente actividadCliente);
 }

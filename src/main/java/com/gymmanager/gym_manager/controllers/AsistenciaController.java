@@ -1,6 +1,7 @@
 package com.gymmanager.gym_manager.controllers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -68,21 +69,29 @@ public class AsistenciaController {
     @PostMapping("/guardar")
     public String guardarAsistencia(
         @RequestParam LocalDate fecha,
-        @RequestParam(name = "presentes", required = false) List<Integer> actividadesClientesIds
+        @RequestParam(name = "presentes", required = false) List<Integer> presentesIds, // Los que tienen Check
+        @RequestParam(name = "todosLosIds", required = false) List<Integer> todosLosIds // TODOS los que había en pantalla
     ) {
-        //Validamos que al menos haya una asistencia marcada
-        // Igualmente esta logica iria en service, tengo que cambiarlo luego
-        if (actividadesClientesIds != null) {
-            //Recorremos cada inscripción marcada como presente
-            for (Integer id : actividadesClientesIds) {
-                // - Delegamos la lógica al service:
-                // - busca la inscripción (ActividadCliente)
-                // - valida reglas del sistema
-                // - registra la asistencia
-                // - Entra en la base de datos
-                asistenciaService.registrarAsistencia(id, fecha, true);
-            }
+        
+        // Manejo de nulls: Si no se marcó ninguno, la lista llega null.
+        if (presentesIds == null) {
+            presentesIds = new ArrayList<>();
         }
+        if (todosLosIds == null) {
+            todosLosIds = new ArrayList<>();
+        }
+
+        // Recorremos TODOS los alumnos que se mostraron en la tabla
+        for (Integer id : todosLosIds) {
+            // Verificamos: ¿Está este ID en la lista de presentes?
+            boolean estaPresente = presentesIds.contains(id);
+
+            // Llamamos al servicio con el resultado (true o false)
+            // - Si estaPresente es TRUE: El servicio crea o mantiene.
+            // - Si estaPresente es FALSE: El servicio BORRA si existía.
+            asistenciaService.registrarAsistencia(id, fecha, estaPresente);
+        }
+
         return "redirect:/asistencias";
     }
 }
