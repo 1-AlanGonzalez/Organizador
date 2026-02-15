@@ -113,12 +113,12 @@
                         
                         <td class="ps-4">
                             <div class="d-flex align-items-center">
-                                <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: bold;">
-                                    <span th:text="${#strings.substring(pago.actividadCliente.cliente.nombre,0,1)}">A</span>
-                                </div>
+                                <!-- <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: bold;">
+                                    <span th:text="${#strings.substring(pago.actividadCliente.cliente.nombre,0,1)}"></span>
+                                </div> -->
                                 <div>
                                     <h6 class="mb-0 fw-bold text-dark" th:text="${pago.actividadCliente.cliente.nombre + ' ' + pago.actividadCliente.cliente.apellido}">Nombre</h6>
-                                    <small class="text-muted" style="font-size: 0.75rem;">ID: <span th:text="${pago.actividadCliente.cliente.idCliente}">123</span></small>
+                                    <small class="text-muted" style="font-size: 0.75rem;">ID: <span th:text="${pago.actividadCliente.cliente.idCliente}"></span></small>
                                 </div>
                             </div>
                         </td>
@@ -129,7 +129,7 @@
                         
                         <td class="text-muted">
                             <i class="bi bi-calendar2-event me-1"></i>
-                            <span th:text="${#temporals.format(pago.fechaGeneracion, 'dd/MM/yyyy')}">01/01/2024</span>
+                            <span th:text="${#temporals.format(pago.fechaGeneracion, 'dd/MM/yyyy')}"></span>
                         </td>
 
                     <td>

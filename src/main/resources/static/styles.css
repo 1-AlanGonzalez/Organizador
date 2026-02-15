@@ -501,6 +501,14 @@ Panel de clientes
 @media (max-width: 768px) {
     .d-flex.min-vh-100 { flex-direction: column; }
     .col-md-5 { min-height: 100vh; padding: 2rem !important; }
+    #tabla-ingresos{
+        margin-top: 3rem;
+    }
+}
+@media (max-width: 990px) {
+    #tabla-ingresos{
+        margin-top: 3rem;
+    }
 }
 
 
@@ -751,3 +759,118 @@ Panel de clientes
 .delay-3 {
     animation-delay: 0.3s; /* Espera 300ms */
 }
+
+/* --- ANIMACIONES CORE --- */
+
+/* Definición del movimiento suave hacia arriba */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Efecto de entrada para el contenedor principal */
+.animate-entry {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* --- TABLA EN CASCADA (Staggered List) --- */
+/* Esto hace que cada fila aparezca milisegundos después de la anterior */
+
+#tablaClientes tbody tr {
+    opacity: 0; /* Ocultas al inicio */
+    animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Retrasos automáticos para las primeras 15 filas */
+#tablaClientes tbody tr:nth-child(1), #tablaAsistencias tbody tr:nth-child(1) { animation-delay: 0.05s; }
+#tablaClientes tbody tr:nth-child(2), #tablaAsistencias tbody tr:nth-child(2) { animation-delay: 0.1s; }
+#tablaClientes tbody tr:nth-child(3), #tablaAsistencias tbody tr:nth-child(3) { animation-delay: 0.15s; }
+#tablaClientes tbody tr:nth-child(4), #tablaAsistencias tbody tr:nth-child(4) { animation-delay: 0.2s; }
+#tablaClientes tbody tr:nth-child(5), #tablaAsistencias tbody tr:nth-child(5) { animation-delay: 0.25s; }
+#tablaClientes tbody tr:nth-child(6), #tablaAsistencias tbody tr:nth-child(6) { animation-delay: 0.3s; }
+#tablaClientes tbody tr:nth-child(7), #tablaAsistencias tbody tr:nth-child(7) { animation-delay: 0.35s; }
+#tablaClientes tbody tr:nth-child(8), #tablaAsistencias tbody tr:nth-child(8) { animation-delay: 0.4s; }
+#tablaClientes tbody tr:nth-child(9), #tablaAsistencias tbody tr:nth-child(9) { animation-delay: 0.45s; }
+#tablaClientes tbody tr:nth-child(10), #tablaAsistencias tbody tr:nth-child(10) { animation-delay: 0.5s; }
+
+
+/* --- MEJORAS VISUALES EN LA TABLA --- */
+.table tbody tr {
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f5f9 !important; /* Gris muy suave */
+    transform: scale(1.005); /* Un imperceptible zoom que da sensación táctil */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03); /* Sombra sutil para elevar la fila */
+    z-index: 1;
+    position: relative;
+}
+
+/* --- BOTONES Y BADGES --- */
+.btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:active {
+    transform: scale(0.95); /* Efecto de "click" presionado */
+}
+
+/* Efecto suave para los badges de estado */
+.badge {
+    transition: all 0.3s ease;
+}
+.activity-row:hover .badge {
+    filter: brightness(0.95); /* Se oscurece un poco al pasar el mouse */
+}
+
+/* --- INPUT DE BÚSQUEDA --- */
+.input-group-text, .form-control {
+    transition: all 0.3s ease;
+}
+
+/* Cuando el usuario hace click en buscar, el icono y borde se iluminan */
+.input-group:focus-within .input-group-text {
+    background-color: #fff !important;
+    border-color: #cbd5e1;
+    color: var(--sidebar-active);
+}
+.input-group:focus-within .form-control {
+    background-color: #fff !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* --- PANEL ELIMINAR (MODAL) --- */
+/* Fondo con desenfoque (Glassmorphism) */
+.panel-overlay {
+    backdrop-filter: blur(4px); 
+    transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* Animación del panel que entra */
+@keyframes modalPop {
+    0% { opacity: 0; transform: scale(0.9) translateY(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.panel-container {
+    animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto rebote suave */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* --- MODO ELIMINAR (Transición del botón rojo) --- */
+.btn-eliminar {
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Efecto resorte */
+}
+
+body.modo-eliminar-activo .btn-eliminar {
+    /* El botón crece un poco al aparecer */
+    transform: scale(1);
+}
+

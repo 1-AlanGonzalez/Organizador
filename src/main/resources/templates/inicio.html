@@ -72,34 +72,33 @@
     </div>
 </div>
 
-    <div class="row g-3 flex-grow-1 pb-2 animate-fade-up delay-2" style="min-height: 0;">
-        
-        <div class="col-lg-5 d-flex flex-column h-100">
+    <div class="row flex-grow-1 pb-2 animate-fade-up delay-2" style="min-height: 0;">
+        <div class="col-lg-5 d-flex flex-column ">
             <h6 class="section-subtitle flex-shrink-0">Accesos Directos</h6>
-            <div class="row g-3 h-100">
+            <div class="row g-3">
                 <div class="col-6 h-50">
-                    <a th:href="@{/asistencias/tomar}" class="btn-widget text-decoration-none h-100 w-100 d-flex flex-column justify-content-center align-items-center text-center p-2">
+                    <a th:href="@{/asistencias/tomar}" class="btn-widget text-decoration-none  d-flex flex-column justify-content-center align-items-center text-center p-2">
                         <i class="bi bi-qr-code-scan mb-2 text-primary fs-4"></i>
                         <span class="fw-bold text-dark d-block">Asistencia</span>
                         <small class="text-muted">Tomar asistencia</small>
                     </a>
                 </div>
                 <div class="col-6 h-50">
-                    <a th:href="@{/ingresos/nuevo}" class="btn-widget text-decoration-none h-100 w-100 d-flex flex-column justify-content-center align-items-center text-center p-2">
+                    <a th:href="@{/ingresos/nuevo}" class="btn-widget text-decoration-none  d-flex flex-column justify-content-center align-items-center text-center p-2">
                         <i class="bi bi-cash-coin mb-2 text-success fs-4"></i>
                         <span class="fw-bold text-dark d-block">Cobrar</span>
                         <small class="text-muted">Registrar pago</small>
                     </a>
                 </div>
                 <div class="col-6 h-50">
-                    <a th:href="@{/clientes/nuevo}" class="btn-widget text-decoration-none h-100 w-100 d-flex flex-column justify-content-center align-items-center text-center p-2">
+                    <a th:href="@{/clientes/nuevo}" class="btn-widget text-decoration-none  d-flex flex-column justify-content-center align-items-center text-center p-2">
                         <i class="bi bi-person-plus mb-2 text-info fs-4"></i>
                         <span class="fw-bold text-dark d-block">Nuevo</span>
                         <small class="text-muted">Alta alumno</small>
                     </a>
                 </div>
                 <div class="col-6 h-50">
-                    <a th:href="@{/reportes}" class="btn-widget text-decoration-none h-100 w-100 d-flex flex-column justify-content-center align-items-center text-center p-2">
+                    <a th:href="@{/reportes}" class="btn-widget text-decoration-none d-flex flex-column justify-content-center align-items-center text-center p-2">
                         <i class="bi bi-file-earmark-spreadsheet mb-2 text-secondary fs-4"></i>
                         <span class="fw-bold text-dark d-block">Reportes</span>
                         <small class="text-muted">Exportar Excel</small>
@@ -107,8 +106,9 @@
                 </div>
             </div>
         </div>
+        
 
-        <div class="col-lg-7 d-flex flex-column h-100">
+        <div class="col-lg-7 d-flex flex-column h-100 " id="tabla-ingresos">
             <h6 class="section-subtitle flex-shrink-0">Tendencia de Ingresos</h6>
             <div class="card custom-card border-0 h-100 w-100 p-3">
                 <div id="chart" class="w-100 h-100"></div>
@@ -121,7 +121,6 @@
                 </script>
             </div>
         </div>
-
     </div>
 
     <script th:src="@{/js/script.js}"></script>
