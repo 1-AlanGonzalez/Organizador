@@ -741,9 +741,7 @@ Panel de clientes
     }
 }
 
-/* Clase base para aplicar la animación */
 .animate-fade-up {
-    opacity: 0; /* Invisible al inicio */
     animation: dashboardEntry 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
