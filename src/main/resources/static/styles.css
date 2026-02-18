@@ -732,16 +732,15 @@ Panel de clientes
 /* La definición del movimiento: entra desde abajo (20px) y sube la opacidad */
 @keyframes dashboardEntry {
     0% {
-        opacity: 0;
         transform: translateY(20px);
     }
     100% {
-        opacity: 1;
         transform: translateY(0);
     }
 }
 
 .animate-fade-up {
+    position: relative;
     animation: dashboardEntry 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
@@ -780,22 +779,22 @@ Panel de clientes
 /* --- TABLA EN CASCADA (Staggered List) --- */
 /* Esto hace que cada fila aparezca milisegundos después de la anterior */
 
-#tablaClientes tbody tr {
-    opacity: 0; /* Ocultas al inicio */
+.tableAnimation tbody tr {
+    opacity: 0; 
     animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Retrasos automáticos para las primeras 15 filas */
-#tablaClientes tbody tr:nth-child(1), #tablaAsistencias tbody tr:nth-child(1) { animation-delay: 0.05s; }
-#tablaClientes tbody tr:nth-child(2), #tablaAsistencias tbody tr:nth-child(2) { animation-delay: 0.1s; }
-#tablaClientes tbody tr:nth-child(3), #tablaAsistencias tbody tr:nth-child(3) { animation-delay: 0.15s; }
-#tablaClientes tbody tr:nth-child(4), #tablaAsistencias tbody tr:nth-child(4) { animation-delay: 0.2s; }
-#tablaClientes tbody tr:nth-child(5), #tablaAsistencias tbody tr:nth-child(5) { animation-delay: 0.25s; }
-#tablaClientes tbody tr:nth-child(6), #tablaAsistencias tbody tr:nth-child(6) { animation-delay: 0.3s; }
-#tablaClientes tbody tr:nth-child(7), #tablaAsistencias tbody tr:nth-child(7) { animation-delay: 0.35s; }
-#tablaClientes tbody tr:nth-child(8), #tablaAsistencias tbody tr:nth-child(8) { animation-delay: 0.4s; }
-#tablaClientes tbody tr:nth-child(9), #tablaAsistencias tbody tr:nth-child(9) { animation-delay: 0.45s; }
-#tablaClientes tbody tr:nth-child(10), #tablaAsistencias tbody tr:nth-child(10) { animation-delay: 0.5s; }
+/* Retrasos automáticos para las primeras filas */
+.tableAnimation tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.tableAnimation tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.tableAnimation tbody tr:nth-child(3) { animation-delay: 0.3s; }
+.tableAnimation tbody tr:nth-child(4) { animation-delay: 0.4s; }
+.tableAnimation tbody tr:nth-child(5) { animation-delay: 0.5s; }
+.tableAnimation tbody tr:nth-child(6) { animation-delay: 0.6s; }
+.tableAnimation tbody tr:nth-child(7) { animation-delay: 0.7s; }
+.tableAnimation tbody tr:nth-child(8) { animation-delay: 0.8s; }
+.tableAnimation tbody tr:nth-child(9) { animation-delay: 0.9s; }
+
 
 
 /* --- MEJORAS VISUALES EN LA TABLA --- */
