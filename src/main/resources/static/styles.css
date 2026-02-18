@@ -85,6 +85,7 @@ Estilo para los títulos de las secciones
     letter-spacing: 0.04em;
     margin-bottom: 12px;
 }
+
 /* 
 Estilo personalizado para las tarjetas
 */
@@ -307,8 +308,13 @@ Panel de clientes
     opacity: 1;
     pointer-events: all;
 }
+.header-buttom-main {
+    position: absolute;
+}
 @media (max-width: 768px) {
-
+    .header-buttom-main {
+        position: relative;
+    }
     .sidebar {
         position: fixed;
         top: 0;
@@ -504,10 +510,19 @@ Panel de clientes
     #tabla-ingresos{
         margin-top: 3rem;
     }
+    .header-buttom-main {
+        position: relative;
+    }
 }
 @media (max-width: 990px) {
     #tabla-ingresos{
         margin-top: 3rem;
+    }
+}
+@media (max-width: 768px) {
+    .header-buttom-main {
+        position: relative;
+    
     }
 }
 

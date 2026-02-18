@@ -1,0 +1,321 @@
+<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2 animate-entry">
+
+    <div class="d-flex align-items-center justify-content-between mb-4 pt-3 flex-shrink-0">
+        <div>
+            <h4 class="fw-bold text-dark mb-0">Centro de Reportes</h4>
+            <p class="text-muted small mb-0">Exportación de datos y estadísticas en formato Excel</p>
+        </div>
+    </div>
+
+    <div class="row g-3 h-100">
+        
+        <div class="col-md-3">
+            <div class="card custom-card h-100 border-0">
+                <div class="card-body p-3 d-flex flex-column gap-2">
+                    <span class="text-xs fw-bold text-uppercase text-muted mb-2 ps-1">Tipo de Datos</span>
+
+                    <label class="report-option selected" onclick="mostrarOpciones('clientes')">
+                        <input type="radio" name="tipoReporte" value="clientes" checked hidden>
+                        <div class="icon-box bg-blue-light text-primary">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold text-dark">Clientes</span>
+                            <small class="text-muted text-xs">Directorio completo</small>
+                        </div>
+                    </label>
+
+                    <label class="report-option" onclick="mostrarOpciones('asistencias')">
+                        <input type="radio" name="tipoReporte" value="asistencias" hidden>
+                        <div class="icon-box bg-green-light text-success">
+                            <i class="bi bi-calendar-check-fill"></i>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold text-dark">Asistencias</span>
+                            <small class="text-muted text-xs">Ingresos al gym</small>
+                        </div>
+                    </label>
+
+                    <label class="report-option" onclick="mostrarOpciones('ingresos')">
+                        <input type="radio" name="tipoReporte" value="ingresos" hidden>
+                        <div class="icon-box bg-orange-light text-warning">
+                            <i class="bi bi-cash-stack"></i>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold text-dark">Ingresos</span>
+                            <small class="text-muted text-xs">Pagos y caja</small>
+                        </div>
+                    </label>
+
+                    <label class="report-option" onclick="mostrarOpciones('actividades')">
+                        <input type="radio" name="tipoReporte" value="actividades" hidden>
+                        <div class="icon-box bg-purple-light text-purple">
+                            <i class="bi bi-activity"></i>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold text-dark">Actividades</span>
+                            <small class="text-muted text-xs">Clases y cupos</small>
+                        </div>
+                    </label>
+
+                     <label class="report-option" onclick="mostrarOpciones('instructores')">
+                        <input type="radio" name="tipoReporte" value="instructores" hidden>
+                        <div class="icon-box bg-gray-light text-secondary">
+                            <i class="bi bi-person-badge-fill"></i>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold text-dark">Instructores</span>
+                            <small class="text-muted text-xs">Staff del gimnasio</small>
+                        </div>
+                    </label>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <form action="/reportes/exportar" method="post" class="h-100">
+                <div class="card custom-card h-100 border-0 position-relative overflow-hidden">
+                    
+                    <div class="bg-pattern"></div>
+
+                    <div class="card-body p-4 d-flex flex-column z-1 position-relative">
+                        
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-sliders me-2"></i>Rango de Fechas</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small text-muted">Desde</label>
+                                <input type="date" name="fechaDesde" class="form-control input-modern">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small text-muted">Hasta</label>
+                                <input type="date" name="fechaHasta" class="form-control input-modern">
+                            </div>
+                            <div class="col-12 mt-2">
+                                <small class="text-muted fst-italic">* Dejá las fechas vacías para exportar el histórico completo.</small>
+                            </div>
+                        </div>
+
+                        <hr class="border-secondary-subtle opacity-25 my-2">
+
+                        <div class="flex-grow-1 mt-3">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="fw-bold text-dark mb-0">
+                                    <i class="bi bi-ui-checks-grid me-2"></i>Columnas a incluir
+                                </h5>
+                                <button type="button" class="btn btn-sm btn-link text-decoration-none" onclick="seleccionarTodos()">
+                                    Marcar todos
+                                </button>
+                            </div>
+
+                            <div id="campos-clientes" class="campos-container animate-fade-in">
+                                <div class="row g-3">
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="id" checked> <span>ID Cliente</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="nombre" checked> <span>Nombre</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="apellido" checked> <span>Apellido</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="dni" checked> <span>DNI</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="email"> <span>Email</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="telefono"> <span>Teléfono</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="fechaAlta"> <span>Fecha Alta</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="estado" checked> <span>Estado Deuda</span></label></div>
+                                </div>
+                            </div>
+
+                            <div id="campos-asistencias" class="campos-container d-none animate-fade-in">
+                                <div class="row g-3">
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="fecha" checked> <span>Fecha y Hora</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="cliente" checked> <span>Cliente</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="dni" checked> <span>DNI</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="actividad"> <span>Actividad</span></label></div>
+                                </div>
+                            </div>
+
+                             <div id="campos-ingresos" class="campos-container d-none animate-fade-in">
+                                <div class="row g-3">
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="fecha" checked> <span>Fecha Pago</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="monto" checked> <span>Monto</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="metodo" checked> <span>Método Pago</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="concepto"> <span>Concepto</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="cliente"> <span>Cliente</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="usuario"> <span>Usuario que cobró</span></label></div>
+                                </div>
+                            </div>
+
+                            <div id="campos-actividades" class="campos-container d-none animate-fade-in">
+                                <div class="row g-3">
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="nombre" checked> <span>Nombre Actividad</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="horario" checked> <span>Horarios</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="instructor"> <span>Instructor</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="cupo"> <span>Cupo Actual</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="activos"> <span>Clientes Activos</span></label></div>
+                                </div>
+                            </div>
+
+                             <div id="campos-instructores" class="campos-container d-none animate-fade-in">
+                                <div class="row g-3">
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="nombre" checked> <span>Nombre</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="apellido" checked> <span>Apellido</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="dni"> <span>DNI / CUIT</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="especialidad" checked> <span>Especialidad</span></label></div>
+                                    <div class="col-md-4"><label class="field-checkbox"><input type="checkbox" name="campos" value="telefono"> <span>Contacto</span></label></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="mt-4 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success btn-lg shadow-sm px-5 d-flex align-items-center gap-2 btn-exportar">
+                                <i class="bi bi-file-earmark-excel-fill"></i>
+                                <span>Descargar Reporte</span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        /* Variables locales de color */
+        .text-purple { color: #8b5cf6; }
+        .bg-blue-light { background-color: #eff6ff; }
+        .bg-green-light { background-color: #f0fdf4; }
+        .bg-orange-light { background-color: #fff7ed; }
+        .bg-purple-light { background-color: #f5f3ff; }
+        .bg-gray-light { background-color: #f8fafc; }
+        .text-xs { font-size: 0.75rem; }
+
+        /* Tarjetas de Selección a la Izquierda */
+        .report-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .report-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Estado seleccionado */
+        .report-option.selected {
+            background-color: #fff;
+            border-color: #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Iconos de las opciones */
+        .icon-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        /* Checkboxes Personalizados */
+        .field-checkbox {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .field-checkbox:hover {
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
+        
+        /* Cuando el input dentro está checkeado */
+        .field-checkbox:has(input:checked) {
+            border-color: var(--sidebar-active);
+            background-color: #f0fdfa; /* Un verde/azul muy suave */
+            color: var(--sidebar-active);
+            font-weight: 500;
+        }
+
+        .field-checkbox input {
+            margin-right: 10px;
+            accent-color: var(--sidebar-active);
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Botón Exportar */
+        .btn-exportar {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            transition: transform 0.2s;
+        }
+        .btn-exportar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3) !important;
+        }
+
+        /* Fondo decorativo panel derecho */
+        .bg-pattern {
+            position: absolute;
+            top: 0; right: 0;
+            width: 200px;
+            height: 200px;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* Animación suave al cambiar pestañas */
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+
+    <script>
+        function mostrarOpciones(tipo) {
+            // 1. Actualizar visualmente la selección en la izquierda
+            document.querySelectorAll('.report-option').forEach(el => el.classList.remove('selected'));
+            
+            // Buscamos el input radio que tenga el valor seleccionado y resaltamos su padre label
+            const radio = document.querySelector(`input[name="tipoReporte"][value="${tipo}"]`);
+            if(radio) radio.parentElement.classList.add('selected');
+
+            // 2. Ocultar todos los contenedores de campos
+            document.querySelectorAll('.campos-container').forEach(el => {
+                el.classList.add('d-none');
+            });
+
+            // 3. Mostrar el contenedor correcto
+            const target = document.getElementById('campos-' + tipo);
+            if (target) {
+                target.classList.remove('d-none');
+            }
+        }
+
+        function seleccionarTodos() {
+            // Busca qué contenedor está visible actualmente
+            const visibleContainer = document.querySelector('.campos-container:not(.d-none)');
+            if(visibleContainer) {
+                const checkboxes = visibleContainer.querySelectorAll('input[type="checkbox"]');
+                // Verifica si todos están checkeados para alternar
+                const allChecked = Array.from(checkboxes).every(c => c.checked);
+                
+                checkboxes.forEach(c => c.checked = !allChecked);
+            }
+        }
+    </script>
+</div>
