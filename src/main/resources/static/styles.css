@@ -732,9 +732,11 @@ Panel de clientes
 /* La definición del movimiento: entra desde abajo (20px) y sube la opacidad */
 @keyframes dashboardEntry {
     0% {
+        opacity: 0;
         transform: translateY(20px);
     }
     100% {
+        opacity: 1;
         transform: translateY(0);
     }
 }
