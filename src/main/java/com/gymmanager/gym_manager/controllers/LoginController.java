@@ -8,6 +8,11 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login() {
-        return "login"; // Retorna login.html
+        return "login"; // busca login.html en templates
+    }
+
+    @GetMapping("/home")
+    public String home() {
+        return "redirect:/dashboard";
     }
 }
