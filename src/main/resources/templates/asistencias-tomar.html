@@ -1,111 +1,114 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-<body>
+<div th:fragment="contenido">
 
-    <div th:fragment="contenido">
-
-        <div class="d-flex align-items-center mb-4">
-            <div>
-                <h4 class="section-title mb-1">Tomar Asistencia</h4>
-                <p class="text-muted small mb-0">Registra la presencia de los alumnos del día.</p>
-            </div>
-            <div class="ms-auto">
-                <a th:href="@{/asistencias}" class="btn btn-outline-secondary btn-sm me-2">
-                    Cancelar
-                </a>
-                <button type="submit" form="formAsistencia" class="btn btn-success text-white fw-bold btn-sm shadow-sm">
-                    <i class="bi bi-check-lg me-1"></i> Guardar Planilla
-                </button>
-            </div>
+    <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
+        <div>
+            <h4 class="fw-bold text-dark mb-0">Tomar Asistencia</h4>
+            <p class="text-muted small mb-0">Registra la presencia de los alumnos del día</p>
         </div>
+        <div class="d-flex gap-2">
+            <a th:href="@{/asistencias}" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
+                <i class="bi bi-arrow-left"></i>
+                <span>Cancelar</span>
+            </a>
+            <button type="submit" form="formAsistencia" class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+                <i class="bi bi-check-lg"></i>
+                <span>Guardar Planilla</span>
+            </button>
+        </div>
+    </div>
 
-        <div class="card custom-card mb-4 p-3">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-3">
-                    <label class="form-label small text-muted fw-bold">FECHA</label>
-                    <input type="date" class="form-control" name="fecha" form="formAsistencia" 
+    <!-- Filtros -->
+    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
+        <div class="row g-2 align-items-center">
+
+            <div class="col-md-3">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-calendar"></i></span>
+                    <input type="date" class="form-control border-start-0 ps-0 bg-light"
+                           name="fecha" form="formAsistencia"
                            th:value="${fechaHoy}" required>
                 </div>
-                
-                <div class="col-md-4">
-                    <label class="form-label small text-muted fw-bold">FILTRAR POR ACTIVIDAD</label>
-                    <select id="filtroActividad" class="form-select" onchange="filtrarTabla()">
-                        <option value="todos">Mostrar todas</option>
-                        <option th:each="act : ${actividades}" 
-                                th:value="${act.nombre}" 
-                                th:text="${act.nombre}"></option>
+            </div>
+
+            <div class="col-md-4">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-funnel"></i></span>
+                    <select id="filtroActividad" class="form-select form-select-sm border-start-0 bg-light text-muted" onchange="filtrarTabla()">
+                        <option value="todos">Todas las actividades</option>
+                        <option th:each="act : ${actividades}"
+                                th:value="${act.nombre}"
+                                th:text="${act.nombre}">
+                        </option>
                     </select>
                 </div>
-                
-                <div class="col-md-5 text-end">
-                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3">
-                        <i class="bi bi-info-circle me-1"></i>
-                        Marcados: <span id="contadorPresentes">0</span>
-                    </span>
-                </div>
             </div>
+
+            <div class="col-md-5 d-flex justify-content-end">
+                <span class="badge bg-light text-dark border rounded-pill px-3 py-2">
+                    <i class="bi bi-person-check me-1 text-success"></i>
+                    Marcados: <span id="contadorPresentes" class="fw-bold text-success">0</span>
+                </span>
+            </div>
+
         </div>
+    </div>
 
-        <form id="formAsistencia" th:action="@{/asistencias/guardar}" method="post">
-            <div class="card custom-card">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" id="tablaAsistencia">
-                        <thead class="bg-light">
-                            <tr class="text-muted small text-uppercase">
-                                <th style="width: 40%;">Alumno</th>
-                                <th style="width: 30%;">Actividad</th>
-                                <th style="width: 30%;" class="text-center">Asistencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="item : ${inscripciones}" class="fila-alumno" th:data-actividad="${item.actividad.nombre}">
-                                
-                                <td>
-                                    <div class="d-flex flex-column">
-                                        <span class="fw-bold text-dark" 
-                                              th:text="${item.cliente.nombre + ' ' + item.cliente.apellido}">
-                                            Nombre Alumno
-                                        </span>
-                                        <small class="text-muted" style="font-size: 0.75rem;">
-                                            ID: <span th:text="${item.cliente.idCliente}">#</span>
-                                        </small>
-                                    </div>
-                                </td>
+    <!-- Tabla -->
+    <form id="formAsistencia" th:action="@{/asistencias/guardar}" method="post">
+        <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
+            <div class="table-responsive h-100 w-100 custom-scrollbar">
+                <table class="table table-hover align-middle mb-0 tableAnimation" id="tablaAsistencia">
 
-                                <td>
-                                    <span class="badge bg-light text-dark border" 
-                                          th:text="${item.actividad.nombre}">
-                                        Actividad
-                                    </span>
-                                </td>
+                    <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
+                        <tr class="text-secondary small text-uppercase">
+                            <th class="ps-4 py-3 bg-light border-bottom" style="width: 40%;">Alumno</th>
+                            <th class="py-3 bg-light border-bottom" style="width: 30%;">Actividad</th>
+                            <th class="py-3 bg-light border-bottom text-center" style="width: 30%;">Asistencia</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="border-top-0">
+                        <tr th:each="item : ${inscripciones}"
+                            class="fila-alumno"
+                            th:data-actividad="${item.actividad.nombre}">
+
+                            <td class="ps-4">
+                                <div class="fw-bold text-dark" th:text="${item.cliente.nombre + ' ' + item.cliente.apellido}">Nombre Alumno</div>
+                                <small class="text-muted" style="font-size: 0.72rem;">ID: <span th:text="${item.cliente.idCliente}">#</span></small>
+                            </td>
+
+                            <td>
+                                <span class="badge bg-light text-dark border fw-normal"
+                                      th:text="${item.actividad.nombre}">Actividad</span>
+                            </td>
+
                             <td class="text-center">
                                 <div class="form-check form-switch d-flex justify-content-center">
-                                    
                                     <input type="hidden" name="todosLosIds" th:value="${item.idActividadCliente}" />
-
                                     <input class="form-check-input input-asistencia"
-                                        type="checkbox"
-                                        name="presentes" 
-                                        th:value="${item.idActividadCliente}"
-                                        th:checked="${item.tieneAsistenciaEnFecha(fechaHoy)}"
-                                        style="width: 3em; height: 1.5em; cursor: pointer;"
-                                        onchange="actualizarContador()">
+                                           type="checkbox"
+                                           name="presentes"
+                                           th:value="${item.idActividadCliente}"
+                                           th:checked="${item.tieneAsistenciaEnFecha(fechaHoy)}"
+                                           style="width: 3em; height: 1.5em; cursor: pointer;"
+                                           onchange="actualizarContador()">
                                 </div>
                             </td>
-                            </tr>
-                            
-                            <tr th:if="${#lists.isEmpty(inscripciones)}">
-                                <td colspan="3" class="text-center text-muted py-4">
-                                    No hay alumnos inscritos en actividades.
-                                </td>
-                            </tr>
 
-                        </tbody>
-                    </table>
-                </div>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(inscripciones)}">
+                            <td colspan="3" class="text-center py-5 text-muted">
+                                <i class="bi bi-people fs-1 d-block mb-2"></i>
+                                No hay alumnos inscritos en actividades.
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
             </div>
-        </form>
-        <script th:src="@{/js/asistencias.js}"></script>
-    </div>
-</body>
-</html>
+        </div>
+    </form>
+
+    <script th:src="@{/js/asistencias.js}"></script>
+</div>

@@ -50,3 +50,37 @@ function cargarDeudas() {
 function setMonto(monto) {
     document.getElementById("monto").value = parseFloat(monto);
 }
+
+// INGRESOS 
+
+function filtrarEstado(estado) {
+    const filas = document.querySelectorAll('#tablaPagos tbody .fila-pago');
+
+    filas.forEach(fila => {
+        const esPagado = fila.dataset.estado === 'true';
+
+        if (estado === 'todos') {
+            fila.style.display = '';
+        } 
+        else if (estado === 'pagado') {
+            fila.style.display = esPagado ? '' : 'none';
+        } 
+        else if (estado === 'pendiente') {
+            fila.style.display = !esPagado ? '' : 'none';
+        }
+    });
+}
+
+// buscador de pago
+document.getElementById('buscadorTabla').addEventListener('input', function () {
+    const textoBuscado = this.value.toLowerCase().trim();
+    const filas = document.querySelectorAll('#tablaPagos tbody .fila-pago');
+
+    filas.forEach(fila => {
+        // Tomamos SOLO la columna del cliente
+        const columnaCliente = fila.querySelector('td.ps-4');
+        const nombreCompleto = columnaCliente.innerText.toLowerCase();
+
+        fila.style.display = nombreCompleto.includes(textoBuscado) ? '' : 'none';
+    });
+});

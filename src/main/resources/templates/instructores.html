@@ -12,21 +12,26 @@
                 <span>Eliminar</span>
             </a>
             
-            <a class="btn btn-primary btn-sm shadow-sm" onclick="abrirPanelInstructor()">
+            <a class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2" onclick="abrirPanelInstructor()">
+                <i class="bi bi-person-plus-fill"></i>
                 <span>Añadir Instructor</span>
             </a>
         </div>
     </div>
 
-    <div class="mb-3 flex-shrink-0">
-        <div class="input-group input-group-sm" style="max-width: 300px;">
-            <span class="input-group-text bg-light border-end-0 text-muted">
-                <i class="bi bi-search"></i>
-            </span>
-            <input id="filtroInstructores"
-                   type="text"
-                   class="form-control border-start-0 ps-0 bg-light"
-                   placeholder="Buscar por nombre, DNI...">
+    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input id="filtroInstructores"
+                           type="text"
+                           class="form-control border-start-0 ps-0 bg-light"
+                           placeholder="Buscar por nombre, DNI...">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -47,7 +52,8 @@
                 
                 <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
                     <tr class="text-secondary small text-uppercase">
-                        <th class="ps-4 py-3 bg-light border-bottom">Nombre</th> <th class="py-3 bg-light border-bottom">Apellido</th>
+                        <th class="ps-4 py-3 bg-light border-bottom">Nombre</th>
+                        <th class="py-3 bg-light border-bottom">Apellido</th>
                         <th class="py-3 bg-light border-bottom">DNI</th>
                         <th class="py-3 bg-light border-bottom">Teléfono</th>
                         <th class="pe-4 py-3 bg-light border-bottom text-center" style="width: 120px;">Acciones</th>
@@ -57,16 +63,20 @@
                 <tbody class="border-top-0">
                     <tr th:each="instructor : ${instructores}">
                         
-                        <td class="ps-4 fw-medium" th:text="${instructor.nombre}"></td>
-                        <td th:text="${instructor.apellido}"></td>
+                        <td class="ps-4 fw-bold text-dark" th:text="${instructor.nombre}"></td>
+                        <td class="fw-semibold text-dark" th:text="${instructor.apellido}"></td>
                         
                         <td>
                             <span class="badge bg-light text-dark border fw-normal" th:text="${instructor.dni}"></span>
                         </td>
                         
-                        <td class="text-secondary small">
-                            <i class="bi bi-telephone me-1"></i>
-                            <span th:text="${instructor.telefono}"></span>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border" style="width: 30px; height: 30px;">
+                                    <i class="bi bi-telephone small"></i>
+                                </div>
+                                <span class="small text-muted" th:text="${instructor.telefono}"></span>
+                            </div>
                         </td>
 
                         <td class="pe-4 text-center">

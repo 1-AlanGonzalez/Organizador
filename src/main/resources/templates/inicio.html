@@ -1,6 +1,6 @@
 <div th:fragment="contenido" class="h-100 d-flex flex-column p-2" style="overflow: hidden;">
 
-    <div class="d-flex align-items-center justify-content-between mb-2 flex-shrink-0 animate-fade-up">
+    <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
         <div>
             <h4 class="fw-bold text-dark mb-0">Inicio</h4> 
             <p class="text-muted small mb-0">Resumen general del gimnasio</p>
@@ -36,38 +36,72 @@
         </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════════
+         ESTADO CLIENTES — versión mejorada
+    ════════════════════════════════════════════════ -->
     <div class="col-lg-5">
-        <div class="card custom-card border-0 h-100 p-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="fw-bold text-dark mb-0 small text-uppercase">Estado Clientes</h6>
-                <span class="badge bg-light text-dark border rounded-pill px-2 py-1" style="font-size: 0.7rem;" th:text="${totalClientes + ' Total'}">0 Total</span>
+        <div class="card custom-card border-0 h-100 p-3 position-relative overflow-hidden">
+
+            <!-- Barra de progreso superior (retención visual) -->
+            <div class="position-absolute top-0 start-0 end-0" style="height: 3px; background: #e2e8f0; border-radius: 14px 14px 0 0;">
+                <div style="height: 100%; border-radius: inherit; background: linear-gradient(90deg, #16a34a, #4ade80);
+                     width: /*[[${totalClientes > 0 ? (clientesActivos * 100 / totalClientes) + '%' : '0%'}]]*/ 0%;">
+                </div>
             </div>
 
-            <div class="row g-2 h-100">
-                <div class="col-6">
-                    <div class="p-2 border rounded-3 bg-light d-flex flex-column justify-content-center align-items-center gap-1 h-100 text-center">
-                        <div class="icon-box-light icon-bg-green rounded-circle" style="width: 36px; height: 36px;">
-                            <i class="bi bi-person-check-fill small"></i>
-                        </div>
-                        <div>
-                            <h5 class="fw-bold mb-0 text-dark" th:text="${clientesActivos}">0</h5>
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 0.6rem;">Activos</small>
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-2 mt-1">
+                <h6 class="fw-bold mb-0 text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.08em; color: #94a3b8;">Estado Clientes</h6>
+                <span class="badge bg-light text-dark border rounded-pill px-2 py-1"
+                      style="font-size: 0.65rem;"
+                      th:text="${totalClientes + ' Total'}">0 Total</span>
+            </div>
+
+            <!-- Fila Activos -->
+            <div class="d-flex align-items-center gap-2 rounded-3 px-2 py-2 mb-1" style="transition: background .2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                <div class="icon-box-light icon-bg-green rounded-3 flex-shrink-0" style="width: 34px; height: 34px; font-size: 0.95rem;">
+                    <i class="bi bi-person-check-fill"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <small class="d-block text-uppercase fw-bold" style="font-size: 0.6rem; color: #94a3b8; line-height: 1;">Activos</small>
+                    <span class="fw-bold text-dark" style="font-size: 1.25rem; line-height: 1.2;" th:text="${clientesActivos}">0</span>
+                </div>
+                <span class="badge rounded-pill fw-bold"
+                      style="background: #dcfce7; color: #16a34a; font-size: 0.65rem;"
+                      th:text="${totalClientes > 0 ? #numbers.formatDecimal(clientesActivos * 100.0 / totalClientes, 1, 0) + '%' : '0%'}">0%</span>
+            </div>
+
+            <!-- Fila Pendientes -->
+            <div class="d-flex align-items-center gap-2 rounded-3 px-2 py-2 mb-2" style="transition: background .2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                <div class="icon-box-light icon-bg-orange rounded-3 flex-shrink-0" style="width: 34px; height: 34px; font-size: 0.95rem;">
+                    <i class="bi bi-person-exclamation"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <small class="d-block text-uppercase fw-bold" style="font-size: 0.6rem; color: #94a3b8; line-height: 1;">Pendientes</small>
+                    <span class="fw-bold text-dark" style="font-size: 1.25rem; line-height: 1.2;" th:text="${clientesPendientes}">0</span>
+                </div>
+                <span class="badge rounded-pill fw-bold"
+                      style="background: #ffedd5; color: #ea580c; font-size: 0.65rem;"
+                      th:text="${totalClientes > 0 ? #numbers.formatDecimal(clientesPendientes * 100.0 / totalClientes, 1, 0) + '%' : '0%'}">0%</span>
+            </div>
+
+            <!-- Divisor -->
+            <hr class="my-1" style="border-color: #f1f5f9;">
+
+            <!-- Footer: barra de retención -->
+            <div class="d-flex align-items-center gap-2 mt-1">
+                <div class="flex-grow-1">
+                    <small class="d-block text-uppercase fw-bold mb-1" style="font-size: 0.6rem; color: #94a3b8;">Tasa de retención</small>
+                    <div class="rounded-pill" style="height: 5px; background: #e2e8f0; overflow: hidden;">
+                        <div class="rounded-pill" style="height: 100%; background: linear-gradient(90deg, #16a34a, #4ade80);
+                             width: /*[[${totalClientes > 0 ? (clientesActivos * 100 / totalClientes) + '%' : '0%'}]]*/ 0%;">
                         </div>
                     </div>
                 </div>
-
-                <div class="col-6">
-                    <div class="p-2 border rounded-3 bg-light d-flex flex-column justify-content-center align-items-center gap-1 h-100 text-center">
-                        <div class="icon-box-light icon-bg-orange rounded-circle" style="width: 36px; height: 36px;">
-                            <i class="bi bi-person-exclamation small"></i>
-                        </div>
-                        <div>
-                            <h5 class="fw-bold mb-0 text-dark" th:text="${clientesPendientes}">0</h5>
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 0.6rem;">Pendientes</small>
-                        </div>
-                    </div>
-                </div>
+                <span class="fw-bold" style="font-size: 0.8rem; color: #16a34a; white-space: nowrap;"
+                      th:text="${totalClientes > 0 ? #numbers.formatDecimal(clientesActivos * 100.0 / totalClientes, 1, 0) + '%' : '0%'}">0%</span>
             </div>
+
         </div>
     </div>
 </div>
