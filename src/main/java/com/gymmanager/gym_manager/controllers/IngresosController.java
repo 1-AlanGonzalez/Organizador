@@ -103,6 +103,7 @@ public class IngresosController {
     try {
         System.out.println("Entre al try");
         pagoService.procesarPago(idActividadCliente, metodoPagoId, observaciones);
+        
         System.out.println("Ejecute el metodo procesarPago");
         flash.addFlashAttribute("success", "Pago registrado correctamente.");
         System.out.println("se huso el flash");

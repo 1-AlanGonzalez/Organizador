@@ -53,30 +53,22 @@ private final ClienteRepository clienteRepository;
             MetodoDePago metodoPago,
             String observacionPago) {
 
-        // 1. Validaciones previas
         if (esEdicion(cliente)) {
             validarEdicion(cliente);
             actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
         } else {
             validarAlta(cliente, fechaInicio, tipoDeCobro, idActividades);
-            // Validar datos de pago si el checkbox está marcado
-            // 2. Guardar Cliente e Inscripciones
-            // Antes de guardar cliente verifico si el cupo está lleno
+
             validarCuposDisponibles(idActividades);
             Cliente clienteGuardado = registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
 
-            if (!Boolean.TRUE.equals(registrarPago)) {
-                return;
-            }
+            if (!Boolean.TRUE.equals(registrarPago)) {return;}
 
             if (Boolean.TRUE.equals(registrarPago)) {
                 validarDatosPago(montoAbonado, metodoPago);
             }
-            // 3. Registrar el Pago (si corresponde)
             if (Boolean.TRUE.equals(registrarPago)) {
-
                 for (ActividadCliente inscripcion : clienteGuardado.getInscripciones()) {
-
                     if (inscripcion.getEstado() == EstadoInscripcion.ACTIVA) {
 
                         pagoService.procesarPago(
