@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gymmanager.gym_manager.entity.Configuracion;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.dto.DeudaDTO;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
 import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
 import com.gymmanager.gym_manager.repository.PagoRepository;
+import com.gymmanager.gym_manager.services.ConfiguracionDePagoService;
 import com.gymmanager.gym_manager.services.PagoService;
 
 @Controller
@@ -27,12 +29,14 @@ public class IngresosController {
     private final PagoRepository pagoRepository;
     private final PagoService pagoService;
     private final MetodoDePagoRepository metodoDePagoRepository;
+    private final ConfiguracionDePagoService configuracionDePagoService;
 
-    public IngresosController(ClienteRepository clienteRepository, PagoService pagoService, PagoRepository pagoRepository, MetodoDePagoRepository metodoDePagoRepository) {
+    public IngresosController(ConfiguracionDePagoService configuracionDePagoService, ClienteRepository clienteRepository, PagoService pagoService, PagoRepository pagoRepository, MetodoDePagoRepository metodoDePagoRepository) {
         this.pagoRepository = pagoRepository;
         this.pagoService = pagoService;
         this.metodoDePagoRepository = metodoDePagoRepository;
         this.clienteRepository = clienteRepository;
+        this.configuracionDePagoService = configuracionDePagoService;
     }
 
 
@@ -77,7 +81,9 @@ public class IngresosController {
     @GetMapping("/nuevo")
     
     public String nuevoIngreso(Model model) {
+        // var metodos = configuracionDePagoService.listarActivos();  
 
+        // model.addAttribute("metodosPago", metodos);
         model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
         model.addAttribute("clientes", clienteRepository.findAll());
 
