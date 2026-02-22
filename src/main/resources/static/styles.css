@@ -325,7 +325,7 @@ Panel de clientes
         z-index: 999;
     }
 
-    .sidebar.show {
+        .sidebar.show {
         left: 0;
     }
 }
@@ -506,7 +506,7 @@ Panel de clientes
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .d-flex.min-vh-100 { flex-direction: column; }
-    .col-md-5 { min-height: 100vh; padding: 2rem !important; }
+    .col-md-5 {  padding: 1rem 0px !important; }
     #tabla-ingresos{
         margin-top: 3rem;
     }
