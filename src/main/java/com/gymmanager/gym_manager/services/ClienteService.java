@@ -3,6 +3,8 @@ package com.gymmanager.gym_manager.services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -46,7 +48,8 @@ private final ClienteRepository clienteRepository;
     public void guardarOActualizarCliente(
             Cliente cliente, 
             List<Integer> idActividades, 
-            LocalDate fechaInicio, 
+            // LocalDate fechaInicio,
+            Map<Integer, LocalDate> fechasPorActividad, 
             TipoDeCobro tipoDeCobro,
             Boolean registrarPago,
             Double montoAbonado,
@@ -55,12 +58,18 @@ private final ClienteRepository clienteRepository;
 
         if (esEdicion(cliente)) {
             validarEdicion(cliente);
-            actualizarCliente(cliente, idActividades, fechaInicio, tipoDeCobro);
+             LocalDate fechaEdicion = fechasPorActividad.values().stream()
+            .filter(Objects::nonNull).findFirst().orElse(LocalDate.now());
+            
+            actualizarCliente(cliente, idActividades, fechaEdicion, tipoDeCobro);
         } else {
-            validarAlta(cliente, fechaInicio, tipoDeCobro, idActividades);
-
+            LocalDate primeraFecha = fechasPorActividad.values().stream()
+                        .filter(Objects::nonNull).findFirst().orElse(null);
+            
+            validarAlta(cliente, primeraFecha, tipoDeCobro, idActividades);
             validarCuposDisponibles(idActividades);
-            Cliente clienteGuardado = registrarClienteEInscribir(cliente, idActividades, fechaInicio, tipoDeCobro);
+
+            Cliente clienteGuardado = registrarClienteEInscribir(cliente, idActividades, fechasPorActividad, tipoDeCobro);
 
             if (!Boolean.TRUE.equals(registrarPago)) {return;}
 
@@ -138,7 +147,7 @@ private final ClienteRepository clienteRepository;
     }
 
     @Transactional
-    public Cliente registrarClienteEInscribir(Cliente cliente, List<Integer> idActividades, LocalDate fechaInicio, TipoDeCobro tipoDeCobro) {
+    public Cliente registrarClienteEInscribir(Cliente cliente, List<Integer> idActividades, Map<Integer, LocalDate> fechasPorActividad, TipoDeCobro tipoDeCobro) {
         if (clienteRepository.existsByDni(cliente.getDni())) {
             throw new RuntimeException("El cliente ya existe.");
         }
@@ -148,8 +157,9 @@ private final ClienteRepository clienteRepository;
         for (Integer idActividad : idActividades) {
             Actividad actividad = actividadRepository.findById(idActividad)
                     .orElseThrow(() -> new RuntimeException("Actividad no encontrada ID: " + idActividad));
-            
-            actividadClienteService.inscribirCliente(clienteGuardado, actividad, fechaInicio, tipoDeCobro);
+            LocalDate fecha = fechasPorActividad.getOrDefault(idActividad, LocalDate.now());
+
+            actividadClienteService.inscribirCliente(clienteGuardado, actividad, fecha, tipoDeCobro);
         }
         
         return clienteGuardado;

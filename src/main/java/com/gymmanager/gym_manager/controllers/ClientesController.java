@@ -3,10 +3,10 @@ package com.gymmanager.gym_manager.controllers;
 
 // import java.math.BigDecimal;
 import java.time.LocalDate;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,10 +88,13 @@ public class ClientesController {
 public String guardarCliente(
         @ModelAttribute Cliente cliente,
         @RequestParam(required = false) List<Integer> idActividades,
-        // Recibimos una lista porque en el HTML el input date está dentro del th:each
-        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") List<LocalDate> fechaInicio,
+
+        // Cambios hechos para solucionar el problema de las fechas.
+        // @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") List<LocalDate> fechaInicio,
+        @RequestParam(required = false) Map<String, String> fechaInicioMap,
+
+        // Campos relacionados con el pago
         @RequestParam("tipoDeCobro") String tipoDeCobroString,
-        // Nuevos campos para el pago
         @RequestParam(required = false) Boolean registrarPago,
         @RequestParam(required = false) Double montoAbonado,
         @RequestParam(required = false) MetodoDePago metodoPagoId,
@@ -102,17 +105,35 @@ public String guardarCliente(
     try {
         TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
 
-        LocalDate fechaInicioReal = LocalDate.now();
-        if (fechaInicio != null) {
-            fechaInicioReal = fechaInicio.stream()
-                .filter(java.util.Objects::nonNull)
-                .findFirst()
-                .orElse(LocalDate.now());
+        // Cambios hechos para solucionar el problema de las fechas.
+        
+        // LocalDate fechaInicioReal = LocalDate.now();
+        // if (fechaInicio != null) {
+        //     fechaInicioReal = fechaInicio.stream()
+        //         .filter(java.util.Objects::nonNull)
+        //         .findFirst()
+        //         .orElse(LocalDate.now());
+        // }
+        Map<Integer, LocalDate> fechasPorActividad = new HashMap<>();
+        if (fechaInicioMap != null) {
+            fechaInicioMap.forEach((key, value) -> {
+                // La clave llega como "fechaInicioMap[3]", no como "3"
+                if (key.startsWith("fechaInicioMap[") && value != null && !value.isEmpty()) {
+                    try {
+                        String idStr = key.replace("fechaInicioMap[", "").replace("]", "");
+                        Integer actId = Integer.parseInt(idStr);
+                        fechasPorActividad.put(actId, LocalDate.parse(value));
+                    } catch (Exception e) {
+                        System.out.println("Error parseando fecha para clave: " + key + " → " + e.getMessage());
+                    }
+                }
+            });
         }
+
         clienteService.guardarOActualizarCliente(
             cliente, 
             idActividades, 
-            fechaInicioReal, 
+            fechasPorActividad, 
             tipoDeCobro,
             registrarPago,
             montoAbonado,

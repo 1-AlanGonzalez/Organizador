@@ -119,7 +119,12 @@
                                                 </span>
                                             </td>
                                             <td class="pe-3">
-                                                     <input type="date" name="fechaInicio">
+                                                <!-- Cambio hecho para solucionar el problema de las fechas. -->
+                                                     <!-- <input type="date" name="fechaInicio"> -->
+                                                      <!--21/2  -->
+                                                <input type="date" 
+                                                    th:name="'fechaInicioMap[' + ${act.idActividad} + ']'"
+                                                    th:id="'fecha_' + ${act.idActividad}">
                                             </td>
                                         </tr>
                                     </tbody>
