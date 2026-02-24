@@ -1,5 +1,6 @@
 package com.gymmanager.gym_manager.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +15,6 @@ public interface ConfiguracionPagoRepository extends JpaRepository<Configuracion
 
     boolean existsByMetodoDePago(MetodoDePago metodoDePago);
     
-
+    Optional<ConfiguracionDePago> findByMetodoDePagoAndActivoFalse(MetodoDePago metodoDePago);
+    List<ConfiguracionDePago>     findByActivoFalse();
 }

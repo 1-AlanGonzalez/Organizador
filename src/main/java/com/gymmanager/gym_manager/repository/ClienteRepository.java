@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.gymmanager.gym_manager.entity.Cliente;
+import com.gymmanager.gym_manager.entity.EstadoInscripcion;
 
 
 
@@ -25,8 +27,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     // AGREGADO HOY 29/1
     // 1. Cuenta clientes que tienen AL MENOS una inscripción ACTIVA
-    @Query("SELECT COUNT(DISTINCT c) FROM Cliente c JOIN c.inscripciones i WHERE i.estado = 'ACTIVA'")
-    long countClientesConInscripcionActiva();
+    @Query("SELECT COUNT(DISTINCT c) FROM Cliente c JOIN c.inscripciones i WHERE i.estado = :estado")
+    long countClientesConInscripcionActiva(@Param("estado") EstadoInscripcion estado);
 
     // 2. Cuenta clientes que tienen inscripción ACTIVA y pagos PENDIENTES (Adeuda o Vencido)
     @Query("SELECT COUNT(DISTINCT c) FROM Cliente c JOIN c.inscripciones i JOIN i.pagos p " +

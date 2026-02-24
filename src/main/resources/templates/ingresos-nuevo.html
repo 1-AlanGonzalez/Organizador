@@ -82,8 +82,8 @@
                                     <select class="form-select" id="metodo" name="metodoPagoId" required>
                                         <option value="" disabled selected>Seleccione...</option>
                                         <option th:each="m : ${metodosPago}"
-                                                th:value="${m.idMetodoDePago}"
-                                                th:text="${m.nombre}">
+                                            th:value="${m.idMetodo}"
+                                            th:text="${m.nombre}">
                                         </option>
                                     </select>
                                 </div>

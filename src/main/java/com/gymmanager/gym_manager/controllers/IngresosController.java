@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.gymmanager.gym_manager.entity.Configuracion;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.dto.DeudaDTO;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
@@ -84,7 +83,10 @@ public class IngresosController {
         // var metodos = configuracionDePagoService.listarActivos();  
 
         // model.addAttribute("metodosPago", metodos);
-        model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
+        // model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
+        model.addAttribute("metodosPago", configuracionDePagoService.listarActivos());
+
+
         model.addAttribute("clientes", clienteRepository.findAll());
 
         model.addAttribute("title", "Gym Manager | Nuevo Ingreso");
@@ -128,7 +130,7 @@ public class IngresosController {
 
         return clienteRepository.findById(clienteId)
                 .orElseThrow()
-                .getInscripcionesActivas()
+                .getInscripciones()
                 .stream()
                 .map(insc -> new DeudaDTO(
                         insc.getIdActividadCliente(),

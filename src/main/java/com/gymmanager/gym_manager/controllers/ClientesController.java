@@ -24,9 +24,9 @@ import com.gymmanager.gym_manager.entity.Pago;
 import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
-import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
 import com.gymmanager.gym_manager.repository.PagoRepository;
 import com.gymmanager.gym_manager.services.ClienteService;
+import com.gymmanager.gym_manager.services.ConfiguracionDePagoService;
 
 @Controller
 @RequestMapping("/clientes")
@@ -35,8 +35,8 @@ public class ClientesController {
     private final ClienteRepository clienteRepository;
     private final ActividadRepository actividadRepository;
     private final ClienteService clienteService;
-    private final MetodoDePagoRepository metodoDePagoRepository;
     private final PagoRepository pagoRepository;
+    private final ConfiguracionDePagoService configuracionDePagoService;
 
     // NUEVO HOY 4/2 
     /* Al crear un cliente hay un botón de "registrar pago"
@@ -45,11 +45,11 @@ public class ClientesController {
 
 
     public ClientesController(PagoRepository pagoRepository, ClienteRepository clienteRepository, ActividadRepository actividadRepository,
-            ClienteService clienteService, MetodoDePagoRepository metodoDePagoRepository) {
+            ClienteService clienteService, ConfiguracionDePagoService configuracionDePagoService) {
         this.clienteRepository = clienteRepository;
         this.actividadRepository = actividadRepository;
         this.clienteService = clienteService;
-        this.metodoDePagoRepository = metodoDePagoRepository;
+        this.configuracionDePagoService = configuracionDePagoService;
         this.pagoRepository = pagoRepository;
     }
 
@@ -69,7 +69,10 @@ public class ClientesController {
 
         model.addAttribute("active", "clientes");
 
-        model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
+        // model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
+
+        model.addAttribute("metodosPago", configuracionDePagoService.listarActivos());
+
 
         return "layouts/main";
     }
@@ -161,7 +164,7 @@ public String guardarCliente(
         model.addAttribute("error", errorMsg);
         model.addAttribute("cliente", cliente);
         model.addAttribute("actividades", actividadRepository.findAll());
-        model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
+        model.addAttribute("metodosPago", configuracionDePagoService.listarActivos());
 
         model.addAttribute("vista", "fragments/panel-cliente");
         model.addAttribute("fragmento", "panelCliente");
@@ -193,9 +196,7 @@ public String guardarCliente(
     public long cantidadTotal() {
         return clienteRepository.count();
     }
-    // Listado de clientes con inscripciones y actividades
 
-    // Añado la página para editar cliente
     @GetMapping("/nuevo")
         public String nuevoCliente(Model model) {
         // Definimos qué queremos ver en el contenido principal
@@ -205,7 +206,7 @@ public String guardarCliente(
         // Datos necesarios para el formulario
         model.addAttribute("cliente", new Cliente());
         model.addAttribute("actividades", actividadRepository.findAll());
-        model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
+        model.addAttribute("metodosPago", configuracionDePagoService.listarActivos());
 
         // Datos del layout
         prepararModeloBase(model, "Añadir Cliente", "Clientes / Nuevo");
@@ -217,19 +218,13 @@ public String guardarCliente(
 
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-        // 🔍 DEBUG: ver estados reales
-        cliente.getInscripciones().forEach(i ->
-            System.out.println(
-                "Actividad ID: " + i.getActividad().getIdActividad()
-                + " | Estado: " + i.getEstado()
-            )
-        );
+
         model.addAttribute("vista", "fragments/panel-cliente");
         model.addAttribute("fragmento", "panelCliente");
-
         model.addAttribute("cliente", cliente);
 
         model.addAttribute("actividades", actividadRepository.findAll());
+        model.addAttribute("metodosPago", configuracionDePagoService.listarActivos());
 
         prepararModeloBase(model, "Editar Cliente", "Clientes / Editar " + cliente.getNombre());
         return "layouts/main";

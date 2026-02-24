@@ -1,11 +1,13 @@
 package com.gymmanager.gym_manager.controllers;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.gymmanager.gym_manager.entity.EstadoInscripcion;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
 import com.gymmanager.gym_manager.repository.PagoRepository;
 
@@ -24,24 +26,21 @@ public class DashboardController {
 
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
+        BigDecimal totalMesActual = pagoRepository.sumTotalRecaudadoEnMes(LocalDate.now().getMonthValue(), LocalDate.now().getYear());
+        model.addAttribute("totalMesActual", totalMesActual != null ? totalMesActual : BigDecimal.ZERO);
 
-        BigDecimal total = pagoRepository.sumTotalRecaudado();
-        model.addAttribute("ingresosTotales", total != null ? total : BigDecimal.ZERO);
+        //   TOTAL DE CLIENTES
+        
         model.addAttribute("totalClientes", clienteRepository.count());
-//   TOTAL DE CLIENTES
 
-        model.addAttribute("totalClientes", clienteRepository.count());
-
-        // 3. Lógica de Activos vs Pendientes
-        long totalInscriptos = clienteRepository.countClientesConInscripcionActiva();
+        long totalInscriptos = clienteRepository.countClientesConInscripcionActiva(EstadoInscripcion.ACTIVA);
         long totalDeudores = clienteRepository.countClientesDeudores();
-    // "Activos" en la caja verde serán los que NO deben nada
         long activosAlDia = totalInscriptos - totalDeudores;
-
-        model.addAttribute("clientesActivos", activosAlDia);     // Caja Verde (Sin deuda)
-        model.addAttribute("clientesPendientes", totalDeudores); // Caja Naranja (Con deuda)
-        // Datos para el gráfico
+        model.addAttribute("totalInscriptos", totalInscriptos);
+        model.addAttribute("clientesActivos", activosAlDia); 
+        model.addAttribute("clientesPendientes", totalDeudores); 
         model.addAttribute("datosGrafico", pagoRepository.obtenerIngresosMensuales());
+
         model.addAttribute("categoriasGrafico", Arrays.asList("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"));
 
         model.addAttribute("title", "Gym Manager | Inicio");

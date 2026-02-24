@@ -78,4 +78,12 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
 
     // Para el ver_clientes añado este método
     List<Pago> findByActividadCliente_Cliente_IdClienteOrderByFechaGeneracionDesc(Integer idCliente);
+
+
+    @Query("SELECT COALESCE(SUM(p.montoAPagar), 0) FROM Pago p " +
+        "WHERE p.estado = 'PAGADO' " +
+        "AND MONTH(p.fechaGeneracion) = :mes " +
+        "AND YEAR(p.fechaGeneracion) = :anio")
+    BigDecimal sumTotalRecaudadoEnMes(@Param("mes") int mes, @Param("anio") int anio);
+
 }  

@@ -97,7 +97,29 @@ public class ConfiguracionController {
         return "redirect:/configuracion";
     }
 
+    // SISTEMA DE TICKETS ENDPOINT
 
+    @PostMapping("/tickets")
+    public String guardarTickets(
+            @ModelAttribute("config") Configuracion config,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            // configuracionService.guardar(config);
+
+            redirectAttributes.addFlashAttribute("success", "Configuración guardada.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+        }
+
+        return "redirect:/configuracion";
+    }
+    // ENDPOINT PARA PAGOS
+    // 
+    // 
+    // 
+
+    
     @DeleteMapping("/metodos/{idMetodo}")
     @ResponseBody
     public ResponseEntity<Void> desactivarMetodo(@PathVariable Integer idMetodo) {
