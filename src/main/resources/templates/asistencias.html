@@ -32,16 +32,17 @@
                 </div>
 
                 <div class="col-md-4">
-                    <select name="idActividad" class="form-select form-select-sm bg-light text-muted" 
-                            onchange="document.getElementById('filtroForm').submit()">
-                        <option value="" th:selected="${actividadSeleccionada == null}">Todas las actividades</option>
-                        <option th:each="actividad : ${actividades}"
-                                th:value="${actividad.idActividad}"
-                                th:text="${actividad.nombre}"
-                                th:selected="${actividadSeleccionada == actividad.idActividad}">
-                        </option>
-                    </select>
-                </div>
+    <div class="input-group input-group-sm">
+        <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-funnel"></i></span>
+        <select id="filtroActividad" class="form-select form-select-sm border-start-0 bg-light text-muted" onchange="filtrarTabla()">
+            <option value="todos">Todas las actividades</option>
+            <option th:each="actividad : ${actividades}"
+                    th:value="${actividad.nombre}"
+                    th:text="${actividad.nombre}">
+            </option>
+        </select>
+    </div>
+</div>
             </div>
         </form>
     </div>
@@ -60,45 +61,47 @@
                 </thead>
 
                 <tbody class="border-top-0">
-                    <tr th:each="item : ${reporteAsistencia}">
+    <tr th:each="item : ${reporteAsistencia}" 
+        class="fila-alumno" 
+        th:data-actividad="${item.nombreActividad}">
+        <td class="ps-4">
+            <div class="fw-bold text-dark" th:text="${item.nombreCliente} + ' ' + ${item.apellidoCliente}">Nombre</div>
+        </td>
+        <td>
+            <span class="badge bg-light text-dark border fw-normal" th:text="${item.nombreActividad}">Actividad</span>
+        </td>
+        <td>
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border" style="width: 30px; height: 30px;">
+                    <i class="bi bi-calendar2-event small"></i>
+                </div>
+                <span class="small text-muted" th:text="${#temporals.format(item.fecha, 'dd/MM/yyyy')}">01/01/2024</span>
+            </div>
+        </td>
+        <td>
+            <span th:if="${item.estado == 'PRESENTE'}" class="badge bg-success-light text-success border border-success border-opacity-25">
+                <i class="bi bi-check-circle-fill me-1"></i> Presente
+            </span>
+            <span th:if="${item.estado == 'AUSENTE'}" class="badge bg-danger-light text-danger border border-danger border-opacity-25">
+                <i class="bi bi-x-circle me-1"></i> Ausente
+            </span>
+        </td>
+    </tr>
+    
+    <tr th:if="${reporteAsistencia == null or #lists.isEmpty(reporteAsistencia)}">
+        <td colspan="4" class="text-center py-5 text-muted">
+            <i class="bi bi-people fs-1 d-block mb-2"></i>
+            No hay inscripciones activas registradas para este día.
+        </td>
+    </tr>
 
-                        <td class="ps-4">
-                            <div class="fw-bold text-dark" th:text="${item.nombreCliente} + ' ' + ${item.apellidoCliente}">Nombre</div>
-                        </td>
-
-                        <td>
-                            <span class="badge bg-light text-dark border fw-normal" th:text="${item.nombreActividad}">Actividad</span>
-                        </td>
-
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border" style="width: 30px; height: 30px;">
-                                    <i class="bi bi-calendar2-event small"></i>
-                                </div>
-                                <span class="small text-muted" th:text="${#temporals.format(item.fecha, 'dd/MM/yyyy')}">01/01/2024</span>
-                            </div>
-                        </td>
-
-                        <td>
-                            <span th:if="${item.estado == 'PRESENTE'}"
-                                  class="badge bg-success-light text-success border border-success border-opacity-25">
-                                <i class="bi bi-check-circle-fill me-1"></i> Presente
-                            </span>
-                            <span th:if="${item.estado == 'AUSENTE'}"
-                                  class="badge bg-danger-light text-danger border border-danger border-opacity-25">
-                                <i class="bi bi-x-circle me-1"></i> Ausente
-                            </span>
-                        </td>
-
-                    </tr>
-                    
-                    <tr th:if="${#lists.isEmpty(reporteAsistencia)}">
-                        <td colspan="4" class="text-center py-5 text-muted">
-                            <i class="bi bi-people fs-1 d-block mb-2"></i>
-                            No hay inscripciones activas para los filtros seleccionados.
-                        </td>
-                    </tr>
-                </tbody>
+    <tr id="mensajeVacioJS" style="display: none;">
+        <td colspan="4" class="text-center py-5 text-muted">
+            <i class="bi bi-search fs-1 d-block mb-2 text-secondary opacity-50"></i>
+            No se encontraron alumnos con los filtros actuales.
+        </td>
+    </tr>
+</tbody>
             </table>
         </div>
     </div>

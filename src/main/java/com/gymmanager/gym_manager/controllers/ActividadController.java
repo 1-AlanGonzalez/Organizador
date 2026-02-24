@@ -1,5 +1,6 @@
 package com.gymmanager.gym_manager.controllers;
 
+import org.springframework.dao.DataIntegrityViolationException;
 // import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -83,28 +84,37 @@ public String guardarActividad(
     return "redirect:/actividades";
 }
 
-@PostMapping("/eliminar/{id}")
-public String eliminarActividad(
-        @PathVariable Integer id,
-        RedirectAttributes redirectAttributes
-) {
-    Actividad actividad = actividadRepository.findById(id).orElse(null);
+    @PostMapping("/eliminar/{id}")
+    public String eliminarActividad(
+            @PathVariable Integer id,
+            RedirectAttributes redirectAttributes
+    ) {
+        Actividad actividad = actividadRepository.findById(id).orElse(null);
 
-    if (actividad == null) {
-        redirectAttributes.addFlashAttribute(
-            "error", "Actividad no encontrada"
-        );
+        if (actividad == null) {
+            redirectAttributes.addFlashAttribute(
+                "error", "Actividad no encontrada"
+            );
+            return "redirect:/actividades";
+        }
+
+        try {
+            // Intentamos borrarla
+            actividadRepository.delete(actividad);
+            
+            redirectAttributes.addFlashAttribute(
+                "success", "Actividad eliminada correctamente"
+            );
+            
+        } catch (DataIntegrityViolationException e) {
+            // Si la base de datos se queja por la clave foránea, atajamos el error acá
+            redirectAttributes.addFlashAttribute(
+                "error", "No se puede eliminar la actividad porque hay clientes inscriptos en ella."
+            );
+        }
+
         return "redirect:/actividades";
     }
-
-    actividadRepository.delete(actividad);
-
-    redirectAttributes.addFlashAttribute(
-        "success", "Actividad eliminada correctamente"
-    );
-
-    return "redirect:/actividades";
-}
 }
 
 

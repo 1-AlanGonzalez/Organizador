@@ -38,7 +38,7 @@ public class AsistenciaController {
         model.addAttribute("title", "Gym Manager | Asistencias");
         model.addAttribute("header", "Panel de control / Asistencias");
         model.addAttribute("asistencias", asistenciaRepository.findAll());
-
+        model.addAttribute("actividades", actividadRepository.findAll());
         model.addAttribute("vista", "asistencias");
         model.addAttribute("fragmento", "contenido");
         LocalDate fechaReporte = LocalDate.now();

@@ -86,4 +86,7 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
         "AND YEAR(p.fechaGeneracion) = :anio")
     BigDecimal sumTotalRecaudadoEnMes(@Param("mes") int mes, @Param("anio") int anio);
 
+    // deleteByMetodoPago
+    void deleteByMetodoPago(MetodoDePago metodo);
+
 }  

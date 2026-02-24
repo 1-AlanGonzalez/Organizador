@@ -6,6 +6,87 @@ function updatePreview() {
     if (pm) pm.innerText = document.getElementById('inputMensaje')?.value   || 'Gracias por su visita';
 }
 
+// ── GUARDAR SECCIÓN ACTIVA ────────────────────────────────────────────────────
+// El botón "Guardar" del sidebar envía el form del tab visible en ese momento.
+
+function guardarSeccionActiva() {
+    const tabActivo = document.querySelector('#configTabs .nav-link.active');
+    const target    = tabActivo?.dataset.bsTarget; // ej: "#tab-pagos"
+
+    const mapaForms = {
+        '#tab-tickets': 'form-tickets',
+        '#tab-pagos':   'form-pagos',
+    };
+
+    const formId = mapaForms[target];
+    if (formId) {
+        document.getElementById(formId)?.submit();
+    }
+}
+
+// ── RESTAURAR TAB ACTIVO TRAS REDIRECT ────────────────────────────────────────
+// El controller manda tabActivo como flash attribute.
+// Lo leemos desde el hidden input que Thymeleaf renderiza.
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Restaurar tab si el server indicó cuál era el activo
+    const tabInicial = document.getElementById('tabActivoInicial')?.value;
+    if (tabInicial && tabInicial !== 'tickets') {
+        const btn = document.querySelector(`[data-bs-target="#tab-${tabInicial}"]`);
+        if (btn) btn.click();
+    }
+
+    // Inicializar simulaciones de recargo en métodos ya cargados
+    document.querySelectorAll('.metodo-item input[type="number"]')
+            .forEach(actualizarSimulacion);
+
+    // ── Confirmar desactivar ──────────────────────────────────────────────────
+    document.getElementById('btnConfirmarDesactivar')
+        ?.addEventListener('click', () => {
+            if (!pendienteBtn) return;
+            const idMetodo = pendienteBtn.dataset.id;
+            const row      = pendienteBtn.closest('.metodo-item');
+            const nombre   = row.querySelector('span:not(.badge)')?.textContent?.trim() || 'Método';
+
+            fetch(`/configuracion/metodos/${idMetodo}`, {
+                method: 'DELETE',
+                headers: getCsrfHeaders()
+            })
+            .then(res => {
+                if (res.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById('modalDesactivar')).hide();
+                    row.remove();
+                    agregarFilaInactiva(idMetodo, nombre);
+                } else {
+                    alert('Error ' + res.status + ': No se pudo desactivar el método.');
+                }
+            })
+            .catch(() => alert('Error de conexión.'));
+        });
+
+    // ── Confirmar eliminar permanente ─────────────────────────────────────────
+    document.getElementById('btnConfirmarEliminarPermanente')
+        ?.addEventListener('click', () => {
+            if (!idMetodoAEliminar) return;
+
+            fetch(`/configuracion/metodos/${idMetodoAEliminar}/permanente`, {
+                method: 'DELETE',
+                headers: getCsrfHeaders()
+            })
+            .then(res => {
+                if (res.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById('modalEliminarPermanente')).hide();
+                    document.getElementById(`inactivo-${idMetodoAEliminar}`)?.remove();
+                    ocultarBloqueInactivosSiVacio();
+                } else {
+                    alert('No se pudo eliminar el método.');
+                }
+            })
+            .catch(() => alert('Error de conexión.'));
+        });
+});
+
 // ── SIMULACIÓN RECARGO ────────────────────────────────────────────────────────
 const ars = new Intl.NumberFormat('es-AR', {
     style: 'currency', currency: 'ARS', maximumFractionDigits: 0
@@ -89,7 +170,7 @@ function getCsrfHeaders() {
     return (token && header) ? { [header]: token } : {};
 }
 
-// ── DESACTIVAR MÉTODO (soft-delete) ───────────────────────────────────────────
+// ── DESACTIVAR MÉTODO ─────────────────────────────────────────────────────────
 let pendienteBtn = null;
 
 function confirmarDesactivar(btn) {
@@ -97,7 +178,6 @@ function confirmarDesactivar(btn) {
     new bootstrap.Modal(document.getElementById('modalDesactivar')).show();
 }
 
-// Mantener compatibilidad si algún lugar todavía llama confirmarEliminar
 function confirmarEliminar(btn) { confirmarDesactivar(btn); }
 
 // ── REACTIVAR MÉTODO ──────────────────────────────────────────────────────────
@@ -139,59 +219,6 @@ function confirmarEliminarPermanente(btn) {
     document.getElementById('modalNombreMetodo').textContent = `"${btn.dataset.nombre}"`;
     new bootstrap.Modal(document.getElementById('modalEliminarPermanente')).show();
 }
-
-// ── DOM READY ─────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-
-    // Inicializar simulaciones de métodos ya existentes
-    document.querySelectorAll('.metodo-item input[type="number"]')
-            .forEach(actualizarSimulacion);
-
-    // Confirmar desactivar
-    document.getElementById('btnConfirmarDesactivar')
-        ?.addEventListener('click', () => {
-            if (!pendienteBtn) return;
-            const idMetodo = pendienteBtn.dataset.id;
-            const row      = pendienteBtn.closest('.metodo-item');
-            const nombre   = row.querySelector('span:not(.badge)')?.textContent?.trim() || 'Método';
-
-            fetch(`/configuracion/metodos/${idMetodo}`, {
-                method: 'DELETE',
-                headers: getCsrfHeaders()
-            })
-            .then(res => {
-                if (res.ok) {
-                    bootstrap.Modal.getInstance(document.getElementById('modalDesactivar')).hide();
-                    row.remove();
-                    agregarFilaInactiva(idMetodo, nombre);
-                } else {
-                    alert('Error ' + res.status + ': No se pudo desactivar el método.');
-                }
-            })
-            .catch(() => alert('Error de conexión.'));
-        });
-
-    // Confirmar eliminar permanente
-    document.getElementById('btnConfirmarEliminarPermanente')
-        ?.addEventListener('click', () => {
-            if (!idMetodoAEliminar) return;
-
-            fetch(`/configuracion/metodos/${idMetodoAEliminar}/permanente`, {
-                method: 'DELETE',
-                headers: getCsrfHeaders()
-            })
-            .then(res => {
-                if (res.ok) {
-                    bootstrap.Modal.getInstance(document.getElementById('modalEliminarPermanente')).hide();
-                    document.getElementById(`inactivo-${idMetodoAEliminar}`)?.remove();
-                    ocultarBloqueInactivosSiVacio();
-                } else {
-                    alert('No se pudo eliminar el método.');
-                }
-            })
-            .catch(() => alert('Error de conexión.'));
-        });
-});
 
 // ── HELPERS DOM ───────────────────────────────────────────────────────────────
 

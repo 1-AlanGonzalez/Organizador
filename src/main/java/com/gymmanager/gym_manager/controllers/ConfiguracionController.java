@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,13 +39,17 @@ public class ConfiguracionController {
         this.excelService         = excelService;
     }
 
+// ── GET /configuracion ────────────────────────────────────────────────────
+
     @GetMapping
     public String configuracion(Model model) {
-        var metodos = configuracionDePagoService.listarActivos();  
+        var activos   = configuracionDePagoService.listarActivos();
+        var inactivos = configuracionDePagoService.listarInactivos();
 
-        model.addAttribute("config",        new Configuracion());
-        model.addAttribute("metodosDePago", metodos);
-        model.addAttribute("metodosVacios", metodos.isEmpty());
+        model.addAttribute("config",           new Configuracion());
+        model.addAttribute("metodosDePago",    activos);
+        model.addAttribute("metodosVacios",    activos.isEmpty());
+        model.addAttribute("metodosInactivos", inactivos);
 
         model.addAttribute("title",     "Gym Manager | Configuración");
         model.addAttribute("header",    "Panel de control / Configuración");
@@ -55,50 +60,8 @@ public class ConfiguracionController {
         return "layouts/main";
     }
 
-    @PostMapping("/guardar")
-    public String guardar(
-            @ModelAttribute("config") Configuracion config,
-
-            @RequestParam(value = "configId",      required = false) List<Integer>    configIds,
-            @RequestParam(value = "configRecargo", required = false) List<BigDecimal> configRecargoList,
-
-            @RequestParam(value = "nuevoNombre",  required = false) List<String>     nuevosNombres,
-            @RequestParam(value = "nuevoRecargo", required = false) List<BigDecimal> nuevosRecargoList,
-
-            RedirectAttributes redirectAttributes) {
-
-        try {
-            // 2. Actualizar recargos de configuraciones existentes
-            if (configIds != null) {
-                for (int i = 0; i < configIds.size(); i++) {
-                    BigDecimal recargo = safeGet(configRecargoList, i, BigDecimal.ZERO);
-                    configuracionDePagoService.actualizarRecargo(configIds.get(i), recargo);
-                }
-            }
-
-            // 3. Crear nuevos métodos de pago
-            if (nuevosNombres != null) {
-                for (int i = 0; i < nuevosNombres.size(); i++) {
-                    String nombre = nuevosNombres.get(i);
-                    if (nombre == null || nombre.isBlank()) continue;
-                    BigDecimal recargo = safeGet(nuevosRecargoList, i, BigDecimal.ZERO);
-                    configuracionDePagoService.crearMetodoConRecargo(nombre, recargo);
-                }
-            }
-
-            redirectAttributes.addFlashAttribute("success", "Cambios guardados correctamente.");
-
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al guardar: " + e.getMessage());
-        }
-
-        return "redirect:/configuracion";
-    }
-
     // SISTEMA DE TICKETS ENDPOINT
-
+  // ── POST /configuracion/guardar/tickets ───────────────────────────────────
     @PostMapping("/tickets")
     public String guardarTickets(
             @ModelAttribute("config") Configuracion config,
@@ -115,10 +78,46 @@ public class ConfiguracionController {
         return "redirect:/configuracion";
     }
     // ENDPOINT PARA PAGOS
-    // 
-    // 
-    // 
 
+
+    @PostMapping("/guardar/pagos")
+    public String guardarPagos(
+            @RequestParam(value = "configId",      required = false) List<Integer>    configIds,
+            @RequestParam(value = "configRecargo", required = false) List<BigDecimal> configRecargoList,
+            @RequestParam(value = "nuevoNombre",   required = false) List<String>     nuevosNombres,
+            @RequestParam(value = "nuevoRecargo",  required = false) List<BigDecimal> nuevosRecargoList,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            if (configIds != null) {
+                for (int i = 0; i < configIds.size(); i++) {
+                    BigDecimal recargo = safeGet(configRecargoList, i, BigDecimal.ZERO);
+                    configuracionDePagoService.actualizarRecargo(configIds.get(i), recargo);
+                }
+            }
+
+            if (nuevosNombres != null) {
+                for (int i = 0; i < nuevosNombres.size(); i++) {
+                    String nombre = nuevosNombres.get(i);
+                    if (nombre == null || nombre.isBlank()) continue;
+                    BigDecimal recargo = safeGet(nuevosRecargoList, i, BigDecimal.ZERO);
+                    configuracionDePagoService.crearMetodoConRecargo(nombre, recargo);
+                }
+            }
+
+            redirectAttributes.addFlashAttribute("success", "Métodos de pago guardados correctamente.");
+            redirectAttributes.addFlashAttribute("tabActivo", "pagos");
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("tabActivo", "pagos");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al guardar: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("tabActivo", "pagos");
+        }
+
+        return "redirect:/configuracion";
+    }
     
     @DeleteMapping("/metodos/{idMetodo}")
     @ResponseBody
@@ -130,7 +129,30 @@ public class ConfiguracionController {
             return ResponseEntity.status(409).build();
         }
     }
+    // ── PATCH /configuracion/metodos/{idMetodo}/reactivar ────────────────────
 
+    @PatchMapping("/metodos/{idMetodo}/reactivar")
+    @ResponseBody
+    public ResponseEntity<Void> reactivarMetodo(@PathVariable Integer idMetodo) {
+        try {
+            configuracionDePagoService.reactivarMetodo(idMetodo);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(409).build();
+        }
+    }
+        // ── DELETE /configuracion/metodos/{idMetodo}/permanente ──────────────────
+
+    @DeleteMapping("/metodos/{idMetodo}/permanente")
+    @ResponseBody
+    public ResponseEntity<Void> eliminarPermanente(@PathVariable Integer idMetodo) {
+        try {
+            configuracionDePagoService.eliminarMetodoPermanente(idMetodo);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(409).build();
+        }
+    }
     @GetMapping("/exportar")
     public void exportar(
             @RequestParam String       entidad,
