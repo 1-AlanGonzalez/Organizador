@@ -8,30 +8,36 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    // ── 403: el usuario no tiene permiso (ej: USER intenta entrar a /usuarios) ─
+    // ── 404: recursos estáticos que no existen (favicon, devtools, etc.) ──────
+    // El navegador los pide automáticamente — no son errores reales, se ignoran
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleNoResource() {
+        // Sin log, sin página de error — simplemente devuelve 404
+    }
+
+    // ── 403: acceso denegado ──────────────────────────────────────────────────
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public String handleAccesDenied(AccessDeniedException e, Model model) {
+    public String handleAccesDenied(Model model) {
         model.addAttribute("codigo",  "403");
         model.addAttribute("titulo",  "Acceso denegado");
         model.addAttribute("mensaje", "No tenés permiso para acceder a esta sección.");
         return "error";
     }
 
-    // ── 500: cualquier error inesperado ───────────────────────────────────────
+    // ── 500: cualquier otro error inesperado ──────────────────────────────────
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleError(Exception e, Model model) {
-        // El error real se loguea en el servidor para debugging
         log.error("Error inesperado: {}", e.getMessage(), e);
-
-        // Al usuario le mostramos un mensaje genérico, sin detalles técnicos
         model.addAttribute("codigo",  "500");
         model.addAttribute("titulo",  "Algo salió mal");
         model.addAttribute("mensaje", "Ocurrió un error inesperado. Por favor, intentá de nuevo.");

@@ -47,19 +47,16 @@ public class UsuarioController {
     // ── POST /usuarios/crear — solo ADMIN ─────────────────────────────────────
 
     @PostMapping("/usuarios/crear")
-    public String crear(
-            @RequestParam String username,
-            @RequestParam String password,
-            @RequestParam(required = false) String nombreGimnasio,
-            RedirectAttributes redirectAttributes) {
+    public String crear(@RequestParam String username,
+                        @RequestParam String password,
+                        @RequestParam(required = false) String nombreGimnasio,
+                        RedirectAttributes redirectAttributes) {
 
-        // Validación de contraseña
         String errorPassword = validarPassword(password, password);
         if (errorPassword != null) {
             redirectAttributes.addFlashAttribute("error", errorPassword);
             return "redirect:/usuarios";
         }
-
         if (usuarioRepository.existsByUsername(username.trim())) {
             redirectAttributes.addFlashAttribute("error", "El nombre de usuario ya existe.");
             return "redirect:/usuarios";
@@ -71,12 +68,35 @@ public class UsuarioController {
         nuevo.setNombreGimnasio(nombreGimnasio);
         nuevo.setRol("ROLE_USER");
         usuarioRepository.save(nuevo);
-
-        // Crear los métodos de pago por defecto para este usuario
         crearMetodosIniciales(nuevo);
 
         redirectAttributes.addFlashAttribute("success",
                 "Usuario '" + username + "' creado correctamente.");
+        return "redirect:/usuarios";
+    }
+
+    // ── POST /usuarios/resetear-password/{id} — solo ADMIN ───────────────────
+    // El admin puede resetear la contraseña de cualquier usuario
+
+    @PostMapping("/usuarios/resetear-password/{id}")
+    public String resetearPassword(@PathVariable Integer id,
+                                   @RequestParam String nuevaPassword,
+                                   RedirectAttributes redirectAttributes) {
+
+        String error = validarPassword(nuevaPassword, nuevaPassword);
+        if (error != null) {
+            redirectAttributes.addFlashAttribute("error", error);
+            return "redirect:/usuarios";
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        usuario.setPassword(passwordEncoder.encode(nuevaPassword));
+        usuarioRepository.save(usuario);
+
+        redirectAttributes.addFlashAttribute("success",
+                "Contraseña de '" + usuario.getUsername() + "' reseteada correctamente.");
         return "redirect:/usuarios";
     }
 
@@ -86,19 +106,16 @@ public class UsuarioController {
     public String eliminar(@PathVariable Integer id,
                            RedirectAttributes redirectAttributes) {
         Usuario actual = securityUtils.getUsuarioActual();
-
-        // No se puede borrar a uno mismo
         if (actual.getId().equals(id)) {
             redirectAttributes.addFlashAttribute("error", "No podés eliminar tu propio usuario.");
             return "redirect:/usuarios";
         }
-
         usuarioRepository.deleteById(id);
         redirectAttributes.addFlashAttribute("success", "Usuario eliminado.");
         return "redirect:/usuarios";
     }
 
-    // ── GET /perfil — cualquier usuario logueado ──────────────────────────────
+    // ── GET /perfil ───────────────────────────────────────────────────────────
 
     @GetMapping("/perfil")
     public String perfil(Model model) {
@@ -111,24 +128,20 @@ public class UsuarioController {
         return "layouts/main";
     }
 
-    // ── POST /perfil/cambiar-password — cualquier usuario logueado ────────────
+    // ── POST /perfil/cambiar-password ─────────────────────────────────────────
 
     @PostMapping("/perfil/cambiar-password")
-    public String cambiarPassword(
-            @RequestParam String passwordActual,
-            @RequestParam String passwordNueva,
-            @RequestParam String confirmar,
-            RedirectAttributes redirectAttributes) {
-
+    public String cambiarPassword(@RequestParam String passwordActual,
+                                  @RequestParam String passwordNueva,
+                                  @RequestParam String confirmar,
+                                  RedirectAttributes redirectAttributes) {
         Usuario usuario = securityUtils.getUsuarioActual();
 
-        // Verificar que la contraseña actual es correcta
         if (!passwordEncoder.matches(passwordActual, usuario.getPassword())) {
             redirectAttributes.addFlashAttribute("error", "La contraseña actual es incorrecta.");
             return "redirect:/perfil";
         }
 
-        // Validar nueva contraseña
         String error = validarPassword(passwordNueva, confirmar);
         if (error != null) {
             redirectAttributes.addFlashAttribute("error", error);
@@ -137,27 +150,23 @@ public class UsuarioController {
 
         usuario.setPassword(passwordEncoder.encode(passwordNueva));
         usuarioRepository.save(usuario);
-
         redirectAttributes.addFlashAttribute("success", "Contraseña actualizada correctamente.");
         return "redirect:/perfil";
     }
 
-    // ── POST /perfil/actualizar — cambiar nombre del gimnasio ─────────────────
+    // ── POST /perfil/actualizar ───────────────────────────────────────────────
 
     @PostMapping("/perfil/actualizar")
-    public String actualizarPerfil(
-            @RequestParam(required = false) String nombreGimnasio,
-            RedirectAttributes redirectAttributes) {
-
+    public String actualizarPerfil(@RequestParam(required = false) String nombreGimnasio,
+                                   RedirectAttributes redirectAttributes) {
         Usuario usuario = securityUtils.getUsuarioActual();
         usuario.setNombreGimnasio(nombreGimnasio);
         usuarioRepository.save(usuario);
-
         redirectAttributes.addFlashAttribute("success", "Perfil actualizado.");
         return "redirect:/perfil";
     }
 
-    // ── Validación de contraseña ──────────────────────────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private String validarPassword(String password, String confirmar) {
         if (password == null || password.length() < 8)
@@ -166,8 +175,6 @@ public class UsuarioController {
             return "Las contraseñas no coinciden.";
         return null;
     }
-
-    // ── Métodos de pago por defecto para cada usuario nuevo ──────────────────
 
     private void crearMetodosIniciales(Usuario usuario) {
         crearMetodo("NO_ESPECIFICADO", BigDecimal.ZERO,        usuario);

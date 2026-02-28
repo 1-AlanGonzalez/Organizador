@@ -11,8 +11,8 @@ public class LoginController {
         return "login";
     }
 
-    @GetMapping("/home")
-    public String home() {
-        return "redirect:/dashboard";
+    @GetMapping("/olvide-password")
+    public String olvidePassword() {
+        return "olvide-password";
     }
 }

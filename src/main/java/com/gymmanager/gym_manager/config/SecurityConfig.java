@@ -24,14 +24,14 @@ public class SecurityConfig {
         http
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/styles.css", "/js/**", "/images/logo/**")
-                    .permitAll()
-
-                // Solo el ADMIN puede gestionar usuarios
-                .requestMatchers("/usuarios/**")
-                    .hasRole("ADMIN")
-
-                // Todo lo demás requiere estar autenticado (ADMIN o USER)
+                .requestMatchers(
+                    "/login",
+                    "/olvide-password",   // ← pública, sin login
+                    "/styles.css",
+                    "/js/**",
+                    "/images/logo/**"
+                ).permitAll()
+                .requestMatchers("/usuarios/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -42,10 +42,9 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutSuccessUrl("/login?logout")
             )
-            // Sesión expira a los 30 minutos de inactividad
             .sessionManagement(session -> session
                 .invalidSessionUrl("/login?session=expirada")
-                .maximumSessions(1)               // un solo login por usuario a la vez
+                .maximumSessions(1)
                 .expiredUrl("/login?session=expirada")
             );
 

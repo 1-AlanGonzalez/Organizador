@@ -7,15 +7,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gymmanager.gym_manager.config.SecurityUtils;
@@ -31,30 +23,30 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ConfiguracionController {
 
     private final ConfiguracionDePagoService configuracionDePagoService;
-    private final ExcelService excelService;
-     private final SecurityUtils securityUtils;
-
+    private final ExcelService               excelService;
+    private final SecurityUtils              securityUtils;
 
     public ConfiguracionController(ConfiguracionDePagoService configuracionDePagoService,
-                                   ExcelService excelService,
-                                   SecurityUtils securityUtils) {
-        this.configuracionDePagoService  = configuracionDePagoService;
-        this.excelService         = excelService;
-        this.securityUtils        = securityUtils;
+                                   ExcelService               excelService,
+                                   SecurityUtils              securityUtils) {
+        this.configuracionDePagoService = configuracionDePagoService;
+        this.excelService               = excelService;
+        this.securityUtils              = securityUtils;
     }
-
-// ── GET /configuracion ────────────────────────────────────────────────────
 
     @GetMapping
     public String configuracion(Model model) {
         Usuario usuario = securityUtils.getUsuarioActual();
-        var activos = configuracionDePagoService.listarActivos(usuario);
+        var activos   = configuracionDePagoService.listarActivos(usuario);
         var inactivos = configuracionDePagoService.listarInactivos(usuario);
 
-        model.addAttribute("config", new Configuracion());
-        model.addAttribute("metodosDePago", activos);
-        model.addAttribute("metodosVacios", activos.isEmpty());
+        Configuracion config = new Configuracion();
+        config.setNombreGimnasio(usuario.getNombreGimnasio()); 
+        model.addAttribute("config", config);
+        model.addAttribute("metodosDePago",    activos);
+        model.addAttribute("metodosVacios",    activos.isEmpty());
         model.addAttribute("metodosInactivos", inactivos);
+        model.addAttribute("usuario",          usuario);  // ← necesario para la tab Mi Cuenta
 
         model.addAttribute("title",     "Gym Manager | Configuración");
         model.addAttribute("header",    "Panel de control / Configuración");
@@ -63,13 +55,11 @@ public class ConfiguracionController {
         model.addAttribute("active",    "configuracion");
         return "layouts/main";
     }
-    // SISTEMA DE TICKETS ENDPOINT
-  // ── POST /configuracion/guardar/tickets ───────────────────────────────────
+
     @PostMapping("/tickets")
     public String guardarTickets(@ModelAttribute("config") Configuracion config,
                                  RedirectAttributes redirectAttributes) {
         try {
-            // configuracionService.guardar(config);
             redirectAttributes.addFlashAttribute("success", "Configuración guardada.");
             redirectAttributes.addFlashAttribute("tabActivo", "tickets");
         } catch (Exception e) {
@@ -78,8 +68,6 @@ public class ConfiguracionController {
         }
         return "redirect:/configuracion";
     }
-    // ENDPOINT PARA PAGOS
-
 
     @PostMapping("/guardar/pagos")
     public String guardarPagos(
@@ -88,7 +76,6 @@ public class ConfiguracionController {
             @RequestParam(value = "nuevoNombre",   required = false) List<String>     nuevosNombres,
             @RequestParam(value = "nuevoRecargo",  required = false) List<BigDecimal> nuevosRecargoList,
             RedirectAttributes redirectAttributes) {
-
         try {
             Usuario usuario = securityUtils.getUsuarioActual();
 
@@ -113,7 +100,6 @@ public class ConfiguracionController {
 
             redirectAttributes.addFlashAttribute("success", "Métodos de pago guardados correctamente.");
             redirectAttributes.addFlashAttribute("tabActivo", "pagos");
-
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             redirectAttributes.addFlashAttribute("tabActivo", "pagos");
@@ -123,7 +109,7 @@ public class ConfiguracionController {
         }
         return "redirect:/configuracion";
     }
-    
+
     @DeleteMapping("/metodos/{idMetodo}")
     @ResponseBody
     public ResponseEntity<Void> desactivarMetodo(@PathVariable Integer idMetodo) {
@@ -134,7 +120,6 @@ public class ConfiguracionController {
             return ResponseEntity.status(409).build();
         }
     }
-    // ── PATCH /configuracion/metodos/{idMetodo}/reactivar ────────────────────
 
     @PatchMapping("/metodos/{idMetodo}/reactivar")
     @ResponseBody
@@ -147,8 +132,6 @@ public class ConfiguracionController {
         }
     }
 
-        // ── DELETE /configuracion/metodos/{idMetodo}/permanente ──────────────────
-
     @DeleteMapping("/metodos/{idMetodo}/permanente")
     @ResponseBody
     public ResponseEntity<Void> eliminarPermanente(@PathVariable Integer idMetodo) {
@@ -159,17 +142,14 @@ public class ConfiguracionController {
             return ResponseEntity.status(409).build();
         }
     }
-    
-    @GetMapping("/exportar")
-    public void exportar(
-            @RequestParam String       entidad,
-            @RequestParam List<String> columnas,
-            HttpServletResponse        response) throws IOException {
 
+    @GetMapping("/exportar")
+    public void exportar(@RequestParam String       entidad,
+                         @RequestParam List<String> columnas,
+                         HttpServletResponse        response) throws IOException {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition",
                 "attachment; filename=" + entidad.toLowerCase() + ".xlsx");
-
         excelService.exportar(entidad, columnas, response);
     }
 

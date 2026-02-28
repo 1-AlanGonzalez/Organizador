@@ -104,7 +104,7 @@ public class ClientesController {
                             Integer actId = Integer.parseInt(idStr);
                             fechasPorActividad.put(actId, LocalDate.parse(value));
                         } catch (Exception e) {
-                            System.out.println("Error parseando fecha para clave: " + key + " → " + e.getMessage());
+                            // System.out.println("Error parseando fecha para clave: " + key + " → " + e.getMessage());
                         }
                     }
                 });

@@ -298,3 +298,7 @@ function escapeHtml(text) {
     d.appendChild(document.createTextNode(text));
     return d.innerHTML;
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    updatePreview(); 
+});
