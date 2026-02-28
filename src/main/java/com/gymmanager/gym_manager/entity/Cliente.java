@@ -43,6 +43,11 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ActividadCliente> inscripciones = new HashSet<>();
 
+    // AÑADIDO PARA CREAR CADA USUARIO
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
     public Cliente(String nombre, String apellido, String dni, String telefono) {
         this.nombre = nombre;
         this.apellido = apellido;

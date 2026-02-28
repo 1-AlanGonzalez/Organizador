@@ -1,0 +1,27 @@
+<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2 animate-entry">
+
+    <!-- Lista de usuarios -->
+<table>
+  <tr th:each="u : ${usuarios}">
+    <td th:text="${u.username}"></td>
+    <td th:text="${u.nombreGimnasio}"></td>
+    <td>
+      <form th:action="@{/usuarios/eliminar/{id}(id=${u.id})}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit">Eliminar</button>
+      </form>
+    </td>
+  </tr>
+</table>
+
+<!-- Formulario crear usuario -->
+<form th:action="@{/usuarios/crear}" method="post">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+  <input type="text"     name="username"      placeholder="Usuario"          required/>
+  <input type="text"     name="nombreGimnasio" placeholder="Nombre del gym" />
+  <input type="password" name="password"      placeholder="Contraseña"       required/>
+  <button type="submit">Crear usuario</button>
+</form>
+    </div>
+
+</div>

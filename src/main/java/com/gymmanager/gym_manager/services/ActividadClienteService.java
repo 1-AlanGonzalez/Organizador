@@ -11,6 +11,7 @@ import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.EstadoInscripcion;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.TipoDeCobro;
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
 import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
 
@@ -49,9 +50,11 @@ public class ActividadClienteService {
         Si las validaciones pasan, se crea una nueva inscripción activa y la añade a el conjunto de inscripciones del cliente (entidad)
     */
 
-    public ActividadCliente inscribirCliente(Cliente cliente, Actividad actividad, LocalDate fechaInicio, TipoDeCobro tipoCobro){
-        boolean yaEstaInscripto = actividadClienteRepository.existsByClienteAndActividadAndEstado(cliente, actividad, EstadoInscripcion.ACTIVA);
-
+     public ActividadCliente inscribirCliente(Cliente cliente, Actividad actividad,
+                                              LocalDate fechaInicio, TipoDeCobro tipoCobro,
+                                              Usuario usuario) {
+         boolean yaEstaInscripto = actividadClienteRepository
+                    .existsByClienteAndActividadAndEstado(cliente, actividad, EstadoInscripcion.ACTIVA);
         if(yaEstaInscripto){
             throw new RuntimeException("El cliente ya esta inscripto en esta actividad");
         }
@@ -61,35 +64,36 @@ public class ActividadClienteService {
             throw new RuntimeException("No hay cupos disponibles para esta actividad");
         }
         
-        // Ésta línea no me permitía agregar clientes que pagaran el plan DIARIO por actividad.getPrecio()
-        // ActividadCliente inscripcion = new ActividadCliente(fechaInicio, actividad.getPrecio(), cliente, actividad, tipoCobro);
-
-        BigDecimal costoDeterminado;
-        /*
-         * Determino si el tipoCobro asignado es el diario para obtener su precio
-         * Si no lo es, y por casualidad no se cargó, atuomaticamente hago un fallback al precio mensual
-         */
-        if (tipoCobro == TipoDeCobro.DIARIO) {
-            costoDeterminado = actividad.getPrecioDiario(); 
+        // BigDecimal costoDeterminado;
+        // if (tipoCobro == TipoDeCobro.DIARIO) {
+        //     costoDeterminado = actividad.getPrecioDiario(); 
             
-            if (costoDeterminado == null) {
-                costoDeterminado = actividad.getPrecio(); 
-            }
+        //     if (costoDeterminado == null) {
+        //         costoDeterminado = actividad.getPrecio(); 
+        //     }
+        // } else {
+        //     costoDeterminado = actividad.getPrecio();
+        // }
+
+        BigDecimal costo;
+        if (tipoCobro == TipoDeCobro.DIARIO) {
+            costo = actividad.getPrecioDiario() != null
+                    ? actividad.getPrecioDiario()
+                    : actividad.getPrecio();
         } else {
-            costoDeterminado = actividad.getPrecio();
+            costo = actividad.getPrecio();
         }
-        ActividadCliente inscripcion = new ActividadCliente(fechaInicio, costoDeterminado, cliente, actividad, tipoCobro);
+
+        ActividadCliente inscripcion = new ActividadCliente(fechaInicio, costo, cliente, actividad, tipoCobro);
 
         cliente.agregarInscripcion(inscripcion); 
         
-        /* bueno agregado, a la hora de que inscribe al cliente luego el flujo es que se genere el pago */
-        
         MetodoDePago metodoPago = metodoDePagoRepository
-        .findByNombre("NO_ESPECIFICADO")
-        .orElseThrow(() -> new RuntimeException("Metodo de pago no encontrado"));
+                        .findByNombreAndUsuario("NO_ESPECIFICADO", usuario)
+                        .orElseThrow(() -> new RuntimeException(
+                                "Método de pago 'NO_ESPECIFICADO' no encontrado para este usuario."));
 
         inscripcion.generarPago(fechaInicio,metodoPago);
-        /* Si genero la inscripcion */        
 
         return actividadClienteRepository.save(inscripcion);
     }
@@ -106,7 +110,6 @@ public class ActividadClienteService {
         ActividadCliente inscripcion = actividadClienteRepository.findByClienteAndActividadAndEstado(cliente, actividad, EstadoInscripcion.ACTIVA).orElseThrow(()-> new RuntimeException("El cliente no tiene una inscripción activa en esta actividad"));
         
         cliente.darseDeBajaAInscripcion(inscripcion);
-
         return actividadClienteRepository.save(inscripcion);
 
     }

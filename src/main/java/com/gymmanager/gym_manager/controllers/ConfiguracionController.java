@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.Configuracion;
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.services.ConfiguracionDePagoService;
-import com.gymmanager.gym_manager.services.ConfiguracionService;
 import com.gymmanager.gym_manager.services.ExcelService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,24 +32,28 @@ public class ConfiguracionController {
 
     private final ConfiguracionDePagoService configuracionDePagoService;
     private final ExcelService excelService;
+     private final SecurityUtils securityUtils;
 
-    public ConfiguracionController(ConfiguracionService configuracionService,
-                                   ConfiguracionDePagoService configuracionDePagoService,
-                                   ExcelService excelService) {
+
+    public ConfiguracionController(ConfiguracionDePagoService configuracionDePagoService,
+                                   ExcelService excelService,
+                                   SecurityUtils securityUtils) {
         this.configuracionDePagoService  = configuracionDePagoService;
         this.excelService         = excelService;
+        this.securityUtils        = securityUtils;
     }
 
 // ── GET /configuracion ────────────────────────────────────────────────────
 
     @GetMapping
     public String configuracion(Model model) {
-        var activos   = configuracionDePagoService.listarActivos();
-        var inactivos = configuracionDePagoService.listarInactivos();
+        Usuario usuario = securityUtils.getUsuarioActual();
+        var activos = configuracionDePagoService.listarActivos(usuario);
+        var inactivos = configuracionDePagoService.listarInactivos(usuario);
 
-        model.addAttribute("config",           new Configuracion());
-        model.addAttribute("metodosDePago",    activos);
-        model.addAttribute("metodosVacios",    activos.isEmpty());
+        model.addAttribute("config", new Configuracion());
+        model.addAttribute("metodosDePago", activos);
+        model.addAttribute("metodosVacios", activos.isEmpty());
         model.addAttribute("metodosInactivos", inactivos);
 
         model.addAttribute("title",     "Gym Manager | Configuración");
@@ -56,25 +61,21 @@ public class ConfiguracionController {
         model.addAttribute("vista",     "configuracion/configuracion");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active",    "configuracion");
-
         return "layouts/main";
     }
-
     // SISTEMA DE TICKETS ENDPOINT
   // ── POST /configuracion/guardar/tickets ───────────────────────────────────
     @PostMapping("/tickets")
-    public String guardarTickets(
-            @ModelAttribute("config") Configuracion config,
-            RedirectAttributes redirectAttributes) {
-
+    public String guardarTickets(@ModelAttribute("config") Configuracion config,
+                                 RedirectAttributes redirectAttributes) {
         try {
             // configuracionService.guardar(config);
-
             redirectAttributes.addFlashAttribute("success", "Configuración guardada.");
+            redirectAttributes.addFlashAttribute("tabActivo", "tickets");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("tabActivo", "tickets");
         }
-
         return "redirect:/configuracion";
     }
     // ENDPOINT PARA PAGOS
@@ -89,10 +90,13 @@ public class ConfiguracionController {
             RedirectAttributes redirectAttributes) {
 
         try {
+            Usuario usuario = securityUtils.getUsuarioActual();
+
             if (configIds != null) {
                 for (int i = 0; i < configIds.size(); i++) {
-                    BigDecimal recargo = safeGet(configRecargoList, i, BigDecimal.ZERO);
-                    configuracionDePagoService.actualizarRecargo(configIds.get(i), recargo);
+                    configuracionDePagoService.actualizarRecargo(
+                            configIds.get(i),
+                            safeGet(configRecargoList, i, BigDecimal.ZERO));
                 }
             }
 
@@ -100,8 +104,10 @@ public class ConfiguracionController {
                 for (int i = 0; i < nuevosNombres.size(); i++) {
                     String nombre = nuevosNombres.get(i);
                     if (nombre == null || nombre.isBlank()) continue;
-                    BigDecimal recargo = safeGet(nuevosRecargoList, i, BigDecimal.ZERO);
-                    configuracionDePagoService.crearMetodoConRecargo(nombre, recargo);
+                    configuracionDePagoService.crearMetodoConRecargo(
+                            nombre,
+                            safeGet(nuevosRecargoList, i, BigDecimal.ZERO),
+                            usuario);
                 }
             }
 
@@ -115,7 +121,6 @@ public class ConfiguracionController {
             redirectAttributes.addFlashAttribute("error", "Error al guardar: " + e.getMessage());
             redirectAttributes.addFlashAttribute("tabActivo", "pagos");
         }
-
         return "redirect:/configuracion";
     }
     
@@ -141,6 +146,7 @@ public class ConfiguracionController {
             return ResponseEntity.status(409).build();
         }
     }
+
         // ── DELETE /configuracion/metodos/{idMetodo}/permanente ──────────────────
 
     @DeleteMapping("/metodos/{idMetodo}/permanente")
@@ -153,6 +159,7 @@ public class ConfiguracionController {
             return ResponseEntity.status(409).build();
         }
     }
+    
     @GetMapping("/exportar")
     public void exportar(
             @RequestParam String       entidad,

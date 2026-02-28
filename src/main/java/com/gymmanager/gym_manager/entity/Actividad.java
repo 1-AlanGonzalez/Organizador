@@ -7,9 +7,12 @@ import java.util.Set;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -50,6 +53,12 @@ public class Actividad {
     // Agrego una lista de inscripciones para poder manejar el cupo máximo
     @OneToMany(mappedBy = "actividad")
     private Set<ActividadCliente> inscripciones = new HashSet<>();
+
+
+    // AÑADIDO PARA CREAR CADA USUARIO
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     public Actividad(String nombre, Integer cupoMaximo, BigDecimal precio, BigDecimal precioDiario) {
         this.nombre = nombre;

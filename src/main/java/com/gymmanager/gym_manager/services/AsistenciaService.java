@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.Asistencia;
 import com.gymmanager.gym_manager.entity.EstadoInscripcion;
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.entity.dto.ReporteAsistenciaDTO;
 import com.gymmanager.gym_manager.repository.AsistenciaRepository;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
@@ -79,9 +80,9 @@ public class AsistenciaService {
         }
     }
     
-    public List<ReporteAsistenciaDTO> generarReporteDiario(LocalDate fecha, Integer idActividadFiltro) {
+    public List<ReporteAsistenciaDTO> generarReporteDiario(LocalDate fecha, Integer idActividadFiltro, Usuario usuario) {
     // 1. Buscamos TODAS las inscripciones activas (Gente que paga)
-    List<ActividadCliente> inscripciones = clienteActividadRepository.findByEstado(EstadoInscripcion.ACTIVA);
+    List<ActividadCliente> inscripciones = clienteActividadRepository.findByEstadoAndCliente_Usuario(EstadoInscripcion.ACTIVA, usuario);
 
     // 2. Filtramos por actividad si el usuario seleccionó una en el select
     if (idActividadFiltro != null) {

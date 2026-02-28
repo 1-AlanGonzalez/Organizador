@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Error | Gym Manager</title>
+    <link rel="stylesheet" th:href="@{/styles.css}"/>
+    <style>
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            text-align: center;
+            padding: 2rem;
+        }
+        .error-code {
+            font-size: 6rem;
+            font-weight: bold;
+            color: #e74c3c;
+            line-height: 1;
+        }
+        .error-titulo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem;
+        }
+        .error-mensaje {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        .btn-volver {
+            background: #3498db;
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .btn-volver:hover { background: #2980b9; }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-code"  th:text="${codigo}">500</div>
+        <div class="error-titulo"  th:text="${titulo}">Algo salió mal</div>
+        <p   class="error-mensaje" th:text="${mensaje}">Ocurrió un error inesperado.</p>
+        <a class="btn-volver" th:href="@{/dashboard}">← Volver al inicio</a>
+    </div>
+</body>
+</html>

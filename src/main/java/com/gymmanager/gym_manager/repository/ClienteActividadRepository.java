@@ -10,6 +10,7 @@ import com.gymmanager.gym_manager.entity.Actividad;
 import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.EstadoInscripcion;
+import com.gymmanager.gym_manager.entity.Usuario;
 
 public interface ClienteActividadRepository extends JpaRepository<ActividadCliente, Integer> {
 
@@ -39,6 +40,7 @@ public interface ClienteActividadRepository extends JpaRepository<ActividadClien
     List<ActividadCliente> findAllActivas();
 
     List<ActividadCliente> findByEstado(EstadoInscripcion estadoInscripcion);
+    List<ActividadCliente> findByEstadoAndCliente_Usuario(EstadoInscripcion estado, Usuario usuario);
 
 }
 

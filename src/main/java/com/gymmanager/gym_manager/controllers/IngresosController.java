@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.entity.dto.DeudaDTO;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
 import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
@@ -29,65 +31,72 @@ public class IngresosController {
     private final PagoService pagoService;
     private final MetodoDePagoRepository metodoDePagoRepository;
     private final ConfiguracionDePagoService configuracionDePagoService;
+    private final SecurityUtils securityUtils; 
 
-    public IngresosController(ConfiguracionDePagoService configuracionDePagoService, ClienteRepository clienteRepository, PagoService pagoService, PagoRepository pagoRepository, MetodoDePagoRepository metodoDePagoRepository) {
-        this.pagoRepository = pagoRepository;
-        this.pagoService = pagoService;
-        this.metodoDePagoRepository = metodoDePagoRepository;
-        this.clienteRepository = clienteRepository;
-        this.configuracionDePagoService = configuracionDePagoService;
+
+    public IngresosController(ConfiguracionDePagoService configuracionDePagoService, 
+                                ClienteRepository clienteRepository, 
+                                PagoService pagoService, 
+                                PagoRepository pagoRepository, 
+                                MetodoDePagoRepository metodoDePagoRepository,
+                                SecurityUtils securityUtils) {
+            this.pagoRepository = pagoRepository;
+            this.pagoService = pagoService;
+            this.metodoDePagoRepository = metodoDePagoRepository;
+            this.clienteRepository = clienteRepository;
+            this.configuracionDePagoService = configuracionDePagoService;
+            this.securityUtils = securityUtils;
     }
-
 
     @GetMapping
     public String ingresos(Model model) {
+        Usuario usuario = securityUtils.getUsuarioActual();
 
-    BigDecimal total = pagoRepository.sumTotalRecaudado();
-    BigDecimal pendientes = pagoRepository.sumTotalPendiente();
+        // ── Totales — todos filtrados por usuario
+        BigDecimal total      = pagoRepository.sumTotalRecaudado(usuario);
+        BigDecimal pendientes = pagoRepository.sumTotalPendiente(usuario);
 
-    MetodoDePago efectivo = metodoDePagoRepository.findByNombre("EFECTIVO").orElse(null);
-    MetodoDePago transferencia = metodoDePagoRepository.findByNombre("TRANSFERENCIA").orElse(null);
+        // ── Por método de pago ────────────────────────────────────────────────
+        MetodoDePago efectivo      = metodoDePagoRepository.findByNombreAndUsuario("EFECTIVO", usuario).orElse(null);
+        MetodoDePago transferencia = metodoDePagoRepository.findByNombreAndUsuario("TRANSFERENCIA", usuario).orElse(null);
 
-    BigDecimal totalEfectivo = efectivo != null
-            ? pagoRepository.sumPorMetodo(efectivo)
-            : BigDecimal.ZERO;
+       BigDecimal totalEfectivo = efectivo != null
+                ? pagoRepository.sumPorMetodo(efectivo, usuario) : BigDecimal.ZERO;
+        BigDecimal totalTransferencia = transferencia != null
+                ? pagoRepository.sumPorMetodo(transferencia, usuario) : BigDecimal.ZERO;
+                
 
-    BigDecimal totalTransferencia = transferencia != null
-            ? pagoRepository.sumPorMetodo(transferencia)
-            : BigDecimal.ZERO;
+        model.addAttribute("ingresosTotales", total != null ? total : BigDecimal.ZERO);
+        model.addAttribute("ingresosEfectivo", totalEfectivo);
+        model.addAttribute("ingresosTransferencia", totalTransferencia);
+        model.addAttribute("ingresosPendientes", pendientes != null ? pendientes : BigDecimal.ZERO);
 
-    model.addAttribute("ingresosTotales", total != null ? total : BigDecimal.ZERO);
-    model.addAttribute("ingresosEfectivo", totalEfectivo);
-    model.addAttribute("ingresosTransferencia", totalTransferencia);
-    model.addAttribute("ingresosPendientes", pendientes != null ? pendientes : BigDecimal.ZERO);
+        // ── Gráfico — filtrado por usuario ────────────────────────────────────
+        model.addAttribute("datosGrafico", pagoRepository.obtenerIngresosMensuales(usuario.getId()));
+        model.addAttribute("categoriasGrafico", Arrays.asList(
+                "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+                "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"));
 
-    model.addAttribute("datosGrafico", pagoRepository.obtenerIngresosMensuales());
-    model.addAttribute("categoriasGrafico",
-            Arrays.asList("Ene", "Feb", "Mar", "Abr", "May", "Jun",
-                          "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"));
+       // ── Pagos recientes — solo los del usuario ────────────────────────────
+        model.addAttribute("pagosRecientes", pagoRepository.findByActividadCliente_Cliente_Usuario(usuario));
 
-    model.addAttribute("pagosRecientes", pagoRepository.findAll());
-    model.addAttribute("title", "Gym Manager | Ingresos");
-    model.addAttribute("header", "Contabilidad / Resumen de Ingresos");
-    model.addAttribute("vista", "ingresos");
-    model.addAttribute("fragmento", "contenido");
-    model.addAttribute("active", "ingresos");
+        model.addAttribute("title", "Gym Manager | Ingresos");
+        model.addAttribute("header", "Contabilidad / Resumen de Ingresos");
+        model.addAttribute("vista", "ingresos");
+        model.addAttribute("fragmento", "contenido");
+        model.addAttribute("active", "ingresos");
 
-    return "layouts/main";
-}
-    // /nuevo
+        return "layouts/main";
+    }
 
     @GetMapping("/nuevo")
     
     public String nuevoIngreso(Model model) {
-        // var metodos = configuracionDePagoService.listarActivos();  
+        Usuario usuario = securityUtils.getUsuarioActual();
 
-        // model.addAttribute("metodosPago", metodos);
-        // model.addAttribute("metodosPago", metodoDePagoRepository.findAll());
-        model.addAttribute("metodosPago", configuracionDePagoService.listarActivos());
+        model.addAttribute("metodosPago", configuracionDePagoService.listarActivos(usuario));
+        model.addAttribute("clientes",    clienteRepository.findByUsuario(usuario));
 
-
-        model.addAttribute("clientes", clienteRepository.findAll());
 
         model.addAttribute("title", "Gym Manager | Nuevo Ingreso");
         model.addAttribute("header", "Contabilidad / Nuevo Ingreso");
@@ -99,35 +108,27 @@ public class IngresosController {
 
 
     @PostMapping("/guardar")
-    public String guardarIngreso(
-        @RequestParam Integer idActividadCliente,
-        @RequestParam Integer metodoPagoId,
-        @RequestParam(required = false) String observaciones,
-        RedirectAttributes flash) {
+        public String guardarIngreso(
+            @RequestParam Integer idActividadCliente,
+            @RequestParam Integer metodoPagoId,
+            @RequestParam(required = false) String observaciones,
+            RedirectAttributes flash) {
 
-    System.out.println("id de la isncripcion = " + idActividadCliente);
-    System.out.println("metodoPagoId = " + metodoPagoId);
-    System.out.println("observaciones = " + observaciones);
-    try {
-        System.out.println("Entre al try");
-        pagoService.procesarPago(idActividadCliente, metodoPagoId, observaciones);
-        
-        System.out.println("Ejecute el metodo procesarPago");
-        flash.addFlashAttribute("success", "Pago registrado correctamente.");
-        System.out.println("se huso el flash");
-    } catch (Exception e) {
-        e.printStackTrace();
-        flash.addFlashAttribute("error", e.getMessage());
+        try {
+            pagoService.procesarPago(idActividadCliente, metodoPagoId, observaciones);
+            flash.addFlashAttribute("success", "Pago registrado correctamente.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            flash.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/ingresos";
     }
 
-    return "redirect:/ingresos";
-}
-// Agregado hoy 13/2
-// Endpoint para obtener deudas
+    // Endpoint para obtener deudas
     @GetMapping("/deudas")
     @ResponseBody
     public List<DeudaDTO> obtenerDeudas(@RequestParam Integer clienteId) {
-
         return clienteRepository.findById(clienteId)
                 .orElseThrow()
                 .getInscripciones()
@@ -135,8 +136,7 @@ public class IngresosController {
                 .map(insc -> new DeudaDTO(
                         insc.getIdActividadCliente(),
                         insc.getActividad().getNombre(),
-                        insc.calcularAdeudado()
-                ))
+                        insc.calcularAdeudado()))
                 .filter(d -> d.montoAdeudado().compareTo(BigDecimal.ZERO) > 0)
                 .toList();
     }

@@ -2,9 +2,11 @@ package com.gymmanager.gym_manager.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "usuarios")
 public class Usuario {
 
@@ -17,4 +19,15 @@ public class Usuario {
 
     @Column(nullable = false)
     private String password;
+
+    @Column
+    private String nombreGimnasio;
+
+    @Column(nullable = false)
+    private String rol = "ROLE_USER";
+
+    public Usuario(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }

@@ -7,14 +7,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.gymmanager.gym_manager.entity.ConfiguracionDePago;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
+import com.gymmanager.gym_manager.entity.Usuario;
 
 public interface ConfiguracionPagoRepository extends JpaRepository<ConfiguracionDePago, Integer> {
+
     Optional<ConfiguracionDePago> findByMetodoDePagoAndActivoTrue(MetodoDePago metodoDePago);
+    Optional<ConfiguracionDePago> findByMetodoDePagoAndActivoFalse(MetodoDePago metodoDePago);
 
     boolean existsByMetodoDePagoAndActivoTrue(MetodoDePago metodoDePago);
-
     boolean existsByMetodoDePago(MetodoDePago metodoDePago);
-    
-    Optional<ConfiguracionDePago> findByMetodoDePagoAndActivoFalse(MetodoDePago metodoDePago);
-    List<ConfiguracionDePago>     findByActivoFalse();
+
+    List<ConfiguracionDePago> findByActivoFalse();
+
+    // ── NUEVOS: filtrados por usuario — la DB hace el trabajo, no Java ────────
+    List<ConfiguracionDePago> findByActivoTrueAndMetodoDePago_Usuario(Usuario usuario);
+    List<ConfiguracionDePago> findByActivoFalseAndMetodoDePago_Usuario(Usuario usuario);
 }

@@ -166,6 +166,12 @@
                </div>
             </td>
         </tr>
+        <tr th:if="${#lists.isEmpty(clientes)}">
+            <td colspan="3" class="text-center py-5 text-muted">
+                <i class="bi bi-people fs-1 d-block mb-2"></i>
+                    No se encontraron clientes registrados.
+            </td>
+        </tr>
     </tbody>
 </table>
         </div>

@@ -1,120 +1,84 @@
 package com.gymmanager.gym_manager.controllers;
 
 import org.springframework.dao.DataIntegrityViolationException;
-// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.Actividad;
-import com.gymmanager.gym_manager.entity.Dicta;
-import com.gymmanager.gym_manager.entity.Instructor;
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
-import com.gymmanager.gym_manager.repository.DictaRepository;
 import com.gymmanager.gym_manager.repository.InstructorRepository;
-
-import jakarta.transaction.Transactional;
+import com.gymmanager.gym_manager.services.ActividadService;
 
 @Controller
 @RequestMapping("/actividades")
 public class ActividadController {
-    private DictaRepository dictaRepository;
-    private ActividadRepository actividadRepository;
-    private InstructorRepository instructorRepository;
-    public ActividadController(ActividadRepository actividadRepository, InstructorRepository instructorRepository, 
-    DictaRepository dictaRepository
-    ) {
-        this.actividadRepository = actividadRepository;
+
+    private final ActividadRepository  actividadRepository;
+    private final InstructorRepository instructorRepository;
+    private final ActividadService     actividadService;  
+    private final SecurityUtils        securityUtils;
+
+    public ActividadController(ActividadRepository  actividadRepository,
+                               InstructorRepository instructorRepository,
+                               ActividadService     actividadService,
+                               SecurityUtils        securityUtils) {
+        this.actividadRepository  = actividadRepository;
         this.instructorRepository = instructorRepository;
-        this.dictaRepository = dictaRepository;
+        this.actividadService     = actividadService;
+        this.securityUtils        = securityUtils;
     }
 
     @GetMapping
     public String actividades(Model model) {
-        model.addAttribute("actividades", actividadRepository.findAll());
-        model.addAttribute("instructores", instructorRepository.findAll());
-        model.addAttribute("title", "Gym Manager | Actividades");
-        model.addAttribute("header", "Panel de control / Actividades");
-        model.addAttribute("actividad", new Actividad());
-
-        model.addAttribute("vista", "actividades");
+        Usuario usuario = securityUtils.getUsuarioActual();
+        model.addAttribute("actividades",  actividadRepository.findByUsuario(usuario));
+        model.addAttribute("instructores", instructorRepository.findByUsuario(usuario));
+        model.addAttribute("actividad",    new Actividad());
+        model.addAttribute("title",     "Gym Manager | Actividades");
+        model.addAttribute("header",    "Panel de control / Actividades");
+        model.addAttribute("vista",     "actividades");
         model.addAttribute("fragmento", "contenido");
-
-        model.addAttribute("active", "actividades");
-        
+        model.addAttribute("active",    "actividades");
         return "layouts/main";
     }
 
-    // Al guardar la actividad necesito crear un nuevo Dicta para asignar el instructor, dias y horario
-@PostMapping("/guardar")
-// Transactional para que si algo falla en el medio, no quede nada guardado a medias
-@Transactional
-public String guardarActividad(
-        @ModelAttribute Actividad actividad,
-        @RequestParam Integer instructorId,
-        @RequestParam String dias,
-        @RequestParam String horario
-) {
-    Instructor instructor = instructorRepository.findById(instructorId)
-            .orElseThrow(() -> new RuntimeException("Instructor no encontrado"));
-
-    // 1️⃣ GUARDO PRIMERO LA ACTIVIDAD (si es nueva)
-    if (actividad.getIdActividad() == null) {
-        actividad = actividadRepository.save(actividad);
+    // ← punto 9: sin @Transactional — eso le corresponde al service
+    @PostMapping("/guardar")
+    public String guardarActividad(
+            @ModelAttribute Actividad actividad,
+            @RequestParam Integer instructorId,
+            @RequestParam String dias,
+            @RequestParam String horario,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Usuario usuario = securityUtils.getUsuarioActual();
+            actividadService.guardarActividad(actividad, instructorId, dias, horario, usuario);
+            redirectAttributes.addFlashAttribute("success", "Actividad guardada correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/actividades";
     }
 
-    // 2️⃣ BUSCO SI YA EXISTE EL DICTA
-    Dicta dicta = dictaRepository
-            .findByActividadAndInstructor(actividad, instructor)
-            .orElse(new Dicta());
-
-    dicta.setActividad(actividad);
-    dicta.setInstructor(instructor);
-    dicta.setDias(dias);
-    dicta.setHorario(horario);
-
-    dictaRepository.save(dicta);
-
-    return "redirect:/actividades";
-}
-
     @PostMapping("/eliminar/{id}")
-    public String eliminarActividad(
-            @PathVariable Integer id,
-            RedirectAttributes redirectAttributes
-    ) {
+    public String eliminarActividad(@PathVariable Integer id,
+                                    RedirectAttributes redirectAttributes) {
         Actividad actividad = actividadRepository.findById(id).orElse(null);
-
         if (actividad == null) {
-            redirectAttributes.addFlashAttribute(
-                "error", "Actividad no encontrada"
-            );
+            redirectAttributes.addFlashAttribute("error", "Actividad no encontrada");
             return "redirect:/actividades";
         }
-
         try {
-            // Intentamos borrarla
             actividadRepository.delete(actividad);
-            
-            redirectAttributes.addFlashAttribute(
-                "success", "Actividad eliminada correctamente"
-            );
-            
+            redirectAttributes.addFlashAttribute("success", "Actividad eliminada correctamente");
         } catch (DataIntegrityViolationException e) {
-            // Si la base de datos se queja por la clave foránea, atajamos el error acá
-            redirectAttributes.addFlashAttribute(
-                "error", "No se puede eliminar la actividad porque hay clientes inscriptos en ella."
-            );
+            redirectAttributes.addFlashAttribute("error",
+                    "No se puede eliminar la actividad porque hay clientes inscriptos en ella.");
         }
-
         return "redirect:/actividades";
     }
 }
-
-

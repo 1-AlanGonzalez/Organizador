@@ -888,3 +888,135 @@ body.modo-eliminar-activo .btn-eliminar {
     transform: scale(1);
 }
 
+
+
+/* REPORTES EXCEL */
+/* Variables locales de color */
+.text-purple { color: #8b5cf6; }
+.bg-blue-light { background-color: #eff6ff; }
+.bg-green-light { background-color: #f0fdf4; }
+.bg-orange-light { background-color: #fff7ed; }
+.bg-purple-light { background-color: #f5f3ff; }
+.bg-gray-light { background-color: #f8fafc; }
+.text-xs { font-size: 0.75rem; }
+
+/* Tarjetas de Selección a la Izquierda */
+.report-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.report-option:hover {
+    background-color: #f8f9fa;
+}
+
+/* Estado seleccionado múltiple */
+.report-option.selected {
+    background-color: #fff;
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Iconos de las opciones */
+.icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+/* * SOLUCIÓN AL SALTO (LAYOUT SHIFT): 
+ * El icono de check siempre existe y ocupa espacio, 
+ * solo que es transparente y un poco más chico cuando no está seleccionado.
+ */
+.check-icon {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.2s ease;
+}
+
+.report-option.selected .check-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Checkboxes Personalizados para las columnas */
+.field-checkbox {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    height: 100%;
+    font-size: 0.85rem;
+}
+
+.field-checkbox:hover {
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+}
+
+.field-checkbox:has(input:checked) {
+    border-color: var(--sidebar-active, #0d6efd);
+    background-color: #f0fdfa; 
+    color: var(--sidebar-active, #0d6efd);
+    font-weight: 500;
+}
+
+.field-checkbox input {
+    margin-right: 8px;
+    accent-color: var(--sidebar-active, #0d6efd);
+    width: 14px;
+    height: 14px;
+}
+
+/* Botón Exportar */
+.btn-exportar {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    transition: transform 0.2s;
+}
+.btn-exportar:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3) !important;
+}
+.btn-exportar:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Fondo decorativo panel derecho */
+.bg-pattern {
+    position: absolute;
+    top: 0; right: 0;
+    width: 200px;
+    height: 200px;
+    background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

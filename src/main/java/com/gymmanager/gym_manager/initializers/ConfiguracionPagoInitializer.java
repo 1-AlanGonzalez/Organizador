@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 
 import com.gymmanager.gym_manager.entity.ConfiguracionDePago;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.repository.ConfiguracionPagoRepository;
 import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
+import com.gymmanager.gym_manager.repository.UsuarioRepository;
 
 
 // el CommandLineRunner:
@@ -33,45 +35,53 @@ import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
 public class ConfiguracionPagoInitializer implements  CommandLineRunner {
     private final MetodoDePagoRepository metodoDePagoRepository;
     private final ConfiguracionPagoRepository configuracionPagoRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public ConfiguracionPagoInitializer(MetodoDePagoRepository metodoDePagoRepository, ConfiguracionPagoRepository configuracionPagoRepository) {
+    public ConfiguracionPagoInitializer(MetodoDePagoRepository metodoDePagoRepository,
+                                            ConfiguracionPagoRepository configuracionPagoRepository,
+                                            UsuarioRepository usuarioRepository) {
     this.metodoDePagoRepository = metodoDePagoRepository;
     this.configuracionPagoRepository = configuracionPagoRepository;
+    this.usuarioRepository = usuarioRepository;
     }
 
     //Este método se ejecuta SOLO al iniciar la aplicación
     @Override
     public void run(String... args) {
-        crearSiNoExiste("NO_ESPECIFICADO", BigDecimal.ZERO);
-        crearSiNoExiste("EFECTIVO", BigDecimal.ZERO);
-        crearSiNoExiste("TRANSFERENCIA", BigDecimal.ZERO);
-        crearSiNoExiste("TARJETA/CREDITO", BigDecimal.valueOf(15));
+        Usuario admin = usuarioRepository.findByUsername("admin").orElse(null);
+        if (admin == null) {
+            System.out.println("[ConfiguracionPagoInitializer] Usuario admin no encontrado, saltando inicialización.");
+            return;
+        }
+
+        crearSiNoExiste("NO_ESPECIFICADO", BigDecimal.ZERO, admin);
+        crearSiNoExiste("EFECTIVO", BigDecimal.ZERO, admin);
+        crearSiNoExiste("TRANSFERENCIA", BigDecimal.ZERO, admin);
+        crearSiNoExiste("TARJETA/CREDITO", BigDecimal.valueOf(15), admin);
 
 
     }
 
-    private void crearSiNoExiste(String nombre, BigDecimal porcentaje) {
-
-    MetodoDePago metodo = metodoDePagoRepository
-            .findByNombre(nombre)
-            .orElseGet(() -> {
-                MetodoDePago nuevo = new MetodoDePago(nombre);
-                return metodoDePagoRepository.save(nuevo);
-            });
+    private void crearSiNoExiste(String nombre, BigDecimal porcentaje, Usuario usuario) {
+        // Buscamos por nombre Y usuario para no mezclar datos entre usuarios
+        MetodoDePago metodo = metodoDePagoRepository
+                .findByNombreAndUsuario(nombre, usuario)
+                .orElseGet(() -> {
+                    MetodoDePago nuevo = new MetodoDePago(nombre);
+                    nuevo.setUsuario(usuario);  
+                    return metodoDePagoRepository.save(nuevo);
+                });
 
     boolean existeConfig = configuracionPagoRepository.existsByMetodoDePago(metodo);
-    System.out.println(existeConfig);
-    System.out.println(metodo.getNombre());
     if (!existeConfig) {
         ConfiguracionDePago config = new ConfiguracionDePago();
         config.setMetodoDePago(metodo);
         config.cambiarOAgregarRecargo(porcentaje);
         config.activarMetodo();
 
-        System.out.println(config.getMetodoDePago().getNombre());
-        System.out.println(config.getActivo());
-        System.out.println(config.getPorcentajeRecargo());
         configuracionPagoRepository.save(config);
+        System.out.println("[Init] Método creado: " + nombre + " para usuario: " + usuario.getUsername());
+
     }
 }
 }
