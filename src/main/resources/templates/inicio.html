@@ -20,7 +20,7 @@
                     <h6 class="text-white mt-1 fw-bold fs-5" th:text="${#strings.capitalize(#dates.format(#dates.createNow(), 'MMMM'))}">Mes</h6>
                 </div>
                 <div class="icon-box-glass" style="width: 42px; height: 42px; font-size: 1.2rem;">
-                    <i class="bi bi-wallet2"></i>
+                    <i data-lucide="wallet"></i>
                 </div>
             </div>
             
@@ -29,7 +29,7 @@
                     th:text="${'$' + #numbers.formatDecimal(totalMesActual, 1, 'POINT', 2, 'COMMA')}">$0.00</h1>
                 
                 <div class="d-flex align-items-center gap-2 text-white-50 small mt-1">
-                    <i class="bi bi-arrow-up-circle-fill text-white"></i>
+                    <i data-lucide="trending-up"></i>
                     <span>Acumulado actual</span>
                 </div>
             </div>
@@ -60,7 +60,7 @@
             <!-- Fila Activos -->
             <div class="d-flex align-items-center gap-2 rounded-3 px-2 py-2 mb-1" style="transition: background .2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
                 <div class="icon-box-light icon-bg-green rounded-3 flex-shrink-0" style="width: 34px; height: 34px; font-size: 0.95rem;">
-                    <i class="bi bi-person-check-fill"></i>
+                    <i data-lucide="user-check"></i>
                 </div>
                 <div class="flex-grow-1">
                     <small class="d-block text-uppercase fw-bold" style="font-size: 0.6rem; color: #94a3b8; line-height: 1;">Activos / Sin deudas</small>
@@ -74,7 +74,7 @@
             <!-- Fila Pendientes -->
             <div class="d-flex align-items-center gap-2 rounded-3 px-2 py-2 mb-2" style="transition: background .2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
                 <div class="icon-box-light icon-bg-orange rounded-3 flex-shrink-0" style="width: 34px; height: 34px; font-size: 0.95rem;">
-                    <i class="bi bi-person-exclamation"></i>
+                    <i data-lucide="user-x"></i>
                 </div>
                 <div class="flex-grow-1">
                     <small class="d-block text-uppercase fw-bold" style="font-size: 0.6rem; color: #94a3b8; line-height: 1;">Pendientes</small>
@@ -112,28 +112,28 @@
             <div class="row g-3">
                 <div class="col-6 h-50">
                     <a th:href="@{/asistencias/tomar}" class="btn-widget text-decoration-none  d-flex flex-column justify-content-center align-items-center text-center p-2">
-                        <i class="bi bi-qr-code-scan mb-2 text-primary fs-4"></i>
+                        <i data-lucide="qr-code"></i>
                         <span class="fw-bold text-dark d-block">Asistencia</span>
                         <small class="text-muted">Tomar asistencia</small>
                     </a>
                 </div>
                 <div class="col-6 h-50">
                     <a th:href="@{/ingresos/nuevo}" class="btn-widget text-decoration-none  d-flex flex-column justify-content-center align-items-center text-center p-2">
-                        <i class="bi bi-cash-coin mb-2 text-success fs-4"></i>
+                        <i data-lucide="banknote-arrow-up"></i>
                         <span class="fw-bold text-dark d-block">Cobrar</span>
                         <small class="text-muted">Registrar pago</small>
                     </a>
                 </div>
                 <div class="col-6 h-50">
                     <a th:href="@{/clientes/nuevo}" class="btn-widget text-decoration-none  d-flex flex-column justify-content-center align-items-center text-center p-2">
-                        <i class="bi bi-person-plus mb-2 text-info fs-4"></i>
+                        <i data-lucide="user-round-plus"></i>
                         <span class="fw-bold text-dark d-block">Nuevo</span>
                         <small class="text-muted">Alta alumno</small>
                     </a>
                 </div>
                 <div class="col-6 h-50">
                     <a th:href="@{/reportes}" class="btn-widget text-decoration-none d-flex flex-column justify-content-center align-items-center text-center p-2">
-                        <i class="bi bi-file-earmark-spreadsheet mb-2 text-secondary fs-4"></i>
+                        <i data-lucide="file-exclamation-point"></i>
                         <span class="fw-bold text-dark d-block">Reportes</span>
                         <small class="text-muted">Exportar Excel</small>
                     </a>

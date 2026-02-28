@@ -148,7 +148,7 @@
                     <i class="bi bi-exclamation-circle me-1"></i> Adeuda
                 </span>
                 <span th:if="${!c.adeuda()}" class="badge bg-success-light text-success border border-success border-opacity-25">
-                    <i class="bi bi-check-circle me-1"></i> Al día
+                    <i data-lucide="check-circle" class="me-1"></i> Al día
                 </span>
             </td>
 
@@ -161,7 +161,7 @@
                             th:data-nombre="${c.nombre} + ' ' + ${c.apellido}"
                             th:data-url="@{/clientes/eliminar}" 
                             onclick="abrirPanelEliminar(this)">
-                        <i class="bi bi-trash"></i>
+                        <i data-lucide="trash"></i>
                     </button>
                </div>
             </td>

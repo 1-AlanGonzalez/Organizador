@@ -1,7 +1,7 @@
 :root {
     --sidebar-bg: #1f2a30;
     --sidebar-active: #2d3f46;
-    --main-bg: #f5f7fa;
+    --main-bg: #f8fafc;
 
     --card-bg: #ffffff;
     --card-shadow: 0 6px 18px rgba(0,0,0,0.06);
@@ -13,7 +13,6 @@
 
 * {
     font-size: 14px;
-    font-family: 'Marko One';
 }
 body {
     background-color: var(--main-bg);
@@ -23,6 +22,9 @@ body {
 html, body {
     height: 100%;
     margin: 0;
+}
+h1, h2, h3, h4 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 main {
     flex-direction: column;
@@ -46,13 +48,19 @@ main {
 Estilos para los enlaces de navegación en el sidebar
 */
 .nav-link {
-    color: #D1D5DB;
-}
-.sidebar .nav-link {
-    color: #cbd5e1;
-    border-radius: 8px;
-    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.75rem 1.20rem;
     font-weight: 500;
+    color: #cbd5e1;
+}
+.nav-link i {
+    width: 15px;
+    height: 15px;
+}
+a {
+    color: var(--sidebar-active);
 }
 /* 
 Estilo para los enlaces de navegación en el sidebar al pasar el mouse
@@ -67,19 +75,13 @@ Estilo para los enlaces de navegación en el sidebar al pasar el mouse
     background-color: var(--sidebar-active);
     color: #fff;
 }
-.sidebar-footer h3 {
-    color: #fff;
-    letter-spacing: 2px;
-}
-.sidebar-footer small {
-    color: #94a3b8;
-}
+
 /* 
 Estilo para los títulos de las secciones
 */
 .section-title {
-    font-size: 0.95rem;
-    font-weight: 600;
+    /* font-size: 0.95rem; */
+    /* font-weight: 600; */
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -91,7 +93,7 @@ Estilo personalizado para las tarjetas
 */
 .custom-card {
     background-color: var(--card-bg);
-    border-radius: 14px;
+    border-radius: 16px;
     box-shadow: var(--card-shadow);
     border: none;         
 }
@@ -392,7 +394,6 @@ Panel de clientes
 }
 
 /* Tipografía */
-.font-marko { font-family: 'Marko One', serif; letter-spacing: 1px; }
 .text-dark-brand { color: var(--brand-dark); }
 .tracking-wide { letter-spacing: 0.05em; font-size: 0.75rem; }
 .text-brand { color: var(--brand-dark); transition: color 0.2s; }
@@ -714,7 +715,6 @@ Panel de clientes
 
 /* Ajuste para que la fecha se vea técnica y limpia */
 .activity-row .badge {
-    font-family: 'Inter', sans-serif; /* Usar tu fuente sans, no la Marko One */
     font-size: 0.75rem;
     letter-spacing: 0.5px;
     color: #64748b !important;
@@ -735,7 +735,6 @@ Panel de clientes
             box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
         }
         .ticket-preview {
-            font-family: 'Courier New', Courier, monospace;
             background: #fff;
             border: 1px dashed #ccc;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);

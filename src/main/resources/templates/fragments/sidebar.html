@@ -8,86 +8,85 @@
             <img th:src="@{/images/logo/logo.png}"
                  alt="Logo Gym Manager"
                  class="img-fluid"
-                 style="max-height:150px;">
+                 style="max-height:160px;">
         </div>
     </div>
     <ul class="nav nav-pills flex-column mb-auto gap-2">
-        
-        <li class="nav-item">
-            <a th:href="@{/dashboard}" 
-               class="nav-link" 
-               th:classappend="${active == 'dashboard'} ? 'active'">
-                <i class="bi bi-grid-1x2-fill me-2"></i>
-                Inicio
-            </a>
-        </li>
 
-        <li class="nav-item">
-            <a th:href="@{/clientes}" 
-               class="nav-link" 
-               th:classappend="${active == 'clientes'} ? 'active'">
-                <i class="bi bi-people-fill me-2"></i>
-                Clientes
-            </a>
-        </li>
+    <li class="nav-item">
+        <a th:href="@{/dashboard}" 
+           class="nav-link" 
+           th:classappend="${active == 'dashboard'} ? 'active'">
+            <i data-lucide="house"></i>
+            Inicio
+        </a>
+    </li>
 
-        <li class="nav-item">
-            <a th:href="@{/asistencias}" 
-               class="nav-link" 
-               th:classappend="${active == 'asistencias'} ? 'active'">
-                <i class="bi bi-qr-code-scan me-2"></i>
-                Asistencias
-            </a>
-        </li>
+    <li class="nav-item">
+        <a th:href="@{/clientes}" 
+           class="nav-link" 
+           th:classappend="${active == 'clientes'} ? 'active'">
+            <i data-lucide="users"></i>
+            Clientes
+        </a>
+    </li>
 
-        <li class="nav-item">
-            <a th:href="@{/actividades}" 
-               class="nav-link" 
-               th:classappend="${active == 'actividades'} ? 'active'">
-                <i class="bi bi-calendar2-week-fill me-2"></i>
-                Actividades
-            </a>
-        </li>
+    <li class="nav-item">
+        <a th:href="@{/asistencias}" 
+           class="nav-link" 
+           th:classappend="${active == 'asistencias'} ? 'active'">
+            <i data-lucide="notepad-text"></i>
+            Asistencias
+        </a>
+    </li>
 
-        <li class="nav-item">
-            <a th:href="@{/instructores}" 
-               class="nav-link" 
-               th:classappend="${active == 'instructores'} ? 'active'">
-                <i class="bi bi-person-badge-fill me-2"></i>
-                Instructores
-            </a>
-        </li>
+    <li class="nav-item">
+        <a th:href="@{/actividades}" 
+           class="nav-link" 
+           th:classappend="${active == 'actividades'} ? 'active'">
+            <i data-lucide="calendar"></i>
+            Actividades
+        </a>
+    </li>
 
-        <li class="nav-item">
-            <a th:href="@{/ingresos}" 
-               class="nav-link" 
-               th:classappend="${active == 'ingresos'} ? 'active'">
-                <i class="bi bi-cash-stack me-2"></i>
-                Ingresos
-            </a>
-        </li>
+    <li class="nav-item">
+        <a th:href="@{/instructores}" 
+           class="nav-link" 
+           th:classappend="${active == 'instructores'} ? 'active'">
+            <i data-lucide="user-cog"></i>
+            Instructores
+        </a>
+    </li>
 
-        <li class="nav-item">
-            <a th:href="@{/configuracion}" 
-               class="nav-link" 
-               th:classappend="${active == 'configuracion'} ? 'active'">
-                <i class="bi bi-gear-fill me-2"></i>
-                Configuración
-            </a>
-        </li>
-        <li class="nav-item">
-            <form th:action="@{/logout}" method="post" id="logoutForm" class="d-none">
-            </form>
+    <li class="nav-item">
+        <a th:href="@{/ingresos}" 
+           class="nav-link" 
+           th:classappend="${active == 'ingresos'} ? 'active'">
+            <i data-lucide="dollar-sign"></i>
+            Ingresos
+        </a>
+    </li>
 
-            <a href="#"
-               class="nav-link text-danger"
-               onclick="document.getElementById('logoutForm').submit(); return false;">
+    <li class="nav-item">
+        <a th:href="@{/configuracion}" 
+           class="nav-link" 
+           th:classappend="${active == 'configuracion'} ? 'active'">
+            <i data-lucide="settings"></i>
+            Configuración
+        </a>
+    </li>
 
-                <i class="bi bi-box-arrow-right me-2"></i>
-                Cerrar sesión
-            </a>
-        </li>
-    </ul>
+    <li class="nav-item">
+        <form th:action="@{/logout}" method="post" id="logoutForm" class="d-none"></form>
 
+        <a href="#"
+           class="nav-link text-danger"
+           onclick="document.getElementById('logoutForm').submit(); return false;">
+            <i data-lucide="power"></i>
+            Cerrar sesión
+        </a>
+    </li>
+
+</ul>
 
 </aside>
