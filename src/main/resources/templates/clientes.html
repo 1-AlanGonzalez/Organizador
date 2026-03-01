@@ -1,11 +1,16 @@
 <div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2" >
-    
+
+    <!-- Header / Divisor título -->
     <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
+
         <div>
             <h4 class="fw-bold text-dark mb-0">Directorio de Clientes</h4>
             <p class="text-muted small mb-0">Gestión de inscripciones y estados</p>
         </div>
+    
+    <!-- Botones del header -->
         <div class="d-flex gap-2">
+
             <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2 btn-modo-eliminar"
                     onclick="toggleModoEliminar()">
                 <i class="bi bi-trash"></i>
@@ -16,167 +21,177 @@
                 <i class="bi bi-person-plus-fill"></i>
                 <span>Nuevo Cliente</span>
             </a>
+
         </div>
+    
     </div>
 
-    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0" >
-        <div class="row">
-            <div class="col-md-4"> <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input id="filtroClientes" 
-                           type="text" 
-                           class="form-control border-start-0 ps-0 bg-light" 
-                           placeholder="Buscar por nombre, apellido o ID...">
-                </div>
+    <!-- SubHeader / Divisor para filtros  -->
+    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
+    <div class="row g-2">
+        <div class="col-md-4">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input id="filtroClientes" type="text"
+                       class="form-control border-start-0 ps-0 bg-light"
+                       placeholder="Buscar por nombre, apellido o ID...">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i class="bi bi-funnel"></i>
+                </span>
+                <select id="filtroActividadClientes" class="form-select form-select-sm border-start-0 bg-light">
+                    <option value="todos">Todas las actividades</option>
+                    <option th:each="act : ${actividades}"
+                            th:value="${act.nombre}"
+                            th:text="${act.nombre}">
+                    </option>
+                </select>
             </div>
         </div>
     </div>
+</div>
 
+    <!-- Main / Divisor para la tabla -->
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
-        
+
         <div class="table-responsive h-100 w-100 custom-scrollbar">
+
             <table  class="table table-hover align-middle mb-0 tableAnimation" style="width: 100%;" id="tablaClientes">
-    
-    <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
-        <tr class="text-secondary small text-uppercase">
-            <th class="ps-4 py-3 bg-light border-bottom">Cliente</th>
-            
-            <th class="py-3 bg-light border-bottom" style="min-width: 250px;">Suscripciones</th>
-            
-            <th class="py-3 bg-light border-bottom">Última Asistencia</th>
 
-            <th class="py-3 bg-light border-bottom">Estado de pago</th>
-            <th class="pe-4 py-3 bg-light border-bottom text-center">Acciones</th>
-        </tr>
-    </thead>
+                <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
 
-    <tbody class="border-top-0">
-        <tr th:each="c : ${clientes}" >
-            <td class="ps-4">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <div class="fw-bold text-dark" th:text="${c.nombre} + ' ' + ${c.apellido}"></div>
-                    </div>
-                </div>
-            </td>
+                    <!-- Titulos de la tabla -->
+                    <tr class="text-secondary small text-uppercase">
+                        <th class="ps-4 py-3 bg-light border-bottom">Cliente</th>
+                        <th class="py-3 bg-light border-bottom" style="min-width: 250px;">Inscripciones</th>
+                        <th class="py-3 bg-light border-bottom">Última Asistencia</th>
+                        <th class="py-3 bg-light border-bottom">Estado de pago</th>
+                        <th class="pe-4 py-3 bg-light border-bottom text-center">Acciones</th>
+                    </tr>
 
-            <!-- ═══════════════════════════════════════════
-                 SUSCRIPCIONES — versión mejorada
-            ════════════════════════════════════════════ -->
-            <td class="py-2">
+                    <!-- Iteración para cada cliente -->
+                    <tbody class="border-top-0">
+                        <tr th:each="c : ${clientes}"
+    th:data-actividades="${#strings.listJoin(c.inscripciones.![actividad.nombre], ',')}">
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <div class="fw-bold text-dark" th:text="${c.nombre} + ' ' + ${c.apellido}"></div>
+                                    </div>
+                                </div>
+                            </td>
 
-                <div class="d-flex flex-column gap-1" th:if="${!#lists.isEmpty(c.inscripciones)}">
-                    <div th:each="insc : ${c.inscripciones}"
-                         class="d-flex align-items-center gap-2"
-                         th:classappend="${insc.estado.name() == 'BAJA'} ? 'opacity-50'">
+                            <td class="py-2">
+                                <div class="d-flex flex-column gap-1" th:if="${!#lists.isEmpty(c.inscripciones)}">
+                                    <div th:each="insc : ${c.inscripciones}"
+                                        class="d-flex align-items-center gap-2"
+                                        th:classappend="${insc.estado.name() == 'BAJA'} ? 'opacity-50'">
 
-                        <!-- Dot de estado -->
-                        <span th:switch="${insc.estado.name()}">
-                            <span th:case="'ACTIVA'"
-                                  class="rounded-circle flex-shrink-0"
-                                  style="width: 7px; height: 7px; background: #16a34a; display:inline-block; box-shadow: 0 0 0 2px #dcfce7;">
-                            </span>
-                            <span th:case="'BAJA'"
-                                  class="rounded-circle flex-shrink-0"
-                                  style="width: 7px; height: 7px; background: #94a3b8; display:inline-block; box-shadow: 0 0 0 2px #f1f5f9;">
-                            </span>
-                            <span th:case="*"
-                                  class="rounded-circle flex-shrink-0"
-                                  style="width: 7px; height: 7px; background: #f59e0b; display:inline-block; box-shadow: 0 0 0 2px #fef9c3;">
-                            </span>
-                        </span>
+                                        <span th:switch="${insc.estado.name()}">
+                                            <span th:case="'ACTIVA'"
+                                                class="rounded-circle flex-shrink-0"
+                                                style="width: 7px; height: 7px; background: #16a34a; display:inline-block; box-shadow: 0 0 0 2px #dcfce7;">
+                                            </span>
+                                            <span th:case="'BAJA'"
+                                                class="rounded-circle flex-shrink-0"
+                                                style="width: 7px; height: 7px; background: #94a3b8; display:inline-block; box-shadow: 0 0 0 2px #f1f5f9;">
+                                            </span>
+                                            <span th:case="*"
+                                                class="rounded-circle flex-shrink-0"
+                                                style="width: 7px; height: 7px; background: #f59e0b; display:inline-block; box-shadow: 0 0 0 2px #fef9c3;">
+                                            </span>
+                                        </span>
 
-                        <!-- Nombre de actividad -->
-                        <span class="fw-semibold text-dark small" th:text="${insc.actividad.nombre}"></span>
+                                        <span class="fw-semibold text-dark small" th:text="${insc.actividad.nombre}"></span>
 
-                        <!-- Separador -->
-                        <span class="text-muted" style="font-size: 0.55rem;">●</span>
+                                        <span class="text-muted" style="font-size: 0.55rem;">●</span>
 
-                        <!-- Fecha último pago -->
-                        <span class="text-muted" style="font-size: 0.72rem;">
-                            <i class="bi bi-calendar2 me-1" style="font-size: 0.65rem;"></i>
-                            <span th:if="${insc.fechaUltimoPago != null}"
-                                  th:text="${#temporals.format(insc.fechaUltimoPago, 'dd/MM/yy')}">
-                            </span>
-                            <span th:unless="${insc.fechaUltimoPago != null}" class="fst-italic">Sin pago</span>
-                        </span>
+                                        <span class="text-muted" style="font-size: 0.72rem;">
+                                            <i class="bi bi-calendar2 me-1" style="font-size: 0.65rem;"></i>
+                                            <span th:if="${insc.fechaUltimoPago != null}"
+                                                th:text="${#temporals.format(insc.fechaUltimoPago, 'dd/MM/yy')}">
+                                            </span>
+                                            <span th:unless="${insc.fechaUltimoPago != null}" class="fst-italic">Sin pago</span>
+                                        </span>
 
-                        <!-- Badge de estado solo para no-ACTIVA (para no recargar si está activa) -->
-                        <span th:if="${insc.estado.name() == 'BAJA'}"
-                              class="badge rounded-pill"
-                              style="font-size: 0.6rem; background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0;">
-                            Baja
-                        </span>
-                        <span th:if="${insc.estado.name() != 'ACTIVA' and insc.estado.name() != 'BAJA'}"
-                              class="badge rounded-pill"
-                              style="font-size: 0.6rem; background: #fef9c3; color: #a16207; border: 1px solid #fde68a;">
-                            Inactiva
-                        </span>
+                                        <span th:if="${insc.estado.name() == 'BAJA'}"
+                                            class="badge rounded-pill"
+                                            style="font-size: 0.6rem; background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0;">
+                                            Baja
+                                        </span>
+                                        <span th:if="${insc.estado.name() != 'ACTIVA' and insc.estado.name() != 'BAJA'}"
+                                            class="badge rounded-pill"
+                                            style="font-size: 0.6rem; background: #fef9c3; color: #a16207; border: 1px solid #fde68a;">
+                                            Inactiva
+                                        </span>
 
-                    </div>
-                </div>
+                                    </div>
+                                </div>
 
-                <!-- Sin actividad -->
-                <span th:if="${#lists.isEmpty(c.inscripciones)}"
-                      class="text-muted small fst-italic ps-1">
-                    Sin actividad registrada
-                </span>
-            </td>
+                                <!-- Sin actividad -->
+                                <span th:if="${#lists.isEmpty(c.inscripciones)}"
+                                    class="text-muted small fst-italic ps-1">
+                                    Sin actividad registrada
+                                </span>
+                            </td>
 
-            <td>
-                <div class="d-flex align-items-center gap-2">
-                    <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border" style="width: 30px; height: 30px;">
-                        <i class="bi bi-clock small"></i>
-                    </div>
-                    
-                    <span class="small text-muted"
-                        th:if="${c.fechaUltimaAsistencia != null}"
-                        th:text="${#temporals.format(c.fechaUltimaAsistencia, 'dd/MM/yyyy')}">
-                    </span>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border" style="width: 30px; height: 30px;">
+                                        <i class="bi bi-clock small"></i>
+                                    </div>
+                                    
+                                    <span class="small text-muted"
+                                        th:if="${c.fechaUltimaAsistencia != null}"
+                                        th:text="${#temporals.format(c.fechaUltimaAsistencia, 'dd/MM/yyyy')}">
+                                    </span>
 
-                    <span class="small text-muted fst-italic"
-                        th:unless="${c.fechaUltimaAsistencia != null}">
-                        Sin registros
-                    </span>
-                </div>
-            </td>
+                                    <span class="small text-muted fst-italic"
+                                        th:unless="${c.fechaUltimaAsistencia != null}">
+                                        Sin registros
+                                    </span>
+                                </div>
+                            </td>
 
-            <td>
-                <span th:if="${c.adeuda()}" class="badge bg-danger-light text-danger border border-danger border-opacity-25">
-                    <i class="bi bi-exclamation-circle me-1"></i> Adeuda
-                </span>
-                <span th:if="${!c.adeuda()}" class="badge bg-success-light text-success border border-success border-opacity-25">
-                    <i data-lucide="check-circle" class="me-1"></i> Al día
-                </span>
-            </td>
+                            <td>
+                                <span th:if="${c.adeuda()}" class="badge bg-danger-light text-danger border border-danger border-opacity-25">
+                                    <i class="bi bi-exclamation-circle me-1"></i> Adeuda
+                                </span>
+                                <span th:if="${!c.adeuda()}" class="badge bg-success-light text-success border border-success border-opacity-25">
+                                    <i data-lucide="check-circle" class="me-1"></i> Al día
+                                </span>
+                            </td>
 
-            <td class="pe-4">
-               <div class="d-flex align-items-center justify-content-center gap-2">
-                    <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
-                    <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-primary btn-editar-row"><i class="bi bi-pencil"></i></a>
-                    <button class="btn btn-sm btn-outline-danger btn-eliminar" 
-                            th:data-id="${c.idCliente}" 
-                            th:data-nombre="${c.nombre} + ' ' + ${c.apellido}"
-                            th:data-url="@{/clientes/eliminar}" 
-                            onclick="abrirPanelEliminar(this)">
-                        <i data-lucide="trash"></i>
-                    </button>
-               </div>
-            </td>
-        </tr>
-        <tr th:if="${#lists.isEmpty(clientes)}">
-            <td colspan="3" class="text-center py-5 text-muted">
-                <i class="bi bi-people fs-1 d-block mb-2"></i>
-                    No se encontraron clientes registrados.
-            </td>
-        </tr>
-    </tbody>
-</table>
+                            <td class="pe-4">
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
+                                    <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-primary btn-editar-row"><i class="bi bi-pencil"></i></a>
+                                    <button class="btn btn-sm btn-outline-danger btn-eliminar" 
+                                            th:data-id="${c.idCliente}" 
+                                            th:data-nombre="${c.nombre} + ' ' + ${c.apellido}"
+                                            th:data-url="@{/clientes/eliminar}" 
+                                            onclick="abrirPanelEliminar(this)">
+                                        <i data-lucide="trash"></i>
+                                    </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="mensajeVacioClientes" class="empty-row" style="display:none;">
+    <td colspan="5" class="text-center py-5 text-muted">
+        <i class="bi bi-search fs-1 d-block mb-2 opacity-50"></i>
+        No se encontraron clientes con los filtros actuales.
+    </td>
+</tr>
+                                </tbody>
+            </table>
         </div>
+        <div id="paginadorClientes" class="border-top px-3 flex-shrink-0"></div>
     </div>
-
     <div id="panelEliminarOverlay"
          class="panel-overlay d-none"
          onclick="cerrarPanelEliminar()">
@@ -185,5 +200,11 @@
              th:insert="fragments/panel-eliminar :: panelEliminar">
         </div>
     </div>
+
+    <!-- Scripts -->
 <script th:src="@{/js/clientes.js}"></script>
+<script th:src="@{/js/pagination.js}"></script>
+<script>
+    initPaginator('tablaClientes', 'paginadorClientes', 10);
+</script>
 </div>

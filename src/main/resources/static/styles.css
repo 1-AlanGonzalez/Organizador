@@ -110,7 +110,6 @@ Estilo para los botones de acción rápida
     transition: 0.2s ease;
 }
 /* Por defecto los botones de acciones están ocultos */
-
 .btn-eliminar {
     visibility: hidden;
     opacity: 0;
@@ -1018,4 +1017,59 @@ body.modo-eliminar-activo .btn-eliminar {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* añadido hoy 28/2 */
+/* ═══════════════════════════════════════════════════════════════════════════
+   ESTILOS NUEVOS — pegar al final de styles.css
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. PALETA DE BOTONES — usa color del sidebar en lugar de Bootstrap blue ── */
+
+/* Reemplaza btn-primary en toda la app */
+.btn-primary,
+.btn-primary:focus {
+    background-color: var(--sidebar-bg);
+    border-color: var(--sidebar-bg);
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: #162024;
+    border-color: #162024;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(31, 42, 48, 0.25);
+}
+.btn-primary:active {
+    background-color: #0f1a1e !important;
+    border-color: #0f1a1e !important;
+}
+
+/* outline-primary también */
+.btn-outline-primary {
+    color: var(--sidebar-bg);
+    border-color: var(--sidebar-bg);
+}
+.btn-outline-primary:hover {
+    background-color: var(--sidebar-bg);
+    border-color: var(--sidebar-bg);
+    color: #fff;
+}
+
+/* ── 5. PAGINADOR ── */
+.page-link {
+    color: var(--sidebar-bg);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+.page-link:hover {
+    background-color: rgba(31, 42, 48, 0.08);
+    color: var(--sidebar-bg);
+}
+.page-active {
+    background-color: var(--sidebar-bg) !important;
+    color: #fff !important;
+}
+.page-item.disabled .page-link {
+    color: #adb5bd;
 }

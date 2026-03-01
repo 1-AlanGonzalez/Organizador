@@ -1,49 +1,50 @@
-<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2 " >
+<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2">
 
     <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
         <div>
             <h4 class="fw-bold text-dark mb-0">Tablero Financiero</h4>
-            <p class="text-muted small mb-0">Resumen de movimientos y facturación</p>
+            <p class="text-muted small mb-0">
+                Resumen de
+                <span id="labelMes" class="fw-bold text-dark"></span>
+            </p>
         </div>
     </div>
 
+    <!-- Cards de resumen — valores actualizados por JS al cambiar el mes -->
     <div class="row g-3 mb-4 animate-fade-up">
         <div class="col-md-3">
             <div class="card card-stat bg-gradient-primary p-3 h-100">
                 <div class="card-body-content">
-                    <span class="stat-title">Ingresos Totales</span>
-                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosTotales ?: 0, 1, 'POINT', 2, 'COMMA')}">>$0,00</h4>
-                    <i class="bi bi-wallet2 position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
+                    <span class="stat-title">Ingresos del Mes</span>
+                    <h4 class="stat-value" id="cardTotal"
+                        th:text="${'$' + #numbers.formatDecimal(ingresosTotales ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
                 </div>
             </div>
         </div>
-
         <div class="col-md-3">
             <div class="card card-stat bg-gradient-success p-3 h-100">
                 <div class="card-body-content">
-                    <span class="stat-title">Pagos en Efectivo</span>
-                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosEfectivo ?: 0, 1, 'POINT', 2, 'COMMA')}">>$0,00</h4>
-                    <i class="bi bi-cash-stack position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
+                    <span class="stat-title">Efectivo</span>
+                    <h4 class="stat-value" id="cardEfectivo"
+                        th:text="${'$' + #numbers.formatDecimal(ingresosEfectivo ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
                 </div>
             </div>
         </div>
-
         <div class="col-md-3">
             <div class="card card-stat bg-gradient-info p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Transferencias</span>
-                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosTransferencia ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
-                    <i class="bi bi-bank position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
+                    <h4 class="stat-value" id="cardTransferencia"
+                        th:text="${'$' + #numbers.formatDecimal(ingresosTransferencia ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
                 </div>
             </div>
         </div>
-
         <div class="col-md-3">
             <div class="card card-stat bg-gradient-warning p-3 h-100">
                 <div class="card-body-content">
-                    <span class="stat-title">Pagos Pendientes</span>
-                    <h4 class="stat-value" th:text="${'$' + #numbers.formatDecimal(ingresosPendientes ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
-                    <i class="bi bi-clock-history position-absolute bottom-0 end-0 mb-3 me-3 text-white-50 fs-1" style="opacity: 0.2;"></i>
+                    <span class="stat-title">Pendientes</span>
+                    <h4 class="stat-value" id="cardPendiente"
+                        th:text="${'$' + #numbers.formatDecimal(ingresosPendientes ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
                 </div>
             </div>
         </div>
@@ -52,22 +53,24 @@
     <!-- Barra de herramientas -->
     <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0 animate-fade-up delay-1">
         <div class="row g-2 align-items-center">
-
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="input-group input-group-sm">
                     <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                    <input type="text" id="buscadorTabla" class="form-control border-start-0 ps-0 bg-light" placeholder="Buscar pago por alumno...">
+                    <input type="text" id="buscadorTabla"
+                           class="form-control border-start-0 ps-0 bg-light"
+                           placeholder="Buscar por alumno...">
                 </div>
             </div>
-
+            <!-- Filtro de mes — controla TANTO la tabla COMO las cards -->
             <div class="col-md-3">
                 <div class="input-group input-group-sm">
                     <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-calendar-month"></i></span>
-                    <input type="month" class="form-control border-start-0 ps-0 bg-light">
+                    <input type="month" id="filtroMes"
+                           class="form-control border-start-0 ps-0 bg-light"
+                           th:value="${mesSeleccionado}">
                 </div>
             </div>
-
-            <div class="col-md-5 d-flex justify-content-end gap-2">
+            <div class="col-md-6 d-flex justify-content-end gap-2">
                 <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
                     <i class="bi bi-file-earmark-excel"></i>
                     <span>Exportar</span>
@@ -77,92 +80,192 @@
                     <span>Nuevo Pago</span>
                 </a>
             </div>
-
         </div>
     </div>
 
-    <!-- Tabla de movimientos -->
+    <!-- Tabla — solo PAGADOS (ADEUDA no se renderiza) -->
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative animate-fade-up delay-2">
 
-        <!-- Tabs de filtro -->
         <div class="px-3 pt-3 pb-0 border-bottom flex-shrink-0">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="fw-bold text-dark mb-0">Últimos Movimientos</h6>
-            </div>
+            <h6 class="fw-bold text-dark mb-2">Movimientos</h6>
             <ul class="nav nav-tabs border-0" id="paymentTabs" role="tablist">
                 <li class="nav-item">
-                    <button class="nav-link active fw-bold small text-dark px-3" onclick="filtrarEstado('todos')" data-bs-toggle="tab">Todos</button>
+                    <button class="nav-link active fw-bold small text-dark px-3"
+                            onclick="filtrarEstado('todos')">Todos</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link fw-bold small text-success px-3" onclick="filtrarEstado('pagado')" data-bs-toggle="tab">Pagados</button>
+                    <button class="nav-link fw-bold small text-success px-3"
+                            onclick="filtrarEstado('pagado')">Pagados</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link fw-bold small text-warning px-3" onclick="filtrarEstado('pendiente')" data-bs-toggle="tab">Pendientes</button>
+                    <button class="nav-link fw-bold small text-warning px-3"
+                            onclick="filtrarEstado('pendiente')">Pendientes</button>
                 </li>
             </ul>
         </div>
 
-        <div class="table-responsive h-100 w-100 custom-scrollbar">
+        <div class="table-responsive custom-scrollbar" style="flex:1;overflow-y:auto;">
             <table class="table table-hover align-middle mb-0 tableAnimation" id="tablaPagos">
-
-                <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
+                <thead style="position:sticky;top:0;z-index:10;">
                     <tr class="text-secondary small text-uppercase">
                         <th class="ps-4 py-3 bg-light border-bottom">Cliente</th>
                         <th class="py-3 bg-light border-bottom">Actividad</th>
-                        <th class="py-3 bg-light border-bottom">Fecha de ingreso</th>
-                        <th class="py-3 bg-light border-bottom">Método / Estado</th>
-                        <th class="pe-4 py-3 bg-light border-bottom text-end">Monto</th>
+                        <th class="py-3 bg-light border-bottom">Fecha</th>
+                        <th class="py-3 bg-light border-bottom">Método</th>
+                        <th class="py-3 bg-light border-bottom text-end">Monto</th>
+                        <th class="pe-4 py-3 bg-light border-bottom text-center">Ticket</th>
                     </tr>
                 </thead>
-
                 <tbody class="border-top-0">
+
+                    <!--/*  Solo se renderizan pagos PAGADOS — ADEUDA se ignora  */-->
                     <tr th:each="pago : ${pagosRecientes}"
-                        th:data-estado="${pago.estado.name() == 'PAGADO'}" class="fila-pago">
+                        th:if="${pago.estado.name() == 'PAGADO'}"
+                        th:data-fecha="${#temporals.format(pago.fechaGeneracion, 'yyyy-MM')}"
+                        class="fila-pago">
 
                         <td class="ps-4">
-                            <div class="fw-bold text-dark" th:text="${pago.actividadCliente.cliente.nombre + ' ' + pago.actividadCliente.cliente.apellido}">Nombre</div>
-                            <small class="text-muted" style="font-size: 0.72rem;">ID: <span th:text="${pago.actividadCliente.cliente.idCliente}"></span></small>
+                            <div class="fw-bold text-dark"
+                                 th:text="${pago.actividadCliente.cliente.nombre + ' ' + pago.actividadCliente.cliente.apellido}"></div>
+                            <small class="text-muted" style="font-size:0.72rem;">
+                                ID: <span th:text="${pago.actividadCliente.cliente.idCliente}"></span>
+                            </small>
                         </td>
 
                         <td>
-                            <span class="badge bg-light text-dark border fw-normal" th:text="${pago.actividadCliente.actividad.nombre}">Boxeo</span>
+                            <span class="badge bg-light text-dark border fw-normal"
+                                  th:text="${pago.actividadCliente.actividad.nombre}"></span>
                         </td>
 
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border" style="width: 30px; height: 30px;">
+                                <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border"
+                                     style="width:30px;height:30px;">
                                     <i class="bi bi-calendar2-event small"></i>
                                 </div>
-                                <span class="small text-muted" th:text="${#temporals.format(pago.fechaGeneracion, 'dd/MM/yyyy')}"></span>
+                                <span class="small text-muted"
+                                      th:text="${#temporals.format(pago.fechaGeneracion,'dd/MM/yyyy')}"></span>
                             </div>
                         </td>
 
                         <td>
-                            <span th:if="${pago.estado.name() == 'PAGADO'}"
-                                  class="badge bg-success-light text-success border border-success border-opacity-25">
+                            <span class="badge bg-success-light text-success border border-success border-opacity-25">
                                 <i class="bi bi-check-circle-fill me-1"></i>
                                 <span th:text="${pago.metodoPago}"></span>
                             </span>
-                            <span th:if="${pago.estado.name() == 'ADEUDA'}"
-                                  class="badge bg-danger-light text-danger border border-danger border-opacity-25">
-                                <i class="bi bi-exclamation-circle me-1"></i> Adeuda
-                            </span>
                         </td>
 
-                        <td class="pe-4 text-end">
-                            <span class="fw-bold text-dark" th:text="${'$' + pago.montoAPagar}">$5000</span>
+                        <td class="text-end">
+                            <span class="fw-bold text-dark" th:text="${'$' + pago.montoAPagar}"></span>
                         </td>
 
+                        <td class="pe-4 text-center">
+                            <a th:href="@{/pagos/ticket/{id}(id=${pago.idPago})}"
+                               class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1"
+                               title="Ver ticket">
+                                <i class="bi bi-receipt" style="font-size:0.8rem;"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Vacío server-side -->
+                    <tr class="empty-row" th:if="${#lists.isEmpty(pagosRecientes)}">
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-receipt fs-1 d-block mb-2 opacity-50"></i>
+                            No hay movimientos registrados.
+                        </td>
+                    </tr>
+
+                    <!-- Vacío JS (filtros sin resultado) -->
+                    <tr id="mensajeVacioPagos" class="empty-row" style="display:none;">
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-search fs-1 d-block mb-2 opacity-50"></i>
+                            No se encontraron pagos para este período.
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="border-top py-2 px-4 text-end flex-shrink-0">
-            <a href="#" class="text-decoration-none text-primary small fw-bold">Ver historial completo <i class="bi bi-arrow-right"></i></a>
-        </div>
-
+        <div id="paginadorPagos" class="border-top px-3 flex-shrink-0"></div>
     </div>
 
-    <script th:src="@{/js/pagos.js}"></script>
+    <script th:src="@{/js/pagination.js}"></script>
+    <script>
+        const pagPagos = initPaginator('tablaPagos', 'paginadorPagos', 10);
+        let estadoActivo = 'todos';
+
+        // ── Nombres de meses en español ───────────────────────────────────────
+        const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                       'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+        function formatearMes(valor) {
+            if (!valor) return '';
+            const [anio, mes] = valor.split('-');
+            return MESES[parseInt(mes) - 1] + ' ' + anio;
+        }
+
+        // ── Actualizar cards via fetch ────────────────────────────────────────
+        async function actualizarCards(mes) {
+            try {
+                const res  = await fetch(`/ingresos/stats?mes=${mes}`);
+                const data = await res.json();
+
+                const fmt = n => '$' + Number(n).toLocaleString('es-AR', {minimumFractionDigits: 2});
+                document.getElementById('cardTotal').textContent        = fmt(data.total);
+                document.getElementById('cardEfectivo').textContent     = fmt(data.efectivo);
+                document.getElementById('cardTransferencia').textContent = fmt(data.transferencia);
+                document.getElementById('cardPendiente').textContent    = fmt(data.pendiente);
+            } catch(e) {
+                console.error('Error al cargar stats:', e);
+            }
+        }
+
+        // ── Filtro combinado tabla ────────────────────────────────────────────
+        function aplicarFiltros() {
+            const texto = (document.getElementById('buscadorTabla')?.value || '').toLowerCase();
+            const mes   = document.getElementById('filtroMes')?.value || '';
+
+            const filas = document.querySelectorAll('#tablaPagos tbody tr.fila-pago');
+            let visibles = 0;
+
+            filas.forEach(row => {
+                const fechaMes = row.dataset.fecha || '';
+                const cumpleTexto = !texto || row.textContent.toLowerCase().includes(texto);
+                const cumpleMes   = !mes   || fechaMes === mes;
+
+                const visible = cumpleTexto && cumpleMes;
+                row.style.display        = visible ? '' : 'none';
+                row.dataset.searchHidden = visible ? 'false' : 'true';
+                if (visible) visibles++;
+            });
+
+            document.getElementById('mensajeVacioPagos').style.display = visibles === 0 ? '' : 'none';
+            pagPagos.refresh();
+        }
+
+        // ── Al cambiar el mes: actualiza cards Y filtra tabla ─────────────────
+        document.getElementById('filtroMes').addEventListener('change', function () {
+            const mes = this.value;
+            document.getElementById('labelMes').textContent = formatearMes(mes);
+            actualizarCards(mes);
+            aplicarFiltros();
+        });
+
+        document.getElementById('buscadorTabla').addEventListener('input', aplicarFiltros);
+
+        window.filtrarEstado = function(estado) {
+            estadoActivo = estado;
+            aplicarFiltros();
+        };
+
+        // ── Inicializar con el mes actual ─────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', function () {
+            const mes = document.getElementById('filtroMes').value;
+            if (mes) {
+                document.getElementById('labelMes').textContent = formatearMes(mes);
+                aplicarFiltros();
+            }
+        });
+    </script>
 </div>

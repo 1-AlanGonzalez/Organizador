@@ -1,8 +1,11 @@
 package com.gymmanager.gym_manager.controllers;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,30 +52,21 @@ public class IngresosController {
         this.securityUtils              = securityUtils;
     }
 
+    // ── GET /ingresos ─────────────────────────────────────────────────────────
+    // Carga la página con stats del mes actual por defecto
+
     @GetMapping
     public String ingresos(Model model) {
-        Usuario usuario = securityUtils.getUsuarioActual();
+        Usuario   usuario = securityUtils.getUsuarioActual();
+        YearMonth mesActual = YearMonth.now();
 
-        BigDecimal total      = pagoRepository.sumTotalRecaudado(usuario);
-        BigDecimal pendientes = pagoRepository.sumTotalPendiente(usuario);
+        agregarStatsAlModelo(model, usuario, mesActual);
 
-        MetodoDePago efectivo      = metodoDePagoRepository.findByNombreAndUsuario("EFECTIVO",      usuario).orElse(null);
-        MetodoDePago transferencia = metodoDePagoRepository.findByNombreAndUsuario("TRANSFERENCIA", usuario).orElse(null);
-
-        BigDecimal totalEfectivo      = efectivo      != null ? pagoRepository.sumPorMetodo(efectivo,      usuario) : BigDecimal.ZERO;
-        BigDecimal totalTransferencia = transferencia != null ? pagoRepository.sumPorMetodo(transferencia, usuario) : BigDecimal.ZERO;
-
-        model.addAttribute("ingresosTotales",       total      != null ? total      : BigDecimal.ZERO);
-        model.addAttribute("ingresosEfectivo",       totalEfectivo);
-        model.addAttribute("ingresosTransferencia",  totalTransferencia);
-        model.addAttribute("ingresosPendientes",     pendientes != null ? pendientes : BigDecimal.ZERO);
-
-        model.addAttribute("datosGrafico",      pagoRepository.obtenerIngresosMensuales(usuario.getId()));
-        model.addAttribute("categoriasGrafico", Arrays.asList(
-                "Ene", "Feb", "Mar", "Abr", "May", "Jun",
-                "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"));
-
-        model.addAttribute("pagosRecientes", pagoRepository.findByActividadCliente_Cliente_Usuario(usuario));
+        model.addAttribute("mesSeleccionado",    mesActual.toString()); // "2025-03"
+        model.addAttribute("pagosRecientes",     pagoRepository.findByActividadCliente_Cliente_Usuario(usuario));
+        model.addAttribute("datosGrafico",       pagoRepository.obtenerIngresosMensuales(usuario.getId()));
+        model.addAttribute("categoriasGrafico",  Arrays.asList(
+                "Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"));
 
         model.addAttribute("title",     "Gym Manager | Ingresos");
         model.addAttribute("header",    "Contabilidad / Resumen de Ingresos");
@@ -81,6 +75,56 @@ public class IngresosController {
         model.addAttribute("active",    "ingresos");
         return "layouts/main";
     }
+
+    // ── GET /ingresos/stats?mes=2025-03 ──────────────────────────────────────
+    // Devuelve JSON con las 4 stats del mes — lo llama el JS al cambiar el filtro
+
+    @GetMapping("/stats")
+    @ResponseBody
+    public Map<String, BigDecimal> statsMensuales(@RequestParam String mes) {
+        Usuario   usuario   = securityUtils.getUsuarioActual();
+        YearMonth yearMonth = YearMonth.parse(mes);
+
+        LocalDate desde = yearMonth.atDay(1);
+        LocalDate hasta = yearMonth.atEndOfMonth();
+
+        MetodoDePago efectivo      = metodoDePagoRepository.findByNombreAndUsuario("EFECTIVO",      usuario).orElse(null);
+        MetodoDePago transferencia = metodoDePagoRepository.findByNombreAndUsuario("TRANSFERENCIA", usuario).orElse(null);
+
+        BigDecimal total    = pagoRepository.sumTotalRecaudadoEntreFechas(usuario, desde, hasta);
+        BigDecimal pendiente = pagoRepository.sumTotalPendienteEntreFechas(usuario, desde, hasta);
+        BigDecimal efect    = efectivo      != null ? pagoRepository.sumPorMetodoEntreFechas(efectivo,      usuario, desde, hasta) : BigDecimal.ZERO;
+        BigDecimal transf   = transferencia != null ? pagoRepository.sumPorMetodoEntreFechas(transferencia, usuario, desde, hasta) : BigDecimal.ZERO;
+
+        return Map.of(
+                "total",        total      != null ? total      : BigDecimal.ZERO,
+                "efectivo",     efect,
+                "transferencia",transf,
+                "pendiente",    pendiente  != null ? pendiente  : BigDecimal.ZERO
+        );
+    }
+
+    // ── Helper ────────────────────────────────────────────────────────────────
+
+    private void agregarStatsAlModelo(Model model, Usuario usuario, YearMonth mes) {
+        LocalDate desde = mes.atDay(1);
+        LocalDate hasta = mes.atEndOfMonth();
+
+        MetodoDePago efectivo      = metodoDePagoRepository.findByNombreAndUsuario("EFECTIVO",      usuario).orElse(null);
+        MetodoDePago transferencia = metodoDePagoRepository.findByNombreAndUsuario("TRANSFERENCIA", usuario).orElse(null);
+
+        BigDecimal total     = pagoRepository.sumTotalRecaudadoEntreFechas(usuario, desde, hasta);
+        BigDecimal pendiente = pagoRepository.sumTotalPendienteEntreFechas(usuario, desde, hasta);
+        BigDecimal efect     = efectivo      != null ? pagoRepository.sumPorMetodoEntreFechas(efectivo,      usuario, desde, hasta) : BigDecimal.ZERO;
+        BigDecimal transf    = transferencia != null ? pagoRepository.sumPorMetodoEntreFechas(transferencia, usuario, desde, hasta) : BigDecimal.ZERO;
+
+        model.addAttribute("ingresosTotales",      total      != null ? total      : BigDecimal.ZERO);
+        model.addAttribute("ingresosEfectivo",      efect);
+        model.addAttribute("ingresosTransferencia", transf);
+        model.addAttribute("ingresosPendientes",    pendiente  != null ? pendiente  : BigDecimal.ZERO);
+    }
+
+    // ── GET /ingresos/nuevo ───────────────────────────────────────────────────
 
     @GetMapping("/nuevo")
     public String nuevoIngreso(Model model) {
@@ -95,6 +139,8 @@ public class IngresosController {
         return "layouts/main";
     }
 
+    // ── POST /ingresos/guardar ────────────────────────────────────────────────
+
     @PostMapping("/guardar")
     public String guardarIngreso(@RequestParam Integer idActividadCliente,
                                   @RequestParam Integer metodoPagoId,
@@ -102,7 +148,6 @@ public class IngresosController {
                                   RedirectAttributes flash) {
         try {
             Pago pago = pagoService.procesarPago(idActividadCliente, metodoPagoId, observaciones);
-            // ← redirige al ticket en vez de solo mostrar "éxito"
             return "redirect:/pagos/ticket/" + pago.getIdPago();
         } catch (Exception e) {
             log.error("Error al registrar pago: {}", e.getMessage(), e);
@@ -110,6 +155,8 @@ public class IngresosController {
             return "redirect:/ingresos";
         }
     }
+
+    // ── GET /ingresos/deudas ──────────────────────────────────────────────────
 
     @GetMapping("/deudas")
     @ResponseBody

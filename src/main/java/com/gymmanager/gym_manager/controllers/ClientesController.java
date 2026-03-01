@@ -65,6 +65,7 @@ public class ClientesController {
         model.addAttribute("actividades", actividadRepository.findByUsuario(usuario));
         model.addAttribute("clientes", clienteRepository.findByUsuario(usuario));
         model.addAttribute("cliente", new Cliente());
+        
         // model.addAttribute("metodosPago", configuracionDePagoService.listarActivos());
         model.addAttribute("metodosPago", configuracionDePagoService.listarActivos(usuario));
 

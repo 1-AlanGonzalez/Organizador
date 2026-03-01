@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import java.time.LocalDate;
 
 import com.gymmanager.gym_manager.entity.EstadoPago;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
@@ -95,5 +96,40 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
             @Param("usuario") Usuario usuario);
 
     List<Pago> findByActividadCliente_Cliente_Usuario(Usuario usuario);
+
+
+// ── Agregar estos 3 métodos a PagoRepository.java ────────────────────────────
+// (los existentes sumTotalRecaudado, sumTotalPendiente, sumPorMetodo se pueden
+//  mantener si los usás en otro lado, o reemplazar si solo los usabas en ingresos)
+
+
+// Total recaudado (PAGADO) en un rango de fechas
+@Query("SELECT COALESCE(SUM(p.montoAPagar), 0) FROM Pago p " +
+       "WHERE p.actividadCliente.cliente.usuario = :usuario " +
+       "AND p.estado = 'PAGADO' " +
+       "AND p.fechaGeneracion BETWEEN :desde AND :hasta")
+BigDecimal sumTotalRecaudadoEntreFechas(@Param("usuario") Usuario usuario,
+                                        @Param("desde")   LocalDate desde,
+                                        @Param("hasta")   LocalDate hasta);
+
+// Total adeudado en un rango de fechas
+@Query("SELECT COALESCE(SUM(p.montoAPagar), 0) FROM Pago p " +
+       "WHERE p.actividadCliente.cliente.usuario = :usuario " +
+       "AND p.estado = 'ADEUDA' " +
+       "AND p.fechaGeneracion BETWEEN :desde AND :hasta")
+BigDecimal sumTotalPendienteEntreFechas(@Param("usuario") Usuario usuario,
+                                        @Param("desde")   LocalDate desde,
+                                        @Param("hasta")   LocalDate hasta);
+
+// Total por método de pago en un rango de fechas
+@Query("SELECT COALESCE(SUM(p.montoAPagar), 0) FROM Pago p " +
+       "WHERE p.metodoPago = :metodo " +
+       "AND p.actividadCliente.cliente.usuario = :usuario " +
+       "AND p.estado = 'PAGADO' " +
+       "AND p.fechaGeneracion BETWEEN :desde AND :hasta")
+BigDecimal sumPorMetodoEntreFechas(@Param("metodo")  MetodoDePago metodo,
+                                   @Param("usuario") Usuario usuario,
+                                   @Param("desde")   LocalDate desde,
+                                   @Param("hasta")   LocalDate hasta);
 
 }  

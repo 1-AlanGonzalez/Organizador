@@ -104,7 +104,21 @@
 </tbody>
             </table>
         </div>
+                <div id="paginadorAsistencias" class="border-top px-3 flex-shrink-0"></div>
+
     </div>
 
     <script th:src="@{/js/asistencias.js}"></script>
+<script th:src="@{/js/pagination.js}"></script>
+<script>
+    const pagAsistencias = initPaginator('tablaAsistencias', 'paginadorAsistencias', 10);
+
+    // Conectar al filtro de texto que ya existe en asistencias.js
+    // Si filtrarTabla() ya está definida ahí, llamá refresh() después:
+    const _filtrarTablaOriginal = window.filtrarTabla;
+    window.filtrarTabla = function() {
+        if (_filtrarTablaOriginal) _filtrarTablaOriginal();
+        pagAsistencias.refresh();
+    };
+</script>
 </div>

@@ -8,6 +8,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.Actividad;
+import com.gymmanager.gym_manager.entity.Dicta;
 import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.InstructorRepository;
@@ -19,7 +20,7 @@ public class ActividadController {
 
     private final ActividadRepository  actividadRepository;
     private final InstructorRepository instructorRepository;
-    private final ActividadService     actividadService;  
+    private final ActividadService     actividadService;
     private final SecurityUtils        securityUtils;
 
     public ActividadController(ActividadRepository  actividadRepository,
@@ -46,7 +47,50 @@ public class ActividadController {
         return "layouts/main";
     }
 
-    // ← punto 9: sin @Transactional — eso le corresponde al service
+        // ── Devuelve datos de una actividad como JSON para prellenar el modal ─────
+    @GetMapping("/editar/{id}")
+    @ResponseBody
+    public ActividadEditDTO obtenerParaEditar(@PathVariable Integer id) {
+        Actividad a = actividadRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
+
+        Integer instructorId = null;
+        String  dias         = "";
+        String  horario      = "";
+
+        // dictados es Set<Dicta> — no tiene .get(), usamos stream
+        if (a.getDictados() != null && !a.getDictados().isEmpty()) {
+            Dicta dicta = a.getDictados().stream().findFirst().get();
+            instructorId = dicta.getInstructor().getIdInstructor();
+            dias         = dicta.getDias()    != null ? dicta.getDias()    : "";
+            horario      = dicta.getHorario() != null ? dicta.getHorario() : "";
+        }
+
+        return new ActividadEditDTO(
+                a.getIdActividad(),
+                a.getNombre(),
+                a.getPrecio(),
+                a.getPrecioDiario(),
+                a.getCupoMaximo(),
+                instructorId,
+                dias,
+                horario
+        );
+    }
+
+    public record ActividadEditDTO(
+            Integer    id,
+            String     nombre,
+            java.math.BigDecimal precio,
+            java.math.BigDecimal precioDiario,
+            Integer    cupoMaximo,
+            Integer    instructorId,
+            String     dias,
+            String     horario
+    ) {}
+
+
+    // ── Crear o actualizar ────────────────────────────────────────────────────
     @PostMapping("/guardar")
     public String guardarActividad(
             @ModelAttribute Actividad actividad,
@@ -56,8 +100,19 @@ public class ActividadController {
             RedirectAttributes redirectAttributes) {
         try {
             Usuario usuario = securityUtils.getUsuarioActual();
+
+            // Si tiene ID es una edición: preservar el usuario original
+            if (actividad.getIdActividad() != null) {
+                Actividad existente = actividadRepository.findById(actividad.getIdActividad())
+                        .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
+                actividad.setUsuario(existente.getUsuario());
+            }
+
             actividadService.guardarActividad(actividad, instructorId, dias, horario, usuario);
-            redirectAttributes.addFlashAttribute("success", "Actividad guardada correctamente.");
+            redirectAttributes.addFlashAttribute("success",
+                    actividad.getIdActividad() != null
+                            ? "Actividad actualizada correctamente."
+                            : "Actividad creada correctamente.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }

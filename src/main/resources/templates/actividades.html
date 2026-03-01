@@ -1,21 +1,34 @@
-<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2 ">
+<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2">
 
     <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
         <div>
             <h4 class="fw-bold text-dark mb-0">Actividades</h4>
             <p class="text-muted small mb-0">Gestión de clases y cupos</p>
         </div>
-
         <div class="d-flex gap-2">
-            <a class="btn btn-outline-danger btn-sm btn-modo-eliminar"
-                    onclick="toggleModoEliminar()">
-                <span>Eliminar</span>
+            <a class="btn btn-outline-danger btn-sm btn-modo-eliminar" onclick="toggleModoEliminar()">
+                <i class="bi bi-trash me-1"></i><span>Eliminar</span>
             </a>
-
             <a class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2" onclick="abrirPanelActividad()">
                 <i class="bi bi-plus-lg"></i>
                 <span>Nueva actividad</span>
             </a>
+        </div>
+    </div>
+
+    <!-- Buscador -->
+    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input id="filtroActividades" type="text"
+                           class="form-control border-start-0 ps-0 bg-light"
+                           placeholder="Buscar actividad...">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -29,10 +42,9 @@
     </div>
 
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
-        
         <div class="table-responsive h-100 w-100 custom-scrollbar">
-            <table class="table table-hover align-middle mb-0 tableAnimation" style="width: 100%;">
-                
+            <table class="table table-hover align-middle mb-0 tableAnimation" style="width: 100%;" id="tablaActividades">
+
                 <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
                     <tr class="text-secondary small text-uppercase">
                         <th class="ps-4 py-3 bg-light border-bottom">Actividad</th>
@@ -46,9 +58,8 @@
 
                 <tbody class="border-top-0">
                     <tr th:each="actividad : ${actividades}">
-                        
                         <td class="ps-4 fw-bold text-dark" th:text="${actividad.nombre}"></td>
-                        
+
                         <td>
                             <div class="d-flex flex-column gap-1">
                                 <span th:each="d : ${actividad.dictados}"
@@ -61,7 +72,7 @@
 
                         <td>
                             <span class="badge bg-success-light text-success border border-success border-opacity-25"
-                                th:with="inscriptosActivos=${actividad.inscripciones.?[estado.name() == 'ACTIVA']}">
+                                  th:with="inscriptosActivos=${actividad.inscripciones.?[estado.name() == 'ACTIVA']}">
                                 <i class="bi bi-people-fill me-1"></i>
                                 <span th:text="${inscriptosActivos.size()}">0</span>
                                 <span th:text="'/' + ${actividad.cupoMaximo}"></span>
@@ -87,23 +98,17 @@
                         </td>
 
                         <td class="pe-4 text-center">
-                            <div class="acciones-td position-relative d-flex justify-content-center align-items-center">
+                            <div class="d-flex justify-content-center align-items-center gap-1">
                                 <button type="button"
                                         class="btn btn-sm btn-outline-primary btn-editar-row"
-                                        th:attr="data-id=${actividad.idActividad}, 
-                                                 data-nombre=${actividad.nombre}, 
-                                                 data-cupo-maximo=${actividad.cupoMaximo}, 
-                                                 data-precio=${actividad.precio}"
+                                        th:attr="data-id=${actividad.idActividad}"
                                         onclick="abrirPanelEditarActividad(this)">
                                     <i class="bi bi-pencil"></i>
                                 </button>
-                                
                                 <button type="button"
-                                        class="btn btn-sm btn-outline-danger btn-eliminar position-absolute"
+                                        class="btn btn-sm btn-outline-danger btn-eliminar"
                                         th:attr="data-id=${actividad.idActividad},
                                                  data-nombre=${actividad.nombre},
-                                                 data-cupoMaximo=${actividad.cupoMaximo},
-                                                 data-precio=${actividad.precio},
                                                  data-url='/actividades/eliminar'"
                                         onclick="abrirPanelEliminar(this)">
                                     <i class="bi bi-trash"></i>
@@ -111,9 +116,26 @@
                             </div>
                         </td>
                     </tr>
+
+                    <!-- Fila vacía server-side (sin actividades) -->
+                    <tr class="empty-row" th:if="${#lists.isEmpty(actividades)}">
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                            No hay actividades registradas.
+                        </td>
+                    </tr>
+
+                    <!-- Fila vacía JS (búsqueda sin resultados) -->
+                    <tr id="mensajeVacioActividades" class="empty-row" style="display:none;">
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-search fs-1 d-block mb-2 opacity-50"></i>
+                            No se encontraron actividades con ese nombre.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
+        <div id="paginadorActividades" class="border-top px-3 flex-shrink-0"></div>
     </div>
 
     <div id="panelEliminarOverlay"
@@ -125,4 +147,9 @@
         </div>
     </div>
 
+    <script th:src="@{/js/actividades.js}"></script>
+    <script th:src="@{/js/pagination.js}"></script>
+    <script>
+        initPaginator('tablaActividades', 'paginadorActividades', 10);
+    </script>
 </div>

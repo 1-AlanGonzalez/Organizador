@@ -8,19 +8,20 @@
                     <i class="bi bi-activity fs-4"></i>
                 </div>
                 <div>
-                    <h4 class="fw-bold mb-0" th:text="${actividad.idActividad != null} ? 'Editar Actividad' : 'Nueva Actividad'">
-                        Nueva Actividad
-                    </h4>
+                    <!-- id="panelActividadTitulo" para que JS pueda cambiar el texto -->
+                    <h4 class="fw-bold mb-0" id="panelActividadTitulo">Nueva Actividad</h4>
                     <small class="text-muted">Gestión de precios y horarios</small>
                 </div>
             </div>
 
             <form th:action="@{/actividades/guardar}" th:object="${actividad}" method="post">
-                
+
+                <!-- ID oculto: th:field genera id="idActividad" automáticamente -->
                 <input type="hidden" th:field="*{idActividad}">
 
                 <div class="mb-3">
                     <label class="form-label small fw-bold text-secondary">Nombre</label>
+                    <!-- th:field genera id="nombre" -->
                     <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ej: Yoga" required>
                 </div>
 
@@ -35,10 +36,11 @@
                             <label class="form-label small fw-bold text-secondary">Precio Mensual</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white text-primary fw-bold">$</span>
-                                <input type="number" 
-                                       th:field="*{precio}" 
-                                       class="form-control fw-bold" 
-                                       placeholder="0.00" 
+                                <!-- th:field genera id="precio" -->
+                                <input type="number"
+                                       th:field="*{precio}"
+                                       class="form-control fw-bold"
+                                       placeholder="0.00"
                                        step="0.01"
                                        required>
                             </div>
@@ -48,53 +50,52 @@
                             <label class="form-label small fw-bold text-secondary">Precio por Clase (Opcional)</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white text-success">$</span>
+                                <!-- th:field genera id="precioDiario" -->
                                 <input type="number"
-                                        th:field="*{precioDiario}"
-                                        class="form-control"
-                                        step="0.01"
-                                        placeholder="Ej: 2000"
-                                        required> 
-                                       <!-- name="precioDiarioDummy" 
-                                       class="form-control" 
-                                       placeholder="Ej: 2000"> -->
+                                       th:field="*{precioDiario}"
+                                       class="form-control"
+                                       step="0.01"
+                                       placeholder="Ej: 2000">
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="row mb-3">
-                     <div class="col-md-6">
+                    <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">Cupo Máximo</label>
+                        <!-- th:field genera id="cupoMaximo" -->
                         <input type="number" th:field="*{cupoMaximo}" class="form-control" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">Instructor</label>
-                        <select name="instructorId" class="form-select" required>
+                        <!-- id="editInstructor" para que JS pueda seleccionar el valor -->
+                        <select name="instructorId" id="editInstructor" class="form-select" required>
                             <option value="" disabled selected>Seleccionar...</option>
-                             <option th:each="instr : ${instructores}"
-                                     th:value="${instr.idInstructor}"
-                                     th:text="${instr.nombre + ' ' + instr.apellido}"
-                                     th:selected="${actividad.dictados != null and !actividad.dictados.empty and actividad.dictados[0].instructor.idInstructor == instr.idInstructor}">
+                            <option th:each="instr : ${instructores}"
+                                    th:value="${instr.idInstructor}"
+                                    th:text="${instr.nombre + ' ' + instr.apellido}">
                             </option>
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">Días</label>
-                        <input type="text" name="dias" class="form-control" placeholder="Lun - Mie" required> 
-                        </div>
+                        <!-- id="editDias" para JS -->
+                        <input type="text" name="dias" id="editDias" class="form-control" placeholder="Lun - Mie" required>
+                    </div>
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">Horario</label>
-                        <input type="text" name="horario" class="form-control" placeholder="18:00" required>
-                         </div>
+                        <!-- id="editHorario" para JS -->
+                        <input type="text" name="horario" id="editHorario" class="form-control" placeholder="18:00" required>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 border-top pt-3">
-                    <a th:href="@{/actividades}" class="btn btn-light border">Cancelar</a>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-light border" onclick="cerrarPanelActividad()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmitActividad">Guardar</button>
                 </div>
             </form>
         </div>

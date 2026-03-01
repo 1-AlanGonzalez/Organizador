@@ -107,6 +107,7 @@
                 </tbody>
             </table>
         </div>
+    <div id="paginadorInstructores" class="border-top px-3 flex-shrink-0"></div>
     </div>
 
     <div id="panelEliminarOverlay"
@@ -118,4 +119,11 @@
         </div>
     </div>
 <script src="/js/instructores.js"></script>
+<script th:src="@{/js/pagination.js}"></script> 
+<script>
+    const pagInstructores = initPaginator('tablaInstructores', 'paginadorInstructores', 10);
+    document.getElementById('filtroInstructores').addEventListener('input', function () {
+        pagInstructores.filter(this.value);
+    });
+</script>
 </div>
