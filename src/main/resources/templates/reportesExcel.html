@@ -7,8 +7,10 @@
         </div>
     </div>
 
-    <form action="/reportes/exportar" method="post" class="row g-3 h-100 flex-grow-1" id="form-exportar">
-        
+    <form class="row g-3 h-100 flex-grow-1" id="form-exportar">
+        <input type="hidden"
+            th:name="${_csrf.parameterName}"
+            th:value="${_csrf.token}" />
         <div class="col-md-3">
             <div class="card custom-card h-100 border-0 shadow-sm">
                 <div class="card-body p-3 d-flex flex-column gap-2">
@@ -113,22 +115,22 @@
                         <div id="seccion-clientes" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
                             <h6 class="fw-bold text-primary mb-2 border-bottom pb-2 small"><i class="bi bi-people-fill me-2"></i>Datos de Clientes</h6>
                             <div class="row g-2">
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="nombre" checked> <span>Nombre</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="apellido" checked> <span>Apellido</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="dni" checked> <span>DNI</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="nombre"> <span>Nombre</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="apellido"> <span>Apellido</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="dni"> <span>DNI</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="email"> <span>Email</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="telefono"> <span>Teléfono</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="fechaAlta"> <span>Fecha Alta</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="estado" checked> <span>Estado Deuda</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="estado"> <span>Estado Deuda</span></label></div>
                             </div>
                         </div>
 
                         <div id="seccion-asistencias" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
                             <h6 class="fw-bold text-success mb-2 border-bottom pb-2 small"><i class="bi bi-calendar-check-fill me-2"></i>Datos de Asistencias</h6>
                             <div class="row g-2">
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="fecha" checked> <span>Fecha y Hora</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="cliente" checked> <span>Cliente</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="dni" checked> <span>DNI</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="fecha"> <span>Fecha y Hora</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="cliente"> <span>Cliente</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="dni"> <span>DNI</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="actividad"> <span>Actividad</span></label></div>
                             </div>
                         </div>
@@ -136,10 +138,10 @@
                          <div id="seccion-ingresos" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
                             <h6 class="fw-bold text-warning mb-2 border-bottom pb-2 small"><i class="bi bi-cash-stack me-2"></i>Datos de Ingresos</h6>
                             <div class="row g-2">
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="fecha" checked> <span>Fecha Pago</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="monto" checked> <span>Monto</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="metodo" checked> <span>Método Pago</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="concepto"> <span>Concepto</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="fechaGeneracion"> <span>Fecha Pago</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="montoAPagar"> <span>Monto</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="metodoPago.nombre"> <span>Método Pago</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="observaciones"> <span>observaciones</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="cliente"> <span>Cliente</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="usuario"> <span>Usuario cobró</span></label></div>
                             </div>
@@ -148,10 +150,10 @@
                         <div id="seccion-actividades" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
                             <h6 class="fw-bold text-purple mb-2 border-bottom pb-2 small"><i class="bi bi-activity me-2"></i>Datos de Actividades</h6>
                             <div class="row g-2">
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="nombre" checked> <span>Actividad</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="horario" checked> <span>Horarios</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="instructor"> <span>Instructor</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="cupo"> <span>Cupo Actual</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="nombre"> <span>Actividad</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="dictados.horario"> <span>Horarios</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="dictados.instructor.nombre"> <span>Instructor</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="cupoMaximo"> <span>Cupo Actual</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="activos"> <span>Activos</span></label></div>
                             </div>
                         </div>
@@ -159,10 +161,10 @@
                          <div id="seccion-instructores" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
                             <h6 class="fw-bold text-secondary mb-2 border-bottom pb-2 small"><i class="bi bi-person-badge-fill me-2"></i>Datos de Instructores</h6>
                             <div class="row g-2">
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="nombre" checked> <span>Nombre</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="apellido" checked> <span>Apellido</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="nombre"> <span>Nombre</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="apellido"> <span>Apellido</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="dni"> <span>DNI / CUIT</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="especialidad" checked> <span>Especialidad</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="especialidad"> <span>Especialidad</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="telefono"> <span>Contacto</span></label></div>
                             </div>
                         </div>

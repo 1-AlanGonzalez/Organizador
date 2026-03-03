@@ -4,6 +4,8 @@ package com.gymmanager.gym_manager.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.gymmanager.gym_manager.entity.Anotation.ColumnLabel;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,11 +35,15 @@ public class Instructor {
     @Column(name = "ID_INSTRUCTOR")
     private Integer idInstructor;
     @Column(name = "NOMBRE", nullable = false, length = 50)
+    @ColumnLabel("Nombre de Instructor")
     private String nombre;
     @Column(name = "APELLIDO", nullable = false, length = 50)
+    @ColumnLabel("Apellido de Instructor")
     private String apellido;
     @Column(name = "DNI", nullable = false)
+    @ColumnLabel("DNI instructor")
     private String dni;
+    @ColumnLabel("Telefono (Instructor)")
     @Column(name = "TELEFONO", nullable = false, length = 20)
     private String telefono;
 

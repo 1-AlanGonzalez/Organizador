@@ -2,6 +2,8 @@ package com.gymmanager.gym_manager.entity;
 
 import java.time.LocalDate;
 
+import com.gymmanager.gym_manager.entity.Anotation.ColumnLabel;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,9 +28,11 @@ public class Asistencia {
     private Integer idAsistencia;
 
     @Column(name = "FECHA", nullable = false)
+    @ColumnLabel("Fecha de Asistencia")
     private LocalDate fecha;
 
     @Column(name = "PRESENTE", nullable = false)
+    @ColumnLabel("Presente")
     private Boolean presente;
 
 

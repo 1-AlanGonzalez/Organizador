@@ -3,6 +3,8 @@ package com.gymmanager.gym_manager.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.gymmanager.gym_manager.entity.Anotation.ColumnLabel;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,16 +32,20 @@ public class Pago {
     private Integer idPago;
 
     @Column(name = "FECHA_GENERACION", nullable = false)
+    @ColumnLabel("Fecha de generacion")
     private LocalDate fechaGeneracion;
 
     @Column(name = "FECHA_VENCIMIENTO", nullable = false)
+    @ColumnLabel("Fecha de Vencimiento")
     private LocalDate fechaVencimiento;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO_PAGO", nullable = false)
+    @ColumnLabel("Estado de Pago")
     private EstadoPago estado;
 
     @Column(name = "MONTO_A_PAGAR", nullable = false)
+    @ColumnLabel("Monto a Pagar")
     private BigDecimal montoAPagar;
 
     @ManyToOne

@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.gymmanager.gym_manager.entity.Anotation.ColumnLabel;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,18 +26,23 @@ public class Cliente {
     private Integer idCliente;
 
     @Column(name = "NOMBRE", nullable = false, length = 50)
+    @ColumnLabel("Nombre")
     private String nombre;
 
     @Column(name = "APELLIDO", nullable = false, length = 50)
+    @ColumnLabel("Apellido")
     private String apellido;
 
     @Column(name = "DNI", nullable = false, length = 15)
+    @ColumnLabel("DNI")
     private String dni;
 
     @Column(name = "TELEFONO", nullable = true, length = 20)
+    @ColumnLabel("Telefono")
     private String telefono;
 
     @Column(name = "OBSERVACIONES", nullable = true, columnDefinition = "TEXT")
+    @ColumnLabel("Observaciones")
     private String observaciones;
 
     // Relación con ActividadCliente

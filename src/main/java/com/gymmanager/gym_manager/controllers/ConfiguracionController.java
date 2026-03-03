@@ -1,6 +1,5 @@
 package com.gymmanager.gym_manager.controllers;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -14,23 +13,17 @@ import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.Configuracion;
 import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.services.ConfiguracionDePagoService;
-import com.gymmanager.gym_manager.services.ExcelService;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/configuracion")
 public class ConfiguracionController {
 
     private final ConfiguracionDePagoService configuracionDePagoService;
-    private final ExcelService               excelService;
     private final SecurityUtils              securityUtils;
 
     public ConfiguracionController(ConfiguracionDePagoService configuracionDePagoService,
-                                   ExcelService               excelService,
                                    SecurityUtils              securityUtils) {
         this.configuracionDePagoService = configuracionDePagoService;
-        this.excelService               = excelService;
         this.securityUtils              = securityUtils;
     }
 
@@ -141,16 +134,6 @@ public class ConfiguracionController {
         } catch (Exception e) {
             return ResponseEntity.status(409).build();
         }
-    }
-
-    @GetMapping("/exportar")
-    public void exportar(@RequestParam String       entidad,
-                         @RequestParam List<String> columnas,
-                         HttpServletResponse        response) throws IOException {
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition",
-                "attachment; filename=" + entidad.toLowerCase() + ".xlsx");
-        excelService.exportar(entidad, columnas, response);
     }
 
     private <T> T safeGet(List<T> list, int index, T defaultValue) {

@@ -29,7 +29,8 @@ public class SecurityConfig {
                     "/olvide-password",   // ← pública, sin login
                     "/styles.css",
                     "/js/**",
-                    "/images/logo/**"
+                    "/images/logo/**",
+                    "/exportar/**"
                 ).permitAll()
                 .requestMatchers("/usuarios/**").hasRole("ADMIN")
                 .anyRequest().authenticated()

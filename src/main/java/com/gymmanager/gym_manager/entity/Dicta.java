@@ -1,5 +1,7 @@
 package com.gymmanager.gym_manager.entity;
 
+import com.gymmanager.gym_manager.entity.Anotation.ColumnLabel;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,11 +41,12 @@ public class Dicta {
     private Instructor instructor;
 
     @Column(name = "DIAS", nullable = false, length = 50)
+    @ColumnLabel("Dias de Dictado")
     private String dias;
 
     @Column(name = "HORARIO", nullable = false, length = 50)
+    @ColumnLabel("Horario de Dictado")
     private String horario;
-
 
     public Dicta(Actividad actividad, Instructor instructor, String dias, String horario) {
         this.actividad = actividad;

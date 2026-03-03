@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.gymmanager.gym_manager.entity.Anotation.ColumnLabel;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -41,17 +42,21 @@ public class ActividadCliente {
     @Column(name = "ID_ACTIVIDAD_CLIENTE")
     private Integer idActividadCliente;
     @Column(name = "FECHA_DE_INSCRIPCION", nullable = false)
+    @ColumnLabel("Fecha de Inscripcion")
     private LocalDate fechaDeInscripcion;
     
     @Column(name = "COSTO", nullable = false)
+    @ColumnLabel("Costo de Inscripcion")
     private BigDecimal costo;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO", nullable = false)
+    @ColumnLabel("Estado de Inscripcion")
     private EstadoInscripcion estado = EstadoInscripcion.ACTIVA;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TIPO_DE_COBRO", nullable = false)
+    @ColumnLabel("Tipo de Cobro")
     private TipoDeCobro tipoDeCobro;
     
     @ManyToOne
@@ -67,6 +72,7 @@ public class ActividadCliente {
 
     @OneToMany(mappedBy = "actividadCliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Asistencia> asistencias = new HashSet<>();
+
 
 
     public ActividadCliente(LocalDate fechaDeInscripcion, BigDecimal costo, Cliente cliente, 

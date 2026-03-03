@@ -1,5 +1,7 @@
 package com.gymmanager.gym_manager.entity;
 
+import com.gymmanager.gym_manager.entity.Anotation.ColumnLabel;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,6 +29,7 @@ public class MetodoDePago {
     private Integer idMetodoDePago;
 
     @Column(unique = true, nullable = false)
+    @ColumnLabel("Metodo Utilizado")
     private String nombre;
 
     // AÑADIDO PARA CREAR CADA USUARIO

@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.gymmanager.gym_manager.entity.Anotation.ColumnLabel;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,15 +34,19 @@ public class Actividad {
     private Integer idActividad;
 
     @Column(name = "NOMBRE", nullable = false, length = 50)
+    @ColumnLabel("Nombre de Actividad")
     private String nombre;
 
     @Column(name = "CUPO_MAXIMO", nullable = false)
+    @ColumnLabel("Cupo Maximo")
     private Integer cupoMaximo;
 
     @Column(name = "PRECIO", nullable = false, precision = 10, scale = 2)
+    @ColumnLabel("Precio")
     private BigDecimal precio;
 
     @Column(name = "PRECIO_DIARIO", nullable = false, precision = 10, scale = 2)
+    @ColumnLabel("Precio Diario")
     private BigDecimal precioDiario;
 
     @OneToMany(

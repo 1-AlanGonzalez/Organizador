@@ -2,6 +2,8 @@ package com.gymmanager.gym_manager.entity;
 
 import java.math.BigDecimal;
 
+import com.gymmanager.gym_manager.entity.Anotation.ColumnLabel;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,9 +22,9 @@ import lombok.Setter;
 
  // 5/2/26 METODO DE PAGO CAMBIO NO ES ENUM, AHORA ES UNA CLASE
 
- @Getter
- @Setter
- @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "CONFIGURACIONPAGO")
 public class ConfiguracionDePago {
@@ -37,9 +39,11 @@ public class ConfiguracionDePago {
     private MetodoDePago metodoDePago;
 
     @Column(name = "PORCENTAJE_RECARGO", nullable = false, precision = 5, scale = 2)
+    @ColumnLabel("Porcentaje de Recargo")
     private BigDecimal porcentajeRecargo;
 
     @Column(name = "ACTIVO", nullable = false)
+    @ColumnLabel("Activo")
     private Boolean activo;
 
 
