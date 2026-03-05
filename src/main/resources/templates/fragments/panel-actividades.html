@@ -1,103 +1,95 @@
 <div th:fragment="panelActividad">
-
-    <div class="card custom-card border-0 shadow-sm" style="max-width: 650px;">
+    <div class="card custom-card border-0 shadow-sm" style="max-width: 700px; width: 100%;">
         <div class="card-body p-4">
 
             <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
                 <div class="bg-warning bg-opacity-10 p-2 rounded me-3 text-warning">
-                    <i class="bi bi-activity fs-4"></i>
+                    <i data-lucide="activity" style="width:22px;height:22px;"></i>
                 </div>
                 <div>
-                    <!-- id="panelActividadTitulo" para que JS pueda cambiar el texto -->
                     <h4 class="fw-bold mb-0" id="panelActividadTitulo">Nueva Actividad</h4>
                     <small class="text-muted">Gestión de precios y horarios</small>
                 </div>
             </div>
 
-            <form th:action="@{/actividades/guardar}" th:object="${actividad}" method="post">
+            <!--
+                th:action es OBLIGATORIO — Thymeleaf inyecta el token CSRF automáticamente.
+                Sin th:action, Spring Security rechaza el POST con 403.
+                IDs con prefijo "act-" para evitar colisiones con otros forms de la página.
+            -->
+            <form th:action="@{/actividades/guardar}" method="post">
 
-                <!-- ID oculto: th:field genera id="idActividad" automáticamente -->
-                <input type="hidden" th:field="*{idActividad}">
+                <input type="hidden" name="idActividad" id="act-idActividad">
 
                 <div class="mb-3">
                     <label class="form-label small fw-bold text-secondary">Nombre</label>
-                    <!-- th:field genera id="nombre" -->
-                    <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ej: Yoga" required>
+                    <input type="text" name="nombre" id="act-nombre"
+                           class="form-control" placeholder="Ej: Yoga" required>
                 </div>
 
                 <div class="bg-light p-3 rounded-3 mb-4 border">
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="bi bi-tag-fill text-success me-2"></i>
+                    <div class="d-flex align-items-center mb-3 gap-2">
+                        <i data-lucide="tag" style="width:15px;height:15px;" class="text-success"></i>
                         <h6 class="fw-bold mb-0 text-dark">Esquema de Cobro</h6>
                     </div>
-
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-secondary">Precio Mensual</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white text-primary fw-bold">$</span>
-                                <!-- th:field genera id="precio" -->
-                                <input type="number"
-                                       th:field="*{precio}"
-                                       class="form-control fw-bold"
-                                       placeholder="0.00"
-                                       step="0.01"
-                                       required>
+                                <input type="number" name="precio" id="act-precio"
+                                       class="form-control fw-bold" placeholder="0.00"
+                                       step="0.01" required>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-secondary">Precio por Clase (Opcional)</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white text-success">$</span>
-                                <!-- th:field genera id="precioDiario" -->
-                                <input type="number"
-                                       th:field="*{precioDiario}"
-                                       class="form-control"
-                                       step="0.01"
-                                       placeholder="Ej: 2000">
+                                <!--
+                                    value="0" como fallback — si queda vacío Spring falla
+                                    al parsear "" como BigDecimal (400 Bad Request)
+                                -->
+                                <input type="number" name="precioDiario" id="act-precioDiario"
+                                       class="form-control" step="0.01"
+                                       placeholder="Ej: 2000" value="0">
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold text-secondary">Cupo Máximo</label>
-                        <!-- th:field genera id="cupoMaximo" -->
-                        <input type="number" th:field="*{cupoMaximo}" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold text-secondary">Instructor</label>
-                        <!-- id="editInstructor" para que JS pueda seleccionar el valor -->
-                        <select name="instructorId" id="editInstructor" class="form-select" required>
-                            <option value="" disabled selected>Seleccionar...</option>
-                            <option th:each="instr : ${instructores}"
-                                    th:value="${instr.idInstructor}"
-                                    th:text="${instr.nombre + ' ' + instr.apellido}">
-                            </option>
-                        </select>
-                    </div>
+                <div class="mb-4">
+                    <label class="form-label small fw-bold text-secondary">Cupo Máximo</label>
+                    <input type="number" name="cupoMaximo" id="act-cupoMaximo"
+                           class="form-control" style="max-width:180px;" required>
                 </div>
 
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold text-secondary">Días</label>
-                        <!-- id="editDias" para JS -->
-                        <input type="text" name="dias" id="editDias" class="form-control" placeholder="Lun - Mie" required>
+                <!-- Instructores dinámicos -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <label class="form-label small fw-bold text-secondary mb-0 d-flex align-items-center gap-1">
+                            <i data-lucide="users" style="width:14px;height:14px;"></i>
+                            Instructores y Horarios
+                        </label>
+                        <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
+                                onclick="agregarFilaInstructor()">
+                            <i data-lucide="plus" style="width:13px;height:13px;"></i> Añadir instructor
+                        </button>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold text-secondary">Horario</label>
-                        <!-- id="editHorario" para JS -->
-                        <input type="text" name="horario" id="editHorario" class="form-control" placeholder="18:00" required>
-                    </div>
+                    <div id="instructoresContainer"></div>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 border-top pt-3">
-                    <button type="button" class="btn btn-light border" onclick="cerrarPanelActividad()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" id="btnSubmitActividad">Guardar</button>
+                    <button type="button" class="btn btn-light border"
+                            onclick="cerrarPanelActividad()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary d-flex align-items-center gap-2"
+                            id="btnSubmitActividad">
+                        <i data-lucide="save" style="width:14px;height:14px;"></i> Guardar
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<!-- NO SE ESTÁ USANDO -->

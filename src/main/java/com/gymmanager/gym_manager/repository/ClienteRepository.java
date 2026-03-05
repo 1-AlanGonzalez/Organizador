@@ -65,4 +65,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
         AND c.usuario = :usuario
         """)
     long countClientesDeudores(@Param("usuario") Usuario usuario);
+
+
+
+    
 }

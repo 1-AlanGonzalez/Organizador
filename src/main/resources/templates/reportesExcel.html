@@ -8,88 +8,93 @@
     </div>
 
     <form class="row g-3 h-100 flex-grow-1" id="form-exportar">
-        <input type="hidden"
-            th:name="${_csrf.parameterName}"
-            th:value="${_csrf.token}" />
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
         <div class="col-md-3">
             <div class="card custom-card h-100 border-0 shadow-sm">
                 <div class="card-body p-3 d-flex flex-column gap-2">
                     <span class="text-xs fw-bold text-uppercase text-muted mb-2 ps-1">¿Qué información querés descargar?</span>
 
                     <label class="report-option" id="label-clientes">
-                        <input type="checkbox" name="tiposReporte" value="clientes" onchange="toggleSeccion('clientes', this)" hidden>
+                        <input type="checkbox" name="tiposReporte" value="clientes"
+                               onchange="toggleSeccion('clientes', this)" hidden>
                         <div class="icon-box bg-blue-light text-primary">
-                            <i class="bi bi-people-fill"></i>
+                            <i data-lucide="users" style="width:18px;height:18px;"></i>
                         </div>
                         <div class="d-flex flex-column flex-grow-1">
                             <span class="fw-bold text-dark fs-6">Clientes</span>
                             <small class="text-muted text-xs">Directorio completo</small>
                         </div>
-                        <i class="bi bi-check-circle-fill text-primary ms-auto check-icon"></i>
+                        <i data-lucide="check-circle" class="text-primary ms-auto check-icon" style="width:16px;height:16px;"></i>
                     </label>
 
                     <label class="report-option" id="label-asistencias">
-                        <input type="checkbox" name="tiposReporte" value="asistencias" onchange="toggleSeccion('asistencias', this)" hidden>
+                        <input type="checkbox" name="tiposReporte" value="asistencias"
+                               onchange="toggleSeccion('asistencias', this)" hidden>
                         <div class="icon-box bg-green-light text-success">
-                            <i class="bi bi-calendar-check-fill"></i>
+                            <i data-lucide="calendar-check" style="width:18px;height:18px;"></i>
                         </div>
                         <div class="d-flex flex-column flex-grow-1">
                             <span class="fw-bold text-dark fs-6">Asistencias</span>
                             <small class="text-muted text-xs">Ingresos al gym</small>
                         </div>
-                        <i class="bi bi-check-circle-fill text-success ms-auto check-icon"></i>
+                        <i data-lucide="check-circle" class="text-success ms-auto check-icon" style="width:16px;height:16px;"></i>
                     </label>
 
                     <label class="report-option" id="label-ingresos">
-                        <input type="checkbox" name="tiposReporte" value="ingresos" onchange="toggleSeccion('ingresos', this)" hidden>
+                        <input type="checkbox" name="tiposReporte" value="ingresos"
+                               onchange="toggleSeccion('ingresos', this)" hidden>
                         <div class="icon-box bg-orange-light text-warning">
-                            <i class="bi bi-cash-stack"></i>
+                            <i data-lucide="banknote" style="width:18px;height:18px;"></i>
                         </div>
                         <div class="d-flex flex-column flex-grow-1">
                             <span class="fw-bold text-dark fs-6">Ingresos</span>
                             <small class="text-muted text-xs">Pagos y caja</small>
                         </div>
-                        <i class="bi bi-check-circle-fill text-warning ms-auto check-icon"></i>
+                        <i data-lucide="check-circle" class="text-warning ms-auto check-icon" style="width:16px;height:16px;"></i>
                     </label>
 
                     <label class="report-option" id="label-actividades">
-                        <input type="checkbox" name="tiposReporte" value="actividades" onchange="toggleSeccion('actividades', this)" hidden>
+                        <input type="checkbox" name="tiposReporte" value="actividades"
+                               onchange="toggleSeccion('actividades', this)" hidden>
                         <div class="icon-box bg-purple-light text-purple">
-                            <i class="bi bi-activity"></i>
+                            <i data-lucide="activity" style="width:18px;height:18px;"></i>
                         </div>
                         <div class="d-flex flex-column flex-grow-1">
                             <span class="fw-bold text-dark fs-6">Actividades</span>
                             <small class="text-muted text-xs">Clases y cupos</small>
                         </div>
-                        <i class="bi bi-check-circle-fill text-purple ms-auto check-icon"></i>
+                        <i data-lucide="check-circle" class="text-purple ms-auto check-icon" style="width:16px;height:16px;"></i>
                     </label>
 
-                     <label class="report-option" id="label-instructores">
-                        <input type="checkbox" name="tiposReporte" value="instructores" onchange="toggleSeccion('instructores', this)" hidden>
+                    <label class="report-option" id="label-instructores">
+                        <input type="checkbox" name="tiposReporte" value="instructores"
+                               onchange="toggleSeccion('instructores', this)" hidden>
                         <div class="icon-box bg-gray-light text-secondary">
-                            <i class="bi bi-person-badge-fill"></i>
+                            <i data-lucide="badge" style="width:18px;height:18px;"></i>
                         </div>
                         <div class="d-flex flex-column flex-grow-1">
                             <span class="fw-bold text-dark fs-6">Instructores</span>
                             <small class="text-muted text-xs">Staff del gimnasio</small>
                         </div>
-                        <i class="bi bi-check-circle-fill text-secondary ms-auto check-icon"></i>
+                        <i data-lucide="check-circle" class="text-secondary ms-auto check-icon" style="width:16px;height:16px;"></i>
                     </label>
-
                 </div>
             </div>
         </div>
 
         <div class="col-md-9 d-flex flex-column h-100">
             <div class="card custom-card flex-grow-1 border-0 shadow-sm position-relative overflow-hidden d-flex flex-column">
-                
+
                 <div class="bg-pattern"></div>
 
                 <div class="card-body p-3 d-flex flex-column z-1 position-relative h-100 overflow-auto custom-scrollbar">
-                    
+
                     <div class="row mb-3 flex-shrink-0 align-items-center bg-light p-3 rounded-3 border">
                         <div class="col-md-4">
-                            <h6 class="fw-bold text-dark mb-0"><i class="bi bi-calendar-event me-2"></i>Fecha del Reporte</h6>
+                            <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                                <i data-lucide="calendar" style="width:15px;height:15px;"></i>Fecha del Reporte
+                            </h6>
                             <small class="text-muted">Dejá vacío para ver todo el historial.</small>
                         </div>
                         <div class="col-md-4">
@@ -98,22 +103,25 @@
                     </div>
 
                     <div id="empty-state" class="text-center py-5 my-auto text-muted">
-                        <i class="bi bi-file-earmark-spreadsheet fs-2 d-block mb-3 opacity-25"></i>
+                        <i data-lucide="file-spreadsheet" style="width:48px;height:48px;opacity:0.25;" class="d-block mx-auto mb-3"></i>
                         <p class="mb-0">Seleccioná una o más opciones a la izquierda<br>para elegir qué columnas descargar.</p>
                     </div>
 
                     <div id="columnas-config" class="flex-grow-1 mt-2 d-none flex-column">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="fw-bold text-dark mb-0">
-                                <i class="bi bi-ui-checks-grid me-2"></i>Elegí las columnas a incluir
+                            <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                                <i data-lucide="layout-grid" style="width:15px;height:15px;"></i>Elegí las columnas a incluir
                             </h6>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="seleccionarTodos()">
+                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                    onclick="seleccionarTodos()">
                                 Marcar/Desmarcar Todas
                             </button>
                         </div>
 
                         <div id="seccion-clientes" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
-                            <h6 class="fw-bold text-primary mb-2 border-bottom pb-2 small"><i class="bi bi-people-fill me-2"></i>Datos de Clientes</h6>
+                            <h6 class="fw-bold text-primary mb-2 border-bottom pb-2 small d-flex align-items-center gap-2">
+                                <i data-lucide="users" style="width:14px;height:14px;"></i>Datos de Clientes
+                            </h6>
                             <div class="row g-2">
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="nombre"> <span>Nombre</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="apellido"> <span>Apellido</span></label></div>
@@ -126,7 +134,9 @@
                         </div>
 
                         <div id="seccion-asistencias" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
-                            <h6 class="fw-bold text-success mb-2 border-bottom pb-2 small"><i class="bi bi-calendar-check-fill me-2"></i>Datos de Asistencias</h6>
+                            <h6 class="fw-bold text-success mb-2 border-bottom pb-2 small d-flex align-items-center gap-2">
+                                <i data-lucide="calendar-check" style="width:14px;height:14px;"></i>Datos de Asistencias
+                            </h6>
                             <div class="row g-2">
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="fecha"> <span>Fecha y Hora</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="cliente"> <span>Cliente</span></label></div>
@@ -135,20 +145,24 @@
                             </div>
                         </div>
 
-                         <div id="seccion-ingresos" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
-                            <h6 class="fw-bold text-warning mb-2 border-bottom pb-2 small"><i class="bi bi-cash-stack me-2"></i>Datos de Ingresos</h6>
+                        <div id="seccion-ingresos" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
+                            <h6 class="fw-bold text-warning mb-2 border-bottom pb-2 small d-flex align-items-center gap-2">
+                                <i data-lucide="banknote" style="width:14px;height:14px;"></i>Datos de Ingresos
+                            </h6>
                             <div class="row g-2">
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="fechaGeneracion"> <span>Fecha Pago</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="montoAPagar"> <span>Monto</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="metodoPago.nombre"> <span>Método Pago</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="observaciones"> <span>observaciones</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="observaciones"> <span>Observaciones</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="cliente"> <span>Cliente</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="usuario"> <span>Usuario cobró</span></label></div>
                             </div>
                         </div>
 
                         <div id="seccion-actividades" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
-                            <h6 class="fw-bold text-purple mb-2 border-bottom pb-2 small"><i class="bi bi-activity me-2"></i>Datos de Actividades</h6>
+                            <h6 class="fw-bold text-purple mb-2 border-bottom pb-2 small d-flex align-items-center gap-2">
+                                <i data-lucide="activity" style="width:14px;height:14px;"></i>Datos de Actividades
+                            </h6>
                             <div class="row g-2">
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="nombre"> <span>Actividad</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="dictados.horario"> <span>Horarios</span></label></div>
@@ -158,8 +172,10 @@
                             </div>
                         </div>
 
-                         <div id="seccion-instructores" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
-                            <h6 class="fw-bold text-secondary mb-2 border-bottom pb-2 small"><i class="bi bi-person-badge-fill me-2"></i>Datos de Instructores</h6>
+                        <div id="seccion-instructores" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
+                            <h6 class="fw-bold text-secondary mb-2 border-bottom pb-2 small d-flex align-items-center gap-2">
+                                <i data-lucide="badge" style="width:14px;height:14px;"></i>Datos de Instructores
+                            </h6>
                             <div class="row g-2">
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="nombre"> <span>Nombre</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="apellido"> <span>Apellido</span></label></div>
@@ -168,19 +184,19 @@
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="telefono"> <span>Contacto</span></label></div>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="mt-auto pt-3 d-flex justify-content-end border-top flex-shrink-0">
-                        <button type="submit" id="btn-submit" class="btn btn-success shadow-sm px-4 d-flex align-items-center gap-2 btn-exportar" disabled>
-                            <i class="bi bi-file-earmark-excel-fill"></i>
+                        <button type="submit" id="btn-submit"
+                                class="btn btn-success shadow-sm px-4 d-flex align-items-center gap-2 btn-exportar" disabled>
+                            <i data-lucide="file-spreadsheet" style="width:15px;height:15px;"></i>
                             <span>Descargar Excel</span>
                         </button>
                     </div>
-
                 </div>
             </div>
         </div>
     </form>
+
     <script src="/js/reportes.js"></script>
 </div>

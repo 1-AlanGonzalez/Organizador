@@ -1,5 +1,5 @@
 <div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2">
-    
+
     <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
         <div>
             <h4 class="fw-bold text-dark mb-0">Gestión de Asistencias</h4>
@@ -7,7 +7,7 @@
         </div>
         <div>
             <a class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2" th:href="@{/asistencias/tomar}">
-                <i class="bi bi-plus-lg"></i>
+                <i data-lucide="plus" style="width:14px;height:14px;"></i>
                 <span>Tomar Asistencia</span>
             </a>
         </div>
@@ -18,31 +18,37 @@
             <div class="row g-2 align-items-center">
                 <div class="col-md-3">
                     <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-calendar"></i></span>
-                        <input type="date" name="fecha" class="form-control border-start-0 ps-0 bg-light" 
+                        <span class="input-group-text bg-light border-end-0">
+                            <i data-lucide="calendar" style="width:14px;height:14px;"></i>
+                        </span>
+                        <input type="date" name="fecha" class="form-control border-start-0 ps-0 bg-light"
                                th:value="${fechaSeleccionada}" onchange="document.getElementById('filtroForm').submit()">
                     </div>
                 </div>
-                
                 <div class="col-md-5">
                     <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
-                        <input type="text" id="filtroAsistencias" class="form-control border-start-0 ps-0 bg-light" placeholder="Buscar alumno...">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i data-lucide="search" style="width:14px;height:14px;"></i>
+                        </span>
+                        <input type="text" id="filtroAsistencias" class="form-control border-start-0 ps-0 bg-light"
+                               placeholder="Buscar alumno...">
                     </div>
                 </div>
-
                 <div class="col-md-4">
-    <div class="input-group input-group-sm">
-        <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-funnel"></i></span>
-        <select id="filtroActividad" class="form-select form-select-sm border-start-0 bg-light text-muted" onchange="filtrarTabla()">
-            <option value="todos">Todas las actividades</option>
-            <option th:each="actividad : ${actividades}"
-                    th:value="${actividad.nombre}"
-                    th:text="${actividad.nombre}">
-            </option>
-        </select>
-    </div>
-</div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-light border-end-0 text-muted">
+                            <i data-lucide="filter" style="width:14px;height:14px;"></i>
+                        </span>
+                        <select id="filtroActividad" class="form-select form-select-sm border-start-0 bg-light text-muted"
+                                onchange="filtrarTabla()">
+                            <option value="todos">Todas las actividades</option>
+                            <option th:each="actividad : ${actividades}"
+                                    th:value="${actividad.nombre}"
+                                    th:text="${actividad.nombre}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -50,7 +56,6 @@
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
         <div class="table-responsive h-100 w-100 custom-scrollbar">
             <table class="table table-hover align-middle mb-0 tableAnimation" style="width: 100%;" id="tablaAsistencias">
-
                 <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
                     <tr class="text-secondary small text-uppercase">
                         <th class="ps-4 py-3 bg-light border-bottom">Alumno</th>
@@ -59,66 +64,67 @@
                         <th class="py-3 bg-light border-bottom">Estado</th>
                     </tr>
                 </thead>
-
                 <tbody class="border-top-0">
-    <tr th:each="item : ${reporteAsistencia}" 
-        class="fila-alumno" 
-        th:data-actividad="${item.nombreActividad}">
-        <td class="ps-4">
-            <div class="fw-bold text-dark" th:text="${item.nombreCliente} + ' ' + ${item.apellidoCliente}">Nombre</div>
-        </td>
-        <td>
-            <span class="badge bg-light text-dark border fw-normal" th:text="${item.nombreActividad}">Actividad</span>
-        </td>
-        <td>
-            <div class="d-flex align-items-center gap-2">
-                <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border" style="width: 30px; height: 30px;">
-                    <i class="bi bi-calendar2-event small"></i>
-                </div>
-                <span class="small text-muted" th:text="${#temporals.format(item.fecha, 'dd/MM/yyyy')}">01/01/2024</span>
-            </div>
-        </td>
-        <td>
-            <span th:if="${item.estado == 'PRESENTE'}" class="badge bg-success-light text-success border border-success border-opacity-25">
-                <i class="bi bi-check-circle-fill me-1"></i> Presente
-            </span>
-            <span th:if="${item.estado == 'AUSENTE'}" class="badge bg-danger-light text-danger border border-danger border-opacity-25">
-                <i class="bi bi-x-circle me-1"></i> Ausente
-            </span>
-        </td>
-    </tr>
-    
-    <tr th:if="${reporteAsistencia == null or #lists.isEmpty(reporteAsistencia)}">
-        <td colspan="4" class="text-center py-5 text-muted">
-            <i class="bi bi-people fs-1 d-block mb-2"></i>
-            No hay inscripciones activas registradas para este día.
-        </td>
-    </tr>
+                    <tr th:each="item : ${reporteAsistencia}"
+                        class="fila-alumno"
+                        th:data-actividad="${item.nombreActividad}">
+                        <td class="ps-4">
+                            <div class="fw-bold text-dark"
+                                 th:text="${item.nombreCliente} + ' ' + ${item.apellidoCliente}">Nombre</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border fw-normal"
+                                  th:text="${item.nombreActividad}">Actividad</span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border"
+                                     style="width:30px;height:30px;">
+                                    <i data-lucide="calendar" style="width:13px;height:13px;"></i>
+                                </div>
+                                <span class="small text-muted"
+                                      th:text="${#temporals.format(item.fecha, 'dd/MM/yyyy')}">01/01/2024</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span th:if="${item.estado == 'PRESENTE'}"
+                                  class="badge bg-success-light text-success border border-success border-opacity-25 d-inline-flex align-items-center gap-1">
+                                <i data-lucide="check-circle" style="width:11px;height:11px;"></i> Presente
+                            </span>
+                            <span th:if="${item.estado == 'AUSENTE'}"
+                                  class="badge bg-danger-light text-danger border border-danger border-opacity-25 d-inline-flex align-items-center gap-1">
+                                <i data-lucide="x-circle" style="width:11px;height:11px;"></i> Ausente
+                            </span>
+                        </td>
+                    </tr>
 
-    <tr id="mensajeVacioJS" style="display: none;">
-        <td colspan="4" class="text-center py-5 text-muted">
-            <i class="bi bi-search fs-1 d-block mb-2 text-secondary opacity-50"></i>
-            No se encontraron alumnos con los filtros actuales.
-        </td>
-    </tr>
-</tbody>
+                    <tr th:if="${reporteAsistencia == null or #lists.isEmpty(reporteAsistencia)}">
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i data-lucide="users" style="width:40px;height:40px;opacity:0.3;" class="d-block mx-auto mb-2"></i>
+                            No hay inscripciones activas registradas para este día.
+                        </td>
+                    </tr>
+
+                    <tr id="mensajeVacioJS" style="display:none;">
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i data-lucide="search" style="width:40px;height:40px;opacity:0.3;" class="d-block mx-auto mb-2"></i>
+                            No se encontraron alumnos con los filtros actuales.
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
-                <div id="paginadorAsistencias" class="border-top px-3 flex-shrink-0"></div>
-
+        <div id="paginadorAsistencias" class="border-top px-3 flex-shrink-0"></div>
     </div>
 
     <script th:src="@{/js/asistencias.js}"></script>
-<script th:src="@{/js/pagination.js}"></script>
-<script>
-    const pagAsistencias = initPaginator('tablaAsistencias', 'paginadorAsistencias', 10);
-
-    // Conectar al filtro de texto que ya existe en asistencias.js
-    // Si filtrarTabla() ya está definida ahí, llamá refresh() después:
-    const _filtrarTablaOriginal = window.filtrarTabla;
-    window.filtrarTabla = function() {
-        if (_filtrarTablaOriginal) _filtrarTablaOriginal();
-        pagAsistencias.refresh();
-    };
-</script>
+    <script th:src="@{/js/pagination.js}"></script>
+    <script>
+        const pagAsistencias = initPaginator('tablaAsistencias', 'paginadorAsistencias', 10);
+        const _filtrarTablaOriginal = window.filtrarTabla;
+        window.filtrarTabla = function() {
+            if (_filtrarTablaOriginal) _filtrarTablaOriginal();
+            pagAsistencias.refresh();
+        };
+    </script>
 </div>

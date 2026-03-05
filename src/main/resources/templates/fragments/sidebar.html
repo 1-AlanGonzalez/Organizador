@@ -1,92 +1,113 @@
-<aside th:fragment="sidebar-fragment" id="sidebar" class="sidebar d-flex flex-column p-3">
-    
-<!--    <div class="sidebar-header mb-4 px-2">-->
-<!--        <h5 class="text-white fw-bold m-0" style="letter-spacing: 1px;"></h5>-->
-<!--    </div>-->
-    <div class="sidebar-footer text-center">
-        <div class="logo-placeholder">
-            <img th:src="@{/images/logo/logo.png}"
-                 alt="Logo Gym Manager"
-                 class="img-fluid"
-                 style="max-height:160px;">
-        </div>
+<aside th:fragment="sidebar-fragment"
+       id="sidebar"
+       class="sidebar d-flex flex-column p-3">
+
+    <!--
+        Logo: las dos imágenes superpuestas dentro de un contenedor de altura fija.
+        Así el sidebar NO salta al cambiar entre logo grande y logo icono.
+    -->
+    <div class="sidebar-logo">
+        <img th:src="@{/images/logo/logo.png}"
+             class="logo-full"
+             alt="Gym Manager">
+        <img th:src="@{/images/logo/logo.png}"
+             class="logo-icon"
+             alt="GM">
     </div>
-    <ul class="nav nav-pills flex-column mb-auto gap-2">
 
-    <li class="nav-item">
-        <a th:href="@{/dashboard}" 
-           class="nav-link" 
-           th:classappend="${active == 'dashboard'} ? 'active'">
-            <i data-lucide="house"></i>
-            Inicio
-        </a>
-    </li>
+    <ul class="nav nav-pills flex-column mb-auto gap-1">
 
-    <li class="nav-item">
-        <a th:href="@{/clientes}" 
-           class="nav-link" 
-           th:classappend="${active == 'clientes'} ? 'active'">
-            <i data-lucide="users"></i>
-            Clientes
-        </a>
-    </li>
+        <li class="nav-item">
+            <a th:href="@{/dashboard}"
+               class="nav-link"
+               th:classappend="${active == 'dashboard'} ? 'active'"
+               title="Inicio">
+                <i data-lucide="house"></i>
+                <span class="nav-text">Inicio</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a th:href="@{/asistencias}" 
-           class="nav-link" 
-           th:classappend="${active == 'asistencias'} ? 'active'">
-            <i data-lucide="notepad-text"></i>
-            Asistencias
-        </a>
-    </li>
+        <li class="nav-item">
+            <a th:href="@{/clientes}"
+               class="nav-link"
+               th:classappend="${active == 'clientes'} ? 'active'"
+               title="Clientes">
+                <i data-lucide="users"></i>
+                <span class="nav-text">Clientes</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a th:href="@{/actividades}" 
-           class="nav-link" 
-           th:classappend="${active == 'actividades'} ? 'active'">
-            <i data-lucide="calendar"></i>
-            Actividades
-        </a>
-    </li>
+        <li class="nav-item">
+            <a th:href="@{/asistencias}"
+               class="nav-link"
+               th:classappend="${active == 'asistencias'} ? 'active'"
+               title="Asistencias">
+                <i data-lucide="notepad-text"></i>
+                <span class="nav-text">Asistencias</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a th:href="@{/instructores}" 
-           class="nav-link" 
-           th:classappend="${active == 'instructores'} ? 'active'">
-            <i data-lucide="user-cog"></i>
-            Instructores
-        </a>
-    </li>
+        <li class="nav-item">
+            <a th:href="@{/actividades}"
+               class="nav-link"
+               th:classappend="${active == 'actividades'} ? 'active'"
+               title="Actividades">
+                <i data-lucide="calendar"></i>
+                <span class="nav-text">Actividades</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a th:href="@{/ingresos}" 
-           class="nav-link" 
-           th:classappend="${active == 'ingresos'} ? 'active'">
-            <i data-lucide="dollar-sign"></i>
-            Ingresos
-        </a>
-    </li>
+        <li class="nav-item">
+            <a th:href="@{/instructores}"
+               class="nav-link"
+               th:classappend="${active == 'instructores'} ? 'active'"
+               title="Instructores">
+                <i data-lucide="user-cog"></i>
+                <span class="nav-text">Instructores</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a th:href="@{/configuracion}" 
-           class="nav-link" 
-           th:classappend="${active == 'configuracion'} ? 'active'">
-            <i data-lucide="settings"></i>
-            Configuración
-        </a>
-    </li>
+        <li class="nav-item">
+            <a th:href="@{/ingresos}"
+               class="nav-link"
+               th:classappend="${active == 'ingresos'} ? 'active'"
+               title="Ingresos">
+                <i data-lucide="dollar-sign"></i>
+                <span class="nav-text">Ingresos</span>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <form th:action="@{/logout}" method="post" id="logoutForm" class="d-none"></form>
+        <li class="nav-item">
+            <a th:href="@{/reportes}"
+               class="nav-link"
+               th:classappend="${active == 'reportes'} ? 'active'"
+               title="Reportes">
+                <i data-lucide="file-spreadsheet"></i>
+                <span class="nav-text">Reportes</span>
+            </a>
+        </li>
 
-        <a href="#"
-           class="nav-link text-danger"
-           onclick="document.getElementById('logoutForm').submit(); return false;">
-            <i data-lucide="power"></i>
-            Cerrar sesión
-        </a>
-    </li>
+        <li class="nav-item">
+            <a th:href="@{/configuracion}"
+               class="nav-link"
+               th:classappend="${active == 'configuracion'} ? 'active'"
+               title="Configuración">
+                <i data-lucide="settings"></i>
+                <span class="nav-text">Configuración</span>
+            </a>
+        </li>
 
-</ul>
+        <li class="nav-item" style="margin-top: auto;">
+            <form th:action="@{/logout}" method="post" id="logoutForm" class="d-none"></form>
+            <a href="#"
+               class="nav-link text-danger"
+               onclick="document.getElementById('logoutForm').submit(); return false;"
+               title="Cerrar sesión">
+                <i data-lucide="power"></i>
+                <span class="nav-text">Cerrar sesión</span>
+            </a>
+        </li>
+
+    </ul>
 
 </aside>

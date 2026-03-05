@@ -142,14 +142,20 @@ public class ClientesController {
         }
         private String volverFormulario(Model model, Cliente cliente, String errorMsg) {
             Usuario usuario = securityUtils.getUsuarioActual();
+
+            // Spring binding convierte idCliente="" a 0 en vez de null.
+            // Si es 0 o negativo, es un cliente nuevo — reseteamos a null
+            // para que Thymeleaf no lo muestre como modo edición.
+            if (cliente.getIdCliente() != null && cliente.getIdCliente() <= 0) {
+                cliente.setIdCliente(null);
+            }
+
             model.addAttribute("error", errorMsg);
             model.addAttribute("cliente", cliente);
             model.addAttribute("actividades", actividadRepository.findByUsuario(usuario));
             model.addAttribute("metodosPago", configuracionDePagoService.listarActivos(usuario));
-
             model.addAttribute("vista", "fragments/panel-cliente");
             model.addAttribute("fragmento", "panelCliente");
-
             prepararModeloBase(model, "Añadir Cliente", "Clientes / Nuevo");
 
             return "layouts/main";

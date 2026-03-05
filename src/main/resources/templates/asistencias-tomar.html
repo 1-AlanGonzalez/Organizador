@@ -7,43 +7,46 @@
         </div>
         <div class="d-flex gap-2">
             <a th:href="@{/asistencias}" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
-                <i class="bi bi-arrow-left"></i>
+                <i data-lucide="arrow-left" style="width:14px;height:14px;"></i>
                 <span>Cancelar</span>
             </a>
             <button type="submit" form="formAsistencia" class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
-                <i class="bi bi-check-lg"></i>
+                <i data-lucide="check" style="width:14px;height:14px;"></i>
                 <span>Guardar Planilla</span>
             </button>
         </div>
     </div>
 
     <!-- Filtros -->
-<div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
+    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
         <div class="row g-2 align-items-center">
-            
-            
             <div class="col-md-3">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-calendar"></i></span>
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                        <i data-lucide="calendar" style="width:14px;height:14px;"></i>
+                    </span>
                     <input type="date" class="form-control form-control-sm border-start-0 ps-0 bg-light"
-                    name="fecha" form="formAsistencia"
-                    th:value="${fechaHoy}" required>
+                           name="fecha" form="formAsistencia"
+                           th:value="${fechaHoy}" required>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                    <input id="filtroAsistencias"
-                           type="text"
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                        <i data-lucide="search" style="width:14px;height:14px;"></i>
+                    </span>
+                    <input id="filtroAsistencias" type="text"
                            class="form-control form-control-sm border-start-0 ps-0 bg-light"
                            placeholder="Buscar por nombre, DNI...">
                 </div>
             </div>
-            
             <div class="col-md-3">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-funnel"></i></span>
-                    <select id="filtroActividad" class="form-select form-select-sm border-start-0 bg-light text-muted" onchange="filtrarTabla()">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                        <i data-lucide="filter" style="width:14px;height:14px;"></i>
+                    </span>
+                    <select id="filtroActividad" class="form-select form-select-sm border-start-0 bg-light text-muted"
+                            onchange="filtrarTabla()">
                         <option value="todos">Todas las actividades</option>
                         <option th:each="act : ${actividades}"
                                 th:value="${act.nombre}"
@@ -52,13 +55,12 @@
                     </select>
                 </div>
             </div>
-
-            <div class="col-md-3 d-flex justify-content-end"> <span class="badge bg-light text-dark border rounded-pill px-3 py-2">
-                    <i class="bi bi-person-check me-1 text-success"></i>
+            <div class="col-md-3 d-flex justify-content-end">
+                <span class="badge bg-light text-dark border rounded-pill px-3 py-2 d-flex align-items-center gap-2">
+                    <i data-lucide="user-check" style="width:13px;height:13px;" class="text-success"></i>
                     Marcados: <span id="contadorPresentes" class="fw-bold text-success">0</span>
                 </span>
             </div>
-
         </div>
     </div>
 
@@ -67,60 +69,56 @@
         <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
             <div class="table-responsive h-100 w-100 custom-scrollbar">
                 <table class="table table-hover align-middle mb-0 tableAnimation" id="tablaAsistencias">
-
                     <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
                         <tr class="text-secondary small text-uppercase">
-                            <th class="ps-4 py-3 bg-light border-bottom" style="width: 40%;">Alumno</th>
-                            <th class="py-3 bg-light border-bottom" style="width: 30%;">Actividad</th>
-                            <th class="py-3 bg-light border-bottom text-center" style="width: 30%;">Asistencia</th>
+                            <th class="ps-4 py-3 bg-light border-bottom" style="width:40%;">Alumno</th>
+                            <th class="py-3 bg-light border-bottom" style="width:30%;">Actividad</th>
+                            <th class="py-3 bg-light border-bottom text-center" style="width:30%;">Asistencia</th>
                         </tr>
                     </thead>
-
                     <tbody class="border-top-0">
                         <tr th:each="item : ${inscripciones}"
                             class="fila-alumno"
                             th:data-actividad="${item.actividad.nombre}">
-
                             <td class="ps-4">
-                                <div class="fw-bold text-dark" th:text="${item.cliente.nombre + ' ' + item.cliente.apellido}">Nombre Alumno</div>
-                                <small class="text-muted" style="font-size: 0.72rem;">ID: <span th:text="${item.cliente.idCliente}">#</span></small>
+                                <div class="fw-bold text-dark"
+                                     th:text="${item.cliente.nombre + ' ' + item.cliente.apellido}">Nombre Alumno</div>
+                                <small class="text-muted" style="font-size:0.72rem;">
+                                    ID: <span th:text="${item.cliente.idCliente}">#</span>
+                                </small>
                             </td>
-
                             <td>
                                 <span class="badge bg-light text-dark border fw-normal"
-                                    th:text="${item.actividad.nombre}">Actividad</span>
+                                      th:text="${item.actividad.nombre}">Actividad</span>
                             </td>
-
                             <td class="text-center">
                                 <div class="form-check form-switch d-flex justify-content-center">
-                                    <input type="hidden" name="todosLosIds" th:value="${item.idActividadCliente}" />
+                                    <input type="hidden" name="todosLosIds" th:value="${item.idActividadCliente}"/>
                                     <input class="form-check-input input-asistencia"
-                                        type="checkbox"
-                                        name="presentes"
-                                        th:value="${item.idActividadCliente}"
-                                        th:checked="${item.tieneAsistenciaEnFecha(fechaHoy)}"
-                                        style="width: 3em; height: 1.5em; cursor: pointer;"
-                                        onchange="actualizarContador()">
+                                           type="checkbox"
+                                           name="presentes"
+                                           th:value="${item.idActividadCliente}"
+                                           th:checked="${item.tieneAsistenciaEnFecha(fechaHoy)}"
+                                           style="width:3em;height:1.5em;cursor:pointer;"
+                                           onchange="actualizarContador()">
                                 </div>
                             </td>
-
                         </tr>
 
                         <tr th:if="${#lists.isEmpty(inscripciones)}">
                             <td colspan="3" class="text-center py-5 text-muted">
-                                <i class="bi bi-people fs-1 d-block mb-2"></i>
+                                <i data-lucide="users" style="width:40px;height:40px;opacity:0.3;" class="d-block mx-auto mb-2"></i>
                                 No hay alumnos inscritos en actividades.
                             </td>
                         </tr>
 
-                        <tr id="mensajeVacioJS" style="display: none;">
+                        <tr id="mensajeVacioJS" style="display:none;">
                             <td colspan="3" class="text-center py-5 text-muted">
-                                <i class="bi bi-search fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                                <i data-lucide="search" style="width:40px;height:40px;opacity:0.3;" class="d-block mx-auto mb-2"></i>
                                 No se encontraron alumnos con los filtros actuales.
                             </td>
                         </tr>
                     </tbody>
-
                 </table>
             </div>
         </div>

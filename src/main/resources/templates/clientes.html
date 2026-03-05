@@ -11,14 +11,13 @@
     <!-- Botones del header -->
         <div class="d-flex gap-2">
 
-            <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2 btn-modo-eliminar"
+                <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2 btn-modo-eliminar"
                     onclick="toggleModoEliminar()">
-                <i class="bi bi-trash"></i>
+                <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
                 <span>Eliminar</span>
             </button>
-            
             <a th:href="@{/clientes/nuevo}" class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
-                <i class="bi bi-person-plus-fill"></i>
+                <i data-lucide="user-plus" style="width:14px;height:14px;"></i>
                 <span>Nuevo Cliente</span>
             </a>
 
@@ -32,18 +31,18 @@
         <div class="col-md-4">
             <div class="input-group input-group-sm">
                 <span class="input-group-text bg-light border-end-0 text-muted">
-                    <i class="bi bi-search"></i>
-                </span>
+                        <i data-lucide="search" style="width:14px;height:14px;"></i>
+                    </span>
                 <input id="filtroClientes" type="text"
                        class="form-control border-start-0 ps-0 bg-light"
-                       placeholder="Buscar por nombre, apellido o ID...">
+                       placeholder="Buscar por nombre, apellido, fecha, estado...">
             </div>
         </div>
         <div class="col-md-4">
             <div class="input-group input-group-sm">
                 <span class="input-group-text bg-light border-end-0 text-muted">
-                    <i class="bi bi-funnel"></i>
-                </span>
+                        <i data-lucide="filter" style="width:14px;height:14px;"></i>
+                    </span>
                 <select id="filtroActividadClientes" class="form-select form-select-sm border-start-0 bg-light">
                     <option value="todos">Todas las actividades</option>
                     <option th:each="act : ${actividades}"
@@ -112,7 +111,7 @@
                                         <span class="text-muted" style="font-size: 0.55rem;">●</span>
 
                                         <span class="text-muted" style="font-size: 0.72rem;">
-                                            <i class="bi bi-calendar2 me-1" style="font-size: 0.65rem;"></i>
+                                            <i data-lucide="calendar" style="width:11px;height:11px;"></i>
                                             <span th:if="${insc.fechaUltimoPago != null}"
                                                 th:text="${#temporals.format(insc.fechaUltimoPago, 'dd/MM/yy')}">
                                             </span>
@@ -143,7 +142,7 @@
                             <td>
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border" style="width: 30px; height: 30px;">
-                                        <i class="bi bi-clock small"></i>
+                                        <i data-lucide="clock" style="width:13px;height:13px;"></i>
                                     </div>
                                     
                                     <span class="small text-muted"
@@ -160,33 +159,33 @@
 
                             <td>
                                 <span th:if="${c.adeuda()}" class="badge bg-danger-light text-danger border border-danger border-opacity-25">
-                                    <i class="bi bi-exclamation-circle me-1"></i> Adeuda
+                                    <i data-lucide="alert-circle" style="width:11px;height:11px;"></i> Adeuda
                                 </span>
                                 <span th:if="${!c.adeuda()}" class="badge bg-success-light text-success border border-success border-opacity-25">
-                                    <i data-lucide="check-circle" class="me-1"></i> Al día
+                                    <i data-lucide="check-circle" style="width:11px;height:11px;"></i> Al día
                                 </span>
                             </td>
 
                             <td class="pe-4">
                             <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
-                                    <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-primary btn-editar-row"><i class="bi bi-pencil"></i></a>
+                                    <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-info"><i data-lucide="eye" style="width:13px;height:13px;"></i></a>
+                                    <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-primary btn-editar-row"><i data-lucide="pencil" style="width:13px;height:13px;"></i></a>
                                     <button class="btn btn-sm btn-outline-danger btn-eliminar" 
                                             th:data-id="${c.idCliente}" 
                                             th:data-nombre="${c.nombre} + ' ' + ${c.apellido}"
                                             th:data-url="@{/clientes/eliminar}" 
                                             onclick="abrirPanelEliminar(this)">
-                                        <i data-lucide="trash"></i>
+                                        <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
                                     </button>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr id="mensajeVacioClientes" class="empty-row" style="display:none;">
-    <td colspan="5" class="text-center py-5 text-muted">
-        <i class="bi bi-search fs-1 d-block mb-2 opacity-50"></i>
-        No se encontraron clientes con los filtros actuales.
-    </td>
-</tr>
+                                        <td colspan="5" class="text-center py-5 text-muted">
+                                            <i data-lucide="search" style="width:40px;height:40px;opacity:0.3;" class="d-block mx-auto mb-2"></i>
+                                            No se encontraron clientes con los filtros actuales.
+                                        </td>
+                                    </tr>
                                 </tbody>
             </table>
         </div>
