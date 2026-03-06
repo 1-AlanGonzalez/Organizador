@@ -128,39 +128,41 @@
     <div class="row g-2 flex-grow-1 animate-fade-up delay-2" style="min-height:0;">
 
         <!-- Accesos directos -->
+      <div class="row g-3 flex-grow-1 animate-fade-up delay-2" style="min-height:0;">
+
         <div class="col-12 col-lg-3 d-flex flex-column" style="min-height:0;">
-            <h6 class="section-subtitle flex-shrink-0">Accesos Directos</h6>
+            <h6 class="fw-bold text-uppercase mb-2 flex-shrink-0" style="font-size:.7rem; letter-spacing:.08em; color:#64748b;">Accesos Directos</h6>
             <div class="row g-2">
-                <div class="col-3 col-lg-6">
+                <div class="col-6">
                     <a th:href="@{/asistencias/tomar}"
-                       class="btn-widget text-decoration-none">
-                        <i data-lucide="qr-code" style="color:#1f2a30;"></i>
+                       class="btn-widget text-decoration-none bg-white p-3 rounded-3 d-block text-center shadow-sm h-100 border-0" style="transition: transform 0.2s;">
+                        <i data-lucide="qr-code" style="color:#1e293b; margin-bottom: 8px;"></i>
                         <span class="fw-bold text-dark d-block" style="font-size:.85rem;">Asistencia</span>
-                        <small class="text-muted d-none d-lg-block" style="font-size:.72rem;">Tomar</small>
+                        <small class="text-muted d-none d-lg-block" style="font-size:.7rem;">Tomar</small>
                     </a>
                 </div>
-                <div class="col-3 col-lg-6">
+                <div class="col-6">
                     <a th:href="@{/ingresos/nuevo}"
-                       class="btn-widget text-decoration-none">
-                        <i data-lucide="banknote-arrow-up" style="color:#16a34a;"></i>
+                       class="btn-widget text-decoration-none bg-white p-3 rounded-3 d-block text-center shadow-sm h-100 border-0" style="transition: transform 0.2s;">
+                        <i data-lucide="banknote-arrow-up" style="color:#10b981; margin-bottom: 8px;"></i>
                         <span class="fw-bold text-dark d-block" style="font-size:.85rem;">Cobrar</span>
-                        <small class="text-muted d-none d-lg-block" style="font-size:.72rem;">Registrar pago</small>
+                        <small class="text-muted d-none d-lg-block" style="font-size:.7rem;">Registrar pago</small>
                     </a>
                 </div>
-                <div class="col-3 col-lg-6">
+                <div class="col-6">
                     <a th:href="@{/clientes/nuevo}"
-                       class="btn-widget text-decoration-none">
-                        <i data-lucide="user-round-plus" style="color:#3b82f6;"></i>
+                       class="btn-widget text-decoration-none bg-white p-3 rounded-3 d-block text-center shadow-sm h-100 border-0" style="transition: transform 0.2s;">
+                        <i data-lucide="user-round-plus" style="color:#3b82f6; margin-bottom: 8px;"></i>
                         <span class="fw-bold text-dark d-block" style="font-size:.85rem;">Nuevo</span>
-                        <small class="text-muted d-none d-lg-block" style="font-size:.72rem;">Alta alumno</small>
+                        <small class="text-muted d-none d-lg-block" style="font-size:.7rem;">Alta alumno</small>
                     </a>
                 </div>
-                <div class="col-3 col-lg-6">
+                <div class="col-6">
                     <a th:href="@{/reportes}"
-                       class="btn-widget text-decoration-none">
-                        <i data-lucide="file-spreadsheet" style="color:#8b5cf6;"></i>
+                       class="btn-widget text-decoration-none bg-white p-3 rounded-3 d-block text-center shadow-sm h-100 border-0" style="transition: transform 0.2s;">
+                        <i data-lucide="file-spreadsheet" style="color:#8b5cf6; margin-bottom: 8px;"></i>
                         <span class="fw-bold text-dark d-block" style="font-size:.85rem;">Reportes</span>
-                        <small class="text-muted d-none d-lg-block" style="font-size:.72rem;">Exportar Excel</small>
+                        <small class="text-muted d-none d-lg-block" style="font-size:.7rem;">Exportar Excel</small>
                     </a>
                 </div>
             </div>
@@ -180,99 +182,90 @@
             </div>
         </div>
 
-        <!-- Panel alertas: mismo dark style en ambos -->
-        <div class="col-12 col-lg-4 d-flex flex-column" style="min-height:0;">
+      <div class="col-12 col-lg-4 d-flex flex-column" style="min-height:0;">
 
-            <!-- Deudores -->
-            <h6 class="section-subtitle flex-shrink-0">Deudores</h6>
-            <div class="card border-0 mb-2 flex-shrink-0 position-relative overflow-hidden"
-                 style="border-radius:14px;background:linear-gradient(135deg,#1f2a30 0%,#2d3f46 100%);max-height:190px;">
-                <div class="position-absolute rounded-circle"
-                     style="width:120px;height:120px;top:-40px;right:-30px;background:rgba(255,255,255,.05);pointer-events:none;"></div>
-
+            <h6 class="fw-bold text-uppercase mb-2 flex-shrink-0" style="font-size:.7rem; letter-spacing:.08em; color:#64748b;">Deudores</h6>
+            <div class="card border-0 mb-3 flex-shrink-0 shadow-sm"
+                 style="border-radius:16px; background:#fff; max-height:190px;">
+                 
                 <div th:if="${#lists.isEmpty(clientesDeudores)}"
                      class="d-flex flex-column align-items-center justify-content-center py-4"
-                     style="color:rgba(255,255,255,.5);">
+                     style="color:#94a3b8;">
                     <i data-lucide="circle-check-big"
-                       style="width:26px;height:26px;opacity:.5;color:#4ade80;" class="mb-1"></i>
-                    <small class="fw-medium">¡Sin deudores!</small>
+                       style="width:26px;height:26px;color:#10b981;" class="mb-2"></i>
+                    <small class="fw-bold">¡Sin deudores!</small>
                 </div>
 
                 <ul th:if="${!#lists.isEmpty(clientesDeudores)}"
                     class="list-unstyled mb-0 p-2" style="overflow-y:auto;max-height:190px;">
                     <li th:each="c, iter : ${clientesDeudores}"
                         th:if="${iter.index < 5}"
-                        class="d-flex align-items-center gap-2 rounded-3 px-2 py-2"
+                        class="d-flex align-items-center gap-2 rounded-3 px-3 py-2"
                         style="transition:background .15s;"
-                        onmouseover="this.style.background='rgba(255,255,255,.07)'"
+                        onmouseover="this.style.background='#f8fafc'"
                         onmouseout="this.style.background='transparent'">
-                        <!-- <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
-                             style="width:28px;height:28px;font-size:.65rem;background:rgba(239,68,68,.25);color:#fca5a5;"
-                             th:text="${#strings.substring(c.nombre,0,1).toUpperCase()}">A</div> -->
+                        
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
+                             style="width:28px;height:28px;font-size:.7rem;background:#fee2e2;color:#ef4444;"
+                             th:text="${#strings.substring(c.nombre,0,1).toUpperCase()}">A</div>
                         <span class="fw-semibold flex-grow-1 text-truncate"
-                              style="font-size:.78rem;color:rgba(255,255,255,.85);"
-                              th:text="'- ' + ${c.nombre + ' ' + c.apellido}">Nombre</span>
+                              style="font-size:.8rem;color:#1e293b;"
+                              th:text="${c.nombre + ' ' + c.apellido}">Nombre</span>
                         <a th:href="@{/ingresos/nuevo(idCliente=${c.idCliente})}"
                            class="flex-shrink-0 fw-bold text-decoration-none px-2 py-1 rounded-2"
-                           style="font-size:.62rem;background:rgba(239,68,68,.2);color:#fca5a5;white-space:nowrap;">
+                           style="font-size:.65rem;background:#fee2e2;color:#ef4444;white-space:nowrap;">
                             Cobrar
                         </a>
                     </li>
-                    <li th:if="${#lists.size(clientesDeudores) > 5}" class="text-center pt-1 pb-2">
-                        <a th:href="@{/clientes}" class="small text-decoration-none"
-                           style="color:rgba(255,255,255,.35);">
-                            + <span th:text="${#lists.size(clientesDeudores) - 5}">0</span> más →
+                    <li th:if="${#lists.size(clientesDeudores) > 5}" class="text-center pt-2 pb-2 border-top mt-1">
+                        <a th:href="@{/clientes}" class="small fw-bold text-decoration-none"
+                           style="color:#64748b;">
+                            Ver <span th:text="${#lists.size(clientesDeudores) - 5}">0</span> más &rarr;
                         </a>
                     </li>
                 </ul>
             </div>
 
-            <!-- Próximos vencimientos — mismo gradiente que deudores, acento amarillo -->
-            <h6 class="section-subtitle flex-shrink-0">
+            <h6 class="fw-bold text-uppercase mb-2 flex-shrink-0" style="font-size:.7rem; letter-spacing:.08em; color:#64748b;">
                 Vencen en 7 días
                 <span class="badge rounded-pill fw-bold ms-1"
-                      style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);font-size:.6rem;vertical-align:middle;"
+                      style="background:#f1f5f9;color:#64748b;font-size:.65rem;vertical-align:middle;"
                       th:text="${#lists.size(proximosVencimientos)}">0</span>
             </h6>
-            <div class="card border-0 flex-grow-1 position-relative overflow-hidden"
-                 style="border-radius:14px;background:linear-gradient(135deg,#1f2a30 0%,#2d3f46 100%);min-height:0;">
-                <div class="position-absolute rounded-circle"
-                     style="width:100px;height:100px;bottom:-20px;left:-20px;background:rgba(255,255,255,.04);pointer-events:none;"></div>
-
-                <!-- Línea de acento superior amarilla -->
-                <div style="height:3px;background:linear-gradient(90deg,#f59e0b,#fbbf24);border-radius:14px 14px 0 0;"></div>
+            <div class="card border-0 flex-grow-1 shadow-sm position-relative"
+                 style="border-radius:16px; background:#fff; min-height:0;">
+                
+                <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#f59e0b,#fbbf24); border-radius:16px 16px 0 0;"></div>
 
                 <div th:if="${#lists.isEmpty(proximosVencimientos)}"
                      class="d-flex flex-column align-items-center justify-content-center py-4 h-100"
-                     style="color:rgba(255,255,255,.5);">
+                     style="color:#94a3b8;">
                     <i data-lucide="calendar-check"
-                       style="width:26px;height:26px;opacity:.5;color:#fbbf24;" class="mb-1"></i>
-                    <small class="fw-medium">Sin vencimientos próximos</small>
+                       style="width:26px;height:26px;color:#fbbf24;" class="mb-2 mt-2"></i>
+                    <small class="fw-bold">Sin vencimientos</small>
                 </div>
 
                 <ul th:if="${!#lists.isEmpty(proximosVencimientos)}"
-                    class="list-unstyled mb-0 p-2" style="overflow-y:auto;height:100%;">
+                    class="list-unstyled mb-0 p-2 pt-3" style="overflow-y:auto;height:100%;">
                     <li th:each="c : ${proximosVencimientos}"
-                        class="d-flex align-items-center gap-2 rounded-3 px-2 py-2"
+                        class="d-flex align-items-center gap-2 rounded-3 px-3 py-2"
                         style="transition:background .15s;"
-                        onmouseover="this.style.background='rgba(255,255,255,.07)'"
+                        onmouseover="this.style.background='#f8fafc'"
                         onmouseout="this.style.background='transparent'">
                         <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
-                             style="width:28px;height:28px;font-size:.65rem;background:rgba(251,191,36,.2);color:#fbbf24;"
+                             style="width:28px;height:28px;font-size:.7rem;background:#fef3c7;color:#d97706;"
                              th:text="${#strings.substring(c.nombre,0,1).toUpperCase()}">A</div>
                         <span class="fw-semibold flex-grow-1 text-truncate"
-                              style="font-size:.78rem;color:rgba(255,255,255,.85);"
+                              style="font-size:.8rem;color:#1e293b;"
                               th:text="${c.nombre + ' ' + c.apellido}">Nombre</span>
                         <a th:href="@{/ingresos/nuevo(idCliente=${c.idCliente})}"
                            class="flex-shrink-0 fw-bold text-decoration-none px-2 py-1 rounded-2"
-                           style="font-size:.62rem;background:rgba(251,191,36,.15);color:#fbbf24;white-space:nowrap;">
+                           style="font-size:.65rem;background:#fef3c7;color:#d97706;white-space:nowrap;">
                             Renovar
                         </a>
                     </li>
                 </ul>
             </div>
-
-        </div>
     </div>
 
     <script th:src="@{/js/script.js}"></script>
