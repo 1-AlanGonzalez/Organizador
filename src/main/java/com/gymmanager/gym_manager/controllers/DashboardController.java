@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.gymmanager.gym_manager.config.SecurityUtils;
+import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.EstadoInscripcion;
 import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
@@ -34,13 +35,13 @@ public class DashboardController {
     public String dashboard(Model model) {
         Usuario usuario = securityUtils.getUsuarioActual();
 
-        // ── Ingresos del mes — con COALESCE en la query, nunca llega null
+        // ── Ingresos del mes
         BigDecimal totalMesActual = pagoRepository.sumTotalRecaudadoEnMes(
                 LocalDate.now().getMonthValue(), LocalDate.now().getYear(), usuario);
         model.addAttribute("totalMesActual",
                 totalMesActual != null ? totalMesActual : BigDecimal.ZERO);
 
-        // ── Totales de ingresos — protegidos contra null
+        // ── Totales de ingresos
         BigDecimal totalRecaudado = pagoRepository.sumTotalRecaudado(usuario);
         BigDecimal totalPendiente = pagoRepository.sumTotalPendiente(usuario);
         model.addAttribute("totalRecaudado",
@@ -48,7 +49,7 @@ public class DashboardController {
         model.addAttribute("totalPendiente",
                 totalPendiente != null ? totalPendiente : BigDecimal.ZERO);
 
-        // ── Clientes — punto 8: count() sin filtro devolvía el total global
+        // ── Clientes
         long totalClientes   = clienteRepository.findByUsuario(usuario).size();
         long totalInscriptos = clienteRepository.countClientesConInscripcionActiva(
                 EstadoInscripcion.ACTIVA, usuario);
@@ -59,6 +60,17 @@ public class DashboardController {
         model.addAttribute("totalInscriptos",    totalInscriptos);
         model.addAttribute("clientesActivos",    activosAlDia);
         model.addAttribute("clientesPendientes", totalDeudores);
+
+        // ── Deudores (lista para mostrar en dashboard)
+        List<Cliente> clientesDeudores = clienteRepository.findClientesConDeudaByUsuario(usuario);
+        model.addAttribute("clientesDeudores", clientesDeudores);
+
+        // ── Próximos vencimientos (próximos 7 días)
+        LocalDate hoy     = LocalDate.now();
+        LocalDate en7dias = hoy.plusDays(7);
+        List<Cliente> proximosVencimientos = clienteRepository
+                .findClientesConVencimientoEntre(usuario, hoy, en7dias);
+        model.addAttribute("proximosVencimientos", proximosVencimientos);
 
         // ── Gráfico
         List<Object[]> ingresosMensuales = pagoRepository.obtenerIngresosMensuales(usuario.getId());

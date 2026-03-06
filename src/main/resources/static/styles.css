@@ -23,7 +23,7 @@
     font-size: 14px;
 }
 body {
-    background-color: var(--main-bg);
+    background-color: #e4eef8;
     font-family: 'Inter', system-ui, sans-serif;
     overflow-x: hidden;
 }
@@ -148,12 +148,12 @@ a { color: var(--sidebar-active); }
 .sidebar .nav-text {
     opacity: 0;
     transform: translateX(-6px);
-    transition: opacity 0.2s ease 0s, transform 0.2s ease 0s;
+    transition: opacity 0.1s ease 0s, transform 0.2s ease 0s;
 }
 .sidebar:hover .nav-text {
     opacity: 1;
     transform: translateX(0);
-    transition: opacity 0.22s ease 0.2s, transform 0.22s ease 0.2s;
+    /* transition: opacity 0.22s ease 0.2s, transform 0.22s ease 0.2s; */
 }
 
 /* ── Mobile: toggle manual, sin hover ── */
@@ -576,3 +576,6 @@ body.modo-eliminar-activo .btn-eliminar { transform: scale(1); }
 .page-link:hover { background-color: rgba(31,42,48,0.08); color: var(--sidebar-bg); }
 .page-active { background-color: var(--sidebar-bg) !important; color: #fff !important; }
 .page-item.disabled .page-link { color: #adb5bd; }
+
+
+
