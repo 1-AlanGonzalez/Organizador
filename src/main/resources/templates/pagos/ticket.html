@@ -5,23 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comprobante de Pago</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
+        :root {
+            --sidebar-bg: #1f2a30;
+            --main-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --card-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: #f0f2f5;
+            background: var(--main-bg);
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 2rem 1rem;
             min-height: 100vh;
         }
+
+        /* ── Acciones ── */
         .acciones {
             display: flex;
             gap: 0.75rem;
             margin-bottom: 1.5rem;
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
         }
         .btn {
             flex: 1;
@@ -37,186 +48,257 @@
             align-items: center;
             justify-content: center;
             gap: 0.4rem;
+            transition: opacity 0.15s;
         }
-        .btn-print  { background: #1a1a2e; color: #fff; }
-        .btn-volver { background: #fff; color: #555; border: 1px solid #ddd; }
-        .btn-print:hover  { background: #16213e; }
-        .btn-volver:hover { background: #f8f8f8; }
+        .btn:hover { opacity: 0.88; }
+        .btn-print  { background: var(--sidebar-bg); color: #fff; }
+        .btn-volver { background: var(--card-bg); color: #555; border: 1px solid #e2e8f0; }
+
+        /* ── Ticket ── */
         .ticket {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            background: var(--card-bg);
+            border-radius: 14px;
+            box-shadow: var(--card-shadow);
             width: 100%;
-            max-width: 420px;
-            padding: 2rem;
-            position: relative;
+            max-width: 440px;
+            overflow: hidden;
         }
-        .ticket::before, .ticket::after {
-            content: '';
-            position: absolute;
-            left: 0; right: 0;
-            height: 12px;
-            background: radial-gradient(circle at 10px 6px, #f0f2f5 6px, transparent 0),
-                        radial-gradient(circle at 30px 6px, #f0f2f5 6px, transparent 0);
-            background-size: 20px 12px;
-        }
-        .ticket::before { top: -1px; }
-        .ticket::after  { bottom: -1px; transform: rotate(180deg); }
-        .gym-nombre {
+
+        /* Franja superior con el color del sidebar */
+        .ticket-header {
+            background: var(--sidebar-bg);
+            padding: 1.75rem 2rem 1.5rem;
             text-align: center;
-            font-size: 1.2rem;
+            color: #fff;
+        }
+        .ticket-header .gym-nombre {
+            font-size: 1.1rem;
             font-weight: 700;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: #1a1a2e;
-            margin-bottom: 0.25rem;
+            opacity: 0.95;
         }
-        .gym-subtitulo {
-            text-align: center;
-            font-size: 0.75rem;
-            color: #999;
-            margin-bottom: 1.5rem;
+        .ticket-header .gym-sub {
+            font-size: 0.72rem;
+            opacity: 0.55;
+            margin-top: 0.2rem;
+            letter-spacing: 0.04em;
         }
-        .divider {
-            border: none;
-            border-top: 1px dashed #e0e0e0;
-            margin: 1rem 0;
-        }
+
+        /* Badge pagado */
         .badge-pagado {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
             background: #d1fae5;
             color: #065f46;
             font-size: 0.7rem;
             font-weight: 700;
-            padding: 0.2rem 0.6rem;
+            padding: 0.25rem 0.75rem;
             border-radius: 20px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1rem;
+            letter-spacing: 0.06em;
+            margin-top: 1rem;
         }
+
+        /* Cuerpo */
+        .ticket-body { padding: 1.75rem 2rem; }
+
         .cliente-nombre {
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 1.05rem;
+            font-weight: 700;
             color: #1a1a2e;
         }
         .cliente-dni {
             font-size: 0.8rem;
-            color: #999;
-            margin-top: 0.1rem;
+            color: #94a3b8;
+            margin-top: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
+
+        .divider {
+            border: none;
+            border-top: 1px dashed #e2e8f0;
+            margin: 1.25rem 0;
+        }
+
         .detalle-fila {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.4rem 0;
+            padding: 0.45rem 0;
             font-size: 0.875rem;
         }
-        .detalle-fila .label { color: #888; }
-        .detalle-fila .valor { font-weight: 500; color: #333; }
+        .detalle-fila .label {
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .detalle-fila .valor {
+            font-weight: 500;
+            color: #334155;
+        }
+
+        /* Total */
         .total-fila {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 0.5rem;
-            padding-top: 0.75rem;
-            border-top: 2px solid #1a1a2e;
+            margin-top: 0.75rem;
+            padding: 1rem 1.25rem;
+            background: var(--main-bg);
+            border-radius: 10px;
         }
-        .total-fila .total-label { font-size: 0.875rem; font-weight: 700; text-transform: uppercase; color: #1a1a2e; }
-        .total-fila .total-valor { font-size: 1.4rem; font-weight: 700; color: #1a1a2e; }
-        .mensaje-pie {
+        .total-fila .total-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+        }
+        .total-fila .total-valor {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--sidebar-bg);
+        }
+
+        .pie {
             text-align: center;
+            padding: 1rem 2rem 1.5rem;
+            border-top: 1px solid #f1f5f9;
+        }
+        .pie .mensaje {
             font-size: 0.78rem;
-            color: #bbb;
+            color: #94a3b8;
             font-style: italic;
-            margin-top: 1.25rem;
         }
-        .numero-comprobante {
-            text-align: center;
-            font-size: 0.7rem;
-            color: #ccc;
-            margin-top: 0.5rem;
+        .pie .comprobante-num {
+            font-size: 0.68rem;
+            color: #cbd5e1;
+            margin-top: 0.35rem;
             font-family: monospace;
+            letter-spacing: 0.05em;
         }
+
         @media print {
             body { background: #fff; padding: 0; }
             .acciones { display: none; }
-            .ticket { box-shadow: none; border-radius: 0; max-width: 100%; padding: 1rem; }
-            .ticket::before, .ticket::after { display: none; }
+            .ticket { box-shadow: none; border-radius: 0; max-width: 100%; }
         }
     </style>
 </head>
 <body>
 
     <div class="acciones">
-        <a th:href="@{/ingresos}" class="btn btn-volver">← Volver</a>
-        <button class="btn btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+        <a th:href="@{/ingresos}" class="btn btn-volver">
+            <i data-lucide="arrow-left" style="width:15px;height:15px;"></i>
+            Volver
+        </a>
+        <button class="btn btn-print" onclick="window.print()">
+            <i data-lucide="printer" style="width:15px;height:15px;"></i>
+            Imprimir / PDF
+        </button>
     </div>
 
     <div class="ticket">
 
-        <!-- Nombre del gimnasio — null safe -->
-        <div class="gym-nombre"
-             th:text="${usuario?.nombreGimnasio != null and !#strings.isEmpty(usuario.nombreGimnasio)} ? ${usuario.nombreGimnasio} : 'GYM MANAGER'">
-            GYM MANAGER
-        </div>
-        <div class="gym-subtitulo">Comprobante de Pago</div>
-
-        <hr class="divider">
-
-        <span class="badge-pagado">✓ Pago registrado</span>
-
-        <!-- Cliente — null safe con ?: -->
-        <div class="cliente-nombre"
-             th:text="${pago?.actividadCliente?.cliente?.nombre} + ' ' + ${pago?.actividadCliente?.cliente?.apellido}">
-            —
-        </div>
-        <div class="cliente-dni"
-             th:text="'DNI: ' + (${pago?.actividadCliente?.cliente?.dni} ?: '—')">
-            DNI: —
+        <!-- Franja oscura con nombre del gym -->
+        <div class="ticket-header">
+            <div class="gym-nombre"
+                 th:text="${usuario?.nombreGimnasio != null and !#strings.isEmpty(usuario.nombreGimnasio)}
+                           ? ${usuario.nombreGimnasio} : 'GYM MANAGER'">
+                GYM MANAGER
+            </div>
+            <div class="gym-sub">Comprobante de Pago</div>
+            <div class="badge-pagado">
+                <i data-lucide="check-circle" style="width:12px;height:12px;"></i>
+                Pago registrado
+            </div>
         </div>
 
-        <hr class="divider">
+        <!-- Cuerpo -->
+        <div class="ticket-body">
 
-        <!-- Detalle -->
-        <div class="detalle-fila">
-            <span class="label">Actividad</span>
-            <span class="valor" th:text="${pago?.actividadCliente?.actividad?.nombre} ?: '—'">—</span>
-        </div>
-        <div class="detalle-fila">
-            <span class="label">Plan</span>
-            <span class="valor" th:text="${pago?.actividadCliente?.tipoDeCobro} ?: '—'">—</span>
-        </div>
-        <div class="detalle-fila">
-            <span class="label">Método de pago</span>
-            <span class="valor" th:text="${pago?.metodoPago?.nombre} ?: '—'">—</span>
-        </div>
-
-        <!-- Fecha — null safe: solo formatea si no es null -->
-        <div class="detalle-fila">
-            <span class="label">Fecha</span>
-            <span class="valor"
-                  th:text="${pago?.fechaGeneracion != null} ? ${#temporals.format(pago.fechaGeneracion, 'dd/MM/yyyy HH:mm')} : ${#temporals.format(pago?.fechaGeneracion, 'dd/MM/yyyy')}">
+            <!-- Cliente -->
+            <div class="cliente-nombre"
+                 th:text="${pago?.actividadCliente?.cliente?.nombre} + ' ' + ${pago?.actividadCliente?.cliente?.apellido}">
                 —
-            </span>
+            </div>
+            <div class="cliente-dni">
+                <i data-lucide="id-card" style="width:12px;height:12px;"></i>
+                <span th:text="'DNI: ' + (${pago?.actividadCliente?.cliente?.dni} ?: '—')">DNI: —</span>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Detalle -->
+            <div class="detalle-fila">
+                <span class="label">
+                    <i data-lucide="dumbbell" style="width:13px;height:13px;"></i>
+                    Actividad
+                </span>
+                <span class="valor" th:text="${pago?.actividadCliente?.actividad?.nombre} ?: '—'">—</span>
+            </div>
+
+            <div class="detalle-fila">
+                <span class="label">
+                    <i data-lucide="tag" style="width:13px;height:13px;"></i>
+                    Plan
+                </span>
+                <span class="valor" th:text="${pago?.actividadCliente?.tipoDeCobro} ?: '—'">—</span>
+            </div>
+
+            <div class="detalle-fila">
+                <span class="label">
+                    <i data-lucide="credit-card" style="width:13px;height:13px;"></i>
+                    Método de pago
+                </span>
+                <span class="valor" th:text="${pago?.metodoPago?.nombre} ?: '—'">—</span>
+            </div>
+
+            <div class="detalle-fila">
+                <span class="label">
+                    <i data-lucide="calendar" style="width:13px;height:13px;"></i>
+                    Fecha
+                </span>
+                <span class="valor"
+                      th:text="${pago?.fechaGeneracion != null}
+                                ? ${#temporals.format(pago.fechaGeneracion, 'dd/MM/yyyy HH:mm')}
+                                : '—'">—</span>
+            </div>
+
+            <div class="detalle-fila"
+                 th:if="${pago?.observaciones != null and !#strings.isEmpty(pago.observaciones)}">
+                <span class="label">
+                    <i data-lucide="message-square" style="width:13px;height:13px;"></i>
+                    Observaciones
+                </span>
+                <span class="valor" th:text="${pago.observaciones}">—</span>
+            </div>
+
+            <!-- Total -->
+            <div class="total-fila">
+                <span class="total-label">Total abonado</span>
+                <span class="total-valor">
+                    $<span th:text="${pago?.montoAPagar != null}
+                                   ? ${#numbers.formatDecimal(pago.montoAPagar, 0, 'COMMA', 2, 'POINT')}
+                                   : '0.00'">0.00</span>
+                </span>
+            </div>
         </div>
 
-        <div class="detalle-fila" th:if="${pago?.observaciones != null and !#strings.isEmpty(pago.observaciones)}">
-            <span class="label">Observaciones</span>
-            <span class="valor" th:text="${pago.observaciones}">—</span>
+        <!-- Pie -->
+        <div class="pie">
+            <p class="mensaje">¡Gracias por tu pago!</p>
+            <p class="comprobante-num"
+               th:text="'Comprobante #' + (${pago?.idPago} ?: '—')">Comprobante #0</p>
         </div>
-
-        <!-- Total -->
-        <div class="total-fila">
-            <span class="total-label">Total abonado</span>
-            <span class="total-valor">
-                $<span th:text="${pago?.montoAPagar != null} ? ${#numbers.formatDecimal(pago.montoAPagar, 0, 'COMMA', 2, 'POINT')} : '0.00'">0.00</span>
-            </span>
-        </div>
-
-        <p class="mensaje-pie">¡Gracias por tu pago!</p>
-        <p class="numero-comprobante" th:text="'Comprobante #' + (${pago?.idPago} ?: '—')">Comprobante #0</p>
 
     </div>
 
+    <script>lucide.createIcons();</script>
 </body>
 </html>

@@ -63,17 +63,7 @@ public class ActividadClienteService {
         if(inscriptosActuales >= actividad.getCupoMaximo()){
             throw new RuntimeException("No hay cupos disponibles para esta actividad");
         }
-        
-        // BigDecimal costoDeterminado;
-        // if (tipoCobro == TipoDeCobro.DIARIO) {
-        //     costoDeterminado = actividad.getPrecioDiario(); 
-            
-        //     if (costoDeterminado == null) {
-        //         costoDeterminado = actividad.getPrecio(); 
-        //     }
-        // } else {
-        //     costoDeterminado = actividad.getPrecio();
-        // }
+  
 
         BigDecimal costo;
         if (tipoCobro == TipoDeCobro.DIARIO) {
@@ -89,7 +79,7 @@ public class ActividadClienteService {
         cliente.agregarInscripcion(inscripcion); 
         
         MetodoDePago metodoPago = metodoDePagoRepository
-                        .findByNombreAndUsuario("NO_ESPECIFICADO", usuario)
+                        .findByNombreAndUsuario("No especificado", usuario)
                         .orElseThrow(() -> new RuntimeException(
                                 "Método de pago 'NO_ESPECIFICADO' no encontrado para este usuario."));
 

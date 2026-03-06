@@ -1,160 +1,271 @@
 <div th:fragment="contenido" class="h-100 d-flex flex-column p-2" style="overflow: hidden;">
 
+    <!-- ── Header ── -->
     <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
         <div>
-            <h4 class="fw-bold text-dark mb-0">Inicio</h4> 
+            <h4 class="fw-bold mb-0" style="color:#1f2a30;">Inicio</h4>
             <p class="text-muted small mb-0">Resumen general del gimnasio</p>
         </div>
+        <span class="badge bg-white border px-3 py-2 rounded-pill text-muted"
+              style="font-size:.72rem;box-shadow:0 2px 6px rgba(0,0,0,.06);"
+              th:text="${#dates.format(#dates.createNow(), 'EEEE dd MMMM yyyy')}">Hoy</span>
     </div>
 
-    <div class="row g-2 mb-3 flex-shrink-0 animate-fade-up delay-1">
-        
-    <div class="col-lg-7">
-        <div class="card custom-card bg-gradient-hero border-0 h-100 p-3 position-relative overflow-hidden">
-            <div class="position-absolute rounded-circle bg-white" style="width: 120px; height: 120px; top: -40px; right: -20px; opacity: 0.1;"></div>
-            <div class="position-absolute rounded-circle bg-white" style="width: 80px; height: 80px; bottom: -20px; left: -20px; opacity: 0.05;"></div>
+    <!-- ── Fila 1: KPI principal + Estado clientes ── -->
+    <div class="row g-2 mb-2 flex-shrink-0 animate-fade-up delay-1">
 
-            <div class="d-flex justify-content-between align-items-start position-relative" style="z-index: 2;">
-                <div>
-                    <span class="text-white-50 text-uppercase small fw-bold ls-1" style="font-size: 0.7rem;">Ingresos del Mes</span>
-                    <h6 class="text-white mt-1 fw-bold fs-5" th:text="${#strings.capitalize(#dates.format(#dates.createNow(), 'MMMM'))}">Mes</h6>
+        <!-- Hero: ingresos del mes -->
+        <div class="col-lg-7">
+            <div class="card border-0 h-100 p-3 position-relative overflow-hidden"
+                 style="background:linear-gradient(135deg,#1f2a30 0%,#2d3f46 60%,#3a5260 100%);border-radius:16px;">
+                <div class="d-flex justify-content-between align-items-start position-relative" style="z-index:2;">
+                    <div>
+                        <span class="text-uppercase fw-bold"
+                              style="font-size:.65rem;color:rgba(255,255,255,.5);letter-spacing:.08em;">Ingresos del Mes</span>
+                        <h6 class="text-white mt-1 fw-bold fs-6"
+                            th:text="${#strings.capitalize(#dates.format(#dates.createNow(), 'MMMM yyyy'))}">Mes</h6>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center rounded-3"
+                         style="width:40px;height:40px;background:rgba(255,255,255,.12);backdrop-filter:blur(4px);">
+                        <i data-lucide="wallet" style="width:18px;height:18px;color:#fff;"></i>
+                    </div>
                 </div>
-                <div class="icon-box-glass" style="width: 42px; height: 42px; font-size: 1.2rem;">
-                    <i data-lucide="wallet"></i>
-                </div>
-            </div>
-            
-            <div class="mt-2 position-relative" style="z-index: 2;">
-                <h1 class="text-white fw-bold display-6 mb-0" 
-                    th:text="${'$' + #numbers.formatDecimal(totalMesActual, 1, 'POINT', 2, 'COMMA')}">$0.00</h1>
-                
-                <div class="d-flex align-items-center gap-2 text-white-50 small mt-1">
-                    <i data-lucide="trending-up"></i>
-                    <span>Acumulado actual</span>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- ═══════════════════════════════════════════════
-         ESTADO CLIENTES 
-    ════════════════════════════════════════════════ -->
-    <div class="col-lg-5">
-        <div class="card custom-card border-0 h-100 p-3 position-relative overflow-hidden">
-
-            <!-- Barra de progreso superior (retención visual) -->
-            <div class="position-absolute top-0 start-0 end-0" style="height: 3px; background: #e2e8f0; border-radius: 14px 14px 0 0;">
-                <div style="height: 100%; border-radius: inherit; background: linear-gradient(90deg, #16a34a, #4ade80);
-                     width: /*[[${totalClientes > 0 ? (clientesActivos * 100 / totalClientes) + '%' : '0%'}]]*/ 0%;">
-                </div>
-            </div>
-
-            <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-2 mt-1">
-                <h6 class="fw-bold mb-0 text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.08em; color: #94a3b8;">Estado De Clientes</h6>
-                <span class="badge bg-light text-dark border rounded-pill px-2 py-1"
-                      style="font-size: 0.65rem;"
-                      th:text="${totalInscriptos + ' Total'}">0 Total</span>
-            </div>
-
-            <!-- Fila Activos -->
-            <div class="d-flex align-items-center gap-2 rounded-3 px-2 py-2 mb-1" style="transition: background .2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                <div class="icon-box-light icon-bg-green rounded-3 flex-shrink-0" style="width: 34px; height: 34px; font-size: 0.95rem;">
-                    <i data-lucide="user-check"></i>
-                </div>
-                <div class="flex-grow-1">
-                    <small class="d-block text-uppercase fw-bold" style="font-size: 0.6rem; color: #94a3b8; line-height: 1;">Activos / Sin deudas</small>
-                    <span class="fw-bold text-dark" style="font-size: 1.25rem; line-height: 1.2;" th:text="${clientesActivos}">0</span>
-                </div>
-                <span class="badge rounded-pill fw-bold"
-                      style="background: #dcfce7; color: #16a34a; font-size: 0.65rem;"
-                      th:text="${totalClientes > 0 ? #numbers.formatDecimal(clientesActivos * 100.0 / totalClientes, 1, 0) + '%' : '0%'}">0%</span>
-            </div>
-
-            <!-- Fila Pendientes -->
-            <div class="d-flex align-items-center gap-2 rounded-3 px-2 py-2 mb-2" style="transition: background .2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                <div class="icon-box-light icon-bg-orange rounded-3 flex-shrink-0" style="width: 34px; height: 34px; font-size: 0.95rem;">
-                    <i data-lucide="user-x"></i>
-                </div>
-                <div class="flex-grow-1">
-                    <small class="d-block text-uppercase fw-bold" style="font-size: 0.6rem; color: #94a3b8; line-height: 1;">Pendientes</small>
-                    <span class="fw-bold text-dark" style="font-size: 1.25rem; line-height: 1.2;" th:text="${clientesPendientes}">0</span>
-                </div>
-                <span class="badge rounded-pill fw-bold"
-                      style="background: #ffedd5; color: #ea580c; font-size: 0.65rem;"
-                      th:text="${totalClientes > 0 ? #numbers.formatDecimal(clientesPendientes * 100.0 / totalClientes, 1, 0) + '%' : '0%'}">0%</span>
-            </div>
-
-            <!-- Divisor -->
-            <hr class="my-1" style="border-color: #f1f5f9;">
-
-            <!-- Footer: barra de retención -->
-            <div class="d-flex align-items-center gap-2 mt-1">
-                <div class="flex-grow-1">
-                    <small class="d-block text-uppercase fw-bold mb-1" style="font-size: 0.6rem; color: #94a3b8;">Tasa de retención</small>
-                    <div class="rounded-pill" style="height: 5px; background: #e2e8f0; overflow: hidden;">
-                        <div class="rounded-pill" style="height: 100%; background: linear-gradient(90deg, #16a34a, #4ade80);
-                             width: /*[[${totalClientes > 0 ? (clientesActivos * 100 / totalClientes) + '%' : '0%'}]]*/ 0%;">
+                <div class="mt-2 position-relative" style="z-index:2;">
+                    <h1 class="fw-bold mb-1" style="font-size:2.4rem;color:#fff;letter-spacing:-.02em;"
+                        th:text="${'$' + #numbers.formatDecimal(totalMesActual, 1, 'POINT', 2, 'COMMA')}">$0.00</h1>
+                    <div class="d-flex gap-3 mt-2 flex-wrap">
+                        <div class="rounded-3 px-3 py-1" style="background:rgba(255,255,255,.08);">
+                            <div style="font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;">Pendiente</div>
+                            <div class="fw-bold text-white" style="font-size:.9rem;"
+                                 th:text="${'$' + #numbers.formatDecimal(totalPendiente, 1, 'POINT', 0, 'COMMA')}">$0</div>
+                        </div>
+                        <div class="rounded-3 px-3 py-1" style="background:rgba(255,255,255,.08);">
+                            <div style="font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;">Acumulado</div>
+                            <div class="fw-bold text-white" style="font-size:.9rem;"
+                                 th:text="${'$' + #numbers.formatDecimal(totalRecaudado, 1, 'POINT', 0, 'COMMA')}">$0</div>
+                        </div>
+                        <div class="rounded-3 px-3 py-1" style="background:rgba(239,68,68,.18);">
+                            <div style="font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;">Deudores</div>
+                            <div class="fw-bold" style="font-size:.9rem;color:#fca5a5;"
+                                 th:text="${clientesPendientes}">0</div>
                         </div>
                     </div>
                 </div>
-                <span class="fw-bold" style="font-size: 0.8rem; color: #16a34a; white-space: nowrap;"
-                      th:text="${totalClientes > 0 ? #numbers.formatDecimal(clientesActivos * 100.0 / totalClientes, 1, 0) + '%' : '0%'}">0%</span>
             </div>
+        </div>
 
+        <!-- Estado clientes -->
+        <div class="col-lg-5">
+            <div class="card custom-card border-0 h-100 p-3 position-relative overflow-hidden">
+                <div class="position-absolute top-0 start-0 end-0"
+                     style="height:3px;background:#e2e8f0;border-radius:14px 14px 0 0;">
+                    <div th:style="'height:100%;border-radius:inherit;background:linear-gradient(90deg,#1f2a30,#4ade80);width:' + ${totalClientes > 0 ? (clientesActivos * 100 / totalClientes) + '%' : '0%'}"></div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-2 mt-1">
+                    <h6 class="fw-bold mb-0 text-uppercase"
+                        style="font-size:.65rem;letter-spacing:.08em;color:#94a3b8;">Estado de Clientes</h6>
+                    <span class="badge bg-light text-dark border rounded-pill px-2 py-1"
+                          style="font-size:.65rem;"
+                          th:text="${totalInscriptos + ' inscriptos'}">0</span>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 rounded-3 px-2 py-2 mb-1"
+                     style="transition:background .2s;"
+                     onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                    <div class="icon-box-light icon-bg-green rounded-3 flex-shrink-0"
+                         style="width:34px;height:34px;font-size:.9rem;">
+                        <i data-lucide="user-check"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <small class="d-block text-uppercase fw-bold"
+                               style="font-size:.6rem;color:#94a3b8;line-height:1;">Al día</small>
+                        <span class="fw-bold text-dark" style="font-size:1.2rem;line-height:1.2;"
+                              th:text="${clientesActivos}">0</span>
+                    </div>
+                    <span class="badge rounded-pill fw-bold"
+                          style="background:#dcfce7;color:#16a34a;font-size:.65rem;"
+                          th:text="${totalClientes > 0 ? #numbers.formatDecimal(clientesActivos * 100.0 / totalClientes, 1, 0) + '%' : '0%'}">0%</span>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 rounded-3 px-2 py-2 mb-2"
+                     style="transition:background .2s;"
+                     onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                    <div class="icon-box-light icon-bg-orange rounded-3 flex-shrink-0"
+                         style="width:34px;height:34px;font-size:.9rem;">
+                        <i data-lucide="user-x"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <small class="d-block text-uppercase fw-bold"
+                               style="font-size:.6rem;color:#94a3b8;line-height:1;">Adeudan</small>
+                        <span class="fw-bold text-dark" style="font-size:1.2rem;line-height:1.2;"
+                              th:text="${clientesPendientes}">0</span>
+                    </div>
+                    <span class="badge rounded-pill fw-bold"
+                          style="background:#ffedd5;color:#ea580c;font-size:.65rem;"
+                          th:text="${totalClientes > 0 ? #numbers.formatDecimal(clientesPendientes * 100.0 / totalClientes, 1, 0) + '%' : '0%'}">0%</span>
+                </div>
+
+                <hr class="my-1" style="border-color:#f1f5f9;">
+                <div class="d-flex align-items-center gap-2 mt-1">
+                    <div class="flex-grow-1">
+                        <small class="d-block text-uppercase fw-bold mb-1"
+                               style="font-size:.6rem;color:#94a3b8;">Tasa de retención</small>
+                        <div class="rounded-pill" style="height:5px;background:#e2e8f0;overflow:hidden;">
+                            <div class="rounded-pill"
+                                 th:style="'height:100%;background:linear-gradient(90deg,#1f2a30,#4ade80);width:' + ${totalClientes > 0 ? (clientesActivos * 100 / totalClientes) + '%' : '0%'}"></div>
+                        </div>
+                    </div>
+                    <span class="fw-bold" style="font-size:.8rem;color:#1f2a30;white-space:nowrap;"
+                          th:text="${totalClientes > 0 ? #numbers.formatDecimal(clientesActivos * 100.0 / totalClientes, 1, 0) + '%' : '0%'}">0%</span>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-    <div class="row flex-grow-1 pb-2 animate-fade-up delay-2" style="min-height: 0;">
-        <div class="col-lg-5 d-flex flex-column ">
-            <h6 class="section-subtitle flex-shrink-0">Accesos Directos</h6>
-            <div class="row g-3">
-                <div class="col-6 h-50">
-                    <a th:href="@{/asistencias/tomar}" class="btn-widget text-decoration-none  d-flex flex-column justify-content-center align-items-center text-center p-2">
-                        <i data-lucide="qr-code"></i>
-                        <span class="fw-bold text-dark d-block">Asistencia</span>
-                        <small class="text-muted">Tomar asistencia</small>
+    <!-- ── Fila 2: Accesos | Gráfico | Alertas ── -->
+    <div class="row g-2 flex-grow-1 animate-fade-up delay-2" style="min-height:0;">
+
+        <!-- Accesos directos -->
+      <div class="row g-3 flex-grow-1 animate-fade-up delay-2" style="min-height:0;">
+
+        <div class="col-12 col-lg-3 d-flex flex-column" style="min-height:0;">
+            <h6 class="fw-bold text-uppercase mb-2 flex-shrink-0" style="font-size:.7rem; letter-spacing:.08em; color:#64748b;">Accesos Directos</h6>
+            <div class="row g-2">
+                <div class="col-6">
+                    <a th:href="@{/asistencias/tomar}"
+                       class="btn-widget text-decoration-none bg-white p-3 rounded-3 d-block text-center shadow-sm h-100 border-0" style="transition: transform 0.2s;">
+                        <i data-lucide="qr-code" style="color:#1e293b; margin-bottom: 8px;"></i>
+                        <span class="fw-bold text-dark d-block" style="font-size:.85rem;">Asistencia</span>
+                        <small class="text-muted d-none d-lg-block" style="font-size:.7rem;">Tomar</small>
                     </a>
                 </div>
-                <div class="col-6 h-50">
-                    <a th:href="@{/ingresos/nuevo}" class="btn-widget text-decoration-none  d-flex flex-column justify-content-center align-items-center text-center p-2">
-                        <i data-lucide="banknote-arrow-up"></i>
-                        <span class="fw-bold text-dark d-block">Cobrar</span>
-                        <small class="text-muted">Registrar pago</small>
+                <div class="col-6">
+                    <a th:href="@{/ingresos/nuevo}"
+                       class="btn-widget text-decoration-none bg-white p-3 rounded-3 d-block text-center shadow-sm h-100 border-0" style="transition: transform 0.2s;">
+                        <i data-lucide="banknote-arrow-up" style="color:#10b981; margin-bottom: 8px;"></i>
+                        <span class="fw-bold text-dark d-block" style="font-size:.85rem;">Cobrar</span>
+                        <small class="text-muted d-none d-lg-block" style="font-size:.7rem;">Registrar pago</small>
                     </a>
                 </div>
-                <div class="col-6 h-50">
-                    <a th:href="@{/clientes/nuevo}" class="btn-widget text-decoration-none  d-flex flex-column justify-content-center align-items-center text-center p-2">
-                        <i data-lucide="user-round-plus"></i>
-                        <span class="fw-bold text-dark d-block">Nuevo</span>
-                        <small class="text-muted">Alta alumno</small>
+                <div class="col-6">
+                    <a th:href="@{/clientes/nuevo}"
+                       class="btn-widget text-decoration-none bg-white p-3 rounded-3 d-block text-center shadow-sm h-100 border-0" style="transition: transform 0.2s;">
+                        <i data-lucide="user-round-plus" style="color:#3b82f6; margin-bottom: 8px;"></i>
+                        <span class="fw-bold text-dark d-block" style="font-size:.85rem;">Nuevo</span>
+                        <small class="text-muted d-none d-lg-block" style="font-size:.7rem;">Alta alumno</small>
                     </a>
                 </div>
-                <div class="col-6 h-50">
-                    <a th:href="@{/reportes}" class="btn-widget text-decoration-none d-flex flex-column justify-content-center align-items-center text-center p-2">
-                        <i data-lucide="file-exclamation-point"></i>
-                        <span class="fw-bold text-dark d-block">Reportes</span>
-                        <small class="text-muted">Exportar Excel</small>
+                <div class="col-6">
+                    <a th:href="@{/reportes}"
+                       class="btn-widget text-decoration-none bg-white p-3 rounded-3 d-block text-center shadow-sm h-100 border-0" style="transition: transform 0.2s;">
+                        <i data-lucide="file-spreadsheet" style="color:#8b5cf6; margin-bottom: 8px;"></i>
+                        <span class="fw-bold text-dark d-block" style="font-size:.85rem;">Reportes</span>
+                        <small class="text-muted d-none d-lg-block" style="font-size:.7rem;">Exportar Excel</small>
                     </a>
                 </div>
             </div>
         </div>
-        
 
-        <div class="col-lg-7 d-flex flex-column h-100 " id="tabla-ingresos">
+        <!-- Gráfico -->
+        <div class="col-12 col-lg-5 d-flex flex-column" id="tabla-ingresos">
             <h6 class="section-subtitle flex-shrink-0">Gráfico de Ingresos</h6>
-            <div class="card custom-card border-0 h-100 w-100 p-3">
+            <div class="card custom-card border-0 p-3 flex-grow-1" style="min-height:220px;">
                 <div id="chart" class="w-100 h-100"></div>
-                
                 <script th:inline="javascript">
                     /*<![CDATA[*/
-                    window.datosGrafico = /*[[${datosGrafico}]]*/ [];
+                    window.datosGrafico      = /*[[${datosGrafico}]]*/ [];
                     window.categoriasGrafico = /*[[${categoriasGrafico}]]*/ [];
                     /*]]>*/
                 </script>
             </div>
         </div>
+
+      <div class="col-12 col-lg-4 d-flex flex-column" style="min-height:0;">
+
+            <h6 class="fw-bold text-uppercase mb-2 flex-shrink-0" style="font-size:.7rem; letter-spacing:.08em; color:#64748b;">Deudores</h6>
+            <div class="card border-0 mb-3 flex-shrink-0 shadow-sm"
+                 style="border-radius:16px; background:#fff; max-height:190px;">
+                 
+                <div th:if="${#lists.isEmpty(clientesDeudores)}"
+                     class="d-flex flex-column align-items-center justify-content-center py-4"
+                     style="color:#94a3b8;">
+                    <i data-lucide="circle-check-big"
+                       style="width:26px;height:26px;color:#10b981;" class="mb-2"></i>
+                    <small class="fw-bold">¡Sin deudores!</small>
+                </div>
+
+                <ul th:if="${!#lists.isEmpty(clientesDeudores)}"
+                    class="list-unstyled mb-0 p-2" style="overflow-y:auto;max-height:190px;">
+                    <li th:each="c, iter : ${clientesDeudores}"
+                        th:if="${iter.index < 5}"
+                        class="d-flex align-items-center gap-2 rounded-3 px-3 py-2"
+                        style="transition:background .15s;"
+                        onmouseover="this.style.background='#f8fafc'"
+                        onmouseout="this.style.background='transparent'">
+                        
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
+                             style="width:28px;height:28px;font-size:.7rem;background:#fee2e2;color:#ef4444;"
+                             th:text="${#strings.substring(c.nombre,0,1).toUpperCase()}">A</div>
+                        <span class="fw-semibold flex-grow-1 text-truncate"
+                              style="font-size:.8rem;color:#1e293b;"
+                              th:text="${c.nombre + ' ' + c.apellido}">Nombre</span>
+                        <a th:href="@{/ingresos/nuevo(idCliente=${c.idCliente})}"
+                           class="flex-shrink-0 fw-bold text-decoration-none px-2 py-1 rounded-2"
+                           style="font-size:.65rem;background:#fee2e2;color:#ef4444;white-space:nowrap;">
+                            Cobrar
+                        </a>
+                    </li>
+                    <li th:if="${#lists.size(clientesDeudores) > 5}" class="text-center pt-2 pb-2 border-top mt-1">
+                        <a th:href="@{/clientes}" class="small fw-bold text-decoration-none"
+                           style="color:#64748b;">
+                            Ver <span th:text="${#lists.size(clientesDeudores) - 5}">0</span> más &rarr;
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <h6 class="fw-bold text-uppercase mb-2 flex-shrink-0" style="font-size:.7rem; letter-spacing:.08em; color:#64748b;">
+                Vencen en 7 días
+                <span class="badge rounded-pill fw-bold ms-1"
+                      style="background:#f1f5f9;color:#64748b;font-size:.65rem;vertical-align:middle;"
+                      th:text="${#lists.size(proximosVencimientos)}">0</span>
+            </h6>
+            <div class="card border-0 flex-grow-1 shadow-sm position-relative"
+                 style="border-radius:16px; background:#fff; min-height:0;">
+                
+                <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#f59e0b,#fbbf24); border-radius:16px 16px 0 0;"></div>
+
+                <div th:if="${#lists.isEmpty(proximosVencimientos)}"
+                     class="d-flex flex-column align-items-center justify-content-center py-4 h-100"
+                     style="color:#94a3b8;">
+                    <i data-lucide="calendar-check"
+                       style="width:26px;height:26px;color:#fbbf24;" class="mb-2 mt-2"></i>
+                    <small class="fw-bold">Sin vencimientos</small>
+                </div>
+
+                <ul th:if="${!#lists.isEmpty(proximosVencimientos)}"
+                    class="list-unstyled mb-0 p-2 pt-3" style="overflow-y:auto;height:100%;">
+                    <li th:each="c : ${proximosVencimientos}"
+                        class="d-flex align-items-center gap-2 rounded-3 px-3 py-2"
+                        style="transition:background .15s;"
+                        onmouseover="this.style.background='#f8fafc'"
+                        onmouseout="this.style.background='transparent'">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
+                             style="width:28px;height:28px;font-size:.7rem;background:#fef3c7;color:#d97706;"
+                             th:text="${#strings.substring(c.nombre,0,1).toUpperCase()}">A</div>
+                        <span class="fw-semibold flex-grow-1 text-truncate"
+                              style="font-size:.8rem;color:#1e293b;"
+                              th:text="${c.nombre + ' ' + c.apellido}">Nombre</span>
+                        <a th:href="@{/ingresos/nuevo(idCliente=${c.idCliente})}"
+                           class="flex-shrink-0 fw-bold text-decoration-none px-2 py-1 rounded-2"
+                           style="font-size:.65rem;background:#fef3c7;color:#d97706;white-space:nowrap;">
+                            Renovar
+                        </a>
+                    </li>
+                </ul>
+            </div>
     </div>
 
     <script th:src="@{/js/script.js}"></script>

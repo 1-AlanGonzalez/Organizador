@@ -6,54 +6,116 @@
     <title>Gym Manager | Iniciar Sesión</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    
     <link href="https://fonts.googleapis.com/css2?family=Marko+One&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" th:href="@{/styles.css}">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <style>
+        /*
+         * Lucide reemplaza <i> por <svg> al ejecutar createIcons().
+         * styles.css solo tiene selector "i", así que lo extendemos al svg.
+         */
+        .input-group-modern svg {
+            position: absolute;
+            left: 15px;
+            z-index: 4;
+            color: var(--text-muted);
+            transition: color 0.3s;
+            pointer-events: none;
+        }
+        .input-modern:focus ~ svg,
+        .input-group-modern:focus-within svg {
+            color: var(--brand-dark);
+        }
+
+        /* Mobile: el panel de marca se oculta y el form ocupa toda la pantalla */
+        @media (max-width: 767px) {
+            .d-flex.min-vh-100 {
+                flex-direction: column;
+            }
+            /* Panel izquierdo: ocupa todo */
+            .col-md-5 {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-height: 100vh;
+                display: flex !important;
+                flex-direction: column;
+                justify-content: center;
+                padding: 2.5rem 1.5rem !important;
+            }
+            /* Panel derecho: se oculta en mobile */
+            .col-md-7 {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body>
 
     <div class="d-flex min-vh-100 w-100 overflow-hidden row m-0">
-        
+
+        <!-- Panel izquierdo -->
         <div class="col-md-5 col-lg-4 d-flex flex-column justify-content-center align-items-center bg-white p-5 position-relative shadow-end z-1">
-            
+
             <div class="w-100 fade-in-up" style="max-width: 360px;">
-                
+
                 <div class="mb-5">
                     <h2 class="fw-bold mb-1 text-dark-brand">Bienvenido</h2>
                     <p class="text-muted small">Ingresa tus credenciales para administrar el gimnasio.</p>
                 </div>
 
-                <div th:if="${param.error}" class="alert alert-danger py-2 small border-0 bg-danger-subtle text-danger rounded-3 mb-4">
-                    <i class="bi bi-exclamation-octagon me-2"></i>Credenciales incorrectas
+                <div th:if="${param.error}"
+                     class="alert alert-danger py-2 small border-0 bg-danger-subtle text-danger rounded-3 mb-4 d-flex align-items-center gap-2">
+                    <i data-lucide="alert-circle" style="width:15px;height:15px;flex-shrink:0;"></i>
+                    Credenciales incorrectas
                 </div>
-                <div th:if="${param.logout}" class="alert alert-success py-2 small border-0 bg-success-subtle text-success rounded-3 mb-4">
-                    <i class="bi bi-check-circle me-2"></i>Sesión finalizada
+                <div th:if="${param.logout}"
+                     class="alert alert-success py-2 small border-0 bg-success-subtle text-success rounded-3 mb-4 d-flex align-items-center gap-2">
+                    <i data-lucide="check-circle" style="width:15px;height:15px;flex-shrink:0;"></i>
+                    Sesión finalizada
                 </div>
 
                 <form th:action="@{/login}" method="post">
-                    
+
                     <div class="mb-4">
-                        <label for="username" class="form-label small text-uppercase text-muted fw-bold tracking-wide">Usuario</label>
+                        <label for="username"
+                               class="form-label small text-uppercase text-muted fw-bold tracking-wide">
+                            Usuario
+                        </label>
                         <div class="input-group-modern">
-                            <i class="bi bi-person text-muted"></i>
-                            <input type="text" class="form-control input-modern" id="username" name="username" placeholder="Ej. admin" required autofocus>
+                            <input type="text"
+                                   class="form-control input-modern"
+                                   id="username" name="username"
+                                   placeholder="Ej. admin"
+                                   required autofocus>
+                            <i data-lucide="user" style="width:16px;height:16px;"></i>
                         </div>
                     </div>
 
                     <div class="mb-5">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <label for="password" class="form-label small text-uppercase text-muted fw-bold tracking-wide mb-0">Contraseña</label>
-                                <a th:href="@{/olvide-password}" class="small text-brand text-decoration-none fw-medium">¿Olvidaste?</a>                        </div>
+                            <label for="password"
+                                   class="form-label small text-uppercase text-muted fw-bold tracking-wide mb-0">
+                                Contraseña
+                            </label>
+                            <a th:href="@{/olvide-password}"
+                               class="small text-brand text-decoration-none fw-medium">
+                                ¿Olvidaste?
+                            </a>
+                        </div>
                         <div class="input-group-modern">
-                            <i class="bi bi-lock text-muted"></i>
-                            <input type="password" class="form-control input-modern" id="password" name="password" placeholder="••••••••" required>
+                            <input type="password"
+                                   class="form-control input-modern"
+                                   id="password" name="password"
+                                   placeholder="••••••••"
+                                   required>
+                            <i data-lucide="lock" style="width:16px;height:16px;"></i>
                         </div>
                     </div>
 
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-modern-primary py-3 rounded-3 fw-bold shadow-sm">
+                        <button type="submit"
+                                class="btn btn-modern-primary py-3 rounded-3 fw-bold shadow-sm">
                             ACCEDER AL SISTEMA
                         </button>
                     </div>
@@ -66,18 +128,21 @@
             </div>
         </div>
 
-        <div class="col-md-7 col-lg-8 bg-brand  d-md-flex flex-column align-items-center justify-content-center text-white position-relative overflow-hidden">
+        <!-- Panel derecho (branding) -->
+        <div class="col-md-7 col-lg-8 bg-brand d-md-flex flex-column align-items-center justify-content-center text-white position-relative overflow-hidden">
             <div class="decorative-circle circle-1"></div>
             <div class="decorative-circle circle-2"></div>
-            
             <div class="z-2 text-center fade-in">
-                <!-- Imagen logoSinFondo.png con thymeleaf -->
-                <img th:src="@{/images/logo/logo.png}" alt="Logo Gym Manager" class="img-fluid login-logo-img mb-4" width="350">
+                <img th:src="@{/images/logo/logo.png}"
+                     alt="Logo Gym Manager"
+                     class="img-fluid login-logo-img mb-4"
+                     width="350">
                 <p class="lead opacity-75 fw-light">Gestión profesional para tu centro deportivo</p>
             </div>
         </div>
 
     </div>
 
+    <script>lucide.createIcons();</script>
 </body>
 </html>

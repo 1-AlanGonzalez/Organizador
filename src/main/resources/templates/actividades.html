@@ -6,11 +6,14 @@
             <p class="text-muted small mb-0">Gestión de clases y cupos</p>
         </div>
         <div class="d-flex gap-2">
-            <a class="btn btn-outline-danger btn-sm btn-modo-eliminar" onclick="toggleModoEliminar()">
-                <i class="bi bi-trash me-1"></i><span>Eliminar</span>
-            </a>
-            <a class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2" onclick="abrirPanelActividad()">
-                <i class="bi bi-plus-lg"></i>
+            <button class="btn btn-outline-danger btn-sm btn-modo-eliminar d-flex align-items-center gap-2"
+                    onclick="toggleModoEliminar()">
+                <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
+                <span>Eliminar</span>
+            </button>
+            <a th:href="@{/actividades/nuevo}"
+               class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+                <i data-lucide="plus" style="width:14px;height:14px;"></i>
                 <span>Nueva actividad</span>
             </a>
         </div>
@@ -22,7 +25,7 @@
             <div class="col-md-4">
                 <div class="input-group input-group-sm">
                     <span class="input-group-text bg-light border-end-0 text-muted">
-                        <i class="bi bi-search"></i>
+                        <i data-lucide="search" style="width:14px;height:14px;"></i>
                     </span>
                     <input id="filtroActividades" type="text"
                            class="form-control border-start-0 ps-0 bg-light"
@@ -32,30 +35,21 @@
         </div>
     </div>
 
-    <div id="panelOverlayActividad"
-         class="panel-overlay d-none"
-         onclick="cerrarPanelActividad()">
-        <div class="panel-container"
-             onclick="event.stopPropagation()"
-             th:insert="fragments/panel-actividades :: panelActividad">
-        </div>
-    </div>
-
+    <!-- Tabla -->
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
         <div class="table-responsive h-100 w-100 custom-scrollbar">
-            <table class="table table-hover align-middle mb-0 tableAnimation" style="width: 100%;" id="tablaActividades">
-
-                <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
+            <table class="table table-hover align-middle mb-0 tableAnimation"
+                   style="width:100%;" id="tablaActividades">
+                <thead class="bg-white" style="position:sticky;top:0;z-index:10;">
                     <tr class="text-secondary small text-uppercase">
                         <th class="ps-4 py-3 bg-light border-bottom">Actividad</th>
                         <th class="py-3 bg-light border-bottom">Instructor</th>
                         <th class="py-3 bg-light border-bottom">Cant./Cupos</th>
                         <th class="py-3 bg-light border-bottom">Días</th>
                         <th class="py-3 bg-light border-bottom">Horario</th>
-                        <th class="pe-4 py-3 bg-light border-bottom text-center" style="width: 120px;">Acciones</th>
+                        <th class="pe-4 py-3 bg-light border-bottom text-center" style="width:120px;">Acciones</th>
                     </tr>
                 </thead>
-
                 <tbody class="border-top-0">
                     <tr th:each="actividad : ${actividades}">
                         <td class="ps-4 fw-bold text-dark" th:text="${actividad.nombre}"></td>
@@ -64,16 +58,16 @@
                             <div class="d-flex flex-column gap-1">
                                 <span th:each="d : ${actividad.dictados}"
                                       class="d-flex align-items-center gap-1 text-muted small">
-                                    <i class="bi bi-person-fill text-secondary" style="font-size: 0.75rem;"></i>
+                                    <i data-lucide="user" style="width:12px;height:12px;"></i>
                                     <span th:text="${d.instructor.nombre + ' ' + d.instructor.apellido}"></span>
                                 </span>
                             </div>
                         </td>
 
                         <td>
-                            <span class="badge bg-success-light text-success border border-success border-opacity-25"
+                            <span class="badge bg-success-light text-success border border-success border-opacity-25 d-inline-flex align-items-center gap-1"
                                   th:with="inscriptosActivos=${actividad.inscripciones.?[estado.name() == 'ACTIVA']}">
-                                <i class="bi bi-people-fill me-1"></i>
+                                <i data-lucide="users" style="width:11px;height:11px;"></i>
                                 <span th:text="${inscriptosActivos.size()}">0</span>
                                 <span th:text="'/' + ${actividad.cupoMaximo}"></span>
                             </span>
@@ -81,8 +75,9 @@
 
                         <td>
                             <div class="d-flex flex-column gap-1">
-                                <span class="text-muted small" th:each="d : ${actividad.dictados}">
-                                    <i class="bi bi-calendar4-week me-1"></i>
+                                <span class="text-muted small d-flex align-items-center gap-1"
+                                      th:each="d : ${actividad.dictados}">
+                                    <i data-lucide="calendar-days" style="width:12px;height:12px;"></i>
                                     <span th:text="${d.dias}"></span>
                                 </span>
                             </div>
@@ -90,8 +85,9 @@
 
                         <td>
                             <div class="d-flex flex-column gap-1">
-                                <span class="text-muted small" th:each="d : ${actividad.dictados}">
-                                    <i class="bi bi-clock me-1"></i>
+                                <span class="text-muted small d-flex align-items-center gap-1"
+                                      th:each="d : ${actividad.dictados}">
+                                    <i data-lucide="clock" style="width:12px;height:12px;"></i>
                                     <span th:text="${d.horario}"></span>
                                 </span>
                             </div>
@@ -99,36 +95,35 @@
 
                         <td class="pe-4 text-center">
                             <div class="d-flex justify-content-center align-items-center gap-1">
+                                <a th:href="@{/actividades/editar/{id}(id=${actividad.idActividad})}"
+                                   class="btn btn-sm btn-outline-primary d-inline-flex align-items-center"
+                                   title="Editar">
+                                    <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+                                </a>
                                 <button type="button"
-                                        class="btn btn-sm btn-outline-primary btn-editar-row"
-                                        th:attr="data-id=${actividad.idActividad}"
-                                        onclick="abrirPanelEditarActividad(this)">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button type="button"
-                                        class="btn btn-sm btn-outline-danger btn-eliminar"
+                                        class="btn btn-sm btn-outline-danger btn-eliminar d-inline-flex align-items-center"
                                         th:attr="data-id=${actividad.idActividad},
                                                  data-nombre=${actividad.nombre},
                                                  data-url='/actividades/eliminar'"
-                                        onclick="abrirPanelEliminar(this)">
-                                    <i class="bi bi-trash"></i>
+                                        onclick="abrirPanelEliminar(this)"
+                                        title="Eliminar">
+                                    <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
                                 </button>
                             </div>
                         </td>
                     </tr>
 
-                    <!-- Fila vacía server-side (sin actividades) -->
                     <tr class="empty-row" th:if="${#lists.isEmpty(actividades)}">
                         <td colspan="6" class="text-center py-5 text-muted">
-                            <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                            <i data-lucide="calendar-x" style="width:40px;height:40px;opacity:0.3;"
+                               class="d-block mx-auto mb-2"></i>
                             No hay actividades registradas.
                         </td>
                     </tr>
-
-                    <!-- Fila vacía JS (búsqueda sin resultados) -->
                     <tr id="mensajeVacioActividades" class="empty-row" style="display:none;">
                         <td colspan="6" class="text-center py-5 text-muted">
-                            <i class="bi bi-search fs-1 d-block mb-2 opacity-50"></i>
+                            <i data-lucide="search" style="width:40px;height:40px;opacity:0.3;"
+                               class="d-block mx-auto mb-2"></i>
                             No se encontraron actividades con ese nombre.
                         </td>
                     </tr>
@@ -138,13 +133,10 @@
         <div id="paginadorActividades" class="border-top px-3 flex-shrink-0"></div>
     </div>
 
-    <div id="panelEliminarOverlay"
-         class="panel-overlay d-none"
-         onclick="cerrarPanelEliminar()">
-        <div class="panel-container"
-             onclick="event.stopPropagation()"
-             th:insert="fragments/panel-eliminar :: panelEliminar">
-        </div>
+    <!-- Panel eliminar — solo confirmación, se mantiene como overlay -->
+    <div id="panelEliminarOverlay" class="panel-overlay d-none" onclick="cerrarPanelEliminar()">
+        <div class="panel-container" onclick="event.stopPropagation()"
+             th:insert="~{fragments/panel-eliminar :: panelEliminar}"></div>
     </div>
 
     <script th:src="@{/js/actividades.js}"></script>

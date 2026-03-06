@@ -5,29 +5,29 @@
             <h4 class="fw-bold text-dark mb-0">Instructores</h4>
             <p class="text-muted small mb-0">Gestión del personal docente</p>
         </div>
-
         <div class="d-flex gap-2">
-            <a class="btn btn-outline-danger btn-sm btn-modo-eliminar"
+            <button class="btn btn-outline-danger btn-sm btn-modo-eliminar d-flex align-items-center gap-2"
                     onclick="toggleModoEliminar()">
+                <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
                 <span>Eliminar</span>
-            </a>
-            
-            <a class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2" onclick="abrirPanelInstructor()">
-                <i class="bi bi-person-plus-fill"></i>
+            </button>
+            <a th:href="@{/instructores/nuevo}"
+               class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+                <i data-lucide="user-plus" style="width:14px;height:14px;"></i>
                 <span>Añadir Instructor</span>
             </a>
         </div>
     </div>
 
+    <!-- Buscador -->
     <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
         <div class="row">
             <div class="col-md-4">
                 <div class="input-group input-group-sm">
                     <span class="input-group-text bg-light border-end-0 text-muted">
-                        <i class="bi bi-search"></i>
+                        <i data-lucide="search" style="width:14px;height:14px;"></i>
                     </span>
-                    <input id="filtroInstructores"
-                           type="text"
+                    <input id="filtroInstructores" type="text"
                            class="form-control border-start-0 ps-0 bg-light"
                            placeholder="Buscar por nombre, DNI...">
                 </div>
@@ -35,95 +35,82 @@
         </div>
     </div>
 
-    <div id="panelOverlayInstructor"
-         class="panel-overlay"
-         th:classappend="${abrirPanelInstructor} ? '' : 'd-none'"
-         onclick="cerrarPanelInstructor()">
-        <div class="panel-container"
-             onclick="event.stopPropagation()"
-             th:insert="fragments/panel-instructor :: panelInstructor">
-        </div>
-    </div>
-
+    <!-- Tabla -->
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
-        
         <div class="table-responsive h-100 w-100 custom-scrollbar">
-            <table class="table table-hover align-middle mb-0 tableAnimation" id="tablaInstructores" style="width: 100%;">
-                
-                <thead class="bg-white" style="position: sticky; top: 0; z-index: 10;">
+            <table class="table table-hover align-middle mb-0 tableAnimation"
+                   id="tablaInstructores" style="width:100%;">
+                <thead class="bg-white" style="position:sticky;top:0;z-index:10;">
                     <tr class="text-secondary small text-uppercase">
                         <th class="ps-4 py-3 bg-light border-bottom">Nombre</th>
                         <th class="py-3 bg-light border-bottom">Apellido</th>
                         <th class="py-3 bg-light border-bottom">DNI</th>
                         <th class="py-3 bg-light border-bottom">Teléfono</th>
-                        <th class="pe-4 py-3 bg-light border-bottom text-center" style="width: 120px;">Acciones</th>
+                        <th class="pe-4 py-3 bg-light border-bottom text-center" style="width:120px;">Acciones</th>
                     </tr>
                 </thead>
-
                 <tbody class="border-top-0">
                     <tr th:each="instructor : ${instructores}">
-                        
                         <td class="ps-4 fw-bold text-dark" th:text="${instructor.nombre}"></td>
                         <td class="fw-semibold text-dark" th:text="${instructor.apellido}"></td>
-                        
                         <td>
-                            <span class="badge bg-light text-dark border fw-normal" th:text="${instructor.dni}"></span>
+                            <span class="badge bg-light text-dark border fw-normal"
+                                  th:text="${instructor.dni}"></span>
                         </td>
-                        
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border" style="width: 30px; height: 30px;">
-                                    <i class="bi bi-telephone small"></i>
+                                <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border"
+                                     style="width:30px;height:30px;">
+                                    <i data-lucide="phone" style="width:13px;height:13px;"></i>
                                 </div>
                                 <span class="small text-muted" th:text="${instructor.telefono}"></span>
                             </div>
                         </td>
-
                         <td class="pe-4 text-center">
-                            <div class="acciones-td position-relative d-flex justify-content-center align-items-center">
-                                
+                            <div class="d-flex justify-content-center align-items-center gap-1">
+                                <a th:href="@{/instructores/editar/{id}(id=${instructor.idInstructor})}"
+                                   class="btn btn-sm btn-outline-primary d-inline-flex align-items-center"
+                                   title="Editar">
+                                    <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+                                </a>
                                 <button type="button"
-                                        class="btn btn-sm btn-outline-primary btn-editar-row"
-                                        th:attr="data-id=${instructor.idInstructor},
-                                                 data-nombre=${instructor.nombre},
-                                                 data-apellido=${instructor.apellido},
-                                                 data-dni=${instructor.dni},
-                                                 data-telefono=${instructor.telefono}"
-                                        onclick="abrirPanelEditarInstructor(this)">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-
-                                <button type="button"
-                                        class="btn btn-sm btn-outline-danger btn-eliminar position-absolute"
+                                        class="btn btn-sm btn-outline-danger btn-eliminar d-inline-flex align-items-center"
                                         th:attr="data-id=${instructor.idInstructor},
                                                  data-nombre=${instructor.nombre},
                                                  data-url='/instructores/eliminar'"
-                                        onclick="abrirPanelEliminar(this)">
-                                    <i class="bi bi-trash"></i>
+                                        onclick="abrirPanelEliminar(this)"
+                                        title="Eliminar">
+                                    <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
                                 </button>
                             </div>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(instructores)}">
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <i data-lucide="users" style="width:40px;height:40px;opacity:0.3;"
+                               class="d-block mx-auto mb-2"></i>
+                            No hay instructores registrados.
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-    <div id="paginadorInstructores" class="border-top px-3 flex-shrink-0"></div>
+        <div id="paginadorInstructores" class="border-top px-3 flex-shrink-0"></div>
     </div>
 
-    <div id="panelEliminarOverlay"
-         class="panel-overlay d-none"
-         onclick="cerrarPanelEliminar()">
-        <div class="panel-container"
-             onclick="event.stopPropagation()"
-             th:insert="fragments/panel-eliminar :: panelEliminar">
-        </div>
+    <!-- Panel eliminar — solo confirmación, se mantiene como overlay -->
+    <div id="panelEliminarOverlay" class="panel-overlay d-none" onclick="cerrarPanelEliminar()">
+        <div class="panel-container" onclick="event.stopPropagation()"
+             th:insert="~{fragments/panel-eliminar :: panelEliminar}"></div>
     </div>
-<script src="/js/instructores.js"></script>
-<script th:src="@{/js/pagination.js}"></script> 
-<script>
-    const pagInstructores = initPaginator('tablaInstructores', 'paginadorInstructores', 10);
-    document.getElementById('filtroInstructores').addEventListener('input', function () {
-        pagInstructores.filter(this.value);
-    });
-</script>
+
+    <script src="/js/instructores.js"></script>
+    <script th:src="@{/js/pagination.js}"></script>
+    <script>
+        const pagInstructores = initPaginator('tablaInstructores', 'paginadorInstructores', 10);
+        document.getElementById('filtroInstructores').addEventListener('input', function () {
+            pagInstructores.filter(this.value);
+        });
+    </script>
 </div>

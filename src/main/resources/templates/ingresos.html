@@ -4,13 +4,12 @@
         <div>
             <h4 class="fw-bold text-dark mb-0">Tablero Financiero</h4>
             <p class="text-muted small mb-0">
-                Resumen de
-                <span id="labelMes" class="fw-bold text-dark"></span>
+                Resumen de <span id="labelMes" class="fw-bold text-dark"></span>
             </p>
         </div>
     </div>
 
-    <!-- Cards de resumen — valores actualizados por JS al cambiar el mes -->
+    <!-- Cards -->
     <div class="row g-3 mb-4 animate-fade-up">
         <div class="col-md-3">
             <div class="card card-stat bg-gradient-primary p-3 h-100">
@@ -53,53 +52,85 @@
     <!-- Barra de herramientas -->
     <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0 animate-fade-up delay-1">
         <div class="row g-2 align-items-center">
+
+            <!-- Buscador -->
             <div class="col-md-3">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                        <i data-lucide="search" style="width:14px;height:14px;"></i>
+                    </span>
                     <input type="text" id="buscadorTabla"
                            class="form-control border-start-0 ps-0 bg-light"
                            placeholder="Buscar por alumno...">
                 </div>
             </div>
-            <!-- Filtro de mes — controla TANTO la tabla COMO las cards -->
-            <div class="col-md-3">
+
+            <!-- Filtro MES -->
+            <div class="col-md-2">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-calendar-month"></i></span>
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                        <i data-lucide="calendar" style="width:14px;height:14px;"></i>
+                    </span>
                     <input type="month" id="filtroMes"
                            class="form-control border-start-0 ps-0 bg-light"
-                           th:value="${mesSeleccionado}">
+                           th:value="${mesSeleccionado}"
+                           title="Filtrar por mes">
                 </div>
             </div>
-            <div class="col-md-6 d-flex justify-content-end gap-2">
+
+            <!-- Filtro AÑO — hardcodeado a 2026 por ahora -->
+            <div class="col-md-2">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                        <i data-lucide="calendar-range" style="width:14px;height:14px;"></i>
+                    </span>
+                    <select id="filtroAnio" class="form-select form-select-sm border-start-0 bg-light">
+                        <option value="">Todos</option>
+                        <option value="2026" selected>2026</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-5 d-flex justify-content-end gap-2">
                 <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
-                    <i class="bi bi-file-earmark-excel"></i>
+                    <i data-lucide="file-spreadsheet" style="width:14px;height:14px;"></i>
                     <span>Exportar</span>
                 </button>
-                <a th:href="@{/ingresos/nuevo}" class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
-                    <i class="bi bi-plus-lg"></i>
+                <a th:href="@{/ingresos/nuevo}"
+                   class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+                    <i data-lucide="plus" style="width:14px;height:14px;"></i>
                     <span>Nuevo Pago</span>
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Tabla — solo PAGADOS (ADEUDA no se renderiza) -->
+    <!-- Tabla -->
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative animate-fade-up delay-2">
 
         <div class="px-3 pt-3 pb-0 border-bottom flex-shrink-0">
             <h6 class="fw-bold text-dark mb-2">Movimientos</h6>
             <ul class="nav nav-tabs border-0" id="paymentTabs" role="tablist">
                 <li class="nav-item">
-                    <button class="nav-link active fw-bold small text-dark px-3"
-                            onclick="filtrarEstado('todos')">Todos</button>
+                    <button class="nav-link active fw-bold small px-3"
+                            data-estado="todos"
+                            onclick="filtrarEstado('todos')">
+                        Todos
+                    </button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link fw-bold small text-success px-3"
-                            onclick="filtrarEstado('pagado')">Pagados</button>
+                    <button class="nav-link fw-bold small px-3"
+                            data-estado="pagado"
+                            onclick="filtrarEstado('pagado')">
+                        <i data-lucide="check-circle" style="width:13px;height:13px;" class="text-success"></i>Pagados
+                    </button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link fw-bold small text-warning px-3"
-                            onclick="filtrarEstado('pendiente')">Pendientes</button>
+                    <button class="nav-link fw-bold small px-3"
+                            data-estado="pendiente"
+                            onclick="filtrarEstado('pendiente')">
+                        <i data-lucide="clock" style="width:13px;height:13px;" class="text-warning"></i>Pendientes
+                    </button>
                 </li>
             </ul>
         </div>
@@ -111,16 +142,15 @@
                         <th class="ps-4 py-3 bg-light border-bottom">Cliente</th>
                         <th class="py-3 bg-light border-bottom">Actividad</th>
                         <th class="py-3 bg-light border-bottom">Fecha</th>
-                        <th class="py-3 bg-light border-bottom">Método</th>
+                        <th class="py-3 bg-light border-bottom">Método / Estado</th>
                         <th class="py-3 bg-light border-bottom text-end">Monto</th>
                         <th class="pe-4 py-3 bg-light border-bottom text-center">Ticket</th>
                     </tr>
                 </thead>
                 <tbody class="border-top-0">
 
-                    <!--/*  Solo se renderizan pagos PAGADOS — ADEUDA se ignora  */-->
                     <tr th:each="pago : ${pagosRecientes}"
-                        th:if="${pago.estado.name() == 'PAGADO'}"
+                        th:data-estado="${pago.estado.name() == 'PAGADO' ? 'pagado' : 'pendiente'}"
                         th:data-fecha="${#temporals.format(pago.fechaGeneracion, 'yyyy-MM')}"
                         class="fila-pago">
 
@@ -141,7 +171,7 @@
                             <div class="d-flex align-items-center gap-2">
                                 <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border"
                                      style="width:30px;height:30px;">
-                                    <i class="bi bi-calendar2-event small"></i>
+                                    <i data-lucide="calendar" style="width:13px;height:13px;"></i>
                                 </div>
                                 <span class="small text-muted"
                                       th:text="${#temporals.format(pago.fechaGeneracion,'dd/MM/yyyy')}"></span>
@@ -149,9 +179,14 @@
                         </td>
 
                         <td>
-                            <span class="badge bg-success-light text-success border border-success border-opacity-25">
-                                <i class="bi bi-check-circle-fill me-1"></i>
+                            <span th:if="${pago.estado.name() == 'PAGADO'}"
+                                  class="badge bg-success-light text-success border border-success border-opacity-25">
+                                <i data-lucide="check-circle" style="width:11px;height:11px;"></i>
                                 <span th:text="${pago.metodoPago}"></span>
+                            </span>
+                            <span th:if="${pago.estado.name() == 'ADEUDA'}"
+                                  class="badge bg-light text-secondary border">
+                                <i data-lucide="clock" style="width:11px;height:11px;"></i> Pendiente
                             </span>
                         </td>
 
@@ -160,26 +195,26 @@
                         </td>
 
                         <td class="pe-4 text-center">
-                            <a th:href="@{/pagos/ticket/{id}(id=${pago.idPago})}"
+                            <a th:if="${pago.estado.name() == 'PAGADO'}"
+                               th:href="@{/pagos/ticket/{id}(id=${pago.idPago})}"
                                class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1"
                                title="Ver ticket">
-                                <i class="bi bi-receipt" style="font-size:0.8rem;"></i>
+                                <i data-lucide="receipt" style="width:13px;height:13px;"></i>
                             </a>
+                            <span th:if="${pago.estado.name() != 'PAGADO'}" class="text-muted small">—</span>
                         </td>
                     </tr>
 
-                    <!-- Vacío server-side -->
                     <tr class="empty-row" th:if="${#lists.isEmpty(pagosRecientes)}">
                         <td colspan="6" class="text-center py-5 text-muted">
-                            <i class="bi bi-receipt fs-1 d-block mb-2 opacity-50"></i>
+                            <i data-lucide="receipt" style="width:40px;height:40px;opacity:0.3;" class="d-block mx-auto mb-2"></i>
                             No hay movimientos registrados.
                         </td>
                     </tr>
 
-                    <!-- Vacío JS (filtros sin resultado) -->
                     <tr id="mensajeVacioPagos" class="empty-row" style="display:none;">
                         <td colspan="6" class="text-center py-5 text-muted">
-                            <i class="bi bi-search fs-1 d-block mb-2 opacity-50"></i>
+                            <i data-lucide="search" style="width:40px;height:40px;opacity:0.3;" class="d-block mx-auto mb-2"></i>
                             No se encontraron pagos para este período.
                         </td>
                     </tr>
@@ -191,81 +226,5 @@
     </div>
 
     <script th:src="@{/js/pagination.js}"></script>
-    <script>
-        const pagPagos = initPaginator('tablaPagos', 'paginadorPagos', 10);
-        let estadoActivo = 'todos';
-
-        // ── Nombres de meses en español ───────────────────────────────────────
-        const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                       'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-
-        function formatearMes(valor) {
-            if (!valor) return '';
-            const [anio, mes] = valor.split('-');
-            return MESES[parseInt(mes) - 1] + ' ' + anio;
-        }
-
-        // ── Actualizar cards via fetch ────────────────────────────────────────
-        async function actualizarCards(mes) {
-            try {
-                const res  = await fetch(`/ingresos/stats?mes=${mes}`);
-                const data = await res.json();
-
-                const fmt = n => '$' + Number(n).toLocaleString('es-AR', {minimumFractionDigits: 2});
-                document.getElementById('cardTotal').textContent        = fmt(data.total);
-                document.getElementById('cardEfectivo').textContent     = fmt(data.efectivo);
-                document.getElementById('cardTransferencia').textContent = fmt(data.transferencia);
-                document.getElementById('cardPendiente').textContent    = fmt(data.pendiente);
-            } catch(e) {
-                console.error('Error al cargar stats:', e);
-            }
-        }
-
-        // ── Filtro combinado tabla ────────────────────────────────────────────
-        function aplicarFiltros() {
-            const texto = (document.getElementById('buscadorTabla')?.value || '').toLowerCase();
-            const mes   = document.getElementById('filtroMes')?.value || '';
-
-            const filas = document.querySelectorAll('#tablaPagos tbody tr.fila-pago');
-            let visibles = 0;
-
-            filas.forEach(row => {
-                const fechaMes = row.dataset.fecha || '';
-                const cumpleTexto = !texto || row.textContent.toLowerCase().includes(texto);
-                const cumpleMes   = !mes   || fechaMes === mes;
-
-                const visible = cumpleTexto && cumpleMes;
-                row.style.display        = visible ? '' : 'none';
-                row.dataset.searchHidden = visible ? 'false' : 'true';
-                if (visible) visibles++;
-            });
-
-            document.getElementById('mensajeVacioPagos').style.display = visibles === 0 ? '' : 'none';
-            pagPagos.refresh();
-        }
-
-        // ── Al cambiar el mes: actualiza cards Y filtra tabla ─────────────────
-        document.getElementById('filtroMes').addEventListener('change', function () {
-            const mes = this.value;
-            document.getElementById('labelMes').textContent = formatearMes(mes);
-            actualizarCards(mes);
-            aplicarFiltros();
-        });
-
-        document.getElementById('buscadorTabla').addEventListener('input', aplicarFiltros);
-
-        window.filtrarEstado = function(estado) {
-            estadoActivo = estado;
-            aplicarFiltros();
-        };
-
-        // ── Inicializar con el mes actual ─────────────────────────────────────
-        document.addEventListener('DOMContentLoaded', function () {
-            const mes = document.getElementById('filtroMes').value;
-            if (mes) {
-                document.getElementById('labelMes').textContent = formatearMes(mes);
-                aplicarFiltros();
-            }
-        });
-    </script>
+    <script th:src="@{/js/ingresos.js}"></script>
 </div>

@@ -1,5 +1,6 @@
 package com.gymmanager.gym_manager.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,4 +66,39 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
         AND c.usuario = :usuario
         """)
     long countClientesDeudores(@Param("usuario") Usuario usuario);
+
+
+    // NUEVO 
+    // ─── Agregar estos dos métodos en ClienteRepository.java ───────────────────
+// La cadena es: Cliente → inscripciones (ActividadCliente) → pagos (Pago)
+
+/**
+ * Clientes que tienen al menos un pago vencido (estaVencido = estado ADEUDA y fecha pasada).
+ * Doble JOIN: inscripciones → pagos
+ */
+@Query("SELECT DISTINCT c FROM Cliente c " +
+       "JOIN c.inscripciones i " +
+       "JOIN i.pagos p " +
+       "WHERE c.usuario = :usuario " +
+       "AND p.estado = com.gymmanager.gym_manager.entity.EstadoPago.ADEUDA " +
+       "AND p.fechaVencimiento < CURRENT_DATE")
+List<Cliente> findClientesConDeudaByUsuario(@Param("usuario") Usuario usuario);
+
+/**
+ * Clientes cuyo pago activo (ADEUDA) vence entre [desde] y [hasta].
+ * Útil para mostrar quiénes están por vencer en los próximos N días.
+ */
+@Query("SELECT DISTINCT c FROM Cliente c " +
+       "JOIN c.inscripciones i " +
+       "JOIN i.pagos p " +
+       "WHERE c.usuario = :usuario " +
+       "AND i.estado = com.gymmanager.gym_manager.entity.EstadoInscripcion.ACTIVA " +
+       "AND p.estado = com.gymmanager.gym_manager.entity.EstadoPago.ADEUDA " +
+       "AND p.fechaVencimiento BETWEEN :desde AND :hasta " +
+       "ORDER BY p.fechaVencimiento ASC")
+List<Cliente> findClientesConVencimientoEntre(
+        @Param("usuario") Usuario usuario,
+        @Param("desde")   LocalDate desde,
+        @Param("hasta")   LocalDate hasta);
+    
 }

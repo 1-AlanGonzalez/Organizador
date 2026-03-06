@@ -1,0 +1,162 @@
+<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2">
+
+    <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
+        <div>
+            <h4 class="fw-bold text-dark mb-0"
+                th:text="${actividad.idActividad != null} ? 'Editar Actividad' : 'Nueva Actividad'">
+                Nueva Actividad
+            </h4>
+            <p class="text-muted small mb-0">Gestión de precios y horarios</p>
+        </div>
+        <a th:href="@{/actividades}" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
+            <i data-lucide="arrow-left" style="width:14px;height:14px;"></i>
+            <span>Volver</span>
+        </a>
+    </div>
+
+    <!-- Alertas flash -->
+    <div th:if="${success}" class="alert alert-success border-0 rounded-3 shadow-sm d-flex align-items-center gap-2 mb-3">
+        <i data-lucide="check-circle" style="width:16px;height:16px;"></i>
+        <span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="alert alert-danger border-0 rounded-3 shadow-sm d-flex align-items-center gap-2 mb-3">
+        <i data-lucide="alert-triangle" style="width:16px;height:16px;"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-7">
+            <div class="card custom-card border-0"
+                 style="background: var(--card-bg); box-shadow: var(--card-shadow);">
+                <div class="card-body p-0">
+
+                    <form th:action="@{/actividades/guardar}" method="post">
+                        <input type="hidden" name="idActividad"
+                               th:value="${actividad.idActividad}">
+
+                        <!-- BLOQUE 1: Info general -->
+                        <div class="p-4 pb-3">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <i data-lucide="activity" style="width:15px;height:15px;" class="text-secondary"></i>
+                                <span class="fw-bold text-dark small text-uppercase"
+                                      style="letter-spacing:0.05em;">Información General</span>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold text-secondary">Nombre de la Actividad</label>
+                                    <input type="text" name="nombre" id="act-nombre"
+                                           class="form-control"
+                                           placeholder="Ej: Yoga, Funcional, Pilates..."
+                                           th:value="${actividad.nombre}"
+                                           required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold text-secondary">Cupo Máximo</label>
+                                    <input type="number" name="cupoMaximo" id="act-cupoMaximo"
+                                           class="form-control"
+                                           th:value="${actividad.cupoMaximo}"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="m-0" style="border-color:#f1f5f9;">
+
+                        <!-- BLOQUE 2: Precios -->
+                        <div class="p-4 pb-3">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <i data-lucide="tag" style="width:15px;height:15px;" class="text-secondary"></i>
+                                <span class="fw-bold text-dark small text-uppercase"
+                                      style="letter-spacing:0.05em;">Esquema de Cobro</span>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-secondary">Precio Mensual</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-primary fw-bold">$</span>
+                                        <input type="number" name="precio" id="act-precio"
+                                               class="form-control fw-bold"
+                                               placeholder="0.00" step="0.01"
+                                               th:value="${actividad.precio}"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-secondary">
+                                        Precio por Clase
+                                        <span class="fw-normal text-muted">(Opcional)</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-success">$</span>
+                                        <!--
+                                            value="0" como fallback — si queda vacío Spring falla
+                                            al parsear "" como BigDecimal (400 Bad Request)
+                                        -->
+                                        <input type="number" name="precioDiario" id="act-precioDiario"
+                                               class="form-control" step="0.01"
+                                               placeholder="Ej: 2000"
+                                               th:value="${actividad.precioDiario != null} ? ${actividad.precioDiario} : 0"
+                                               value="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="m-0" style="border-color:#f1f5f9;">
+
+                        <!-- BLOQUE 3: Instructores dinámicos -->
+                        <div class="p-4 pb-3">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i data-lucide="users" style="width:15px;height:15px;" class="text-secondary"></i>
+                                    <span class="fw-bold text-dark small text-uppercase"
+                                          style="letter-spacing:0.05em;">Instructores y Horarios</span>
+                                </div>
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
+                                        onclick="agregarFilaInstructor()">
+                                    <i data-lucide="plus" style="width:13px;height:13px;"></i>
+                                    Añadir instructor
+                                </button>
+                            </div>
+                            <!-- Las filas se inyectan aquí por actividades.js -->
+                            <div id="instructoresContainer"></div>
+                        </div>
+
+                        <hr class="m-0" style="border-color:#f1f5f9;">
+
+                        <!-- Acciones -->
+                        <div class="p-4 pt-3 d-flex flex-column gap-2">
+                            <button type="submit"
+                                    class="btn btn-primary py-2 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2"
+                                    id="btnSubmitActividad">
+                                <i data-lucide="save" style="width:16px;height:16px;"></i>
+                                <span th:text="${actividad.idActividad != null} ? 'Guardar Cambios' : 'Crear Actividad'">
+                                    Crear Actividad
+                                </span>
+                            </button>
+                            <a th:href="@{/actividades}"
+                               class="btn btn-link text-decoration-none text-muted btn-sm text-center">
+                                Cancelar
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+        CRÍTICO: inyectar instructoresJson y dictadosJson ANTES de cargar actividades.js
+        - instructoresJson: lista de instructores disponibles para el <select>
+        - dictadosJson:     filas existentes (vacío en "nuevo", pre-cargado en "editar")
+    -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.instructoresDisponibles = /*[[${instructoresJson}]]*/ [];
+        window.dictadosIniciales       = /*[[${dictadosJson}]]*/ [];
+        /*]]>*/
+    </script>
+    <script th:src="@{/js/actividades.js}"></script>
+</div>

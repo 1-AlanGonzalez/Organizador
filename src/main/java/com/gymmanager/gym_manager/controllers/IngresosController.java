@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gymmanager.gym_manager.config.SecurityUtils;
+import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.Pago;
 import com.gymmanager.gym_manager.entity.Usuario;
@@ -124,20 +125,29 @@ public class IngresosController {
         model.addAttribute("ingresosPendientes",    pendiente  != null ? pendiente  : BigDecimal.ZERO);
     }
 
-    // ── GET /ingresos/nuevo ───────────────────────────────────────────────────
+// ── GET /ingresos/nuevo ───────────────────────────────────────────────────────
+// Solo pasa clientes que tienen al menos una deuda pendiente
 
-    @GetMapping("/nuevo")
-    public String nuevoIngreso(Model model) {
-        Usuario usuario = securityUtils.getUsuarioActual();
-        model.addAttribute("metodosPago", configuracionDePagoService.listarActivos(usuario));
-        model.addAttribute("clientes",    clienteRepository.findByUsuario(usuario));
-        model.addAttribute("title",     "Gym Manager | Nuevo Ingreso");
-        model.addAttribute("header",    "Contabilidad / Nuevo Ingreso");
-        model.addAttribute("vista",     "ingresos-nuevo");
-        model.addAttribute("fragmento", "contenido");
-        model.addAttribute("active",    "ingresos");
-        return "layouts/main";
-    }
+@GetMapping("/nuevo")
+public String nuevoIngreso(Model model) {
+    Usuario usuario = securityUtils.getUsuarioActual();
+
+    // Filtrar en memoria: solo clientes con al menos un pago ADEUDA > 0
+    List<Cliente> clientesConDeuda = clienteRepository.findByUsuario(usuario)
+            .stream()
+            .filter(c -> c.getInscripciones().stream()
+                    .anyMatch(i -> i.calcularAdeudado().compareTo(BigDecimal.ZERO) > 0))
+            .toList();
+
+    model.addAttribute("metodosPago",    configuracionDePagoService.listarActivos(usuario));
+    model.addAttribute("clientes",       clientesConDeuda);
+    model.addAttribute("title",     "Gym Manager | Nuevo Ingreso");
+    model.addAttribute("header",    "Contabilidad / Nuevo Ingreso");
+    model.addAttribute("vista",     "ingresos-nuevo");
+    model.addAttribute("fragmento", "contenido");
+    model.addAttribute("active",    "ingresos");
+    return "layouts/main";
+}
 
     // ── POST /ingresos/guardar ────────────────────────────────────────────────
 
