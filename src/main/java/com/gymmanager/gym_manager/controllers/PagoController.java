@@ -1,5 +1,7 @@
 package com.gymmanager.gym_manager.controllers;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +34,12 @@ public class PagoController {
     public String pagar(@RequestParam Integer idPago,
                         @RequestParam Integer metodoPagoId,
                         @RequestParam(required = false) String observaciones,
+                        @RequestParam (required = false) LocalDate fechaDePago,
                         RedirectAttributes redirectAttributes) {
+        System.out.println("ActividadCliente: " + idPago);
+        System.out.println("MetodoPago: " + metodoPagoId);
         try {
-            Pago pago = pagoService.procesarPago(idPago, metodoPagoId, observaciones);
+            Pago pago = pagoService.procesarPago(idPago, metodoPagoId, observaciones, fechaDePago);
             // Redirige al ticket imprimible con el ID del pago recién registrado
             return "redirect:/pagos/ticket/" + pago.getIdPago();
         } catch (Exception e) {

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 
+import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.EstadoPago;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.Pago;
@@ -95,7 +96,10 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
             @Param("anio")    int anio,
             @Param("usuario") Usuario usuario);
 
-    List<Pago> findByActividadCliente_Cliente_Usuario(Usuario usuario);
+    List<Pago> findByActividadCliente_Cliente_UsuarioAndFechaVencimientoLessThanEqual(
+        Usuario usuario,
+        LocalDate fecha
+);
 
 
 // ── Agregar estos 3 métodos a PagoRepository.java ────────────────────────────
@@ -131,5 +135,18 @@ BigDecimal sumPorMetodoEntreFechas(@Param("metodo")  MetodoDePago metodo,
                                    @Param("usuario") Usuario usuario,
                                    @Param("desde")   LocalDate desde,
                                    @Param("hasta")   LocalDate hasta);
+
+
+Optional<Pago> findTopByActividadClienteOrderByFechaVencimientoDesc(ActividadCliente actividadCliente);
+Optional<Pago> findTopByActividadCliente_IdActividadClienteOrderByFechaVencimientoDesc(Integer idActividadCliente);
+Optional<Pago> findByActividadCliente_IdActividadClienteAndFechaGeneracion(
+        Integer idActividadCliente,
+        LocalDate fechaGeneracion
+);
+@Query("SELECT p FROM Pago p " +
+       "WHERE p.actividadCliente.cliente.usuario = :usuario " +
+       "AND (p.estado = 'PAGADO' OR p.estado = 'ADEUDA') " +
+       "ORDER BY p.fechaGeneracion DESC")
+List<Pago> findPagosVisibles(@Param("usuario") Usuario usuario);
 
 }  

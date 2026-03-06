@@ -88,7 +88,8 @@ private final ClienteRepository clienteRepository;
                         pagoService.procesarPago(
                             inscripcion.getIdActividadCliente(),
                             metodoPago.getIdMetodoDePago(),
-                            observacionPago
+                            observacionPago,
+                            LocalDate.now()
                         );
                     }
                 }

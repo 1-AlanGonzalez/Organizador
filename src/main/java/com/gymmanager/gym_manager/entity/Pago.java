@@ -107,4 +107,9 @@ public class Pago {
         }
         this.montoAPagar = this.montoAPagar.add(recargo);
     }
+
+    public void ajusteDeFechas(LocalDate fechaNueva){
+        fechaGeneracion = fechaNueva;
+        fechaVencimiento = fechaNueva.plusMonths(1);
+    }
 }

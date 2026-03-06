@@ -86,6 +86,7 @@ async function handleExportSubmit(e) {
             {
                 nombre: "inscripcion",
                 atributos: atributos
+
             }
         ]
     };

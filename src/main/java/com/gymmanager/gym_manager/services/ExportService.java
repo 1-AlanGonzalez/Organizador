@@ -46,26 +46,6 @@ public class ExportService {
 
     Map<String, List<Map<String, Object>>> resultado = new LinkedHashMap<>();
 
-    for (EntidadRequestDTO entidad : request.getEntidades()) {
-
-        ExportStrategy strategy =
-                strategies.get(entidad.getNombre().toLowerCase());
-
-        if (strategy != null) {
-            resultado.put(
-                    entidad.getNombre(),
-                    strategy.exportar(entidad, request.getFecha())
-            );
-        }
-    }
-
-    return resultado;
-}
-
-      public Map<String, List<Map<String, Object>>> generarMultihoja(ExportRequest request) {
-
-    Map<String, List<Map<String, Object>>> resultado = new LinkedHashMap<>();
-
     for (EntidadRequestDTO entidadDTO : request.getEntidades()) {
 
         String nombreEntidad = entidadDTO.getNombre().toLowerCase();
@@ -84,6 +64,29 @@ public class ExportService {
 
     return resultado;
 }
+
+//       public Map<String, List<Map<String, Object>>> generarMultihoja(ExportRequest request) {
+
+//     Map<String, List<Map<String, Object>>> resultado = new LinkedHashMap<>();
+
+//     for (EntidadRequestDTO entidadDTO : request.getEntidades()) {
+
+//         String nombreEntidad = entidadDTO.getNombre().toLowerCase();
+
+//         ExportStrategy strategy = strategies.get(nombreEntidad);
+
+//         if (strategy == null) {
+//             throw new RuntimeException("No existe strategy para " + nombreEntidad);
+//         }
+
+//         List<Map<String, Object>> datos =
+//                 strategy.exportar(entidadDTO, request.getFecha());
+
+//         resultado.put(entidadDTO.getNombre(), datos);
+//     }
+
+//     return resultado;
+// }
 
         
 

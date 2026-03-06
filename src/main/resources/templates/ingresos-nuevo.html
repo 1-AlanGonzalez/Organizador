@@ -67,6 +67,23 @@
                                            style="font-size:0.65rem;letter-spacing:0.06em;">Observaciones (opcional)</label>
                                     <input type="text" class="form-control" name="observaciones" placeholder="Notas...">
                                 </div>
+
+                                <!-- Fecha -->
+                                <div class="col-12">
+                                    <label for="fecha" class="form-label small text-muted fw-bold text-uppercase mb-1"
+                                           style="font-size: 0.65rem; letter-spacing: 0.06em;">Fecha de pago</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0 text-muted">
+                                            <i class="bi bi-calendar-event"></i>
+                                        </span>
+                                        <input type="date"
+                                               class="form-control border-start-0"
+                                               id="fecha"
+                                               name="fechaDePago"
+                                               th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                                               required>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

@@ -28,17 +28,15 @@ public class ExportarController {
 
     @PostMapping("/excel")
     public ResponseEntity<byte[]> exportarExcel(@RequestBody ExportRequest request) {
-        System.out.println(request.getEntidades().get(0).getAtributos());
-        // 1️⃣ Genera los datos (multihoja dinámico)
-        Map<String, List<Map<String, Object>>> datos =
-                exportService.generarMultihoja(request);
 
-        // 2️⃣ Genera el archivo Excel real
-        byte[] archivo = excelService.generarExcel(datos);
+    Map<String, List<Map<String, Object>>> datos =
+            exportService.generarExportacion(request);
+    System.out.println("Hojas que se van a crear: " + datos.keySet());
+    byte[] archivo = excelService.generarExcel(datos);
 
-        return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=export.xlsx")
-                .header("Content-Type", "application/octet-stream")
-                .body(archivo);
-    }
+    return ResponseEntity.ok()
+            .header("Content-Disposition", "attachment; filename=export.xlsx")
+            .header("Content-Type", "application/octet-stream")
+            .body(archivo);
+}
 }

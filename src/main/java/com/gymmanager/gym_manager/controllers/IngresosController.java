@@ -63,7 +63,7 @@ public class IngresosController {
         agregarStatsAlModelo(model, usuario, mesActual);
 
         model.addAttribute("mesSeleccionado",    mesActual.toString()); // "2025-03"
-        model.addAttribute("pagosRecientes",     pagoRepository.findByActividadCliente_Cliente_Usuario(usuario));
+        model.addAttribute("pagosRecientes",     pagoRepository.findPagosVisibles(usuario));
         model.addAttribute("datosGrafico",       pagoRepository.obtenerIngresosMensuales(usuario.getId()));
         model.addAttribute("categoriasGrafico",  Arrays.asList(
                 "Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"));
@@ -145,9 +145,15 @@ public class IngresosController {
     public String guardarIngreso(@RequestParam Integer idActividadCliente,
                                   @RequestParam Integer metodoPagoId,
                                   @RequestParam(required = false) String observaciones,
+                                  @RequestParam (required = false) LocalDate fechaDePago,
                                   RedirectAttributes flash) {
+        System.out.println("ActividadCliente: " + idActividadCliente);
+        System.out.println("MetodoPago: " + metodoPagoId);
+        System.out.println("Observaciones: " + observaciones);
+        System.out.println("Fecha de Pago: " + fechaDePago);
+
         try {
-            Pago pago = pagoService.procesarPago(idActividadCliente, metodoPagoId, observaciones);
+            Pago pago = pagoService.procesarPago(idActividadCliente, metodoPagoId, observaciones, fechaDePago);
             return "redirect:/pagos/ticket/" + pago.getIdPago();
         } catch (Exception e) {
             log.error("Error al registrar pago: {}", e.getMessage(), e);

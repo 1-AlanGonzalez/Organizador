@@ -1,6 +1,7 @@
 package com.gymmanager.gym_manager.services;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +37,9 @@ public class PagoService {
 
     // ← ahora devuelve Pago en lugar de void para poder redirigir al ticket
     @Transactional
-    public Pago procesarPago(Integer idActividadCliente, Integer metodoPagoId,
-                              String observaciones) {
+    public Pago procesarPago (Integer idActividadCliente, Integer metodoPagoId, String observaciones, LocalDate fechaDePago) {
 
+        System.out.println("Procesando pago...");
         log.debug("Procesando pago para inscripción ID: {}", idActividadCliente);
 
         MetodoDePago metodo = metodoDePagoRepository.findById(metodoPagoId)
@@ -62,9 +63,10 @@ public class PagoService {
         pago.aplicarRecargo(recargo);
         pago.setMetodoPago(metodo);
 
-        if (observaciones != null && !observaciones.isBlank())
-            pago.setObservaciones(observaciones);
+        if (observaciones != null && !observaciones.isBlank()){
+            pago.setObservaciones(observaciones);}
 
+        pago.ajusteDeFechas(fechaDePago);
         pago.pagar();
         Pago pagado = pagoRepository.save(pago);
 
