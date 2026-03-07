@@ -1,30 +1,110 @@
 <div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2">
 
     <style>
+        /* ── Tabs laterales ── */
         #configTabs .nav-link {
-            color: #495057; border-radius: 8px; padding: 10px 16px;
-            margin-bottom: 4px; font-weight: 500; transition: all 0.2s;
+            color: #64748b;
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 4px;
+            font-weight: 500;
+            font-size: .85rem;
+            transition: all 0.2s;
+            border: none;
         }
-        #configTabs .nav-link:hover { background-color: rgba(0,0,0,0.04); color: #212529; }
-        #configTabs .nav-link.active { background-color: var(--bs-primary); color: #ffffff; }
+        #configTabs .nav-link:hover {
+            background-color: rgba(31,42,48,.06);
+            color: #1f2a30;
+        }
+        #configTabs .nav-link.active {
+            background: linear-gradient(135deg,#1f2a30 0%,#2d3f46 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(31,42,48,.25);
+        }
+        #configTabs .nav-link.active svg,
+        #configTabs .nav-link.active i { color: #fff; }
+
+        /* ── Ítems de métodos de pago ── */
         .metodo-item {
-            background-color: #ffffff; border: 1px solid #e9ecef; border-radius: 8px;
-            padding: 0.5rem 1rem; transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            border-radius: 10px;
+            padding: .6rem 1rem;
+            transition: border-color .2s, box-shadow .2s;
         }
-        .metodo-item:hover { border-color: #ced4da; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .metodo-item:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0,0,0,.04);
+        }
+
+        /* ── Inputs limpio ── */
+        .input-clean {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .input-clean:focus {
+            background: #fff;
+            border-color: #1f2a30;
+            box-shadow: 0 0 0 3px rgba(31,42,48,.08);
+            outline: none;
+        }
+
+        /* ── Botón guardar principal ── */
+        .btn-dark-brand {
+            background: linear-gradient(135deg,#1f2a30 0%,#2d3f46 100%);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all .25s;
+        }
+        .btn-dark-brand:hover {
+            background: linear-gradient(135deg,#162024 0%,#243340 100%);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(31,42,48,.3);
+        }
+
+        /* ── Divider con texto ── */
+        .divider-text {
+            display: flex; align-items: center; gap: 12px;
+            color: #94a3b8; font-size: .72rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .06em;
+            margin: 1.2rem 0;
+        }
+        .divider-text::before,
+        .divider-text::after {
+            content: ''; flex: 1; height: 1px; background: #e2e8f0;
+        }
+
+        /* ── Ticket preview ── */
+        .ticket-preview-card {
+            background: #fff;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 1.2rem;
+            font-size: .8rem;
+        }
     </style>
 
+    <!-- ── Header ── -->
     <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
         <div>
-            <h4 class="fw-bold text-dark mb-0">Ajustes del Sistema</h4>
-            <p class="text-muted small mb-0">Configura el comportamiento global de GymManager</p>
+            <h4 class="fw-bold mb-0" style="color:#1f2a30;">Ajustes del Sistema</h4>
+            <p class="text-muted small mb-0">Configurá el comportamiento global de GymManager</p>
         </div>
         <div class="d-flex gap-2">
-            <div th:if="${success}" class="alert alert-success py-2 px-3 shadow-sm mb-0 rounded-3 border-0 small d-flex align-items-center gap-2">
+            <div th:if="${success}"
+                 class="d-flex align-items-center gap-2 px-3 py-2 rounded-3 small fw-medium"
+                 style="background:#dcfce7;color:#16a34a;">
                 <i data-lucide="check-circle" style="width:14px;height:14px;"></i>
                 <span th:text="${success}"></span>
             </div>
-            <div th:if="${error}" class="alert alert-danger py-2 px-3 shadow-sm mb-0 rounded-3 border-0 small d-flex align-items-center gap-2">
+            <div th:if="${error}"
+                 class="d-flex align-items-center gap-2 px-3 py-2 rounded-3 small fw-medium"
+                 style="background:#fee2e2;color:#ef4444;">
                 <i data-lucide="x-circle" style="width:14px;height:14px;"></i>
                 <span th:text="${error}"></span>
             </div>
@@ -35,84 +115,103 @@
 
     <div class="row g-3 flex-grow-1 overflow-hidden animate-fade-up">
 
-        <!-- Sidebar -->
+        <!-- ── Sidebar de navegación ── -->
         <div class="col-md-3">
-            <div class="position-sticky d-flex flex-column gap-3" style="top: 1rem;">
-                <div class="card custom-card border-0 shadow-sm p-2 flex-shrink-0">
+            <div class="position-sticky d-flex flex-column gap-2" style="top:1rem;">
+                <div class="card custom-card border-0 p-2">
                     <div class="nav flex-column nav-pills" id="configTabs" role="tablist">
+
                         <button class="nav-link active text-start d-flex align-items-center gap-2"
                                 data-bs-toggle="pill" data-bs-target="#tab-tickets" type="button">
-                            <i data-lucide="store" style="width:15px;height:15px;"></i> Tickets
+                            <i data-lucide="receipt" style="width:15px;height:15px;"></i>
+                            Tickets
                         </button>
                         <button class="nav-link text-start d-flex align-items-center gap-2"
                                 data-bs-toggle="pill" data-bs-target="#tab-pagos" type="button">
-                            <i data-lucide="credit-card" style="width:15px;height:15px;"></i> Pagos y Recargos
+                            <i data-lucide="credit-card" style="width:15px;height:15px;"></i>
+                            Pagos y Recargos
                         </button>
                         <button class="nav-link text-start d-flex align-items-center gap-2"
                                 data-bs-toggle="pill" data-bs-target="#tab-cuenta" type="button">
-                            <i data-lucide="user-cog" style="width:15px;height:15px;"></i> Mi Cuenta
+                            <i data-lucide="user-cog" style="width:15px;height:15px;"></i>
+                            Mi Cuenta
                         </button>
+
                     </div>
                 </div>
-                <div class="flex-shrink-0">
-                    <button type="button"
-                            class="btn btn-primary w-100 py-2 fw-bold shadow-sm d-flex justify-content-center align-items-center gap-2"
-                            onclick="guardarSeccionActiva()">
-                        <i data-lucide="save" style="width:15px;height:15px;"></i> Guardar Cambios
-                    </button>
-                </div>
+
+                <button type="button"
+                        class="btn btn-dark-brand w-100 py-2 d-flex justify-content-center align-items-center gap-2"
+                        onclick="guardarSeccionActiva()">
+                    <i data-lucide="save" style="width:15px;height:15px;"></i>
+                    Guardar Cambios
+                </button>
             </div>
         </div>
 
-        <!-- Contenido -->
-        <div class="col-md-9 h-100 overflow-auto custom-scrollbar pe-2 pb-3 delay-1">
+        <!-- ── Contenido ── -->
+        <div class="col-md-9 h-100 overflow-auto pe-2 pb-3 delay-1">
             <div class="tab-content">
 
-                <!-- Tickets -->
+                <!-- ════ TAB: Tickets ════ -->
                 <div class="tab-pane fade show active" id="tab-tickets">
                     <form th:action="@{/configuracion/guardar/tickets}" th:object="${config}" method="post" id="form-tickets">
                         <meta name="_csrf" th:content="${_csrf.token}"/>
                         <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-                        <div class="card custom-card border-0 shadow-sm p-2 mb-3">
-                            <div class="card-body">
-                                <h5 class="fw-bold mb-4 text-dark">Información del Gimnasio</h5>
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <label class="form-label small fw-bold text-secondary">Nombre Comercial</label>
-                                        <input type="text" th:field="*{nombreGimnasio}"
-                                               class="form-control form-control-lg bg-light border-0"
-                                               id="inputNombreGym" oninput="updatePreview()">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-secondary">Dirección</label>
-                                        <input type="text" th:field="*{direccion}" class="form-control bg-light border-0">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-secondary">Teléfono / WhatsApp</label>
-                                        <input type="text" th:field="*{telefono}" class="form-control bg-light border-0">
-                                    </div>
-                                    <div class="col-12 mt-3">
-                                        <div class="row g-4">
-                                            <div class="col-md-6">
-                                                <label class="form-label small fw-bold text-secondary">Mensaje al pie del Ticket</label>
-                                                <textarea th:field="*{mensajeTicket}" class="form-control bg-light border-0"
-                                                          rows="5" id="inputMensaje" oninput="updatePreview()"></textarea>
-                                                <div class="form-text small">Aparece al final de los comprobantes.</div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label small fw-bold text-secondary">Previsualización del Ticket</label>
-                                                <div class="p-3 rounded-3 border bg-white text-center small shadow-sm">
-                                                    <div class="fw-bold mb-2 fs-6 text-dark" id="previewNombre">MI GIMNASIO</div>
-                                                    <div class="border-bottom border-secondary opacity-50 mb-2"></div>
-                                                    <div class="d-flex justify-content-between text-muted mb-1">
-                                                        <span>Concepto:</span><span>Cuota Mensual</span>
-                                                    </div>
-                                                    <div class="d-flex justify-content-between fw-bold text-dark mt-2">
-                                                        <span>TOTAL:</span><span>$ 15,000</span>
-                                                    </div>
-                                                    <div class="border-bottom border-secondary opacity-50 my-2"></div>
-                                                    <div class="fst-italic text-muted small" id="previewMensaje">Gracias por su visita</div>
+
+                        <div class="card custom-card border-0 p-3 mb-3">
+
+                            <!-- Header de sección -->
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <div class="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
+                                     style="width:42px;height:42px;background:linear-gradient(135deg,#1f2a30,#2d3f46);">
+                                    <i data-lucide="receipt" style="width:18px;height:18px;color:#fff;"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-0" style="color:#1f2a30;">Información del Gimnasio</h5>
+                                    <small class="text-muted">Aparece en los tickets y comprobantes</small>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold" style="color:#64748b;">Nombre Comercial</label>
+                                    <input type="text" th:field="*{nombreGimnasio}"
+                                           class="form-control input-clean"
+                                           id="inputNombreGym" oninput="updatePreview()">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold" style="color:#64748b;">Dirección</label>
+                                    <input type="text" th:field="*{direccion}" class="form-control input-clean">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold" style="color:#64748b;">Teléfono / WhatsApp</label>
+                                    <input type="text" th:field="*{telefono}" class="form-control input-clean">
+                                </div>
+
+                                <div class="col-12 mt-2">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold" style="color:#64748b;">Mensaje al pie del Ticket</label>
+                                            <textarea th:field="*{mensajeTicket}" class="form-control input-clean"
+                                                      rows="5" id="inputMensaje" oninput="updatePreview()"></textarea>
+                                            <div class="form-text small">Aparece al final de los comprobantes.</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold" style="color:#64748b;">Previsualización</label>
+                                            <div class="ticket-preview-card">
+                                                <div class="fw-bold text-center mb-2 text-dark" style="font-size:.9rem;"
+                                                     id="previewNombre">MI GIMNASIO</div>
+                                                <div class="border-bottom mb-2" style="border-color:#e2e8f0 !important;"></div>
+                                                <div class="d-flex justify-content-between text-muted mb-1" style="font-size:.75rem;">
+                                                    <span>Concepto:</span><span>Cuota Mensual</span>
                                                 </div>
+                                                <div class="d-flex justify-content-between fw-bold mt-2" style="color:#1f2a30;">
+                                                    <span>TOTAL:</span><span>$ 15,000</span>
+                                                </div>
+                                                <div class="border-bottom my-2" style="border-color:#e2e8f0 !important;"></div>
+                                                <div class="text-center fst-italic text-muted" style="font-size:.75rem;"
+                                                     id="previewMensaje">Gracias por su visita</div>
                                             </div>
                                         </div>
                                     </div>
@@ -122,216 +221,249 @@
                     </form>
                 </div>
 
-                <!-- Pagos -->
+                <!-- ════ TAB: Pagos ════ -->
                 <div class="tab-pane fade" id="tab-pagos">
                     <form th:action="@{/configuracion/guardar/pagos}" method="post" id="form-pagos">
                         <meta name="_csrf" th:content="${_csrf.token}"/>
                         <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-                        <div class="card custom-card border-0 shadow-sm p-2 mb-3">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-4">
-                                    <div class="p-2 rounded-3 me-3 text-white d-flex align-items-center justify-content-center bg-primary"
-                                         style="width:45px;height:45px;">
-                                        <i data-lucide="wallet" style="width:20px;height:20px;"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="fw-bold mb-0 text-dark">Métodos de Pago y Recargos</h5>
-                                        <p class="text-muted small mb-0">Administrá los métodos activos y sus recargos</p>
-                                    </div>
+
+                        <div class="card custom-card border-0 p-3 mb-3">
+
+                            <!-- Header de sección -->
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <div class="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
+                                     style="width:42px;height:42px;background:linear-gradient(135deg,#1f2a30,#2d3f46);">
+                                    <i data-lucide="wallet" style="width:18px;height:18px;color:#fff;"></i>
                                 </div>
-                                <div id="metodosContainer">
-                                    <div th:if="${metodosVacios}" id="emptyState"
-                                         class="text-center text-muted py-5 border rounded-3 bg-light mb-4">
-                                        <i data-lucide="credit-card" style="width:40px;height:40px;opacity:0.25;" class="d-block mx-auto mb-2"></i>
-                                        <p class="mb-0 small">No hay métodos de pago configurados todavía.</p>
+                                <div>
+                                    <h5 class="fw-bold mb-0" style="color:#1f2a30;">Métodos de Pago y Recargos</h5>
+                                    <small class="text-muted">Administrá los métodos activos y sus recargos</small>
+                                </div>
+                            </div>
+
+                            <!-- Lista de métodos activos -->
+                            <div id="metodosContainer">
+                                <div th:if="${metodosVacios}" id="emptyState"
+                                     class="text-center text-muted py-5 rounded-3 mb-4"
+                                     style="background:#f8fafc;border:1.5px dashed #e2e8f0;">
+                                    <i data-lucide="credit-card" style="width:36px;height:36px;opacity:.2;" class="d-block mx-auto mb-2"></i>
+                                    <p class="mb-0 small">No hay métodos de pago configurados todavía.</p>
+                                </div>
+
+                                <div th:each="metodo : ${metodosDePago}"
+                                     class="metodo-item d-flex align-items-center gap-3 mb-2">
+                                    <input type="hidden" name="configId" th:value="${metodo.idConfiguracion}">
+
+                                    <!-- Punto + nombre -->
+                                    <div class="flex-grow-1 fw-semibold d-flex align-items-center gap-2" style="color:#1f2a30;">
+                                        <span class="rounded-circle flex-shrink-0"
+                                              style="width:7px;height:7px;display:inline-block;background:#2d3f46;"></span>
+                                        <span th:text="${metodo.nombre}">Efectivo</span>
                                     </div>
-                                    <div th:each="metodo : ${metodosDePago}"
-                                         class="metodo-item d-flex align-items-center gap-3 mb-2 shadow-sm">
-                                        <input type="hidden" name="configId" th:value="${metodo.idConfiguracion}">
-                                        <div class="flex-grow-1 fw-bold text-dark d-flex align-items-center gap-2">
-                                            <span class="rounded-circle bg-primary" style="width:6px;height:6px;display:inline-block;"></span>
-                                            <span th:text="${metodo.nombre}">Efectivo</span>
+
+                                    <!-- Recargo -->
+                                    <div style="min-width:150px;">
+                                        <label class="form-label small mb-0" style="color:#94a3b8;">Recargo (%)</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" step="0.01" min="0" max="100" name="configRecargo"
+                                                   th:value="${metodo.recargo}"
+                                                   class="form-control input-clean text-center"
+                                                   placeholder="0.00" oninput="actualizarSimulacion(this)">
+                                            <span class="input-group-text border-0 bg-transparent text-muted">%</span>
                                         </div>
-                                        <div style="min-width:140px;">
-                                            <label class="form-label small text-muted mb-0">Recargo (%)</label>
-                                            <div class="input-group input-group-sm">
-                                                <input type="number" step="0.01" min="0" max="100" name="configRecargo"
-                                                       th:value="${metodo.recargo}"
-                                                       class="form-control text-center bg-light border-0"
-                                                       placeholder="0.00" oninput="actualizarSimulacion(this)">
-                                                <span class="input-group-text bg-light text-muted border-0">%</span>
-                                            </div>
+                                    </div>
+
+                                    <!-- Simulación -->
+                                    <div class="text-muted small text-center" style="min-width:120px;font-size:.75rem;">
+                                        Sobre $10.000:<br>
+                                        <strong style="color:#1f2a30;" class="simulacion-label">$10.000</strong>
+                                    </div>
+
+                                    <!-- Desactivar -->
+                                    <button type="button"
+                                            class="btn btn-sm d-inline-flex align-items-center px-2"
+                                            style="background:#fee2e2;color:#ef4444;border:none;border-radius:8px;"
+                                            th:attr="data-id=${metodo.idMetodo}"
+                                            onclick="confirmarDesactivar(this)" title="Desactivar">
+                                        <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Métodos inactivos -->
+                            <div id="bloqueInactivos" th:classappend="${#lists.isEmpty(metodosInactivos)} ? 'd-none' : ''">
+                                <div class="divider-text">Métodos Inactivos</div>
+
+                                <div class="d-flex align-items-start gap-2 rounded-3 px-3 py-2 mb-3 small"
+                                     style="background:#fff7ed;color:#92400e;">
+                                    <i data-lucide="alert-triangle" style="width:15px;height:15px;flex-shrink:0;margin-top:1px;"></i>
+                                    <span><strong>Atención:</strong> Eliminar permanentemente borrará todos los registros de pago asociados. Esta acción no se puede deshacer.</span>
+                                </div>
+
+                                <div id="listaInactivos">
+                                    <div th:each="inactivo : ${metodosInactivos}"
+                                         class="metodo-item d-flex align-items-center gap-3 mb-2"
+                                         style="background:#f8fafc;"
+                                         th:id="'inactivo-' + ${inactivo.idMetodo}">
+                                        <div class="flex-grow-1 d-flex align-items-center gap-2">
+                                            <span class="rounded-circle flex-shrink-0"
+                                                  style="width:7px;height:7px;display:inline-block;background:#cbd5e1;"></span>
+                                            <span th:text="${inactivo.nombre}"
+                                                  class="fw-semibold text-muted text-decoration-line-through">Método</span>
                                         </div>
-                                        <div class="text-muted small text-center" style="min-width:120px;">
-                                            Sobre $10.000:<br>
-                                            <strong class="text-dark simulacion-label">$10.000</strong>
-                                        </div>
+                                        <span class="badge rounded-pill px-2 py-1"
+                                              style="background:#f1f5f9;color:#94a3b8;font-size:.65rem;border:1px solid #e2e8f0;">Inactivo</span>
                                         <button type="button"
-                                                class="btn btn-sm btn-outline-danger border-0 mt-3 d-inline-flex align-items-center"
-                                                th:attr="data-id=${metodo.idMetodo}"
-                                                onclick="confirmarDesactivar(this)" title="Desactivar método">
-                                            <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
+                                                class="btn btn-sm d-flex align-items-center gap-1 px-2 py-1"
+                                                style="background:#dcfce7;color:#16a34a;border:none;border-radius:8px;"
+                                                th:attr="data-id=${inactivo.idMetodo}" onclick="reactivarMetodo(this)">
+                                            <i data-lucide="rotate-ccw" style="width:12px;height:12px;"></i>
+                                            <span style="font-size:.72rem;">Reactivar</span>
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-sm d-flex align-items-center gap-1 px-2 py-1"
+                                                style="background:#fee2e2;color:#ef4444;border:none;border-radius:8px;"
+                                                th:attr="data-id=${inactivo.idMetodo}, data-nombre=${inactivo.nombre}"
+                                                onclick="confirmarEliminarPermanente(this)">
+                                            <i data-lucide="x" style="width:12px;height:12px;"></i>
+                                            <span style="font-size:.72rem;">Eliminar</span>
                                         </button>
                                     </div>
                                 </div>
-
-                                <div id="bloqueInactivos" th:classappend="${#lists.isEmpty(metodosInactivos)} ? 'd-none' : ''">
-                                    <div class="d-flex align-items-center my-4">
-                                        <div class="flex-grow-1 border-top"></div>
-                                        <span class="px-3 text-muted small fw-bold text-uppercase">Métodos Inactivos</span>
-                                        <div class="flex-grow-1 border-top"></div>
-                                    </div>
-                                    <div class="alert alert-warning d-flex align-items-center gap-2 py-2 px-3 mb-3 border-0 rounded-3 small">
-                                        <i data-lucide="alert-triangle" style="width:18px;height:18px;" class="flex-shrink-0"></i>
-                                        <span><strong>Atención:</strong> Eliminar un método permanentemente borrará también todos los registros de pago asociados. Esta acción no se puede deshacer.</span>
-                                    </div>
-                                    <div id="listaInactivos">
-                                        <div th:each="inactivo : ${metodosInactivos}"
-                                             class="metodo-item d-flex align-items-center gap-3 mb-2 bg-light border-0 shadow-none"
-                                             th:id="'inactivo-' + ${inactivo.idMetodo}">
-                                            <div class="flex-grow-1 text-muted d-flex align-items-center gap-2">
-                                                <span class="rounded-circle bg-secondary opacity-25" style="width:6px;height:6px;display:inline-block;"></span>
-                                                <span th:text="${inactivo.nombre}" class="fw-semibold text-secondary text-decoration-line-through">Método</span>
-                                            </div>
-                                            <span class="badge bg-white text-secondary border" style="font-size:0.65rem;">Inactivo</span>
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-success d-flex align-items-center gap-1 border-0"
-                                                    th:attr="data-id=${inactivo.idMetodo}" onclick="reactivarMetodo(this)">
-                                                <i data-lucide="rotate-ccw" style="width:13px;height:13px;"></i> <span>Reactivar</span>
-                                            </button>
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1 border-0"
-                                                    th:attr="data-id=${inactivo.idMetodo}, data-nombre=${inactivo.nombre}"
-                                                    onclick="confirmarEliminarPermanente(this)">
-                                                <i data-lucide="x" style="width:13px;height:13px;"></i> <span>Eliminar</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex align-items-center my-4">
-                                    <div class="flex-grow-1 border-top"></div>
-                                    <span class="px-3 text-muted small fw-bold text-uppercase">Agregar Método de Pago</span>
-                                    <div class="flex-grow-1 border-top"></div>
-                                </div>
-                                <div class="p-3 border-0 rounded-3 bg-light shadow-sm">
-                                    <div class="row g-3 align-items-end">
-                                        <div class="col-md-5">
-                                            <label class="form-label small fw-bold text-secondary">Nombre del Método</label>
-                                            <input type="text" id="nuevoMetodoNombre" class="form-control border-0"
-                                                   placeholder="Ej: Efectivo, Mercado Pago, Débito...">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label small fw-bold text-secondary">Recargo (opcional)</label>
-                                            <div class="input-group">
-                                                <input type="number" step="0.01" min="0" max="100"
-                                                       id="nuevoMetodoRecargo" class="form-control border-0" placeholder="0.00">
-                                                <span class="input-group-text bg-white border-0">%</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <button type="button"
-                                                    class="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
-                                                    onclick="agregarMetodo()">
-                                                <i data-lucide="plus-circle" style="width:15px;height:15px;"></i> Agregar
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div id="nuevoMetodoError" class="text-danger small mt-2 d-none d-flex align-items-center gap-1">
-                                        <i data-lucide="alert-circle" style="width:13px;height:13px;"></i>
-                                        Ingresá un nombre para el método.
-                                    </div>
-                                </div>
-                                <div id="nuevosMetodosHidden"></div>
                             </div>
+
+                            <!-- Agregar método -->
+                            <div class="divider-text">Agregar Método de Pago</div>
+
+                            <div class="p-3 rounded-3" style="background:#f8fafc;border:1.5px dashed #e2e8f0;">
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-5">
+                                        <label class="form-label small fw-bold" style="color:#64748b;">Nombre del Método</label>
+                                        <input type="text" id="nuevoMetodoNombre" class="form-control input-clean"
+                                               placeholder="Ej: Efectivo, Mercado Pago...">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-bold" style="color:#64748b;">Recargo (opcional)</label>
+                                        <div class="input-group">
+                                            <input type="number" step="0.01" min="0" max="100"
+                                                   id="nuevoMetodoRecargo" class="form-control input-clean" placeholder="0.00">
+                                            <span class="input-group-text border-0 bg-transparent text-muted">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="button"
+                                                class="btn btn-dark-brand w-100 d-flex align-items-center justify-content-center gap-2"
+                                                onclick="agregarMetodo()">
+                                            <i data-lucide="plus-circle" style="width:14px;height:14px;"></i>
+                                            Agregar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="nuevoMetodoError"
+                                     class="d-none d-flex align-items-center gap-1 mt-2 small"
+                                     style="color:#ef4444;">
+                                    <i data-lucide="alert-circle" style="width:13px;height:13px;"></i>
+                                    Ingresá un nombre para el método.
+                                </div>
+                            </div>
+                            <div id="nuevosMetodosHidden"></div>
                         </div>
                     </form>
                 </div>
 
-                <!-- Mi Cuenta -->
+                <!-- ════ TAB: Mi Cuenta ════ -->
                 <div class="tab-pane fade" id="tab-cuenta">
                     <div class="row g-3">
+
+                        <!-- Datos del gimnasio -->
                         <div class="col-md-6">
-                            <div class="card custom-card border-0 shadow-sm h-100">
+                            <div class="card custom-card border-0 h-100">
                                 <div class="card-body p-4">
-                                    <div class="d-flex align-items-center mb-4">
-                                        <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3 text-primary">
-                                            <i data-lucide="building-2" style="width:22px;height:22px;"></i>
+                                    <div class="d-flex align-items-center gap-3 mb-4">
+                                        <div class="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
+                                             style="width:42px;height:42px;background:linear-gradient(135deg,#1f2a30,#2d3f46);">
+                                            <i data-lucide="building-2" style="width:18px;height:18px;color:#fff;"></i>
                                         </div>
                                         <div>
-                                            <h5 class="fw-bold mb-0">Datos del Gimnasio</h5>
+                                            <h5 class="fw-bold mb-0" style="color:#1f2a30;">Datos del Gimnasio</h5>
                                             <small class="text-muted">Información de tu cuenta</small>
                                         </div>
                                     </div>
                                     <form th:action="@{/perfil/actualizar}" method="post">
                                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                                         <div class="mb-3">
-                                            <label class="form-label small fw-bold text-secondary">Usuario</label>
-                                            <input type="text" class="form-control bg-light border-0"
+                                            <label class="form-label small fw-bold" style="color:#64748b;">Usuario</label>
+                                            <input type="text" class="form-control input-clean"
+                                                   style="background:#f1f5f9;color:#94a3b8;"
                                                    th:value="${usuario.username}" disabled>
-                                            <div class="form-text small">El nombre de usuario no se puede modificar.</div>
+                                            <div class="form-text small">El usuario no se puede modificar.</div>
                                         </div>
                                         <div class="mb-4">
-                                            <label class="form-label small fw-bold text-secondary">Nombre del Gimnasio</label>
-                                            <input type="text" name="nombreGimnasio" class="form-control bg-light border-0"
+                                            <label class="form-label small fw-bold" style="color:#64748b;">Nombre del Gimnasio</label>
+                                            <input type="text" name="nombreGimnasio" class="form-control input-clean"
                                                    th:value="${usuario.nombreGimnasio}"
                                                    placeholder="Ej: Gimnasio El Campeón">
                                         </div>
-                                        <div class="d-grid">
-                                            <button type="submit" class="btn btn-primary fw-bold py-2 d-flex align-items-center justify-content-center gap-2">
-                                                <i data-lucide="save" style="width:15px;height:15px;"></i> Guardar cambios
-                                            </button>
-                                        </div>
+                                        <button type="submit"
+                                                class="btn btn-dark-brand w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                                            <i data-lucide="save" style="width:15px;height:15px;"></i>
+                                            Guardar cambios
+                                        </button>
                                     </form>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Cambiar contraseña -->
                         <div class="col-md-6">
-                            <div class="card custom-card border-0 shadow-sm h-100">
+                            <div class="card custom-card border-0 h-100">
                                 <div class="card-body p-4">
-                                    <div class="d-flex align-items-center mb-4">
-                                        <div class="bg-warning bg-opacity-10 p-2 rounded-3 me-3 text-warning">
-                                            <i data-lucide="shield-check" style="width:22px;height:22px;"></i>
+                                    <div class="d-flex align-items-center gap-3 mb-4">
+                                        <!-- Icono con acento sutil diferente al primer card -->
+                                        <div class="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
+                                             style="width:42px;height:42px;background:#f1f5f9;">
+                                            <i data-lucide="shield-check" style="width:18px;height:18px;color:#1f2a30;"></i>
                                         </div>
                                         <div>
-                                            <h5 class="fw-bold mb-0">Cambiar Contraseña</h5>
+                                            <h5 class="fw-bold mb-0" style="color:#1f2a30;">Cambiar Contraseña</h5>
                                             <small class="text-muted">Mínimo 8 caracteres</small>
                                         </div>
                                     </div>
                                     <form th:action="@{/perfil/cambiar-password}" method="post">
                                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                                         <div class="mb-3">
-                                            <label class="form-label small fw-bold text-secondary">Contraseña actual</label>
+                                            <label class="form-label small fw-bold" style="color:#64748b;">Contraseña actual</label>
                                             <input type="password" name="passwordActual"
-                                                   class="form-control bg-light border-0" placeholder="••••••••" required>
+                                                   class="form-control input-clean" placeholder="••••••••" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label small fw-bold text-secondary">Nueva contraseña</label>
+                                            <label class="form-label small fw-bold" style="color:#64748b;">Nueva contraseña</label>
                                             <input type="password" name="passwordNueva" id="passwordNueva"
-                                                   class="form-control bg-light border-0"
-                                                   placeholder="••••••••" required minlength="8">
+                                                   class="form-control input-clean" placeholder="••••••••"
+                                                   required minlength="8">
                                         </div>
                                         <div class="mb-4">
-                                            <label class="form-label small fw-bold text-secondary">Confirmar contraseña</label>
+                                            <label class="form-label small fw-bold" style="color:#64748b;">Confirmar contraseña</label>
                                             <input type="password" name="confirmar" id="confirmarPassword"
-                                                   class="form-control bg-light border-0"
-                                                   placeholder="••••••••" required minlength="8"
-                                                   oninput="validarConfirmacion()">
-                                            <div id="errorConfirmacion" class="text-danger small mt-1 d-none d-flex align-items-center gap-1">
+                                                   class="form-control input-clean" placeholder="••••••••"
+                                                   required minlength="8" oninput="validarConfirmacion()">
+                                            <div id="errorConfirmacion"
+                                                 class="d-none d-flex align-items-center gap-1 mt-1 small"
+                                                 style="color:#ef4444;">
                                                 <i data-lucide="alert-circle" style="width:13px;height:13px;"></i>
                                                 Las contraseñas no coinciden.
                                             </div>
                                         </div>
-                                        <div class="d-grid">
-                                            <button type="submit" class="btn btn-warning fw-bold py-2 text-white d-flex align-items-center justify-content-center gap-2">
-                                                <i data-lucide="key" style="width:15px;height:15px;"></i> Cambiar contraseña
-                                            </button>
-                                        </div>
+                                        <button type="submit"
+                                                class="btn btn-dark-brand w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                                            <i data-lucide="key" style="width:15px;height:15px;"></i>
+                                            Cambiar contraseña
+                                        </button>
                                     </form>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -339,46 +471,61 @@
         </div>
     </div>
 
-    <!-- Modal desactivar -->
+    <!-- ── Modal: Desactivar método ── -->
     <div class="modal fade" id="modalDesactivar" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content border-0 shadow">
+            <div class="modal-content border-0 shadow-lg" style="border-radius:16px;">
                 <div class="modal-body text-center p-4">
-                    <i data-lucide="ban" style="width:48px;height:48px;" class="text-warning d-block mx-auto mb-3"></i>
-                    <h6 class="fw-bold mb-1">¿Desactivar método?</h6>
+                    <div class="d-flex align-items-center justify-content-center rounded-3 mx-auto mb-3"
+                         style="width:52px;height:52px;background:#fff7ed;">
+                        <i data-lucide="ban" style="width:24px;height:24px;color:#f59e0b;"></i>
+                    </div>
+                    <h6 class="fw-bold mb-1" style="color:#1f2a30;">¿Desactivar método?</h6>
                     <p class="text-muted small mb-3">
                         No aparecerá en nuevos cobros.<br>
                         Los pagos históricos quedan intactos.<br>
                         Podés reactivarlo cuando quieras.
                     </p>
                     <div class="d-flex gap-2 justify-content-center">
-                        <button class="btn btn-sm btn-outline-secondary border-0" data-bs-dismiss="modal">Cancelar</button>
-                        <button class="btn btn-sm btn-warning fw-bold text-white shadow-sm" id="btnConfirmarDesactivar">Desactivar</button>
+                        <button class="btn btn-sm px-3 py-2 fw-medium"
+                                style="background:#f1f5f9;color:#64748b;border:none;border-radius:8px;"
+                                data-bs-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-sm px-3 py-2 fw-bold"
+                                style="background:#fff7ed;color:#d97706;border:none;border-radius:8px;"
+                                id="btnConfirmarDesactivar">Desactivar</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal eliminar permanente -->
+    <!-- ── Modal: Eliminar permanente ── -->
     <div class="modal fade" id="modalEliminarPermanente" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content border-0 shadow">
+            <div class="modal-content border-0 shadow-lg" style="border-radius:16px;">
                 <div class="modal-body text-center p-4">
-                    <i data-lucide="trash-2" style="width:48px;height:48px;" class="text-danger d-block mx-auto mb-3"></i>
-                    <h6 class="fw-bold mb-1">¿Eliminar permanentemente?</h6>
-                    <p class="text-muted small mb-1">
-                        Estás a punto de eliminar <strong id="modalNombreMetodo" class="text-dark"></strong>.
+                    <div class="d-flex align-items-center justify-content-center rounded-3 mx-auto mb-3"
+                         style="width:52px;height:52px;background:#fee2e2;">
+                        <i data-lucide="trash-2" style="width:24px;height:24px;color:#ef4444;"></i>
+                    </div>
+                    <h6 class="fw-bold mb-1" style="color:#1f2a30;">¿Eliminar permanentemente?</h6>
+                    <p class="text-muted small mb-2">
+                        Estás a punto de eliminar
+                        <strong class="text-dark" id="modalNombreMetodo"></strong>.
                     </p>
-                    <div class="alert alert-danger py-2 px-3 text-start small mb-3 border-0 rounded-3 mt-3">
+                    <div class="rounded-3 px-3 py-2 text-start small mb-3"
+                         style="background:#fee2e2;color:#b91c1c;">
                         <i data-lucide="alert-triangle" style="width:13px;height:13px;" class="me-1"></i>
-                        Se borrarán <strong>todos los registros de pago</strong> asociados.<br>Esta acción <strong>no se puede deshacer</strong>.
+                        Se borrarán <strong>todos los registros de pago</strong> asociados.
+                        Esta acción <strong>no se puede deshacer</strong>.
                     </div>
                     <div class="d-flex gap-2 justify-content-center">
-                        <button class="btn btn-sm btn-outline-secondary border-0" data-bs-dismiss="modal">Cancelar</button>
-                        <button class="btn btn-sm btn-danger fw-bold shadow-sm" id="btnConfirmarEliminarPermanente">
-                            Sí, eliminar todo
-                        </button>
+                        <button class="btn btn-sm px-3 py-2 fw-medium"
+                                style="background:#f1f5f9;color:#64748b;border:none;border-radius:8px;"
+                                data-bs-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-sm px-3 py-2 fw-bold"
+                                style="background:#ef4444;color:#fff;border:none;border-radius:8px;"
+                                id="btnConfirmarEliminarPermanente">Sí, eliminar todo</button>
                     </div>
                 </div>
             </div>
