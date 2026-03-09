@@ -29,15 +29,29 @@ public class AsistenciaStrategy implements ExportStrategy {
     public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha) {
 
         List<Asistencia> asistencias = asistenciaRepository.findAll();
+        
+        System.out.println("Atributos asistencia: " + request.getAtributos());
+        System.out.println("Total asistencias: " + asistencias.size());
+        
+        for (java.lang.reflect.Field f : Asistencia.class.getDeclaredFields()) {
+            System.out.println("Campo real asistencia: " + f.getName());
+        }
+
         List<Map<String, Object>> filas = new ArrayList<>();
 
         for (Asistencia asistencia : asistencias) {
 
+            System.out.println("Procesando asistencia: " + asistencia.getIdAsistencia());
+
             List<Map<String, Object>> filasAsistencia =
                     ExportMapper.mapearEntidad(asistencia, request.getAtributos());
 
+            System.out.println("Filas generadas: " + filasAsistencia);
+
             filas.addAll(filasAsistencia);
         }
+
+        System.out.println("Total filas asistencia: " + filas.size());
 
         return filas;
     }

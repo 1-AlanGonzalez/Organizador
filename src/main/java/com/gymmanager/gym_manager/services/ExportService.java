@@ -34,6 +34,7 @@ public class ExportService {
     public ExportService(List<ExportStrategy> strategyList) {
 
         System.out.println("Strategies detectadas: " + strategyList.size());
+        
 
     for (ExportStrategy strategy : strategyList) {
         System.out.println("Registrando: " + strategy.getNombreEntidad());
@@ -43,7 +44,10 @@ public class ExportService {
     
 
     public Map<String, List<Map<String, Object>>> generarExportacion(ExportRequest request) {
-
+    System.out.println("Entidades pedidas: " + request.getEntidades().size());
+    for (EntidadRequestDTO e : request.getEntidades()) {
+    System.out.println("Entidad: " + e.getNombre());
+    }
     Map<String, List<Map<String, Object>>> resultado = new LinkedHashMap<>();
 
     for (EntidadRequestDTO entidadDTO : request.getEntidades()) {
