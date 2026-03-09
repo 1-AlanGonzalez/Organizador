@@ -150,4 +150,5 @@ Optional<Pago> findByActividadCliente_IdActividadClienteAndFechaGeneracion(
        "ORDER BY p.fechaGeneracion DESC")
 List<Pago> findPagosVisibles(@Param("usuario") Usuario usuario);
 
+Optional<Pago> findTopByActividadCliente_IdActividadClienteOrderByFechaGeneracionDesc(Integer idActividadCliente);
 }  

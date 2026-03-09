@@ -8,8 +8,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.gymmanager.gym_manager.entity.ActividadCliente;
+import com.gymmanager.gym_manager.entity.EstadoInscripcion;
 import com.gymmanager.gym_manager.entity.EstadoPago;
 import com.gymmanager.gym_manager.entity.Pago;
+import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
 import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
 import com.gymmanager.gym_manager.repository.PagoRepository;
@@ -32,7 +34,7 @@ public class PagoSchedulerService {
 
 
 
-    @Scheduled(fixedRate = 10000) //Ejecuta todos los días a medianoche
+    @Scheduled(cron = "0 0 0 * * *") //Ejecuta todos los días a medianoche
     @Transactional
     public void generarPagosMensuales() {
 
@@ -81,5 +83,33 @@ public class PagoSchedulerService {
         
         }
 
+    }
+
+    @Scheduled(cron = "0 0 0 * * *") // todos los días a las 00:00
+    @Transactional
+    public void desactivarInscripcionesDiarias() {
+
+        List<ActividadCliente> inscripciones = clienteActividadRepository.findAllActivas();
+
+        for (ActividadCliente inscripcion : inscripciones) {
+
+            if (inscripcion.getTipoDeCobro() == TipoDeCobro.DIARIO) {
+
+                Pago ultimoPago = pagoRepository
+                    .findTopByActividadCliente_IdActividadClienteOrderByFechaGeneracionDesc(
+                        inscripcion.getIdActividadCliente())
+                    .orElse(null);
+
+                if (ultimoPago == null) continue;
+
+                if (ultimoPago.getFechaGeneracion().isBefore(LocalDate.now())) {
+
+                    inscripcion.setEstado(EstadoInscripcion.BAJA);
+                    clienteActividadRepository.save(inscripcion);
+
+                    System.out.println("Inscripción diaria desactivada: " + inscripcion.getIdActividadCliente());
+                }
+            }
+        }
     }
 }
