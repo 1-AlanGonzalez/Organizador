@@ -11,6 +11,7 @@ import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.EstadoPago;
 import com.gymmanager.gym_manager.entity.Pago;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
+import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
 import com.gymmanager.gym_manager.repository.PagoRepository;
 
 import jakarta.transaction.Transactional;
@@ -19,16 +20,19 @@ import jakarta.transaction.Transactional;
 public class PagoSchedulerService {
     private final PagoRepository pagoRepository;
     private final ClienteActividadRepository clienteActividadRepository;
+    private final MetodoDePagoRepository metodoDePagoRepository;
 
     public PagoSchedulerService(PagoRepository pagoRepository,
-                                ClienteActividadRepository clienteActividadRepository) {
+                                ClienteActividadRepository clienteActividadRepository,
+                                MetodoDePagoRepository metodoDePagoRepository) {
         this.pagoRepository              = pagoRepository;
         this.clienteActividadRepository = clienteActividadRepository;
+        this.metodoDePagoRepository     = metodoDePagoRepository;
     }
 
 
 
-    @Scheduled(cron = "0 0 0 * * *") //Ejecuta todos los días a medianoche
+    @Scheduled(fixedRate = 10000) //Ejecuta todos los días a medianoche
     @Transactional
     public void generarPagosMensuales() {
 
@@ -68,6 +72,7 @@ public class PagoSchedulerService {
                     nuevoPago.setFechaGeneracion(LocalDate.now());
                     nuevoPago.setFechaVencimiento(LocalDate.now().plusMonths(1));
                     nuevoPago.setEstado(EstadoPago.ADEUDA);
+                    nuevoPago.setMetodoPago(metodoDePagoRepository.findByNombre("No especificado").orElse(null));
                     pagoRepository.save(nuevoPago);
                     System.out.println("Nuevo pago generado para inscripción: "
                         + inscripcion.getIdActividadCliente());
