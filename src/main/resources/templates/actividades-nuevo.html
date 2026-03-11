@@ -51,12 +51,16 @@
                                            required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label small fw-bold text-secondary">Cupo Máximo</label>
-                                    <input type="number" name="cupoMaximo" id="act-cupoMaximo"
-                                           class="form-control"
-                                           th:value="${actividad.cupoMaximo}"
-                                           required>
-                                </div>
+    <label class="form-label small fw-bold text-secondary">Cupo Máximo</label>
+    <div class="d-flex align-items-center gap-2 mb-1">
+        <input type="checkbox" id="ilimitado" onchange="toggleCupo(this)">
+        <label for="ilimitado" class="small text-muted mb-0">Ilimitado</label>
+    </div>
+    <input type="number" name="cupoMaximo" id="act-cupoMaximo"
+           class="form-control"
+           th:value="${actividad.cupoMaximo}"
+           min="1">
+</div>
                             </div>
                         </div>
 
