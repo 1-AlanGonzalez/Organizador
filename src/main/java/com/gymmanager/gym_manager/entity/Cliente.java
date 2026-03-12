@@ -41,6 +41,10 @@ public class Cliente {
     @ColumnLabel("Telefono")
     private String telefono;
 
+    @Column(name = "EMAIL", nullable = true, length = 100)
+    @ColumnLabel("Email")
+    private String email;
+
     @Column(name = "OBSERVACIONES", nullable = true, columnDefinition = "TEXT")
     @ColumnLabel("Observaciones")
     private String observaciones;
