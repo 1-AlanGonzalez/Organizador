@@ -76,21 +76,15 @@ async function handleExportSubmit(e) {
     e.preventDefault();
 
     const fecha = document.querySelector('input[name="fecha"]').value;
-    const atributos = buildAtributosSeleccionados();
+    const entidades = buildAtributosSeleccionados();
 
     const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
     const requestBody = {
         fecha: fecha || null,
-        entidades: [
-            {
-                nombre: "inscripcion",
-                atributos: atributos
-
-            }
-        ]
+        entidades: entidades
     };
-
+    console.log(requestBody);
     try {
         const response = await fetch("/exportar/excel", {
             method: "POST",
@@ -118,43 +112,91 @@ async function handleExportSubmit(e) {
 
 function buildAtributosSeleccionados() {
 
-    const atributos = [];
-
-    if (typeof ordenSeleccion === "undefined") return atributos;
+    const entidades = [];
 
     ordenSeleccion.forEach(tipo => {
 
         switch (tipo) {
 
             case "clientes":
+
+                const clientes = [];
                 document.querySelectorAll('input[name="camposClientes"]:checked')
-                    .forEach(c => atributos.push("cliente." + c.value));
+                    .forEach(c => clientes.push(c.value));
+
+                if (clientes.length > 0) {
+                    entidades.push({
+                        nombre: "cliente",
+                        atributos: clientes
+                    });
+                }
+
                 break;
 
             case "ingresos":
+
+                const pagos = [];
                 document.querySelectorAll('input[name="camposIngresos"]:checked')
-                    .forEach(c => atributos.push("pagos." + c.value));
+                    .forEach(c => pagos.push(c.value));
+
+                if (pagos.length > 0) {
+                    entidades.push({
+                        nombre: "pagos",
+                        atributos: pagos
+                    });
+                }
+
                 break;
 
             case "actividades":
+
+                const actividades = [];
                 document.querySelectorAll('input[name="camposActividades"]:checked')
-                    .forEach(c => atributos.push("actividad." + c.value));
+                    .forEach(c => actividades.push(c.value));
+
+                if (actividades.length > 0) {
+                    entidades.push({
+                        nombre: "actividad",
+                        atributos: actividades
+                    });
+                }
+
                 break;
 
             case "asistencias":
+
+                const asistencias = [];
                 document.querySelectorAll('input[name="camposAsistencias"]:checked')
-                    .forEach(c => atributos.push("asistencias." + c.value));
+                    .forEach(c => asistencias.push(c.value));
+
+                if (asistencias.length > 0) {
+                    entidades.push({
+                        nombre: "asistencia",
+                        atributos: asistencias
+                    });
+                }
+
                 break;
 
             case "instructores":
+
+                const instructores = [];
                 document.querySelectorAll('input[name="camposInstructores"]:checked')
-                    .forEach(c => atributos.push("actividad.instructor." + c.value));
+                    .forEach(c => instructores.push(c.value));
+
+                if (instructores.length > 0) {
+                    entidades.push({
+                        nombre: "instructor",
+                        atributos: instructores
+                    });
+                }
+
                 break;
         }
 
     });
 
-    return atributos;
+    return entidades;
 }
 
 function descargarArchivo(blob) {

@@ -113,7 +113,7 @@ public class ActividadController {
             @RequestParam String nombre,
             @RequestParam BigDecimal precio,
             @RequestParam(required = false) BigDecimal precioDiario,
-            @RequestParam Integer cupoMaximo,
+            @RequestParam(required = false) Integer cupoMaximo,
             @RequestParam List<Integer> instructorIds,
             @RequestParam List<String>  dias,
             @RequestParam List<String>  horarios,

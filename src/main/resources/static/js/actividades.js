@@ -186,3 +186,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+function toggleCupo(checkbox) {
+    const input = document.getElementById('act-cupoMaximo');
+    if (checkbox.checked) {
+        input.value = '';
+        input.disabled = true;
+    } else {
+        input.disabled = false;
+    }
+}

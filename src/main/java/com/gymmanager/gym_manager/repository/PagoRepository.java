@@ -20,6 +20,7 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
     Optional<Pago> findByActividadCliente_IdActividadClienteAndEstado(Integer idActividadCliente, EstadoPago estado);
     List<Pago> findByActividadCliente_Cliente_IdClienteOrderByFechaGeneracionDesc(Integer idCliente);
     void deleteByMetodoPago(MetodoDePago metodo);
+    
 
     // @Query("SELECT SUM(p.montoAPagar) FROM Pago p WHERE p.estado = 'ADEUDA'")
     // BigDecimal sumTotalPendiente();
@@ -149,4 +150,5 @@ Optional<Pago> findByActividadCliente_IdActividadClienteAndFechaGeneracion(
        "ORDER BY p.fechaGeneracion DESC")
 List<Pago> findPagosVisibles(@Param("usuario") Usuario usuario);
 
+Optional<Pago> findTopByActividadCliente_IdActividadClienteOrderByFechaGeneracionDesc(Integer idActividadCliente);
 }  

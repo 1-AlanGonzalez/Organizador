@@ -27,17 +27,20 @@ public class ClienteExportStrategy implements ExportStrategy {
 
     @Override
 public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha) {
-
+    
     List<Cliente> clientesBD = clienteRepository.findAll();
+    System.out.println("Atributos clientes: " + request.getAtributos());
+    System.out.println("Total clientes: " + clientesBD.size());
     List<Map<String, Object>> filas = new ArrayList<>();
 
     for (Cliente cliente : clientesBD) {
-
+        System.out.println("Procesando clientes: " + cliente.getIdCliente());
         List<Map<String, Object>> filasCliente =
                 ExportMapper.mapearEntidad(cliente, request.getAtributos());
-
+        System.out.println("Filas generadas: " + filasCliente);
         filas.addAll(filasCliente);
     }
+            System.out.println("Total filas cliente: " + filas.size());
 
     return filas;
 }

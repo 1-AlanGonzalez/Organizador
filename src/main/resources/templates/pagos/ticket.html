@@ -266,7 +266,7 @@
                 </span>
                 <span class="valor"
                       th:text="${pago?.fechaGeneracion != null}
-                                ? ${#temporals.format(pago.fechaGeneracion, 'dd/MM/yyyy HH:mm')}
+                                ? ${#temporals.format(pago.fechaGeneracion, 'dd/MM/yyyy')}
                                 : '—'">—</span>
             </div>
 

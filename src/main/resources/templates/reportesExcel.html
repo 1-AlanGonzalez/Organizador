@@ -128,10 +128,8 @@
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="dni"> <span>DNI</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="email"> <span>Email</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="telefono"> <span>Teléfono</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="fechaDeInscripcion"> <span>Fecha Alta</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="actividades.nombre"> <span>Nombre de Actividad </span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="estado"> <span>Estado Deuda</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="observaciones"> <span>observaciones</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="inscripciones.fechaDeInscripcion"> <span>Fecha Alta</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposClientes" value="inscripciones.pagos.estado"> <span>Estado Deuda</span></label></div>
                             </div>
                         </div>
 
@@ -141,9 +139,9 @@
                             </h6>
                             <div class="row g-2">
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="fecha"> <span>Fecha</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="cliente"> <span>Cliente</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="dni"> <span>DNI</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="actividad"> <span>Actividad</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="actividadCliente.cliente.nombre"> <span>Cliente</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="actividadCliente.cliente.dni"> <span>DNI</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposAsistencias" value="actividadCliente.actividad.nombre"> <span>Actividad</span></label></div>
                             </div>
                         </div>
 
@@ -154,15 +152,9 @@
                             <div class="row g-2">
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="fechaGeneracion"> <span>Fecha Pago</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="montoAPagar"> <span>Monto</span></label></div>
-<<<<<<< HEAD
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="metodoPago.nombre"><span>Método Pago</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="estado"><span>Estado</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="observaciones"><span>observaciones</span></label></div>
-=======
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="metodoPago.nombre"> <span>Método Pago</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="observaciones"> <span>Observaciones</span></label></div>
->>>>>>> f53b5fad60d7089225bb9b026b9fc97224d6650c
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="cliente"> <span>Cliente</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="actividadCliente.cliente.nombre"> <span>Cliente</span></label></div>
                             </div>
                         </div>
 
@@ -174,8 +166,8 @@
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="nombre"> <span>Actividad</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="dictados.horario"> <span>Horarios</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="dictados.instructor.nombre"> <span>Instructor</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="cupoMaximo"><span>Cupo Actual</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="estado == Estado.ACTIVA"> <span>Activos</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="cuposActuales"> <span>Cupos Actuales</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposActividades" value="activos"> <span>Activos</span></label></div>
                             </div>
                         </div>
 
@@ -187,8 +179,8 @@
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="nombre"> <span>Nombre</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="apellido"> <span>Apellido</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="dni"> <span>DNI / CUIT</span></label></div>
+                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="dictados.actividad.nombre"> <span>Especialidad</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="telefono"> <span>Contacto</span></label></div>
-                                <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposInstructores" value="especialidad"> <span>Especialidad</span></label></div>
                             </div>
                         </div>
                     </div>

@@ -1,5 +1,6 @@
 package com.gymmanager.gym_manager.services.exports;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,20 +23,23 @@ public class PagoExportStrategy implements ExportStrategy {
 
     @Override
     public String getNombreEntidad() {
-        return "pago";
+        return "pagos";
     }
 
     @Override
     public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha) {
-
+        System.out.println("Atributos pagos: " + request.getAtributos());
+        for (Field f : Pago.class.getDeclaredFields()) {
+        System.out.println("Campo real: " + f.getName());
+    }
         List<Pago> pagos = pagoRepository.findAll();
         List<Map<String, Object>> filas = new ArrayList<>();
 
         for (Pago pago : pagos) {
-
+            System.out.println("Procesando pago: " + pago.getIdPago());
             List<Map<String, Object>> filasPago =
                     ExportMapper.mapearEntidad(pago, request.getAtributos());
-
+            System.out.println("Filas generadas: " + filasPago);
             filas.addAll(filasPago);
         }
 

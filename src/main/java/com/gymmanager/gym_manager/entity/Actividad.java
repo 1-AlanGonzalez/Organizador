@@ -37,7 +37,7 @@ public class Actividad {
     @ColumnLabel("Nombre de Actividad")
     private String nombre;
 
-    @Column(name = "CUPO_MAXIMO", nullable = false)
+    @Column(name = "CUPO_MAXIMO", nullable = true)
     @ColumnLabel("Cupo Maximo")
     private Integer cupoMaximo;
 
