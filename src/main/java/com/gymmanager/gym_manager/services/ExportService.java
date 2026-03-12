@@ -69,30 +69,6 @@ public class ExportService {
     return resultado;
 }
 
-//       public Map<String, List<Map<String, Object>>> generarMultihoja(ExportRequest request) {
-
-//     Map<String, List<Map<String, Object>>> resultado = new LinkedHashMap<>();
-
-//     for (EntidadRequestDTO entidadDTO : request.getEntidades()) {
-
-//         String nombreEntidad = entidadDTO.getNombre().toLowerCase();
-
-//         ExportStrategy strategy = strategies.get(nombreEntidad);
-
-//         if (strategy == null) {
-//             throw new RuntimeException("No existe strategy para " + nombreEntidad);
-//         }
-
-//         List<Map<String, Object>> datos =
-//                 strategy.exportar(entidadDTO, request.getFecha());
-
-//         resultado.put(entidadDTO.getNombre(), datos);
-//     }
-
-//     return resultado;
-// }
-
-        
 
   
 }
