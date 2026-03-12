@@ -245,8 +245,10 @@
                                             </td>
                                             <td>
                                                 <input type="date" class="form-control ic form-control-sm"
-                                                       th:name="'fechaInicioMap[' + ${act.idActividad} + ']'"
-                                                       th:id="'fecha_' + ${act.idActividad}">
+                                                    th:name="'fechaInicioMap[' + ${act.idActividad} + ']'"
+                                                    th:id="'date_' + ${act.idActividad}"
+                                                    th:value="${fechasInscripcion != null ? fechasInscripcion[act.idActividad] : ''}">
+                                                    
                                             </td>
                                         </tr>
                                     </tbody>

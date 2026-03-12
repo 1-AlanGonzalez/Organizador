@@ -14,44 +14,51 @@
     </div>
 
     <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
-        <form th:action="@{/asistencias}" method="get" id="filtroForm">
-            <div class="row g-2 align-items-center">
-                <div class="col-md-3">
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-light border-end-0">
-                            <i data-lucide="calendar" style="width:14px;height:14px;"></i>
-                        </span>
-                        <input type="date" name="fecha" class="form-control border-start-0 ps-0 bg-light"
-                               th:value="${fechaSeleccionada}" onchange="document.getElementById('filtroForm').submit()">
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-light border-end-0">
-                            <i data-lucide="search" style="width:14px;height:14px;"></i>
-                        </span>
-                        <input type="text" id="filtroAsistencias" class="form-control border-start-0 ps-0 bg-light"
-                               placeholder="Buscar alumno...">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-light border-end-0 text-muted">
-                            <i data-lucide="filter" style="width:14px;height:14px;"></i>
-                        </span>
-                        <select id="filtroActividad" class="form-select form-select-sm border-start-0 bg-light text-muted"
-                                onchange="filtrarTabla()">
-                            <option value="todos">Todas las actividades</option>
-                            <option th:each="actividad : ${actividades}"
-                                    th:value="${actividad.nombre}"
-                                    th:text="${actividad.nombre}">
-                            </option>
-                        </select>
-                    </div>
+    <form th:action="@{/asistencias}" method="get" id="filtroForm">
+        <div class="d-flex flex-wrap gap-2">
+
+            <div style="min-width:160px; flex:1;">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i data-lucide="calendar" style="width:14px;height:14px;"></i>
+                    </span>
+                    <input type="date" name="fecha" class="form-control border-start-0 ps-0 bg-light"
+                           th:value="${fechaSeleccionada}"
+                           onchange="document.getElementById('filtroForm').submit()">
                 </div>
             </div>
-        </form>
-    </div>
+
+            <div style="min-width:180px; flex:2;">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i data-lucide="search" style="width:14px;height:14px;"></i>
+                    </span>
+                    <input type="text" id="filtroAsistencias"
+                           class="form-control border-start-0 ps-0 bg-light"
+                           placeholder="Buscar alumno...">
+                </div>
+            </div>
+
+            <div style="min-width:160px; flex:1.5;">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                        <i data-lucide="filter" style="width:14px;height:14px;"></i>
+                    </span>
+                    <select id="filtroActividad"
+                            class="form-select form-select-sm border-start-0 bg-light text-muted"
+                            onchange="filtrarTabla()">
+                        <option value="todos">Todas las actividades</option>
+                        <option th:each="actividad : ${actividades}"
+                                th:value="${actividad.nombre}"
+                                th:text="${actividad.nombre}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
 
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
         <div class="table-responsive h-100 w-100 custom-scrollbar">

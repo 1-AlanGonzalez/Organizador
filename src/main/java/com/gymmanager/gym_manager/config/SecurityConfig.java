@@ -26,7 +26,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/login",
-                    "/olvide-password",   // ← pública, sin login
+                    "/olvide-password", 
                     "/styles.css",
                     "/js/**",
                     "/images/logo/**",

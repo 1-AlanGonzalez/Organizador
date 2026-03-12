@@ -11,7 +11,7 @@
 
     <!-- Cards -->
     <div class="row g-3 mb-4 animate-fade-up">
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card card-stat bg-gradient-primary p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Ingresos del Mes</span>
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card card-stat bg-gradient-success p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Efectivo</span>
@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card card-stat bg-gradient-info p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Transferencias</span>
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="card card-stat bg-gradient-warning p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Pendientes</span>
@@ -50,60 +50,62 @@
     </div>
 
     <!-- Barra de herramientas -->
-    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0 animate-fade-up delay-1">
-        <div class="row g-2 align-items-center">
+<div class="card custom-card mb-3 p-3 flex-shrink-0 border-0 animate-fade-up delay-1">
+    <div class="d-flex flex-wrap gap-2 align-items-center">
 
-            <!-- Buscador -->
-            <div class="col-md-3">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted">
-                        <i data-lucide="search" style="width:14px;height:14px;"></i>
-                    </span>
-                    <input type="text" id="buscadorTabla"
-                           class="form-control border-start-0 ps-0 bg-light"
-                           placeholder="Buscar por alumno...">
-                </div>
-            </div>
-
-            <!-- Filtro MES -->
-            <div class="col-md-2">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted">
-                        <i data-lucide="calendar" style="width:14px;height:14px;"></i>
-                    </span>
-                    <input type="month" id="filtroMes"
-                           class="form-control border-start-0 ps-0 bg-light"
-                           th:value="${mesSeleccionado}"
-                           title="Filtrar por mes">
-                </div>
-            </div>
-
-            <!-- Filtro AÑO — hardcodeado a 2026 por ahora -->
-            <div class="col-md-2">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted">
-                        <i data-lucide="calendar-range" style="width:14px;height:14px;"></i>
-                    </span>
-                    <select id="filtroAnio" class="form-select form-select-sm border-start-0 bg-light">
-                        <option value="">Todos</option>
-                        <option value="2026" selected>2026</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-md-5 d-flex justify-content-end gap-2">
-                <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
-                    <i data-lucide="file-spreadsheet" style="width:14px;height:14px;"></i>
-                    <span>Exportar</span>
-                </button>
-                <a th:href="@{/ingresos/nuevo}"
-                   class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
-                    <i data-lucide="plus" style="width:14px;height:14px;"></i>
-                    <span>Nuevo Pago</span>
-                </a>
+        <!-- Buscador -->
+        <div style="min-width:160px; flex:2;">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i data-lucide="search" style="width:14px;height:14px;"></i>
+                </span>
+                <input type="text" id="buscadorTabla"
+                       class="form-control border-start-0 ps-0 bg-light"
+                       placeholder="Buscar por alumno...">
             </div>
         </div>
+
+        <!-- Filtro MES -->
+        <div style="min-width:140px; flex:1;">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i data-lucide="calendar" style="width:14px;height:14px;"></i>
+                </span>
+                <input type="month" id="filtroMes"
+                       class="form-control border-start-0 ps-0 bg-light"
+                       th:value="${mesSeleccionado}"
+                       title="Filtrar por mes">
+            </div>
+        </div>
+
+        <!-- Filtro AÑO -->
+        <div style="min-width:110px; flex:1;">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i data-lucide="calendar-range" style="width:14px;height:14px;"></i>
+                </span>
+                <select id="filtroAnio" class="form-select form-select-sm border-start-0 bg-light">
+                    <option value="">Todos</option>
+                    <option value="2026" selected>2026</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Botones — se van al final, en mobile bajan solos -->
+        <div class="d-flex gap-2 ms-auto">
+            <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
+                <i data-lucide="file-spreadsheet" style="width:14px;height:14px;"></i>
+                <span>Exportar</span>
+            </button>
+            <a th:href="@{/ingresos/nuevo}"
+               class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+                <i data-lucide="plus" style="width:14px;height:14px;"></i>
+                <span>Nuevo Pago</span>
+            </a>
+        </div>
+
     </div>
+</div>
     <p th:text="${pagosRecientes.size()}"></p>
     <!-- Tabla -->
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative animate-fade-up delay-2">

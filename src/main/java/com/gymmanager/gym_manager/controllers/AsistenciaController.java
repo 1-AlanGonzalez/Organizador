@@ -39,26 +39,31 @@ public class AsistenciaController {
         this.securityUtils              = securityUtils;
     }
 
-    @GetMapping
-    public String asistencias(Model model, Integer idActividad) {
-        Usuario usuario = securityUtils.getUsuarioActual();
+   // DESPUÉS — en AsistenciaController.java
+@GetMapping
+public String asistencias(Model model,
+                           @RequestParam(required = false) String fecha,
+                           Integer idActividad) {
+    Usuario usuario = securityUtils.getUsuarioActual();
 
-        model.addAttribute("title",      "Gym Manager | Asistencias");
-        model.addAttribute("header",     "Panel de control / Asistencias");
-        model.addAttribute("actividades", actividadRepository.findByUsuario(usuario));  
-        model.addAttribute("asistencias",
-                asistenciaRepository.findByActividadCliente_Cliente_Usuario(usuario));  
+    LocalDate fechaReporte = (fecha != null && !fecha.isBlank())
+            ? LocalDate.parse(fecha)   // el input type="date" manda yyyy-MM-dd
+            : LocalDate.now();
 
-        LocalDate fechaReporte = LocalDate.now();
     List<ReporteAsistenciaDTO> reporte =
-        asistenciaService.generarReporteDiario(fechaReporte, idActividad, usuario);
-        model.addAttribute("reporteAsistencia", reporte);
+            asistenciaService.generarReporteDiario(fechaReporte, idActividad, usuario);
 
-        model.addAttribute("vista",     "asistencias");
-        model.addAttribute("fragmento", "contenido");
-        model.addAttribute("active",    "asistencias");
-        return "layouts/main";
-    }
+    model.addAttribute("title",             "Gym Manager | Asistencias");
+    model.addAttribute("header",            "Panel de control / Asistencias");
+    model.addAttribute("actividades",       actividadRepository.findByUsuario(usuario));
+    model.addAttribute("asistencias",       asistenciaRepository.findByActividadCliente_Cliente_Usuario(usuario));
+    model.addAttribute("reporteAsistencia", reporte);
+    model.addAttribute("fechaSeleccionada", fechaReporte.toString()); // para que el input muestre la fecha elegida
+    model.addAttribute("vista",             "asistencias");
+    model.addAttribute("fragmento",         "contenido");
+    model.addAttribute("active",            "asistencias");
+    return "layouts/main";
+}
 
     @GetMapping("/tomar")
     public String tomarAsistencia(Model model) {

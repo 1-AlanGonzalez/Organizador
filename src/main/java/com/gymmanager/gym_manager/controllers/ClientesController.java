@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.Cliente;
+import com.gymmanager.gym_manager.entity.EstadoInscripcion;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.Pago;
 import com.gymmanager.gym_manager.entity.TipoDeCobro;
@@ -189,23 +190,31 @@ public class ClientesController {
         }
 
     @GetMapping("/editar/{id}")
-    public String editarCliente(@PathVariable Integer id, Model model) {
+        public String editarCliente(@PathVariable Integer id, Model model) {
+            Usuario usuario = securityUtils.getUsuarioActual();
 
-        Usuario usuario = securityUtils.getUsuarioActual();
+            Cliente cliente = clienteRepository.findByIdClienteAndUsuario(id, usuario)
+                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
-        // findByIdClienteAndUsuario garantiza que no puedas ver clientes ajenos
-        Cliente cliente = clienteRepository.findByIdClienteAndUsuario(id, usuario)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+            // Mapa actividadId -> fechaDeInscripcion para pre-cargar el input de fecha
+            Map<Integer, String> fechasInscripcion = new HashMap<>();
+            cliente.getInscripciones().stream()
+                    .filter(i -> i.getEstado() == EstadoInscripcion.ACTIVA)
+                    .forEach(i -> fechasInscripcion.put(
+                            i.getActividad().getIdActividad(),
+                            i.getFechaDeInscripcion().toString()  // yyyy-MM-dd directo
+                    ));
 
-        model.addAttribute("vista",      "fragments/panel-cliente");
-        model.addAttribute("fragmento",  "panelCliente");
-        model.addAttribute("cliente",    cliente);
-        model.addAttribute("actividades", actividadRepository.findByUsuario(usuario));
-        model.addAttribute("metodosPago", configuracionDePagoService.listarActivos(usuario));
+            model.addAttribute("fechasInscripcion", fechasInscripcion);
+            model.addAttribute("vista",      "fragments/panel-cliente");
+            model.addAttribute("fragmento",  "panelCliente");
+            model.addAttribute("cliente",    cliente);
+            model.addAttribute("actividades", actividadRepository.findByUsuario(usuario));
+            model.addAttribute("metodosPago", configuracionDePagoService.listarActivos(usuario));
 
-        prepararModeloBase(model, "Editar Cliente", "Clientes / Editar " + cliente.getNombre());
-        return "layouts/main";
-    }
+            prepararModeloBase(model, "Editar Cliente", "Clientes / Editar " + cliente.getNombre());
+            return "layouts/main";
+        }
 
   @GetMapping("/ver/{id}")
     public String verCliente(@PathVariable Integer id, Model model) {

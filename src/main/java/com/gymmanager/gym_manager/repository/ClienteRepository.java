@@ -80,8 +80,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
        "JOIN c.inscripciones i " +
        "JOIN i.pagos p " +
        "WHERE c.usuario = :usuario " +
-       "AND p.estado = com.gymmanager.gym_manager.entity.EstadoPago.ADEUDA " +
-       "AND p.fechaVencimiento < CURRENT_DATE")
+       "AND p.estado = com.gymmanager.gym_manager.entity.EstadoPago.ADEUDA ")
 List<Cliente> findClientesConDeudaByUsuario(@Param("usuario") Usuario usuario);
 
 /**

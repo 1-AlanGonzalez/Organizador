@@ -5,74 +5,6 @@ function setVal(id, value) {
     if (el) el.value = (value !== null && value !== undefined) ? value : "";
 }
 
-// ── Panel actividad ───────────────────────────────────────────────────────────
-
-function abrirPanelActividad() {
-    const overlay = document.getElementById("panelOverlayActividad");
-    if (!overlay) return;
-
-    setVal("act-idActividad",  "");
-    setVal("act-nombre",       "");
-    setVal("act-precio",       "");
-    setVal("act-precioDiario", "0");   // fallback 0 para evitar 400
-    setVal("act-cupoMaximo",   "");
-
-    document.getElementById("panelActividadTitulo").innerText = "Nueva Actividad";
-    document.getElementById("btnSubmitActividad").innerText   = "Guardar";
-
-    resetFilasInstructor();
-    agregarFilaInstructor();
-
-    overlay.classList.remove("d-none");
-}
-
-function cerrarPanelActividad() {
-    const overlay = document.getElementById("panelOverlayActividad");
-    if (overlay) overlay.classList.add("d-none");
-}
-
-async function abrirPanelEditarActividad(btn) {
-    const id      = btn.dataset.id;
-    const overlay = document.getElementById("panelOverlayActividad");
-    if (!overlay) return;
-
-    overlay.classList.remove("d-none");
-    document.getElementById("panelActividadTitulo").innerText = "Editar Actividad";
-    document.getElementById("btnSubmitActividad").innerText   = "Guardar cambios";
-
-    // Limpiar mientras llega el fetch
-    setVal("act-idActividad",  "");
-    setVal("act-nombre",       "");
-    setVal("act-precio",       "");
-    setVal("act-precioDiario", "0");
-    setVal("act-cupoMaximo",   "");
-    resetFilasInstructor();
-
-    try {
-        const res = await fetch(`/actividades/editar/${id}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-
-        setVal("act-idActividad",  data.id);
-        setVal("act-nombre",       data.nombre);
-        setVal("act-precio",       data.precio);
-        setVal("act-precioDiario", data.precioDiario ?? "0");
-        setVal("act-cupoMaximo",   data.cupoMaximo);
-
-        if (Array.isArray(data.instructores) && data.instructores.length > 0) {
-            data.instructores.forEach(i =>
-                agregarFilaInstructor(i.instructorId, i.dias, i.horario)
-            );
-        } else {
-            agregarFilaInstructor();
-        }
-
-    } catch (e) {
-        console.error("Error al cargar actividad:", e);
-        alert("No se pudieron cargar los datos. Error: " + e.message);
-    }
-}
-
 // ── Filas de instructor dinámicas ─────────────────────────────────────────────
 
 function resetFilasInstructor() {
@@ -196,3 +128,22 @@ function toggleCupo(checkbox) {
         input.disabled = false;
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ... tu código existente del buscador y keydown ...
+
+    // ── Pre-cargar instructores en modo editar ────────────────────────────
+    const container = document.getElementById("instructoresContainer");
+    if (container) {
+        const dictados = window.dictadosIniciales || [];
+        if (dictados.length > 0) {
+            dictados.forEach(d =>
+                agregarFilaInstructor(d.instructorId, d.dias, d.horario)
+            );
+        } else {
+            agregarFilaInstructor(); // fila vacía para nueva actividad
+        }
+    }
+
+});
