@@ -167,18 +167,25 @@
                             </td>
 
                             <td class="pe-4">
-                            <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-info"><i data-lucide="eye" style="width:13px;height:13px;"></i></a>
-                                    <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-primary btn-editar-row"><i data-lucide="pencil" style="width:13px;height:13px;"></i></a>
-                                    <button class="btn btn-sm btn-outline-danger btn-eliminar" 
-                                            th:data-id="${c.idCliente}" 
-                                            th:data-nombre="${c.nombre} + ' ' + ${c.apellido}"
-                                            th:data-url="@{/clientes/eliminar}" 
-                                            onclick="abrirPanelEliminar(this)">
-                                        <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
-                                    </button>
-                                            </div>
-                                        </td>
+    <div class="d-flex align-items-center justify-content-center gap-2">
+        <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-info">
+            <i data-lucide="eye" style="width:13px;height:13px;"></i>
+        </a>
+        <div class="btn-accion-wrap">
+            <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}"
+               class="btn btn-sm btn-outline-primary btn-editar-row">
+                <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+            </a>
+            <button class="btn btn-sm btn-outline-danger btn-eliminar"
+                    th:data-id="${c.idCliente}"
+                    th:data-nombre="${c.nombre} + ' ' + ${c.apellido}"
+                    th:data-url="@{/clientes/eliminar}"
+                    onclick="abrirPanelEliminar(this)">
+                <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+            </button>
+        </div>
+    </div>
+</td>
                                     </tr>
                                     <tr id="mensajeVacioClientes" class="empty-row" style="display:none;">
                                         <td colspan="5" class="text-center py-5 text-muted">

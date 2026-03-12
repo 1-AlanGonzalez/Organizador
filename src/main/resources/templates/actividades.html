@@ -94,23 +94,25 @@
                         </td>
 
                         <td class="pe-4 text-center">
-                            <div class="d-flex justify-content-center align-items-center gap-1">
-                                <a th:href="@{/actividades/editar/{id}(id=${actividad.idActividad})}"
-                                   class="btn btn-sm btn-outline-primary d-inline-flex align-items-center"
-                                   title="Editar">
-                                    <i data-lucide="pencil" style="width:13px;height:13px;"></i>
-                                </a>
-                                <button type="button"
-                                        class="btn btn-sm btn-outline-danger btn-eliminar d-inline-flex align-items-center"
-                                        th:attr="data-id=${actividad.idActividad},
-                                                 data-nombre=${actividad.nombre},
-                                                 data-url='/actividades/eliminar'"
-                                        onclick="abrirPanelEliminar(this)"
-                                        title="Eliminar">
-                                    <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
-                                </button>
-                            </div>
-                        </td>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="btn-accion-wrap">
+            <a th:href="@{/actividades/editar/{id}(id=${actividad.idActividad})}"
+               class="btn btn-sm btn-outline-primary btn-editar-row"
+               title="Editar">
+                <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+            </a>
+            <button type="button"
+                    class="btn btn-sm btn-outline-danger btn-eliminar"
+                    th:attr="data-id=${actividad.idActividad},
+                             data-nombre=${actividad.nombre},
+                             data-url='/actividades/eliminar'"
+                    onclick="abrirPanelEliminar(this)"
+                    title="Eliminar">
+                <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+            </button>
+        </div>
+    </div>
+</td>
                     </tr>
 
                     <tr class="empty-row" th:if="${#lists.isEmpty(actividades)}">

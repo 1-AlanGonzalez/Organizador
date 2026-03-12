@@ -1,5 +1,5 @@
 /**
- * pagination.js — Paginador client-side
+ * 
  * Separa "oculto por búsqueda" de "oculto por página" usando data-pag-hidden
  */
 class Paginator {

@@ -289,7 +289,7 @@ body.modo-eliminar-activo .btn-editar-row { display: none; }
 .panel-container {
     width: 100%; max-width: 520px;
     animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    /* box-shadow: 0 20px 40px rgba(0,0,0,0.2); */
 }
 @keyframes modalPop {
     0%   { opacity: 0; transform: scale(0.9) translateY(10px); }
@@ -579,3 +579,26 @@ body.modo-eliminar-activo .btn-eliminar { transform: scale(1); }
 
 
 
+ /* BOTONES EN TABLAS */
+ .btn-accion-wrap {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+}
+.btn-accion-wrap .btn-editar-row,
+.btn-accion-wrap .btn-eliminar {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: opacity .15s;
+}
+.btn-accion-wrap .btn-eliminar {
+    opacity: 0;
+    pointer-events: none;
+}
