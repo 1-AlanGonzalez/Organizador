@@ -1,23 +1,35 @@
 <div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2">
 
     <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
-        <div>
-            <h4 class="fw-bold text-dark mb-0">Instructores</h4>
-            <p class="text-muted small mb-0">Gestión del personal docente</p>
-        </div>
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-danger btn-sm btn-modo-eliminar d-flex align-items-center gap-2"
-                    onclick="toggleModoEliminar()">
-                <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
-                <span>Eliminar</span>
-            </button>
-            <a th:href="@{/instructores/nuevo}"
-               class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
-                <i data-lucide="user-plus" style="width:14px;height:14px;"></i>
-                <span>Añadir Instructor</span>
-            </a>
-        </div>
+    <div>
+        <h4 class="fw-bold text-dark mb-0">Instructores</h4>
+        <p class="text-muted small mb-0">Gestión del personal docente</p>
     </div>
+    <div class="d-flex gap-2 align-items-center">
+        <div th:if="${success}"
+             class="d-flex align-items-center gap-2 px-3 py-2 rounded-3 small fw-medium"
+             style="background:#dcfce7;color:#16a34a;">
+            <i data-lucide="check-circle" style="width:14px;height:14px;"></i>
+            <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}"
+             class="d-flex align-items-center gap-2 px-3 py-2 rounded-3 small fw-medium"
+             style="background:#fee2e2;color:#ef4444;">
+            <i data-lucide="x-circle" style="width:14px;height:14px;"></i>
+            <span th:text="${error}"></span>
+        </div>
+        <button class="btn btn-outline-danger btn-sm btn-modo-eliminar d-flex align-items-center gap-2"
+                onclick="toggleModoEliminar()">
+            <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
+            <span>Eliminar</span>
+        </button>
+        <a th:href="@{/instructores/nuevo}"
+           class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+            <i data-lucide="user-plus" style="width:14px;height:14px;"></i>
+            <span>Añadir Instructor</span>
+        </a>
+    </div>
+</div>
 
     <!-- Buscador -->
     <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">

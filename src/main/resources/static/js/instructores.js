@@ -15,3 +15,18 @@ if (filtroInput) {
         });
     });
 }
+
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+        cerrarPanelActividad();
+        cerrarPanelEliminar();
+    }
+    // ← agregar esto:
+    if (e.key === "Enter") {
+        const panelEliminar = document.getElementById("panelEliminarOverlay");
+        if (panelEliminar && !panelEliminar.classList.contains("d-none")) {
+            e.preventDefault();
+            document.getElementById("formEliminar")?.submit();
+        }
+    }
+});

@@ -111,12 +111,19 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    document.addEventListener("keydown", e => {
-        if (e.key === "Escape") {
-            cerrarPanelActividad();
-            cerrarPanelEliminar();
+    
+});
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+        cerrarPanelEliminar();
+    }
+    if (e.key === "Enter") {
+        const panelEliminar = document.getElementById("panelEliminarOverlay");
+        if (panelEliminar && !panelEliminar.classList.contains("d-none")) {
+            e.preventDefault();
+            document.getElementById("formEliminar")?.submit();
         }
-    });
+    }
 });
 
 function toggleCupo(checkbox) {

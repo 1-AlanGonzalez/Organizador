@@ -48,38 +48,38 @@ main {
 
 .sidebar {
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     height: 100vh;
     z-index: 100;
-
-    width: 62px;
-    min-width: 62px;        /* ← esto es lo que faltaba */
+    width: 68px;
+    min-width: 68px;
     will-change: width;
-    transition: width 0.4s ease, box-shadow 0.4s ease;
+    transition: width 0.35s cubic-bezier(0.4,0,0.2,1),
+                box-shadow 0.35s ease;
     overflow: hidden;
     box-shadow: none;
-
     background-color: var(--sidebar-bg);
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    padding: 0;
 }
 
 .sidebar:hover {
     width: 240px;
     min-width: 240px;
-    box-shadow: 6px 0 24px rgba(0, 0, 0, 0.3);
+    box-shadow: 6px 0 32px rgba(0,0,0,0.35);
 }
+
+main { margin-left: 68px; }
 
 /* ── Logo ── */
 .sidebar-logo {
-    height: 64px;
+    height: 72px;
     position: relative;
-    margin-bottom: 8px;
     flex-shrink: 0;
     overflow: hidden;
-    z-index: 0;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    margin: 1.2rem 0;
 }
 
 .sidebar-logo img {
@@ -87,94 +87,107 @@ main {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    transition: opacity 0.3s ease;
+    transition: opacity 0.25s ease;
     pointer-events: none;
 }
-
 .sidebar-logo .logo-full {
-    width: 110px;
+    width: 120px;
     object-fit: contain;
     opacity: 0;
 }
 .sidebar-logo .logo-icon {
-    width: 32px;
+    width: 34px;
     object-fit: contain;
     opacity: 1;
 }
-
 .sidebar:hover .logo-full { opacity: 1; }
 .sidebar:hover .logo-icon { opacity: 0; }
 
-/* ── Nav links ── */
-.nav-link {
+/* ── Nav ── */
+.sidebar ul.nav {
+    padding: 0 10px;
+    flex: 1;
+}
+
+.sidebar .nav-link {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 0.75rem 1.20rem;
+    gap: 12px;
+    padding: 0.72rem 0.9rem;
+    white-space: nowrap;
+    border-radius: 10px;
+    overflow: hidden;
     font-weight: 500;
-    color: #cbd5e1;
+    font-size: .875rem;
+    color: #94a3b8;
+    transition: background .2s, color .2s;
 }
-.nav-link i { width: 15px; height: 15px; }
-
-a { color: var(--sidebar-active); }
-
+.sidebar .nav-link svg,
+.sidebar .nav-link i {
+    flex-shrink: 0;
+    width: 18px !important;
+    height: 18px !important;
+}
 .sidebar .nav-link:hover {
-    background-color: rgba(255,255,255,0.06);
+    background-color: rgba(255,255,255,.08);
     color: #fff;
 }
 .sidebar .nav-link.active {
     background-color: var(--sidebar-active);
     color: #fff;
 }
-.sidebar .nav-link {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0.7rem 0.85rem;
-    white-space: nowrap;
-    border-radius: 10px;
-    overflow: hidden;
-}
-.sidebar .nav-link svg,
-.sidebar .nav-link i {
-    flex-shrink: 0;
-    width: 17px !important;
-    height: 17px !important;
+
+/* ── Cerrar sesión al fondo ── */
+.sidebar ul.nav li:last-child {
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,.07);
 }
 
-/* Texto: aparece junto, con delay tras la apertura */
+/* ── Texto: fade in con delay ── */
 .sidebar .nav-text {
     opacity: 0;
-    transform: translateX(-6px);
-    transition: opacity 0.1s ease 0s, transform 0.2s ease 0s;
+    transform: translateX(-8px);
+    transition: opacity 0.15s ease 0s, transform 0.2s ease 0s;
+    font-size: .875rem;
 }
 .sidebar:hover .nav-text {
     opacity: 1;
     transform: translateX(0);
-    /* transition: opacity 0.22s ease 0.2s, transform 0.22s ease 0.2s; */
+    transition: opacity 0.2s ease 0.18s, transform 0.2s ease 0.18s;
 }
 
-/* ── Mobile: toggle manual, sin hover ── */
+/* ── Pantallas muy grandes: sidebar un poco más ancho ── */
+@media (min-width: 1600px) {
+    .sidebar       { width: 72px; min-width: 72px; }
+    .sidebar:hover { width: 260px; min-width: 260px; }
+    main           { margin-left: 72px; }
+}
+
+/* ── Mobile ── */
 @media (max-width: 768px) {
     .sidebar {
-        left: -240px;
+        left: -260px;
         width: 240px !important;
         min-width: 240px !important;
-        transition: left 0.3s ease;
+        transition: left 0.3s cubic-bezier(0.4,0,0.2,1);
         box-shadow: none;
-        overflow: visible;
+        padding: 0;
     }
     .sidebar:hover {
         width: 240px !important;
         box-shadow: none;
+        left: -260px;          /* no abrir con hover en mobile */
     }
     .sidebar.show {
-        left: 0;
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        left: 0 !important;
+        box-shadow: 6px 0 32px rgba(0,0,0,0.4);
     }
     main { margin-left: 0; }
+
+    /* En mobile el texto y logo siempre visibles */
     .sidebar .nav-text       { opacity: 1; transform: none; transition: none; }
     .sidebar-logo .logo-full { opacity: 1 !important; }
     .sidebar-logo .logo-icon { opacity: 0 !important; }
