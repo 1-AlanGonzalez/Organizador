@@ -1,9 +1,34 @@
 // ── TICKET PREVIEW ────────────────────────────────────────────────────────────
 function updatePreview() {
-    const pn = document.getElementById('previewNombre');
-    const pm = document.getElementById('previewMensaje');
-    if (pn) pn.innerText = document.getElementById('inputNombreGym')?.value || 'MI GIMNASIO';
-    if (pm) pm.innerText = document.getElementById('inputMensaje')?.value   || 'Gracias por su visita';
+    const nombre    = document.getElementById('inputNombreGym')?.value   || 'MI GIMNASIO';
+    const mensaje   = document.getElementById('inputMensaje')?.value     || 'Gracias por su visita';
+    const direccion = document.querySelector('input[name="direccion"]')?.value || '';
+    const telefono  = document.querySelector('input[name="telefono"]')?.value  || '';
+
+    document.getElementById('previewNombre').textContent  = nombre;
+    document.getElementById('previewMensaje').textContent = mensaje;
+
+    // direccion
+    let previewDir = document.getElementById('previewDireccion');
+    if (!previewDir) {
+        previewDir = document.createElement('div');
+        previewDir.id = 'previewDireccion';
+        previewDir.style.cssText = 'font-size:.72rem;color:#94a3b8;text-align:center;margin-top:2px;';
+        document.getElementById('previewNombre').insertAdjacentElement('afterend', previewDir);
+    }
+    previewDir.textContent = direccion;
+    previewDir.style.display = direccion ? '' : 'none';
+
+    // telefono
+    let previewTel = document.getElementById('previewTelefono');
+    if (!previewTel) {
+        previewTel = document.createElement('div');
+        previewTel.id = 'previewTelefono';
+        previewTel.style.cssText = 'font-size:.72rem;color:#94a3b8;text-align:center;margin-top:2px;';
+        previewDir.insertAdjacentElement('afterend', previewTel);
+    }
+    previewTel.textContent = telefono;
+    previewTel.style.display = telefono ? '' : 'none';
 }
 
 // ── GUARDAR SECCIÓN ACTIVA ────────────────────────────────────────────────────

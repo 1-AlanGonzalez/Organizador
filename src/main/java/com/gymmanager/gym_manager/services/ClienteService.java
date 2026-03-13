@@ -213,6 +213,7 @@ private final ClienteRepository clienteRepository;
         db.setDni(form.getDni());
         db.setTelefono(form.getTelefono());
         db.setObservaciones(form.getObservaciones());
+        db.setEmail(form.getEmail());
     }
 
     // Normalizar IDS -> Si la lista de IDS nuevos es vacía (es decir, se dieron de baja todas las inscripciones) devolvemos un array vacío

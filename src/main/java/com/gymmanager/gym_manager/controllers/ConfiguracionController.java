@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.Configuracion;
 import com.gymmanager.gym_manager.entity.Usuario;
+import com.gymmanager.gym_manager.repository.UsuarioRepository;
 import com.gymmanager.gym_manager.services.ConfiguracionDePagoService;
 
 @Controller
@@ -19,12 +20,15 @@ import com.gymmanager.gym_manager.services.ConfiguracionDePagoService;
 public class ConfiguracionController {
 
     private final ConfiguracionDePagoService configuracionDePagoService;
-    private final SecurityUtils              securityUtils;
+    private final SecurityUtils  securityUtils;
+    private final UsuarioRepository usuarioRepository;
 
     public ConfiguracionController(ConfiguracionDePagoService configuracionDePagoService,
-                                   SecurityUtils              securityUtils) {
+                                   SecurityUtils  securityUtils,
+                                   UsuarioRepository usuarioRepository) {
         this.configuracionDePagoService = configuracionDePagoService;
         this.securityUtils              = securityUtils;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
@@ -35,6 +39,10 @@ public class ConfiguracionController {
 
         Configuracion config = new Configuracion();
         config.setNombreGimnasio(usuario.getNombreGimnasio()); 
+        config.setDireccion(usuario.getDireccion());
+        config.setTelefono(usuario.getTelefono());
+        config.setMensajeTicket(usuario.getMensajeTicket());
+
         model.addAttribute("config", config);
         model.addAttribute("metodosDePago",    activos);
         model.addAttribute("metodosVacios",    activos.isEmpty());
@@ -49,10 +57,18 @@ public class ConfiguracionController {
         return "layouts/main";
     }
 
-    @PostMapping("/tickets")
+   // POST /tickets — guardar en el usuario:
+    @PostMapping("/guardar/tickets")
     public String guardarTickets(@ModelAttribute("config") Configuracion config,
-                                 RedirectAttributes redirectAttributes) {
+                                RedirectAttributes redirectAttributes) {
         try {
+            Usuario usuario = securityUtils.getUsuarioActual();
+            usuario.setNombreGimnasio(config.getNombreGimnasio());
+            usuario.setDireccion(config.getDireccion()); 
+            usuario.setTelefono(config.getTelefono());   
+            usuario.setMensajeTicket(config.getMensajeTicket());
+            
+            usuarioRepository.save(usuario);
             redirectAttributes.addFlashAttribute("success", "Configuración guardada.");
             redirectAttributes.addFlashAttribute("tabActivo", "tickets");
         } catch (Exception e) {
@@ -141,4 +157,7 @@ public class ConfiguracionController {
             return defaultValue;
         return list.get(index);
     }
+
+
+    
 }

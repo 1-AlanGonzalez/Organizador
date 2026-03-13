@@ -208,10 +208,16 @@
         <!-- Franja oscura con nombre del gym -->
         <div class="ticket-header">
             <div class="gym-nombre"
-                 th:text="${usuario?.nombreGimnasio != null and !#strings.isEmpty(usuario.nombreGimnasio)}
-                           ? ${usuario.nombreGimnasio} : 'GYM MANAGER'">
+                th:text="${usuario?.nombreGimnasio != null and !#strings.isEmpty(usuario.nombreGimnasio)}
+                        ? ${usuario.nombreGimnasio} : 'GYM MANAGER'">
                 GYM MANAGER
             </div>
+            <!-- ↓ agregar esto -->
+            <div class="gym-sub" th:if="${usuario?.direccion != null and !#strings.isEmpty(usuario.direccion)}"
+                th:text="${usuario.direccion}"></div>
+            <div class="gym-sub" th:if="${usuario?.telefono != null and !#strings.isEmpty(usuario.telefono)}"
+                th:text="${usuario.telefono}"></div>
+            <!-- ↑ fin -->
             <div class="gym-sub">Comprobante de Pago</div>
             <div class="badge-pagado">
                 <i data-lucide="check-circle" style="width:12px;height:12px;"></i>
@@ -292,9 +298,13 @@
 
         <!-- Pie -->
         <div class="pie">
-            <p class="mensaje">¡Gracias por tu pago!</p>
+            <p class="mensaje"
+            th:text="${usuario?.mensajeTicket != null and !#strings.isEmpty(usuario.mensajeTicket)}
+                        ? ${usuario.mensajeTicket} : '¡Gracias por tu pago!'">
+                ¡Gracias por tu pago!
+            </p>
             <p class="comprobante-num"
-               th:text="'Comprobante #' + (${pago?.idPago} ?: '—')">Comprobante #0</p>
+            th:text="'Comprobante #' + (${pago?.idPago} ?: '—')">Comprobante #0</p>
         </div>
 
     </div>

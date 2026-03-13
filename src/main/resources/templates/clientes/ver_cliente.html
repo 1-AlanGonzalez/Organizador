@@ -149,6 +149,12 @@
                             <i data-lucide="phone" style="width:13px;height:13px;color:#1f2a30;"></i>
                         </div>
                         <span th:text="${cliente.telefono != null ? cliente.telefono : 'No especificado'}">Tel</span>
+                        <!-- EMAIL -->
+                        <div class="contact-icon">
+                            <i data-lucide="mail" style="width:13px;height:13px;color:#1f2a30;"></i>
+                        </div>
+                        <span th:text="${cliente.email != null ? cliente.email : 'No especificado'}">Email</span>
+
                     </div>
 
                     <div th:if="${cliente.observaciones != null and cliente.observaciones != ''}" class="mt-3">

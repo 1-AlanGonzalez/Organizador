@@ -23,6 +23,15 @@ public class Usuario {
     @Column
     private String nombreGimnasio;
 
+    @Column
+    private String direccion;
+
+    @Column
+    private String telefono;
+
+    @Column
+    private String mensajeTicket;
+
     @Column(nullable = false)
     private String rol = "ROLE_USER";
 
