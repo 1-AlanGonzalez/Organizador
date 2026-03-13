@@ -76,7 +76,7 @@
                     <!-- Iteración para cada cliente -->
                     <tbody class="border-top-0">
                         <tr th:each="c : ${clientes}"
-    th:data-actividades="${#strings.listJoin(c.inscripciones.![actividad.nombre], ',')}">
+                            th:data-actividades="${#strings.listJoin(c.inscripciones.![actividad.nombre], ',')}">
                             <td class="ps-4">
                                 <div class="d-flex align-items-center">
                                     <div>
@@ -168,7 +168,7 @@
 
                             <td class="pe-4">
     <div class="d-flex align-items-center justify-content-center gap-2">
-        <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-info">
+        <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-secondary">
             <i data-lucide="eye" style="width:13px;height:13px;"></i>
         </a>
         <div class="btn-accion-wrap">

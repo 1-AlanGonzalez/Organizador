@@ -75,10 +75,14 @@ function aplicarFiltros() {
 window.filtrarEstado = function(estado) {
     estadoActivo = estado;
 
-    // Resaltar tab activo
     document.querySelectorAll('#paymentTabs .nav-link').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.estado === estado);
     });
+
+    // Actualizar cards con el mes seleccionado, o el mes actual si no hay ninguno
+    const filtroMes = document.getElementById('filtroMes');
+    const mes = filtroMes?.value || new Date().toISOString().slice(0, 7); // "yyyy-MM"
+    actualizarCards(mes);
 
     aplicarFiltros();
 };
@@ -111,9 +115,12 @@ document.addEventListener('DOMContentLoaded', function () {
     buscador?.addEventListener('input', aplicarFiltros);
 
     // Inicializar con mes actual
-    const mesInicial = filtroMes?.value;
+    const mesInicial = filtroMes?.value || new Date().toISOString().slice(0, 7);
     if (mesInicial) {
         document.getElementById('labelMes').textContent = formatearMes(mesInicial);
+        actualizarCards(mesInicial); // ← agregar esta línea
         aplicarFiltros();
     }
+
+    
 });
