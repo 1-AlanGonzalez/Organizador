@@ -147,8 +147,13 @@ Optional<Pago> findByActividadCliente_IdActividadClienteAndFechaGeneracion(
 @Query("SELECT p FROM Pago p " +
        "WHERE p.actividadCliente.cliente.usuario = :usuario " +
        "AND (p.estado = 'PAGADO' OR p.estado = 'ADEUDA') " +
+       "AND p.actividadCliente.estado = 'ACTIVA' " +
        "ORDER BY p.fechaGeneracion DESC")
 List<Pago> findPagosVisibles(@Param("usuario") Usuario usuario);
 
 Optional<Pago> findTopByActividadCliente_IdActividadClienteOrderByFechaGeneracionDesc(Integer idActividadCliente);
+List<Pago> findByFechaGeneracion(LocalDate fechaGeneracion);
+
+
+
 }  

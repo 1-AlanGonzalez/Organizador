@@ -28,7 +28,9 @@ public class AsistenciaStrategy implements ExportStrategy {
     @Override
     public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha) {
 
-        List<Asistencia> asistencias = asistenciaRepository.findAll();
+        List<Asistencia> asistencias = (fecha != null)
+        ? asistenciaRepository.findByFecha(fecha)
+        : asistenciaRepository.findAll();
         
         System.out.println("Atributos asistencia: " + request.getAtributos());
         System.out.println("Total asistencias: " + asistencias.size());

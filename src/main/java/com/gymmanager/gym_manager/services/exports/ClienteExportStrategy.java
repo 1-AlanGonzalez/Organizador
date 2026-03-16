@@ -35,6 +35,7 @@ public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate f
 
     for (Cliente cliente : clientesBD) {
         System.out.println("Procesando clientes: " + cliente.getIdCliente());
+        cliente.setEstadoPago(cliente.adeuda() ? "ADEUDA" : "PAGADO");
         List<Map<String, Object>> filasCliente =
                 ExportMapper.mapearEntidad(cliente, request.getAtributos());
         System.out.println("Filas generadas: " + filasCliente);

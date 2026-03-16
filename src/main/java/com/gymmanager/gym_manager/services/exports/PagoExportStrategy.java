@@ -32,7 +32,9 @@ public class PagoExportStrategy implements ExportStrategy {
         for (Field f : Pago.class.getDeclaredFields()) {
         System.out.println("Campo real: " + f.getName());
     }
-        List<Pago> pagos = pagoRepository.findAll();
+        List<Pago> pagos = (fecha != null)
+        ? pagoRepository.findByFechaGeneracion(fecha)
+        : pagoRepository.findAll();
         List<Map<String, Object>> filas = new ArrayList<>();
 
         for (Pago pago : pagos) {

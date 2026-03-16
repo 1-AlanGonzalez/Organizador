@@ -59,6 +59,10 @@ public class Cliente {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+    @Transient
+    @ColumnLabel("Estado de Pago")
+    private String estadoPago;
+
     public Cliente(String nombre, String apellido, String dni, String telefono) {
         this.nombre = nombre;
         this.apellido = apellido;
@@ -105,7 +109,7 @@ public class Cliente {
     //     .flatMap(insc -> insc.getPagos().stream())
     //     .anyMatch(p -> p.getEstado() == EstadoPago.ADEUDA);
     }
-
+    
 
     public BigDecimal totalAdeudado() {
         return inscripciones.stream().map(ActividadCliente::calcularAdeudado).reduce(BigDecimal.ZERO, BigDecimal::add);
