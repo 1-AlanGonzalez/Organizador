@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.gymmanager.gym_manager.entity.Asistencia;
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.entity.dto.EntidadRequestDTO;
 import com.gymmanager.gym_manager.repository.AsistenciaRepository;
 
@@ -26,35 +27,15 @@ public class AsistenciaStrategy implements ExportStrategy {
     }
 
     @Override
-    public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha) {
-
+    public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha, Usuario usuario) {
         List<Asistencia> asistencias = (fecha != null)
-        ? asistenciaRepository.findByFecha(fecha)
-        : asistenciaRepository.findAll();
-        
-        System.out.println("Atributos asistencia: " + request.getAtributos());
-        System.out.println("Total asistencias: " + asistencias.size());
-        
-        for (java.lang.reflect.Field f : Asistencia.class.getDeclaredFields()) {
-            System.out.println("Campo real asistencia: " + f.getName());
-        }
+            ? asistenciaRepository.findByActividadCliente_Cliente_UsuarioAndFecha(usuario, fecha)
+            : asistenciaRepository.findByActividadCliente_Cliente_Usuario(usuario);
 
         List<Map<String, Object>> filas = new ArrayList<>();
-
         for (Asistencia asistencia : asistencias) {
-
-            System.out.println("Procesando asistencia: " + asistencia.getIdAsistencia());
-
-            List<Map<String, Object>> filasAsistencia =
-                    ExportMapper.mapearEntidad(asistencia, request.getAtributos());
-
-            System.out.println("Filas generadas: " + filasAsistencia);
-
-            filas.addAll(filasAsistencia);
+            filas.addAll(ExportMapper.mapearEntidad(asistencia, request.getAtributos()));
         }
-
-        System.out.println("Total filas asistencia: " + filas.size());
-
         return filas;
     }
 }

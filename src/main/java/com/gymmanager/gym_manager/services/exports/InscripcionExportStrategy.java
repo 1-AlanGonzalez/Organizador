@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.gymmanager.gym_manager.entity.ActividadCliente;
+import com.gymmanager.gym_manager.entity.EstadoInscripcion;
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.entity.dto.EntidadRequestDTO;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
 
@@ -25,22 +27,16 @@ public class InscripcionExportStrategy implements ExportStrategy{
     }
 
     @Override
-public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha) {
+    public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha, Usuario usuario) {
+        List<ActividadCliente> inscripciones = actividadClienteRepository
+            .findByEstadoAndCliente_Usuario(EstadoInscripcion.ACTIVA, usuario);
 
-    List<ActividadCliente> inscripciones = actividadClienteRepository.findAll();
-
-    List<Map<String, Object>> filas = new ArrayList<>();
-
-    for (ActividadCliente inscripcion : inscripciones) {
-
-        List<Map<String, Object>> filasInscripcion =
-                ExportMapper.mapearEntidad(inscripcion, request.getAtributos());
-
-        filas.addAll(filasInscripcion);
+        List<Map<String, Object>> filas = new ArrayList<>();
+        for (ActividadCliente inscripcion : inscripciones) {
+            filas.addAll(ExportMapper.mapearEntidad(inscripcion, request.getAtributos()));
+        }
+        return filas;
     }
-
-    return filas;
-}
 
    
 }

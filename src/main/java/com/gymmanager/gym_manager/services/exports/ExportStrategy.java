@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.entity.dto.EntidadRequestDTO;
 
 public interface ExportStrategy {
@@ -11,7 +12,7 @@ public interface ExportStrategy {
 
 
     //Logica de exportacion por entidad
-    List<Map<String,Object>> exportar(EntidadRequestDTO entidad, LocalDate fecha);
+    List<Map<String,Object>> exportar(EntidadRequestDTO entidad, LocalDate fecha, Usuario usuario);
 
     String getNombreEntidad();
 }

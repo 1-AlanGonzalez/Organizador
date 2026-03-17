@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.gymmanager.gym_manager.entity.Instructor;
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.entity.dto.EntidadRequestDTO;
 import com.gymmanager.gym_manager.repository.InstructorRepository;
 
@@ -26,19 +27,13 @@ public class InstructorStrategy implements ExportStrategy {
     }
 
     @Override
-    public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha) {
-
-        List<Instructor> instructores = instructorRepository.findAll();
+    public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha, Usuario usuario) {
+        List<Instructor> instructores = instructorRepository.findByUsuario(usuario);
         List<Map<String, Object>> filas = new ArrayList<>();
 
         for (Instructor instructor : instructores) {
-
-            List<Map<String, Object>> filasInstructor =
-                    ExportMapper.mapearEntidad(instructor, request.getAtributos());
-
-            filas.addAll(filasInstructor);
+            filas.addAll(ExportMapper.mapearEntidad(instructor, request.getAtributos()));
         }
-
         return filas;
     }
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.gymmanager.gym_manager.entity.Cliente;
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.entity.dto.EntidadRequestDTO;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
 
@@ -26,24 +27,18 @@ public class ClienteExportStrategy implements ExportStrategy {
     }
 
     @Override
-public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha) {
-    
-    List<Cliente> clientesBD = clienteRepository.findAll();
-    System.out.println("Atributos clientes: " + request.getAtributos());
-    System.out.println("Total clientes: " + clientesBD.size());
-    List<Map<String, Object>> filas = new ArrayList<>();
+    public List<Map<String, Object>> exportar(EntidadRequestDTO request, LocalDate fecha, Usuario usuario) {
+        
+        List<Cliente> clientesBD = clienteRepository.findByUsuario(usuario);
+        List<Map<String, Object>> filas = new ArrayList<>();
 
-    for (Cliente cliente : clientesBD) {
-        System.out.println("Procesando clientes: " + cliente.getIdCliente());
-        cliente.setEstadoPago(cliente.adeuda() ? "ADEUDA" : "PAGADO");
-        List<Map<String, Object>> filasCliente =
-                ExportMapper.mapearEntidad(cliente, request.getAtributos());
-        System.out.println("Filas generadas: " + filasCliente);
-        filas.addAll(filasCliente);
+        for (Cliente cliente : clientesBD) {
+            cliente.setEstadoPago(cliente.adeuda() ? "ADEUDA" : "PAGADO");
+            List<Map<String, Object>> filasCliente =
+                    ExportMapper.mapearEntidad(cliente, request.getAtributos());
+            filas.addAll(filasCliente);
+        }
+        return filas;
     }
-            System.out.println("Total filas cliente: " + filas.size());
-
-    return filas;
-}
 
 }

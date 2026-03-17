@@ -153,7 +153,7 @@ List<Pago> findPagosVisibles(@Param("usuario") Usuario usuario);
 
 Optional<Pago> findTopByActividadCliente_IdActividadClienteOrderByFechaGeneracionDesc(Integer idActividadCliente);
 List<Pago> findByFechaGeneracion(LocalDate fechaGeneracion);
-
-
+List<Pago> findByActividadCliente_Cliente_UsuarioAndFechaGeneracion(Usuario usuario, LocalDate fechaGeneracion);
+List<Pago> findByActividadCliente_Cliente_Usuario(Usuario usuario);
 
 }  

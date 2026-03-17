@@ -7,7 +7,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-
+import com.gymmanager.gym_manager.config.SecurityUtils;
+import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.entity.dto.EntidadRequestDTO;
 import com.gymmanager.gym_manager.entity.dto.ExportRequest;
 import com.gymmanager.gym_manager.services.exports.ExportStrategy;
@@ -30,20 +31,22 @@ public class ExportService {
     // Eso es magia de Spring + @Component.
 
     private final Map<String, ExportStrategy> strategies = new LinkedHashMap<>();
+    private final SecurityUtils securityUtils;
 
-    public ExportService(List<ExportStrategy> strategyList) {
+    public ExportService(List<ExportStrategy> strategyList, SecurityUtils securityUtils) {
 
         System.out.println("Strategies detectadas: " + strategyList.size());
         
-
-    for (ExportStrategy strategy : strategyList) {
-        System.out.println("Registrando: " + strategy.getNombreEntidad());
-        strategies.put(strategy.getNombreEntidad().toLowerCase(), strategy);
-    }
+        this.securityUtils = securityUtils;
+        for (ExportStrategy strategy : strategyList) {
+            System.out.println("Registrando: " + strategy.getNombreEntidad());
+            strategies.put(strategy.getNombreEntidad().toLowerCase(), strategy);
+        }
     }
     
 
     public Map<String, List<Map<String, Object>>> generarExportacion(ExportRequest request) {
+    Usuario usuario = securityUtils.getUsuarioActual();
     System.out.println("Entidades pedidas: " + request.getEntidades().size());
     for (EntidadRequestDTO e : request.getEntidades()) {
     System.out.println("Entidad: " + e.getNombre());
@@ -61,7 +64,7 @@ public class ExportService {
         }
 
         List<Map<String, Object>> datos =
-                strategy.exportar(entidadDTO, request.getFecha());
+                strategy.exportar(entidadDTO, request.getFecha(), usuario);
 
         resultado.put(entidadDTO.getNombre(), datos);
     }

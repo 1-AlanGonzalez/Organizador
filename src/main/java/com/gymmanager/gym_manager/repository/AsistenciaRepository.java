@@ -14,6 +14,7 @@ public interface AsistenciaRepository extends JpaRepository<Asistencia, Integer>
         Asistencia findByFechaAndActividadCliente(LocalDate fecha, ActividadCliente actividadCliente);
         List<Asistencia> findByActividadCliente_Cliente_Usuario(Usuario usuario);
         List<Asistencia> findByFecha(LocalDate fecha);
+        List<Asistencia> findByActividadCliente_Cliente_UsuarioAndFecha(Usuario usuario, LocalDate fecha);
 
 
 }
