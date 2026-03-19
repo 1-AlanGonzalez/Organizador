@@ -9,11 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.Actividad;
-import com.gymmanager.gym_manager.entity.Dicta;
-import com.gymmanager.gym_manager.entity.Instructor;
 import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.InstructorRepository;
+import com.gymmanager.gym_manager.services.ActividadService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,13 +24,17 @@ public class ActividadController {
 
     private final ActividadRepository  actividadRepository;
     private final InstructorRepository instructorRepository;
+    private final ActividadService actividadService;
     private final SecurityUtils        securityUtils;
+
 
     public ActividadController(ActividadRepository  actividadRepository,
                                InstructorRepository instructorRepository,
-                               SecurityUtils        securityUtils) {
+                               SecurityUtils        securityUtils,
+                               ActividadService actividadService) {
         this.actividadRepository  = actividadRepository;
         this.instructorRepository = instructorRepository;
+        this.actividadService = actividadService;
         this.securityUtils        = securityUtils;
     }
 
@@ -78,31 +81,22 @@ public class ActividadController {
     @GetMapping("/editar/{id}")
     public String editarActividad(@PathVariable Integer id, Model model,
                                   RedirectAttributes redirectAttributes) {
-        Usuario usuario = securityUtils.getUsuarioActual();
+        try {
+            Usuario usuario = securityUtils.getUsuarioActual();
+            Actividad actividad = actividadService.obtenerActividadDeUsuario(id);
 
-        Actividad actividad = actividadRepository.findById(id).orElse(null);
-        if (actividad == null) {
-            redirectAttributes.addFlashAttribute("error", "Actividad no encontrada.");
+            model.addAttribute("actividad",        actividad);
+            model.addAttribute("instructoresJson", buildInstructoresJson(usuario));
+            model.addAttribute("dictadosJson",     actividadService.buildDictadosJson(actividad));
+            model.addAttribute("title",     "Gym Manager | Editar Actividad");
+            model.addAttribute("vista",     "actividades-nuevo");
+            model.addAttribute("fragmento", "contenido");
+            model.addAttribute("active",    "actividades");
+            return "layouts/main";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/actividades";
         }
-
-        // Serializar dictados como maps simples para que el JS pueda pre-rellenar las filas
-        List<Map<String, Object>> dictadosJson = actividad.getDictados().stream()
-                .map(d -> Map.<String, Object>of(
-                        "instructorId", d.getInstructor().getIdInstructor(),
-                        "dias",         d.getDias()    != null ? d.getDias()    : "",
-                        "horario",      d.getHorario() != null ? d.getHorario() : ""
-                ))
-                .toList();
-
-        model.addAttribute("actividad",        actividad);
-        model.addAttribute("instructoresJson", buildInstructoresJson(usuario));
-        model.addAttribute("dictadosJson",     dictadosJson);
-        model.addAttribute("title",     "Gym Manager | Editar Actividad");
-        model.addAttribute("vista",     "actividades-nuevo");
-        model.addAttribute("fragmento", "contenido");
-        model.addAttribute("active",    "actividades");
-        return "layouts/main";
     }
 
     // ── Crear o actualizar ────────────────────────────────────────────────────
@@ -119,34 +113,7 @@ public class ActividadController {
             @RequestParam List<String>  horarios,
             RedirectAttributes redirectAttributes) {
         try {
-            Usuario usuario = securityUtils.getUsuarioActual();
-            Actividad actividad;
-
-            if (idActividad != null) {
-                actividad = actividadRepository.findById(idActividad)
-                        .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
-                actividad.setNombre(nombre);
-                actividad.setPrecio(precio);
-                actividad.setPrecioDiario(precioDiario != null ? precioDiario : BigDecimal.ZERO);
-                actividad.setCupoMaximo(cupoMaximo);
-
-                actividad.getDictados().clear();
-                actividadRepository.saveAndFlush(actividad);
-            } else {
-                actividad = new Actividad(nombre, cupoMaximo, precio,
-                        precioDiario != null ? precioDiario : BigDecimal.ZERO);
-                actividad.setUsuario(usuario);
-                actividad = actividadRepository.save(actividad);
-            }
-
-            for (int i = 0; i < instructorIds.size(); i++) {
-                Instructor instructor = instructorRepository.findById(instructorIds.get(i))
-                        .orElseThrow(() -> new RuntimeException("Instructor no encontrado"));
-                actividad.getDictados().add(
-                        new Dicta(actividad, instructor, dias.get(i), horarios.get(i)));
-            }
-
-            actividadRepository.save(actividad);
+            actividadService.guardarActividad(idActividad, nombre, precio, precioDiario, cupoMaximo, instructorIds, dias, horarios);
             redirectAttributes.addFlashAttribute("success",
                     idActividad != null ? "Actividad actualizada correctamente."
                                        : "Actividad creada correctamente.");
@@ -160,7 +127,7 @@ public class ActividadController {
     @PostMapping("/eliminar/{id}")
     public String eliminarActividad(@PathVariable Integer id,
                                     RedirectAttributes redirectAttributes) {
-        Actividad actividad = actividadRepository.findById(id).orElse(null);
+        Actividad actividad = actividadService.obtenerActividadDeUsuario(id);
         if (actividad == null) {
             redirectAttributes.addFlashAttribute("error", "Actividad no encontrada");
             return "redirect:/actividades";

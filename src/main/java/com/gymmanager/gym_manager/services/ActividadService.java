@@ -1,13 +1,18 @@
 package com.gymmanager.gym_manager.services;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
+
+import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.Actividad;
 import com.gymmanager.gym_manager.entity.Dicta;
 import com.gymmanager.gym_manager.entity.Instructor;
 import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
-import com.gymmanager.gym_manager.repository.DictaRepository;
 import com.gymmanager.gym_manager.repository.InstructorRepository;
 
 import jakarta.transaction.Transactional;
@@ -17,36 +22,72 @@ public class ActividadService {
 
     private final ActividadRepository  actividadRepository;
     private final InstructorRepository instructorRepository;
-    private final DictaRepository      dictaRepository;
+    private final SecurityUtils securityUtils;
 
     public ActividadService(ActividadRepository  actividadRepository,
                             InstructorRepository instructorRepository,
-                            DictaRepository      dictaRepository) {
+                            SecurityUtils securityUtils) {
         this.actividadRepository  = actividadRepository;
         this.instructorRepository = instructorRepository;
-        this.dictaRepository      = dictaRepository;
+        this.securityUtils = securityUtils;
     }
 
     @Transactional
-    public void guardarActividad(Actividad actividad, Integer instructorId,
-                                  String dias, String horario, Usuario usuario) {
+    public void guardarActividad(Integer idActividad,
+            String nombre,
+            BigDecimal precio,
+            BigDecimal precioDiario,
+            Integer cupoMaximo,
+            List<Integer> instructorIds,
+            List<String>  dias,
+            List<String>  horarios
+            ) {
 
-        Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new RuntimeException("Instructor no encontrado"));
+        Usuario usuario = securityUtils.getUsuarioActual();
+        Actividad actividad;
 
-        if (actividad.getIdActividad() == null) {
-            actividad.setUsuario(usuario);
-            actividad = actividadRepository.save(actividad);
-        }
+        if (idActividad != null) {
+            actividad = actividadRepository.findById(idActividad)
+                        .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
+            actividad.setNombre(nombre);
+            actividad.setPrecio(precio);
+            actividad.setPrecioDiario(precioDiario != null ? precioDiario : BigDecimal.ZERO);
+            actividad.setCupoMaximo(cupoMaximo);
 
-        Dicta dicta = dictaRepository
-                .findByActividadAndInstructor(actividad, instructor)
-                .orElse(new Dicta());
+            actividad.getDictados().clear();
+            actividadRepository.saveAndFlush(actividad);
+            } else {
+                actividad = new Actividad(nombre, cupoMaximo, precio,
+                        precioDiario != null ? precioDiario : BigDecimal.ZERO);
+                actividad.setUsuario(usuario);
+                actividad = actividadRepository.save(actividad);
+            }
 
-        dicta.setActividad(actividad);
-        dicta.setInstructor(instructor);
-        dicta.setDias(dias);
-        dicta.setHorario(horario);
-        dictaRepository.save(dicta);
+            for (int i = 0; i < instructorIds.size(); i++) {
+                Instructor instructor = instructorRepository.findById(instructorIds.get(i))
+                        .orElseThrow(() -> new RuntimeException("Instructor no encontrado"));
+                actividad.getDictados().add(
+                        new Dicta(actividad, instructor, dias.get(i), horarios.get(i)));
+            }
+
+            actividadRepository.save(actividad);
     }
+
+
+    public Actividad obtenerActividadDeUsuario(Integer id) {
+    return actividadRepository.findByIdActividadAndUsuario(id, securityUtils.getUsuarioActual())
+            .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
+}
+
+    public List<Map<String, Object>> buildDictadosJson(Actividad actividad) {
+    return actividad.getDictados().stream()
+            .map(d -> Map.<String, Object>of(
+                    "instructorId", d.getInstructor().getIdInstructor(),
+                    "dias",         d.getDias()    != null ? d.getDias()    : "",
+                    "horario",      d.getHorario() != null ? d.getHorario() : ""
+            ))
+            .toList();
+    }
+
+
 }
