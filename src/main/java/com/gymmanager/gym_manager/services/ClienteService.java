@@ -2,6 +2,7 @@ package com.gymmanager.gym_manager.services;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -301,4 +302,62 @@ private final ClienteRepository clienteRepository;
     
         clienteRepository.delete(cliente);
     }
+
+    @Transactional
+    public void procesarGuardado(String tipoDeCobroString, Map<String, String> fechaInicioMap, Cliente cliente,
+    List<Integer> idActividades,
+    Boolean registrarPago,
+    Double montoAbonado,
+    MetodoDePago metodoPagoId,
+    String observacionPago){
+    Usuario usuario = securityUtils.getUsuarioActual();
+            TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
+
+            Map<Integer, LocalDate> fechasPorActividad = new HashMap<>();
+            if (fechaInicioMap != null) {
+                fechaInicioMap.forEach((key, value) -> {
+                    // La clave llega como "fechaInicioMap[3]", no como "3"
+                    if (key.startsWith("fechaInicioMap[") && value != null && !value.isEmpty()) {
+                        try {
+                            String idStr = key.replace("fechaInicioMap[", "").replace("]", "");
+                            Integer actId = Integer.parseInt(idStr);
+                            fechasPorActividad.put(actId, LocalDate.parse(value));
+                        } catch (Exception e) {
+                            // System.out.println("Error parseando fecha para clave: " + key + " → " + e.getMessage());
+                        }
+                    }
+                });
+            }
+            // Asignar el usuario dueño antes de guardar
+            cliente.setUsuario(usuario);
+
+            this.guardarOActualizarCliente(
+                cliente, 
+                idActividades, 
+                fechasPorActividad, 
+                tipoDeCobro,
+                registrarPago,
+                montoAbonado,
+                metodoPagoId,
+                observacionPago
+            );
+        }
+
+    public Map<Integer,String> fechaInscripcionModel(Cliente cliente){
+    // Mapa actividadId -> fechaDeInscripcion para pre-cargar el input de fecha
+        Map<Integer, String> fechasInscripcion = new HashMap<>();
+        cliente.getInscripciones().stream()
+                .filter(i -> i.getEstado() == EstadoInscripcion.ACTIVA)
+                .forEach(i -> fechasInscripcion.put(
+                        i.getActividad().getIdActividad(),
+                        i.getFechaDeInscripcion().toString()  // yyyy-MM-dd directo
+                    ));
+        return fechasInscripcion;
+    }
+
+    public Cliente obtenerClienteDeUsuario(Integer id) {
+    Usuario usuario = securityUtils.getUsuarioActual();
+    return clienteRepository.findByIdClienteAndUsuario(id, usuario)
+            .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+}
 }

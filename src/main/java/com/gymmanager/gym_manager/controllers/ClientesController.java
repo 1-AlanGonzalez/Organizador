@@ -1,9 +1,5 @@
 package com.gymmanager.gym_manager.controllers;
 
-
-// import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +15,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.Cliente;
-import com.gymmanager.gym_manager.entity.EstadoInscripcion;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.Pago;
-import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.repository.ActividadRepository;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
@@ -67,7 +61,6 @@ public class ClientesController {
         model.addAttribute("clientes", clienteRepository.findByUsuario(usuario));
         model.addAttribute("cliente", new Cliente());
         
-        // model.addAttribute("metodosPago", configuracionDePagoService.listarActivos());
         model.addAttribute("metodosPago", configuracionDePagoService.listarActivos(usuario));
 
         model.addAttribute("title", "Gym Manager | Clientes");
@@ -93,41 +86,10 @@ public class ClientesController {
             RedirectAttributes redirectAttributes) {
 
         try {
-            Usuario usuario = securityUtils.getUsuarioActual();
-            TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
-
-            Map<Integer, LocalDate> fechasPorActividad = new HashMap<>();
-            if (fechaInicioMap != null) {
-                fechaInicioMap.forEach((key, value) -> {
-                    // La clave llega como "fechaInicioMap[3]", no como "3"
-                    if (key.startsWith("fechaInicioMap[") && value != null && !value.isEmpty()) {
-                        try {
-                            String idStr = key.replace("fechaInicioMap[", "").replace("]", "");
-                            Integer actId = Integer.parseInt(idStr);
-                            fechasPorActividad.put(actId, LocalDate.parse(value));
-                        } catch (Exception e) {
-                            // System.out.println("Error parseando fecha para clave: " + key + " → " + e.getMessage());
-                        }
-                    }
-                });
-            }
-            // Asignar el usuario dueño antes de guardar
-            cliente.setUsuario(usuario);
-
-            clienteService.guardarOActualizarCliente(
-                cliente, 
-                idActividades, 
-                fechasPorActividad, 
-                tipoDeCobro,
-                registrarPago,
-                montoAbonado,
-                metodoPagoId,
-                observacionPago
-            );
-
-            redirectAttributes.addFlashAttribute("success", 
-                cliente.getIdCliente() != null ? "Cliente actualizado correctamente." : "Cliente registrado e inscripto.");
-
+            boolean esActualizacion = cliente.getIdCliente() != null;
+            clienteService.procesarGuardado(tipoDeCobroString, fechaInicioMap, cliente, idActividades, registrarPago, montoAbonado, metodoPagoId, observacionPago); 
+            redirectAttributes.addFlashAttribute("success",
+                esActualizacion ? "Cliente actualizado correctamente." : "Cliente registrado e inscripto.");
             return "redirect:/clientes";
 
         } catch (IllegalArgumentException e) {
@@ -141,6 +103,8 @@ public class ClientesController {
             return volverFormulario(model, cliente, e.getMessage());
         }
         }
+
+
         private String volverFormulario(Model model, Cliente cliente, String errorMsg) {
             Usuario usuario = securityUtils.getUsuarioActual();
 
@@ -190,30 +154,18 @@ public class ClientesController {
         }
 
     @GetMapping("/editar/{id}")
-        public String editarCliente(@PathVariable Integer id, Model model) {
-            Usuario usuario = securityUtils.getUsuarioActual();
+    public String editarCliente(@PathVariable Integer id, Model model) {
+        Cliente cliente = clienteService.obtenerClienteDeUsuario(id);
+        Usuario usuario = securityUtils.getUsuarioActual();
+        model.addAttribute("fechasInscripcion", clienteService.fechaInscripcionModel(cliente));
+        model.addAttribute("vista",      "fragments/panel-cliente");
+        model.addAttribute("fragmento",  "panelCliente");
+        model.addAttribute("cliente",    cliente);
+        model.addAttribute("actividades", actividadRepository.findByUsuario(usuario));
+        model.addAttribute("metodosPago", configuracionDePagoService.listarActivos(usuario));
 
-            Cliente cliente = clienteRepository.findByIdClienteAndUsuario(id, usuario)
-                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-
-            // Mapa actividadId -> fechaDeInscripcion para pre-cargar el input de fecha
-            Map<Integer, String> fechasInscripcion = new HashMap<>();
-            cliente.getInscripciones().stream()
-                    .filter(i -> i.getEstado() == EstadoInscripcion.ACTIVA)
-                    .forEach(i -> fechasInscripcion.put(
-                            i.getActividad().getIdActividad(),
-                            i.getFechaDeInscripcion().toString()  // yyyy-MM-dd directo
-                    ));
-
-            model.addAttribute("fechasInscripcion", fechasInscripcion);
-            model.addAttribute("vista",      "fragments/panel-cliente");
-            model.addAttribute("fragmento",  "panelCliente");
-            model.addAttribute("cliente",    cliente);
-            model.addAttribute("actividades", actividadRepository.findByUsuario(usuario));
-            model.addAttribute("metodosPago", configuracionDePagoService.listarActivos(usuario));
-
-            prepararModeloBase(model, "Editar Cliente", "Clientes / Editar " + cliente.getNombre());
-            return "layouts/main";
+        prepararModeloBase(model, "Editar Cliente", "Clientes / Editar " + cliente.getNombre());
+        return "layouts/main";
         }
 
   @GetMapping("/ver/{id}")
