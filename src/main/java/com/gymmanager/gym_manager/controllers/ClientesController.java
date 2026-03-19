@@ -166,17 +166,12 @@ public class ClientesController {
 
         prepararModeloBase(model, "Editar Cliente", "Clientes / Editar " + cliente.getNombre());
         return "layouts/main";
-        }
+    }
 
-  @GetMapping("/ver/{id}")
+    @GetMapping("/ver/{id}")
     public String verCliente(@PathVariable Integer id, Model model) {
-        Usuario usuario = securityUtils.getUsuarioActual();
-
-        Cliente cliente = clienteRepository.findByIdClienteAndUsuario(id, usuario)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-        List<Pago> pagos = pagoRepository
-                .findByActividadCliente_Cliente_IdClienteOrderByFechaGeneracionDesc(id);
-        
+        Cliente cliente = clienteService.obtenerClienteDeUsuario(id);
+        List<Pago> pagos = pagoRepository.findByActividadCliente_Cliente_IdClienteOrderByFechaGeneracionDesc(id);
         model.addAttribute("cliente", cliente);
         model.addAttribute("historialPagos", pagos);
         model.addAttribute("title", "Gym Manager | Detalle Cliente");
@@ -184,7 +179,6 @@ public class ClientesController {
         model.addAttribute("active", "clientes");
         model.addAttribute("vista", "clientes/ver_cliente"); 
         model.addAttribute("fragmento", "detalle_cliente"); 
-        
         return "layouts/main"; 
     }
 
