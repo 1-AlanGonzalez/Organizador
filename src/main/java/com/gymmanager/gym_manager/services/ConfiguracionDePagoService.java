@@ -22,13 +22,16 @@ public class ConfiguracionDePagoService {
     private final ConfiguracionPagoRepository configuracionDePagoRepository;
     private final MetodoDePagoRepository  metodoDePagoRepository;
     private final PagoRepository          pagoRepository;
+    
 
     public ConfiguracionDePagoService(ConfiguracionPagoRepository configuracionDePagoRepository,
                                       MetodoDePagoRepository  metodoDePagoRepository,
-                                      PagoRepository          pagoRepository) {
+                                      PagoRepository          pagoRepository
+                                      ) {
         this.configuracionDePagoRepository = configuracionDePagoRepository;
         this. metodoDePagoRepository =  metodoDePagoRepository;
         this.pagoRepository = pagoRepository;
+        
     }
 
     // ── Listar todos los métodos activos para mostrar en la vista ─────────────
@@ -139,4 +142,26 @@ public class ConfiguracionDePagoService {
                 c.getMetodoDePago().getNombre(),
                 c.getPorcentajeRecargo());
     }
+
+
+    public void guardarPagos(List<Integer> configIds, List<BigDecimal> configRecargoList,
+                          List<String> nuevosNombres, List<BigDecimal> nuevosRecargoList,
+                          Usuario usuario) {
+    if (configIds != null) {
+        for (int i = 0; i < configIds.size(); i++) {
+            BigDecimal recargo = (configRecargoList == null || i >= configRecargoList.size() || configRecargoList.get(i) == null)
+                ? BigDecimal.ZERO : configRecargoList.get(i);
+            actualizarRecargo(configIds.get(i), recargo);
+        }
+    }
+    if (nuevosNombres != null) {
+        for (int i = 0; i < nuevosNombres.size(); i++) {
+            String nombre = nuevosNombres.get(i);
+            if (nombre == null || nombre.isBlank()) continue;
+            BigDecimal recargo = (nuevosRecargoList == null || i >= nuevosRecargoList.size() || nuevosRecargoList.get(i) == null)
+                ? BigDecimal.ZERO : nuevosRecargoList.get(i);
+            crearMetodoConRecargo(nombre, recargo, usuario);
+        }
+    }
+}
 }

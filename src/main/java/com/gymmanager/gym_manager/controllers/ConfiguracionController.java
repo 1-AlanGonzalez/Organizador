@@ -87,26 +87,7 @@ public class ConfiguracionController {
             RedirectAttributes redirectAttributes) {
         try {
             Usuario usuario = securityUtils.getUsuarioActual();
-
-            if (configIds != null) {
-                for (int i = 0; i < configIds.size(); i++) {
-                    configuracionDePagoService.actualizarRecargo(
-                            configIds.get(i),
-                            safeGet(configRecargoList, i, BigDecimal.ZERO));
-                }
-            }
-
-            if (nuevosNombres != null) {
-                for (int i = 0; i < nuevosNombres.size(); i++) {
-                    String nombre = nuevosNombres.get(i);
-                    if (nombre == null || nombre.isBlank()) continue;
-                    configuracionDePagoService.crearMetodoConRecargo(
-                            nombre,
-                            safeGet(nuevosRecargoList, i, BigDecimal.ZERO),
-                            usuario);
-                }
-            }
-
+            configuracionDePagoService.guardarPagos(configIds, configRecargoList, nuevosNombres, nuevosRecargoList, usuario);
             redirectAttributes.addFlashAttribute("success", "Métodos de pago guardados correctamente.");
             redirectAttributes.addFlashAttribute("tabActivo", "pagos");
         } catch (IllegalArgumentException e) {
@@ -152,11 +133,11 @@ public class ConfiguracionController {
         }
     }
 
-    private <T> T safeGet(List<T> list, int index, T defaultValue) {
-        if (list == null || index >= list.size() || list.get(index) == null)
-            return defaultValue;
-        return list.get(index);
-    }
+    // private <T> T safeGet(List<T> list, int index, T defaultValue) {
+    //     if (list == null || index >= list.size() || list.get(index) == null)
+    //         return defaultValue;
+    //     return list.get(index);
+    // }
 
 
     
