@@ -1,7 +1,6 @@
 package com.gymmanager.gym_manager.controllers;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -45,10 +44,7 @@ public String asistencias(Model model,
                            @RequestParam(required = false) String fecha,
                            Integer idActividad) {
     Usuario usuario = securityUtils.getUsuarioActual();
-
-    LocalDate fechaReporte = (fecha != null && !fecha.isBlank())
-            ? LocalDate.parse(fecha)   // el input type="date" manda yyyy-MM-dd
-            : LocalDate.now();
+    LocalDate fechaReporte = asistenciaService.parsearFecha(fecha);
 
     List<ReporteAsistenciaDTO> reporte =
             asistenciaService.generarReporteDiario(fechaReporte, idActividad, usuario);
@@ -88,14 +84,7 @@ public String asistencias(Model model,
             @RequestParam LocalDate fecha,
             @RequestParam(name = "presentes",    required = false) List<Integer> presentesIds,
             @RequestParam(name = "todosLosIds",  required = false) List<Integer> todosLosIds) {
-
-        if (presentesIds == null) presentesIds = new ArrayList<>();
-        if (todosLosIds  == null) todosLosIds  = new ArrayList<>();
-
-        for (Integer id : todosLosIds) {
-            boolean estaPresente = presentesIds.contains(id);
-            asistenciaService.registrarAsistencia(id, fecha, estaPresente);
-        }
+        asistenciaService.guardarAsistencia(fecha, presentesIds, todosLosIds);
         return "redirect:/asistencias";
     }
 }

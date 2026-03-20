@@ -1,11 +1,13 @@
 package com.gymmanager.gym_manager.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.ActividadCliente;
 import com.gymmanager.gym_manager.entity.Asistencia;
 import com.gymmanager.gym_manager.entity.EstadoInscripcion;
@@ -21,39 +23,29 @@ public class AsistenciaService {
 
     private final ClienteActividadRepository clienteActividadRepository;
     private final AsistenciaRepository asistenciaRepository;
+    private final SecurityUtils securityUtils;
 
     public AsistenciaService(
             ClienteActividadRepository clienteActividadRepository,
-            AsistenciaRepository asistenciaRepository
+            AsistenciaRepository asistenciaRepository,
+            SecurityUtils securityUtils
     ) {
         this.clienteActividadRepository = clienteActividadRepository;
         this.asistenciaRepository = asistenciaRepository;
+        this.securityUtils = securityUtils;
     }
 
+    @Transactional
+    public void guardarAsistencia(LocalDate fecha, List<Integer> presentesIds, List<Integer> todosLosIds){
+        if (presentesIds == null) presentesIds = new ArrayList<>();
+        if (todosLosIds  == null) todosLosIds  = new ArrayList<>();
 
-    /**
-     * Registra una asistencia para una inscripción (ActividadCliente)
-     * en una fecha determinada.
-     */
+        for (Integer id : todosLosIds) {
+            boolean estaPresente = presentesIds.contains(id);
+            this.registrarAsistencia(id, fecha, estaPresente);
+        }
+    }
 
-    // @Transactional
-    // public void registrarAsistencia(Integer idActividadCliente,LocalDate fecha,boolean presente) {
-    //     // Buscamos la inscripción (ActividadCliente)
-    //     // Si no existe, se corta el proceso
-    //     ActividadCliente ac = clienteActividadRepository.findById(idActividadCliente).orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
-
-    //     // Delegamos la lógica de dominio a la entidad
-    //     // - valida que no esté dada de baja
-    //     // - valida que no exista asistencia para esa fecha
-    //     // - crea y asocia la nueva Asistencia
-    //     ac.tomarAsistencia(fecha, presente);
-
-    //     // Recuperamos la asistencia recién creada (queda en memoria dentro del Set<Asistencia>)
-    //     // reduce Dame el último elemento del conjunto
-    //     Asistencia asistencia = ac.getAsistencias().stream().reduce((first, second) -> second).orElseThrow();
-        
-    //     asistenciaRepository.save(asistencia);
-    // }
     @Transactional
     public void registrarAsistencia(Integer idActividadCliente, LocalDate fecha, boolean presente) {
         ActividadCliente ac = clienteActividadRepository.findById(idActividadCliente)
@@ -104,6 +96,14 @@ public class AsistenciaService {
             fecha,
             presente
         );
-    }).collect(Collectors.toList());
-}
+        }).collect(Collectors.toList());
+    }
+
+    public LocalDate parsearFecha(String fecha) {
+        return (fecha != null && !fecha.isBlank()) ? LocalDate.parse(fecha) : LocalDate.now();
+    }
+
+    public List<Asistencia> listarAsistenciasDeUsuario() {
+        return asistenciaRepository.findByActividadCliente_Cliente_Usuario(securityUtils.getUsuarioActual());
+    }
 }
