@@ -1,0 +1,20 @@
+:root {
+    --sidebar-bg: #1f2a30;
+    --sidebar-active: #2d3f46;
+    --main-bg: #f8fafc;
+
+    --card-bg: #ffffff;
+    --card-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+
+    --text-muted: #94a3b8;
+    --success: #16a34a;
+    --warning: #f59e0b;
+
+    --brand-dark: #263238;
+    --brand-dark-grad: #1a2327;
+    --brand-accent: #37474f;
+    --brand-primary: #263238;
+
+    --input-bg: #f3f4f6;
+    --input-focus-border: #263238;
+}

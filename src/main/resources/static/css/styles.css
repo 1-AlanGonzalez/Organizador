@@ -1,0 +1,10 @@
+@import url("./variables.css");
+@import url("./global.css");
+@import url("./sidebar.css");
+@import url("./components.css");
+@import url("./animations.css");
+@import url("./pages/login.css");
+@import url("./pages/dashboard.css");
+@import url("./pages/clientes.css");
+@import url("./pages/configuracion.css");
+@import url("./pages/reportes.css");
