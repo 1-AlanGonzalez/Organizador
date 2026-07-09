@@ -35,14 +35,13 @@ private final ClienteRepository clienteRepository;
     private final SecurityUtils securityUtils;
 
     public ClienteService(
-        PagoService pagoService,
-        ClienteRepository clienteRepository,
-        ActividadRepository actividadRepository,
-        ActividadClienteService actividadClienteService,
-        ClienteActividadRepository clienteActividadRepository,
-        PagoRepository pagoRepository,
-        SecurityUtils securityUtils
-    ) {
+            PagoService pagoService,
+            ClienteRepository clienteRepository,
+            ActividadRepository actividadRepository,
+            ActividadClienteService actividadClienteService,
+            ClienteActividadRepository clienteActividadRepository,
+            SecurityUtils securityUtils) {
+
         this.clienteRepository = clienteRepository;
         this.actividadRepository = actividadRepository;
         this.actividadClienteService = actividadClienteService;
@@ -50,52 +49,168 @@ private final ClienteRepository clienteRepository;
         this.clienteActividadRepository = clienteActividadRepository;
         this.securityUtils = securityUtils;
     }
-    
+
     @Transactional
     public void guardarOActualizarCliente(
-            Cliente cliente, 
-            List<Integer> idActividades, 
-            Map<Integer, LocalDate> fechasPorActividad, 
+            Cliente cliente,
+            List<Integer> idActividades,
+            Map<Integer, LocalDate> fechasPorActividad,
             TipoDeCobro tipoDeCobro,
             Boolean registrarPago,
-            Double montoAbonado,
             MetodoDePago metodoPago,
             String observacionPago) {
 
+        // Camino 1: edicion
         if (esEdicion(cliente)) {
-            validarEdicion(cliente);
-             LocalDate fechaEdicion = fechasPorActividad.values().stream()
-            .filter(Objects::nonNull).findFirst().orElse(LocalDate.now());
-            
-            actualizarCliente(cliente, idActividades, fechaEdicion, tipoDeCobro);
-        } else {
-            LocalDate primeraFecha = fechasPorActividad.values().stream()
-                        .filter(Objects::nonNull).findFirst().orElse(null);
-            
-            validarAlta(cliente, primeraFecha, tipoDeCobro, idActividades);
-            validarCuposDisponibles(idActividades);
-
-            Cliente clienteGuardado = registrarClienteEInscribir(cliente, idActividades, fechasPorActividad, tipoDeCobro);
-
-            if (!Boolean.TRUE.equals(registrarPago)) {return;}
-
-            if (Boolean.TRUE.equals(registrarPago)) {
-                validarDatosPago(montoAbonado, metodoPago);
-            }
-            if (Boolean.TRUE.equals(registrarPago)) {
-                for (ActividadCliente inscripcion : clienteGuardado.getInscripciones()) {
-                    if (inscripcion.getEstado() == EstadoInscripcion.ACTIVA) {
-
-                        pagoService.procesarPago(
-                            inscripcion.getIdActividadCliente(),
-                            metodoPago.getIdMetodoDePago(),
-                            observacionPago,
-                            LocalDate.now()
-                        );
-                    }
-                }
-            }
+            procesarEdicion(cliente, idActividades, fechasPorActividad, tipoDeCobro);
+            return;
         }
+        // Camino 2: alta.
+        Cliente clienteGuardado = procesarAlta(cliente, idActividades, fechasPorActividad, tipoDeCobro);
+
+        // El pago es opcional.
+        if (Boolean.TRUE.equals(registrarPago)) {
+            registrarPagoInicial(
+                    clienteGuardado,
+                    metodoPago,
+                    observacionPago
+            );
+        }
+    }
+    private void validarMetodoDePago(MetodoDePago metodoPago) {
+        if (metodoPago == null) {
+            throw new IllegalArgumentException(
+                    "Debe seleccionar un método de pago."
+            );
+        }
+    }
+
+    private void procesarEdicion(
+Cliente cliente,
+            List<Integer> idActividades,
+            Map<Integer, LocalDate> fechasPorActividad,
+            TipoDeCobro tipoDeCobro) {
+
+        validarEdicion(cliente);
+        LocalDate fechaEdicion = obtenerPrimeraFecha(fechasPorActividad, LocalDate.now());
+
+        actualizarCliente(cliente, idActividades, fechaEdicion, tipoDeCobro);
+    }
+    private Cliente procesarAlta(
+            Cliente cliente,
+            List<Integer> idActividades,
+            Map<Integer, LocalDate> fechasPorActividad,
+            TipoDeCobro tipoDeCobro) {
+
+        LocalDate primeraFecha = obtenerPrimeraFecha(fechasPorActividad, null);
+
+        validarAlta(cliente, primeraFecha, tipoDeCobro, idActividades);
+        validarCuposDisponibles(idActividades);
+
+        return registrarClienteEInscribir(cliente, idActividades, fechasPorActividad, tipoDeCobro);
+    }
+    private void registrarPagoInicial(
+            Cliente cliente,
+            MetodoDePago metodoPago,
+            String observacionPago) {
+
+        validarMetodoDePago(metodoPago);
+
+        cliente.getInscripciones()
+                .stream()
+                .filter(inscripcion ->
+                        inscripcion.getEstado() == EstadoInscripcion.ACTIVA
+                )
+                .forEach(inscripcion ->
+                        pagoService.procesarPago(
+                                inscripcion.getIdActividadCliente(),
+                                metodoPago.getIdMetodoDePago(),
+                                observacionPago,
+                                LocalDate.now()
+                        )
+                );
+    }
+    private LocalDate obtenerPrimeraFecha(
+            Map<Integer, LocalDate> fechasPorActividad,
+            LocalDate valorPorDefecto) {
+
+        if (fechasPorActividad == null || fechasPorActividad.isEmpty()) {
+            return valorPorDefecto;
+        }
+
+        return fechasPorActividad.values()
+                .stream()
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(valorPorDefecto);
+    }
+
+    private TipoDeCobro convertirTipoDeCobro(
+            String tipoDeCobroString) {
+
+        if (tipoDeCobroString == null || tipoDeCobroString.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Debe seleccionar un tipo de cobro."
+            );
+        }
+
+        try {
+            return TipoDeCobro.valueOf(
+                    tipoDeCobroString.toUpperCase()
+            );
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    "El tipo de cobro seleccionado no es válido."
+            );
+        }
+    }
+
+    private Map<Integer, LocalDate> parsearFechasPorActividad(
+            Map<String, String> fechaInicioMap) {
+
+        Map<Integer, LocalDate> fechasPorActividad = new HashMap<>();
+
+        if (fechaInicioMap == null || fechaInicioMap.isEmpty()) {
+            return fechasPorActividad;
+        }
+
+        fechaInicioMap.forEach((clave, valor) -> {
+
+            if (valor == null || valor.isBlank()) {
+                return;
+            }
+
+            if (!clave.startsWith("fechaInicioMap[")
+                    || !clave.endsWith("]")) {
+                return;
+            }
+
+            String idActividadString = clave
+                    .replace("fechaInicioMap[", "")
+                    .replace("]", "");
+
+            try {
+                Integer idActividad =
+                        Integer.parseInt(idActividadString);
+
+                LocalDate fecha =
+                        LocalDate.parse(valor);
+
+                fechasPorActividad.put(idActividad, fecha);
+
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException(
+                        "El identificador de una actividad no es válido."
+                );
+
+            } catch (java.time.format.DateTimeParseException e) {
+                throw new IllegalArgumentException(
+                        "La fecha ingresada para una actividad no es válida."
+                );
+            }
+        });
+
+        return fechasPorActividad;
     }
     // Método para validar los cupos antes de guardar un cliente
     private void validarCuposDisponibles(List<Integer> idActividades) {
@@ -304,44 +419,59 @@ private final ClienteRepository clienteRepository;
     }
 
     @Transactional
-    public void procesarGuardado(String tipoDeCobroString, Map<String, String> fechaInicioMap, Cliente cliente,
-    List<Integer> idActividades,
-    Boolean registrarPago,
-    Double montoAbonado,
-    MetodoDePago metodoPagoId,
-    String observacionPago){
-    Usuario usuario = securityUtils.getUsuarioActual();
-            TipoDeCobro tipoDeCobro = TipoDeCobro.valueOf(tipoDeCobroString);
+    public void procesarGuardado(
+            String tipoDeCobroString,
+            Map<String, String> fechaInicioMap,
+            Cliente cliente,
+            List<Integer> idActividades,
+            Boolean registrarPago,
+            MetodoDePago metodoPago,
+            String observacionPago) {
 
-            Map<Integer, LocalDate> fechasPorActividad = new HashMap<>();
-            if (fechaInicioMap != null) {
-                fechaInicioMap.forEach((key, value) -> {
-                    // La clave llega como "fechaInicioMap[3]", no como "3"
-                    if (key.startsWith("fechaInicioMap[") && value != null && !value.isEmpty()) {
-                        try {
-                            String idStr = key.replace("fechaInicioMap[", "").replace("]", "");
-                            Integer actId = Integer.parseInt(idStr);
-                            fechasPorActividad.put(actId, LocalDate.parse(value));
-                        } catch (Exception e) {
-                            // System.out.println("Error parseando fecha para clave: " + key + " → " + e.getMessage());
-                        }
-                    }
-                });
-            }
-            // Asignar el usuario dueño antes de guardar
-            cliente.setUsuario(usuario);
+        /*
+         * Obtenemos al usuario/gimnasio actualmente autenticado.
+         */
+        Usuario usuario = securityUtils.getUsuarioActual();
 
-            this.guardarOActualizarCliente(
-                cliente, 
-                idActividades, 
-                fechasPorActividad, 
+        /*
+         * Convertimos el String que llega desde el formulario
+         * al enum TipoDeCobro.
+         *
+         * Por ejemplo:
+         * "MENSUAL" -> TipoDeCobro.MENSUAL
+         */
+        TipoDeCobro tipoDeCobro =
+                convertirTipoDeCobro(tipoDeCobroString);
+
+        /*
+         * Convertimos el mapa extraño que envía el formulario:
+         *
+         * fechaInicioMap[3] -> "2026-07-09"
+         *
+         * en un mapa más fácil de utilizar:
+         *
+         * 3 -> LocalDate
+         */
+        Map<Integer, LocalDate> fechasPorActividad =
+                parsearFechasPorActividad(fechaInicioMap);
+
+        /*
+         * Asignamos el usuario dueño del cliente.
+         * Esto es importante porque tu sistema es multi-tenant.
+         */
+        cliente.setUsuario(usuario);
+
+        // Delegamos el alta o la actualización.
+        guardarOActualizarCliente(
+                cliente,
+                idActividades,
+                fechasPorActividad,
                 tipoDeCobro,
                 registrarPago,
-                montoAbonado,
-                metodoPagoId,
+                metodoPago,
                 observacionPago
-            );
-        }
+        );
+    }
 
     public Map<Integer,String> fechaInscripcionModel(Cliente cliente){
     // Mapa actividadId -> fechaDeInscripcion para pre-cargar el input de fecha
@@ -356,8 +486,8 @@ private final ClienteRepository clienteRepository;
     }
 
     public Cliente obtenerClienteDeUsuario(Integer id) {
-    Usuario usuario = securityUtils.getUsuarioActual();
-    return clienteRepository.findByIdClienteAndUsuario(id, usuario)
-            .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-}
+        Usuario usuario = securityUtils.getUsuarioActual();
+        return clienteRepository.findByIdClienteAndUsuario(id, usuario)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+    }
 }
