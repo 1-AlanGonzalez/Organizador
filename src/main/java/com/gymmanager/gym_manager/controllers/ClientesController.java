@@ -79,7 +79,6 @@ public class ClientesController {
             @RequestParam(required = false) Map<String, String> fechaInicioMap,
             @RequestParam("tipoDeCobro") String tipoDeCobroString,
             @RequestParam(required = false) Boolean registrarPago,
-            @RequestParam(required = false) Double montoAbonado,
             @RequestParam(required = false) MetodoDePago metodoPagoId,
             @RequestParam(required = false) String observacionPago,
             Model model,
@@ -87,7 +86,7 @@ public class ClientesController {
 
         try {
             boolean esActualizacion = cliente.getIdCliente() != null;
-            clienteService.procesarGuardado(tipoDeCobroString, fechaInicioMap, cliente, idActividades, registrarPago, montoAbonado, metodoPagoId, observacionPago); 
+            clienteService.procesarGuardado(tipoDeCobroString, fechaInicioMap, cliente, idActividades, registrarPago, metodoPagoId, observacionPago);
             redirectAttributes.addFlashAttribute("success",
                 esActualizacion ? "Cliente actualizado correctamente." : "Cliente registrado e inscripto.");
             return "redirect:/clientes";
