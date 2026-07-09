@@ -32,6 +32,10 @@ public class ActividadService {
         this.securityUtils = securityUtils;
     }
 
+    public List<Actividad> listarActividadesDeUsuario() {
+        return actividadRepository.findByUsuario(securityUtils.getUsuarioActual());
+    }
+
     @Transactional
     public void guardarActividad(Integer idActividad,
             String nombre,
@@ -87,6 +91,22 @@ public class ActividadService {
                     "horario",      d.getHorario() != null ? d.getHorario() : ""
             ))
             .toList();
+    }
+
+
+    public List<Map<String, Object>> buildInstructoresJson() {
+        Usuario usuario = securityUtils.getUsuarioActual();
+        return instructorRepository.findByUsuario(usuario).stream()
+                .map(i -> Map.<String, Object>of(
+                        "id",     i.getIdInstructor(),
+                        "nombre", i.getNombre() + " " + i.getApellido()
+                ))
+                .toList();
+    }
+
+    public void eliminarActividad(Integer id) {
+        Actividad actividad = obtenerActividadDeUsuario(id);
+        actividadRepository.delete(actividad);
     }
 
 
