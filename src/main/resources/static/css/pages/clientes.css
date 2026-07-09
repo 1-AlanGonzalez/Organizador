@@ -1,0 +1,130 @@
+/* Modo eliminación */
+.btn-eliminar {
+    display: none;
+    visibility: hidden;
+
+    width: 32px;
+    height: 32px;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+body.modo-eliminar-activo .btn-eliminar {
+    display: inline-block;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
+
+body.modo-eliminar-activo .btn-modo-eliminar {
+    background-color: #fee2e2;
+    border-color: #ef4444;
+}
+
+body.modo-eliminar-activo .btn-editar {
+    opacity: 0;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+body.modo-eliminar-activo .btn-editar-row {
+    display: none;
+}
+
+/* Panel de clientes */
+.panel-wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1050;
+
+    width: 380px;
+    height: 100vh;
+
+    background: #fff;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+
+    transition: transform 0.3s ease;
+}
+
+.panel-wrapper.d-none {
+    transform: translateX(100%);
+}
+
+.panel-wrapper.show {
+    transform: translateX(0);
+}
+
+.panel-cliente {
+    padding: 20px;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+/* Actividades */
+.activities-container {
+    border: 1px solid #dee2e6;
+    transition: border-color 0.2s;
+}
+
+.activities-container:focus-within {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.custom-checkbox .form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+    cursor: pointer;
+}
+
+.custom-checkbox .form-check-label {
+    padding-left: 5px;
+    color: #495057;
+    cursor: pointer;
+}
+
+.custom-checkbox .form-check-input:checked {
+    background-color: var(--sidebar-bg);
+    border-color: var(--sidebar-bg);
+}
+
+.estado-activo {
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+.estado-inactivo {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.activity-row {
+    border: 1px solid #f1f5f9;
+    transition: all 0.2s ease;
+}
+
+.activity-row:hover {
+    background-color: #fff !important;
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.activity-row .badge {
+    color: #64748b !important;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.activity-row:hover .badge {
+    filter: brightness(0.95);
+}

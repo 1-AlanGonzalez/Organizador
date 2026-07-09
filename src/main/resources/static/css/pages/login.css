@@ -1,0 +1,157 @@
+.login-body {
+    min-height: 100vh;
+    background-color: var(--main-bg);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+}
+
+.text-dark-brand {
+    color: var(--brand-dark);
+}
+
+.tracking-wide {
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.text-brand {
+    color: var(--brand-dark);
+    transition: color 0.2s;
+}
+
+.text-brand:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+.bg-brand {
+    position: relative;
+    background: linear-gradient(
+        135deg,
+        var(--brand-dark) 0%,
+        var(--brand-dark-grad) 100%
+    );
+}
+
+.decorative-circle {
+    position: absolute;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 50%;
+}
+
+.circle-1 {
+    top: -100px;
+    right: -50px;
+    width: 400px;
+    height: 400px;
+}
+
+.circle-2 {
+    bottom: -150px;
+    left: -100px;
+    width: 600px;
+    height: 600px;
+}
+
+.login-logo-img {
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+}
+
+.shadow-end {
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Inputs modernos del login */
+.input-group-modern {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-group-modern i,
+.input-group-modern svg {
+    position: absolute;
+    left: 15px;
+    z-index: 4;
+
+    color: var(--text-muted);
+
+    pointer-events: none;
+    transition: color 0.3s;
+}
+
+.input-modern {
+    padding: 14px 14px 14px 45px;
+
+    color: #334155;
+    background-color: var(--input-bg);
+    border: 2px solid transparent;
+    border-radius: 12px;
+
+    font-size: 0.95rem;
+    font-weight: 500;
+
+    transition: all 0.3s ease;
+}
+
+.input-modern:focus {
+    background-color: #fff;
+    border-color: var(--input-focus-border);
+    box-shadow: 0 4px 12px rgba(38, 50, 56, 0.08);
+}
+
+.input-modern:focus ~ svg,
+.input-group-modern:focus-within i,
+.input-group-modern:focus-within svg {
+    color: var(--brand-dark);
+}
+
+.input-modern::placeholder {
+    color: #cbd5e1;
+    font-weight: 400;
+}
+
+.btn-modern-primary {
+    color: #fff;
+    background-color: var(--brand-primary);
+    border: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-modern-primary:hover {
+    color: #fff;
+    background-color: #1a2327;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(38, 50, 56, 0.25);
+}
+
+.btn-modern-primary:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 767px) {
+    .col-md-5 {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 100vh;
+
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+
+        padding: 2.5rem 1.5rem !important;
+    }
+
+    .col-md-7 {
+        display: none !important;
+    }
+}

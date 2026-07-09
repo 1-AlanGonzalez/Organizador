@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/login",
                     "/olvide-password", 
-                    "/styles.css",
+                    "/css/**",
                     "/js/**",
                     "/images/logo/**",
                     "/exportar/**"

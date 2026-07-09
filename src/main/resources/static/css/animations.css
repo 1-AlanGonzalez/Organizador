@@ -1,0 +1,135 @@
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/*
+ * En el archivo original fadeInUp estaba definido dos veces.
+ * Se conserva la última definición, que era la que realmente aplicaba.
+ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes dashboardEntry {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.fade-in {
+    animation: fadeIn 1.2s ease-out forwards;
+}
+
+.animate-fade-up {
+    position: relative;
+    animation: dashboardEntry 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.animate-entry {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.delay-1 {
+    animation-delay: 0.1s;
+}
+
+.delay-2 {
+    animation-delay: 0.2s;
+}
+
+.delay-3 {
+    animation-delay: 0.3s;
+}
+
+.tableAnimation tbody tr {
+    opacity: 0;
+    animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tableAnimation tbody tr:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.tableAnimation tbody tr:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.tableAnimation tbody tr:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.tableAnimation tbody tr:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.tableAnimation tbody tr:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.tableAnimation tbody tr:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.tableAnimation tbody tr:nth-child(7) {
+    animation-delay: 0.7s;
+}
+
+.tableAnimation tbody tr:nth-child(8) {
+    animation-delay: 0.8s;
+}
+
+.tableAnimation tbody tr:nth-child(9) {
+    animation-delay: 0.9s;
+}
