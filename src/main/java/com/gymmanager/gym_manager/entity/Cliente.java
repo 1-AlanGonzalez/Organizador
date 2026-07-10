@@ -100,15 +100,21 @@ public class Cliente {
         if (inscripciones == null || inscripciones.isEmpty()) {
             return false;
         }
-        return inscripciones.stream().anyMatch(i -> i.tieneAdeudaVencida());
-       
-        
+        return inscripciones.stream().anyMatch(i -> i.tieneAdeudaVencida());}
+
+
+    public boolean tieneVencidos() {
+            if (inscripciones == null || inscripciones.isEmpty()) return false;
+            return inscripciones.stream()
+                    .flatMap(i -> i.getPagos().stream())
+                    .anyMatch(p -> p.getEstado() == EstadoPago.VENCIDO);
+        }
     // Usé el mismo criterio que se usa en la tabla de Pagos en ingresos... Así la tabla de clientes directamente filtra por estado ADEUDA
     // y me muestra en la tabla los que adeudan y los que no..
     // return inscripciones.stream()
     //     .flatMap(insc -> insc.getPagos().stream())
     //     .anyMatch(p -> p.getEstado() == EstadoPago.ADEUDA);
-    }
+
     
 
     public BigDecimal totalAdeudado() {
