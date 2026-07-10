@@ -29,6 +29,19 @@
         Librería de iconos moderna y personalizable, similar a Feather Icons pero con más opciones de personalización.
     -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- pequeño script para cargar el darkmode antes que la web, asi no hay frames incorrectos de colores blancos -->
+    <script>
+        (() => {
+            const savedTheme = localStorage.getItem("theme");
+            const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+
+            document.documentElement.dataset.theme = savedTheme ?? systemTheme;
+        })();
+    </script>
+
     <title th:text="${title}">Gym Manager</title>
 </head>
 

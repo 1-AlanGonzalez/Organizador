@@ -2,18 +2,22 @@
 .card-stat {
     position: relative;
     overflow: hidden;
-
-    color: #fff;
-    border: none;
-    border-radius: 16px;
-
+    color: var(--text-color);
+    border-color: var(--border-color);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-
     transition:
         transform 0.3s ease,
         box-shadow 0.3s ease;
 }
-
+.titulo-inicio {
+    color: var(--text-color);
+}
+.subtitulo-inicio {
+    color: var(--text-muted);
+}
+.diaActual-inicio {
+    color: var(--text-muted);
+}
 .card-stat:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
@@ -95,7 +99,7 @@
 }
 
 .bg-gradient-hero {
-    color: #fff;
+    color: var(--text-color);
     background: linear-gradient(
         135deg,
         var(--sidebar-active) 0%,
@@ -111,7 +115,7 @@
     align-items: center;
     justify-content: center;
 
-    color: #fff;
+    color: var(--text-color);
     background: rgba(255, 255, 255, 0.2);
     border-radius: 12px;
 
@@ -144,7 +148,6 @@
 
 .icon-bg-blue {
     color: #2563eb;
-    background-color: #dbeafe;
 }
 
 .btn-widget {
