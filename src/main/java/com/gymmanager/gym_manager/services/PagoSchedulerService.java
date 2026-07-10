@@ -4,14 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.gymmanager.gym_manager.entity.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.gymmanager.gym_manager.entity.ActividadCliente;
-import com.gymmanager.gym_manager.entity.EstadoInscripcion;
-import com.gymmanager.gym_manager.entity.EstadoPago;
-import com.gymmanager.gym_manager.entity.Pago;
-import com.gymmanager.gym_manager.entity.TipoDeCobro;
 import com.gymmanager.gym_manager.repository.ClienteActividadRepository;
 import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
 import com.gymmanager.gym_manager.repository.PagoRepository;
@@ -27,9 +23,9 @@ public class PagoSchedulerService {
     public PagoSchedulerService(PagoRepository pagoRepository,
                                 ClienteActividadRepository clienteActividadRepository,
                                 MetodoDePagoRepository metodoDePagoRepository) {
-        this.pagoRepository              = pagoRepository;
+        this.pagoRepository = pagoRepository;
         this.clienteActividadRepository = clienteActividadRepository;
-        this.metodoDePagoRepository     = metodoDePagoRepository;
+        this.metodoDePagoRepository = metodoDePagoRepository;
     }
 
 
@@ -51,38 +47,37 @@ public class PagoSchedulerService {
                 continue;
             }
 
+            // Si el vencimiento no pasó todavía → no hacer nada
+            if (!ultimoPago.getFechaVencimiento().isBefore(LocalDate.now())) continue;
+
             if (ultimoPago.getEstado() == EstadoPago.ADEUDA) {
-                continue;
+                ultimoPago.setEstado(EstadoPago.VENCIDO);
+                pagoRepository.save(ultimoPago);
             }
-        
-            if (ultimoPago.getEstado() == EstadoPago.PAGADO &&
-                ultimoPago.getFechaVencimiento().isBefore(LocalDate.now())) {
-                    // Verificamos que no exista ya un pago generado hoy para esta inscripción
-                    Optional<Pago> pagoExistente = pagoRepository
-                                    .findByActividadCliente_IdActividadClienteAndFechaGeneracion(
-                                        inscripcion.getIdActividadCliente(),
-                                        LocalDate.now()
-                                    );
+            // Verificar que no exista ya un pago generado hoy
+            Optional<Pago> pagoExistente = pagoRepository
+                    .findByActividadCliente_IdActividadClienteAndFechaGeneracion(
+                            inscripcion.getIdActividadCliente(),
+                            LocalDate.now());
 
-                    if (pagoExistente.isPresent()) {
-                        continue; // ya existe → no generamos otro
-                    }
-                    
-                    Pago nuevoPago = new Pago();
-                    nuevoPago.setActividadCliente(inscripcion);
-                    nuevoPago.setMontoAPagar(inscripcion.getActividad().getPrecio());
-                    nuevoPago.setFechaGeneracion(LocalDate.now());
-                    nuevoPago.setFechaVencimiento(LocalDate.now().plusMonths(1));
-                    nuevoPago.setEstado(EstadoPago.ADEUDA);
-                    nuevoPago.setMetodoPago(metodoDePagoRepository.findByNombre("No especificado").orElse(null));
-                    pagoRepository.save(nuevoPago);
-                    System.out.println("Nuevo pago generado para inscripción: "
-                        + inscripcion.getIdActividadCliente());
-                }
+            if (pagoExistente.isPresent()) continue;
 
-        
+            // Generar nuevo pago ADEUDA
+            Usuario usuario = inscripcion.getCliente().getUsuario();
+            MetodoDePago sinMetodo = metodoDePagoRepository.findByNombreAndUsuario("No especificado", usuario).orElse(null);
+
+            Pago nuevoPago = new Pago();
+            nuevoPago.setActividadCliente(inscripcion);
+            nuevoPago.setMontoAPagar(inscripcion.getActividad().getPrecio());
+            nuevoPago.setFechaGeneracion(LocalDate.now());
+            nuevoPago.setFechaVencimiento(LocalDate.now().plusMonths(1));
+            nuevoPago.setEstado(EstadoPago.ADEUDA);
+            nuevoPago.setMetodoPago(sinMetodo);
+            pagoRepository.save(nuevoPago);
+
+            System.out.println("Nuevo pago generado para inscripción: "
+                    + inscripcion.getIdActividadCliente());
         }
-
     }
 
     @Scheduled(cron = "0 0 0 * * *") // todos los días a las 00:00
