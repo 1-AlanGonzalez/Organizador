@@ -45,7 +45,7 @@ body.modo-eliminar-activo .btn-editar-row {
     width: 380px;
     height: 100vh;
 
-    background: #fff;
+    background: var(--card-bg);
     box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
 
     transition: transform 0.3s ease;
@@ -72,12 +72,12 @@ body.modo-eliminar-activo .btn-editar-row {
 
 /* Actividades */
 .activities-container {
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--border-color);
     transition: border-color 0.2s;
 }
 
 .activities-container:focus-within {
-    border-color: #0d6efd;
+    border-color: var(--border-color);
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
@@ -104,27 +104,147 @@ body.modo-eliminar-activo .btn-editar-row {
 }
 
 .estado-inactivo {
-    color: #e74c3c;
+    color: var(--card-bg);
     font-weight: 600;
 }
 
 .activity-row {
-    border: 1px solid #f1f5f9;
+    border: 1px solid var(--border-color);
     transition: all 0.2s ease;
 }
 
 .activity-row:hover {
-    background-color: #fff !important;
-    border-color: #cbd5e1;
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .activity-row .badge {
-    color: #64748b !important;
+    color: var(--text-secondary) !important;
     font-size: 0.75rem;
     letter-spacing: 0.5px;
 }
 
 .activity-row:hover .badge {
     filter: brightness(0.95);
+}
+
+html[data-theme="dark"] .panel-wrapper,
+html[data-theme="dark"] .activity-row:hover {
+    background: var(--card-bg) !important;
+}
+
+html[data-theme="dark"] .custom-checkbox .form-check-label {
+    color: var(--text-color);
+}
+
+html[data-theme="dark"] .activity-row {
+    border-color: var(--border-soft);
+}
+
+
+/* ── Nuevos clientes ── */
+.titulo-cliente {
+    color: var(--text-color);
+}
+.header-nuevoCliente {
+    border-bottom:1.5px solid var(--border-soft);
+}
+.footer-nuevoCliente {
+    border-top:1.5px solid var(--border-soft);
+}
+.ic { /* input-clean */
+    background: var(--input-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    transition: border-color .2s, box-shadow .2s;
+}
+.ic:focus {
+    background: var(--table-hover-bg);
+    box-shadow: 0 0 0 3px rgba(31,42,48,.08);
+    outline: none;
+}
+
+/* ── Tipo de pase (radio buttons) ── */
+.pase-btn { display: none; }
+.pase-label {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 8px 4px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    font-size: .82rem; font-weight: 500; color: var(--text-muted);
+    cursor: pointer; transition: all .2s; background: var(--card-bg);
+    user-select: none;
+}
+.pase-btn:checked + .pase-label {
+    background: linear-gradient(135deg, #1f2a30, #2d3f46);
+    border-color: #1f2a30; color: var(--border-color);
+    box-shadow: 0 3px 10px rgba(31,42,48,.2);
+}
+.pase-label:hover { border-color: var(--border-color);  }
+.pase-btn:checked + .pase-label:hover { color: var(--text-color); }
+/* ── Tabla de actividades ── */
+.act-table thead th {
+    background: var(--card-bg);
+    font-size: .68rem; text-transform: uppercase;
+    letter-spacing: .05em; color: var(--text-color); font-weight: 700;
+    border-bottom: 1.5px solid var(--border-soft); padding: 10px 8px;
+}
+.btn-asignar {
+    border: 1.5px solid var(--border-soft);
+}
+.act-table tbody tr { transition: background .15s; }
+.act-table tbody tr:hover { background: var(--card-bg); }
+.act-table tbody td { padding: 9px 8px; border-bottom: 1px solid var(--border-color); font-size: .85rem; }
+
+.resumen-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px; padding: 1rem;
+}
+.total-display {
+    font-size: 1.8rem; font-weight: 800; color: #1f2a30; line-height: 1;
+}
+/* ── Bloque inscripción ── */
+.insc-block {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.2rem;
+}
+.insc-block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.badge-reinscripcion {
+    background: var(--card-bg); color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: font-size: .7rem; font-weight: 700;
+    padding: 3px 10px;
+}
+/* ── Monto abonado ── */
+.monto-group .input-group-text {
+    background: #dcfce7; color: #16a34a;
+    border: 1.5px solid #86efac;
+    border-right: none;
+    border-radius: 8px 0 0 8px; font-weight: 700;
+}
+.monto-group .form-control {
+    border: 1.5px solid var(--border-color);
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+    font-weight: 700; color: #16a34a;
+}
+.monto-group .form-control:focus {
+    box-shadow: 0 0 0 3px rgba(134,239,172,.25);
+}
+/* ── Checkbox custom ── */
+
+.label-titulos {
+    color: var(--text-secondary);
+}
+
+.fecha-actividades:disabled {
+    background: var(--card-bg);
 }

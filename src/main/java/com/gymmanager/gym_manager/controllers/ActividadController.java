@@ -28,7 +28,7 @@ public class ActividadController {
         model.addAttribute("actividades", actividadService.listarActividadesDeUsuario());
         model.addAttribute("title",     "Gym Manager | Actividades");
         model.addAttribute("header",    "Panel de control / Actividades");
-        model.addAttribute("vista",     "actividades");
+        model.addAttribute("vista",     "actividades/actividades");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active",    "actividades");
         return "layouts/main";
@@ -41,7 +41,7 @@ public class ActividadController {
         model.addAttribute("instructoresJson", actividadService.buildInstructoresJson());
         model.addAttribute("dictadosJson",     List.of());          // sin filas previas
         model.addAttribute("title",     "Gym Manager | Nueva Actividad");
-        model.addAttribute("vista",     "actividades-nuevo");
+        model.addAttribute("vista",     "actividades/actividades-nuevo");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active",    "actividades");
         return "layouts/main";
@@ -58,7 +58,7 @@ public class ActividadController {
             model.addAttribute("instructoresJson", actividadService.buildInstructoresJson());
             model.addAttribute("dictadosJson",     actividadService.buildDictadosJson(actividad));
             model.addAttribute("title",     "Gym Manager | Editar Actividad");
-            model.addAttribute("vista",     "actividades-nuevo");
+            model.addAttribute("vista",     "actividades/actividades-nuevo");
             model.addAttribute("fragmento", "contenido");
             model.addAttribute("active",    "actividades");
             return "layouts/main";

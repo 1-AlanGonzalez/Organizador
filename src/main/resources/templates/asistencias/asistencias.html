@@ -6,7 +6,7 @@
             <p class="text-muted small mb-0">Control diario de alumnos activos</p>
         </div>
         <div>
-            <a class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2" th:href="@{/asistencias/tomar}">
+            <a class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2 btn-asignar" th:href="@{/asistencias/tomar}">
                 <i data-lucide="plus" style="width:14px;height:14px;"></i>
                 <span>Tomar Asistencia</span>
             </a>
@@ -19,7 +19,7 @@
 
             <div style="min-width:160px; flex:1;">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0">
+                    <span class="icons input-group-text bg-light border-end-0">
                         <i data-lucide="calendar" style="width:14px;height:14px;"></i>
                     </span>
                     <input type="date" name="fecha" class="form-control border-start-0 ps-0 bg-light"
@@ -30,7 +30,7 @@
 
             <div style="min-width:180px; flex:2;">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0">
+                    <span class="icons input-group-text bg-light border-end-0">
                         <i data-lucide="search" style="width:14px;height:14px;"></i>
                     </span>
                     <input type="text" id="filtroAsistencias"
@@ -41,7 +41,7 @@
 
             <div style="min-width:160px; flex:1.5;">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted">
+                    <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="filter" style="width:14px;height:14px;"></i>
                     </span>
                     <select id="filtroActividad"

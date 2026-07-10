@@ -14,7 +14,7 @@ public class ReportesController {
         model.addAttribute("title", "Gym Manager | Reportes");
         model.addAttribute("header", "Panel de control / Reportes");
 
-        model.addAttribute("vista", "reportesExcel"); 
+        model.addAttribute("vista", "reportes/reportesExcel");
         
         model.addAttribute("fragmento", "contenido");
 

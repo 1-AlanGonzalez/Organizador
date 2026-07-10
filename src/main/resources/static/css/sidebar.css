@@ -162,6 +162,20 @@
     pointer-events: all;
 }
 
+html[data-theme="dark"] .sidebar .nav-link:hover,
+html[data-theme="dark"] .sidebar .nav-link.active {
+    color: #d8e2e7;
+}
+
+html[data-theme="dark"] .sidebar-logo,
+html[data-theme="dark"] .sidebar ul.nav li:last-child {
+    border-color: rgba(120, 144, 156, 0.16);
+}
+
+html[data-theme="dark"] .sidebar .nav-link:hover {
+    background-color: rgba(120, 144, 156, 0.14);
+}
+
 @media (min-width: 1600px) {
     .sidebar {
         width: 72px;

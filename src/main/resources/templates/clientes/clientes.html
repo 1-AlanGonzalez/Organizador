@@ -16,7 +16,7 @@
                 <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
                 <span>Eliminar</span>
             </button>
-            <a th:href="@{/clientes/nuevo}" class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+            <a th:href="@{/clientes/nuevo}" class="btn-asignar btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
                 <i data-lucide="user-plus" style="width:14px;height:14px;"></i>
                 <span>Nuevo Cliente</span>
             </a>
@@ -30,7 +30,7 @@
     <div class="row g-2">
         <div class="col-md-4">
             <div class="input-group input-group-sm">
-                <span class="input-group-text bg-light border-end-0 text-muted">
+                <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="search" style="width:14px;height:14px;"></i>
                     </span>
                 <input id="filtroClientes" type="text"
@@ -40,7 +40,7 @@
         </div>
         <div class="col-md-4">
             <div class="input-group input-group-sm">
-                <span class="input-group-text bg-light border-end-0 text-muted">
+                <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="filter" style="width:14px;height:14px;"></i>
                     </span>
                 <select id="filtroActividadClientes" class="form-select form-select-sm border-start-0 bg-light">
@@ -170,33 +170,33 @@
                             </td>
 
                             <td class="pe-4">
-    <div class="d-flex align-items-center justify-content-center gap-2">
-        <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-secondary">
-            <i data-lucide="eye" style="width:13px;height:13px;"></i>
-        </a>
-        <div class="btn-accion-wrap">
-            <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}"
-               class="btn btn-sm btn-outline-primary btn-editar-row">
-                <i data-lucide="pencil" style="width:13px;height:13px;"></i>
-            </a>
-            <button class="btn btn-sm btn-outline-danger btn-eliminar"
-                    th:data-id="${c.idCliente}"
-                    th:data-nombre="${c.nombre} + ' ' + ${c.apellido}"
-                    th:data-url="@{/clientes/eliminar}"
-                    onclick="abrirPanelEliminar(this)">
-                <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
-            </button>
-        </div>
-    </div>
-</td>
-                                    </tr>
-                                    <tr id="mensajeVacioClientes" class="empty-row" style="display:none;">
-                                        <td colspan="5" class="text-center py-5 text-muted">
-                                            <i data-lucide="search" style="width:40px;height:40px;opacity:0.3;" class="d-block mx-auto mb-2"></i>
-                                            No se encontraron clientes con los filtros actuales.
-                                        </td>
-                                    </tr>
-                                </tbody>
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <a th:href="@{/clientes/ver/{id}(id=${c.idCliente})}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="icons" data-lucide="eye" style="width:13px;height:13px;"></i>
+                                </a>
+                                <div class="btn-accion-wrap">
+                                    <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}"
+                                       class="icons btn btn-sm btn-outline-secondary btn-editar-row">
+                                        <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-danger btn-eliminar"
+                                            th:data-id="${c.idCliente}"
+                                            th:data-nombre="${c.nombre} + ' ' + ${c.apellido}"
+                                            th:data-url="@{/clientes/eliminar}"
+                                            onclick="abrirPanelEliminar(this)">
+                                        <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="mensajeVacioClientes" class="empty-row" style="display:none;">
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <i data-lucide="search" style="width:40px;height:40px;opacity:0.3;" class="d-block mx-auto mb-2"></i>
+                            No se encontraron clientes con los filtros actuales.
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
         <div id="paginadorClientes" class="border-top px-3 flex-shrink-0"></div>
@@ -206,7 +206,7 @@
          onclick="cerrarPanelEliminar()">
         <div class="panel-container"
              onclick="event.stopPropagation()"
-             th:insert="fragments/panel-eliminar :: panelEliminar">
+             th:insert="fragments/common/panel-eliminar :: panelEliminar">
         </div>
     </div>
 

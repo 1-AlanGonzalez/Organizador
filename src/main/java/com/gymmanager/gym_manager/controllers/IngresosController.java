@@ -71,7 +71,7 @@ public class IngresosController {
 
         model.addAttribute("title",     "Gym Manager | Ingresos");
         model.addAttribute("header",    "Contabilidad / Resumen de Ingresos");
-        model.addAttribute("vista",     "ingresos");
+        model.addAttribute("vista",     "ingresos/ingresos");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active",    "ingresos");
         return "layouts/main";
@@ -143,7 +143,7 @@ public String nuevoIngreso(Model model) {
     model.addAttribute("clientes",       clientesConDeuda);
     model.addAttribute("title",     "Gym Manager | Nuevo Ingreso");
     model.addAttribute("header",    "Contabilidad / Nuevo Ingreso");
-    model.addAttribute("vista",     "ingresos-nuevo");
+    model.addAttribute("vista",     "ingresos/ingresos-nuevo");
     model.addAttribute("fragmento", "contenido");
     model.addAttribute("active",    "ingresos");
     return "layouts/main";

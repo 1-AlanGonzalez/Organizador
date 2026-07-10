@@ -1,0 +1,248 @@
+<div th:fragment="contenido" class="h-100 d-flex flex-column p-2" style="overflow: hidden;">
+
+    <!-- ── Header ── -->
+    <div class="div-header d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
+        <div>
+            <h4 class="titulo-inicio fw-bold mb-0 dashboard-title">Inicio</h4>
+            <p class="subtitulo-inicio small mb-0">Resumen general del gimnasio</p>
+        </div>
+        <span class="diaActual-inicio badge bg-white border px-3 py-2 rounded-pill date-badge"
+              th:text="${#dates.format(#dates.createNow(), 'EEEE dd MMMM yyyy')}">Hoy</span>
+    </div>
+
+    <!-- ── Fila 1: KPI principal + Estado clientes ── -->
+    <div class="row g-2 mb-2 flex-shrink-0 animate-fade-up delay-1">
+
+        <!-- Hero: ingresos del mes -->
+        <div class="col-lg-7">
+            <div class="card border-0 h-100 p-3 position-relative overflow-hidden income-hero-card">
+                <div class="d-flex justify-content-between align-items-start position-relative" style="z-index:2;">
+                    <div>
+                        <span class="text-uppercase fw-bold income-hero-kicker">Ingresos del Mes</span>
+                        <h6 class="income-hero-title mt-1 fw-bold fs-6"
+                            th:text="${#strings.capitalize(#dates.format(#dates.createNow(), 'MMMM yyyy'))}">Mes</h6>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center rounded-3 income-hero-icon">
+                        <i data-lucide="wallet"></i>
+                    </div>
+                </div>
+                <div class="mt-2 position-relative" style="z-index:2;">
+                    <h1 class="fw-bold mb-1 income-hero-value"
+                        th:text="${'$' + #numbers.formatDecimal(totalMesActual, 1, 'POINT', 2, 'COMMA')}">$0.00</h1>
+                    <div class="d-flex gap-3 mt-2 flex-wrap">
+                        <div class="rounded-3 px-3 py-1 income-hero-pill">
+                            <div class="income-hero-pill-label">Pendiente</div>
+                            <div class="fw-bold income-hero-pill-value"
+                                 th:text="${'$' + #numbers.formatDecimal(totalPendiente, 1, 'POINT', 0, 'COMMA')}">$0</div>
+                        </div>
+                        <div class="rounded-3 px-3 py-1 income-hero-pill income-hero-pill-danger">
+                            <div class="income-hero-pill-label">Deudores</div>
+                            <div class="fw-bold income-hero-pill-value"
+                                 th:text="${clientesPendientes}">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado clientes — SIN tasa de retención -->
+        <div class="col-lg-5">
+            <div class="card custom-card border-0 h-100 p-3 position-relative overflow-hidden">
+                <div class="position-absolute top-0 start-0 end-0 status-card-progress">
+                    <div th:style="'height:100%;border-radius:inherit;background:linear-gradient(90deg,#1f2a30,#4ade80);width:' + ${totalClientes > 0 ? (clientesActivos * 100 / totalClientes) + '%' : '0%'}"></div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-1">
+                    <h6 class="fw-bold mb-0 text-uppercase dashboard-card-label">Estado de Clientes</h6>
+                    <span class="badge bg-light text-dark border rounded-pill px-2 py-1"
+                          style="font-size:.65rem;"
+                          th:text="${totalInscriptos + ' inscriptos'}">0</span>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 rounded-3 px-2 py-3 mb-2 soft-row">
+                    <div class="icon-box-light icon-bg-green rounded-3 flex-shrink-0"
+                         style="width:38px;height:38px;">
+                        <i data-lucide="user-check"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <small class="d-block text-uppercase fw-bold soft-row-kicker"
+                               style="font-size:.6rem;color:#94a3b8;line-height:1;">Al día</small>
+                        <span class="fw-bold soft-row-value"
+                              th:text="${clientesActivos}">0</span>
+                    </div>
+                    <span class="badge rounded-pill fw-bold"
+                          style="background:#dcfce7;color:#16a34a;font-size:.7rem;padding:5px 10px;"
+                          th:text="${totalClientes > 0 ? #numbers.formatDecimal(clientesActivos * 100.0 / totalClientes, 1, 0) + '%' : '0%'}">0%</span>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 rounded-3 px-2 py-3 soft-row">
+                    <div class="icon-box-light icon-bg-orange rounded-3 flex-shrink-0"
+                         style="width:38px;height:38px;">
+                        <i data-lucide="user-x"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <small class="d-block text-uppercase fw-bold soft-row-kicker"
+                               style="font-size:.6rem;color:#94a3b8;line-height:1;">Adeudan</small>
+                        <span class="fw-bold soft-row-value"
+                              th:text="${clientesPendientes}">0</span>
+                    </div>
+                    <span class="badge rounded-pill fw-bold"
+                          style="background:#ffedd5;color:#ea580c;font-size:.7rem;padding:5px 10px;"
+                          th:text="${totalClientes > 0 ? #numbers.formatDecimal(clientesPendientes * 100.0 / totalClientes, 1, 0) + '%' : '0%'}">0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Fila 2: Accesos | Gráfico | Alertas ── -->
+    <div class="row g-2 flex-grow-1 animate-fade-up delay-2" style="min-height:0;">
+        <div class="row g-2 flex-grow-1" style="min-height:0;">
+
+            <!-- Accesos directos -->
+            <div class="col-12 col-lg-3 d-flex flex-column" style="min-height:0;">
+                <h6 class="fw-bold text-uppercase mb-2 flex-shrink-0 dashboard-section-label">Accesos Directos</h6>
+                <div class="row g-2 flex-grow-1">
+
+                    <div class="col-6">
+                        <a th:href="@{/asistencias/tomar}"
+                           class="quick-action text-decoration-none d-flex flex-column align-items-center justify-content-center gap-2 h-100 rounded-3">
+                            <div class="quick-action-icon">
+                                <i data-lucide="qr-code"></i>
+                            </div>
+                            <div class="text-center">
+                                <span class="fw-bold d-block quick-action-title">Asistencia</span>
+                                <small class="text-muted quick-action-subtitle">Tomar presente</small>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-6">
+                        <a th:href="@{/ingresos/nuevo}"
+                           class="quick-action quick-action-success text-decoration-none d-flex flex-column align-items-center justify-content-center gap-2 h-100 rounded-3">
+                            <div class="quick-action-icon">
+                                <i data-lucide="banknote-arrow-up"></i>
+                            </div>
+                            <div class="text-center">
+                                <span class="fw-bold d-block quick-action-title">Cobrar</span>
+                                <small class="text-muted quick-action-subtitle">Registrar pago</small>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-6">
+                        <a th:href="@{/clientes/nuevo}"
+                           class="quick-action text-decoration-none d-flex flex-column align-items-center justify-content-center gap-2 h-100 rounded-3">
+                            <div class="quick-action-icon">
+                                <i data-lucide="user-round-plus"></i>
+                            </div>
+                            <div class="text-center">
+                                <span class="fw-bold d-block quick-action-title">Nuevo</span>
+                                <small class="text-muted quick-action-subtitle">Alta alumno</small>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-6">
+                        <a th:href="@{/reportes}"
+                           class="quick-action quick-action-purple text-decoration-none d-flex flex-column align-items-center justify-content-center gap-2 h-100 rounded-3">
+                            <div class="quick-action-icon">
+                                <i data-lucide="file-spreadsheet"></i>
+                            </div>
+                            <div class="text-center">
+                                <span class="fw-bold d-block quick-action-title">Reportes</span>
+                                <small class="text-muted quick-action-subtitle">Exportar Excel</small>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Gráfico -->
+            <div class="col-12 col-lg-5 d-flex flex-column" id="tabla-ingresos">
+                <h6 class="fw-bold text-uppercase mb-2 flex-shrink-0"
+                    style="font-size:.7rem;letter-spacing:.08em;color:#64748b;">Gráfico de Ingresos</h6>
+                <div class="card custom-card border-0 p-3 flex-grow-1" style="min-height:220px;">
+                    <div id="chart" class="w-100 h-100"></div>
+                    <script th:inline="javascript">
+                        /*<![CDATA[*/
+                        window.datosGrafico      = /*[[${datosGrafico}]]*/ [];
+                        window.categoriasGrafico = /*[[${categoriasGrafico}]]*/ [];
+                        /*]]>*/
+                    </script>
+                </div>
+            </div>
+
+            <!-- Alertas -->
+            <div class="col-12 col-lg-4 d-flex flex-column" style="min-height:0;">
+
+                <h6 class="fw-bold text-uppercase mb-2 flex-shrink-0 dashboard-section-label">Deudores</h6>
+                <div class="card border-0 mb-2 flex-shrink-0 dashboard-alert-card">
+
+                    <div th:if="${#lists.isEmpty(clientesDeudores)}"
+                         class="d-flex flex-column align-items-center justify-content-center py-4 dashboard-empty">
+                        <i data-lucide="circle-check-big"
+                           style="width:24px;height:24px;color:#10b981;" class="mb-1"></i>
+                        <small class="fw-bold">¡Sin deudores!</small>
+                    </div>
+
+                    <ul th:if="${!#lists.isEmpty(clientesDeudores)}"
+                        class="list-unstyled mb-0 p-2" style="overflow-y:auto;max-height:190px;">
+                        <li th:each="c, iter : ${clientesDeudores}"
+                            th:if="${iter.index < 5}"
+                            class="d-flex align-items-center gap-2 rounded-3 px-3 py-2 dashboard-list-row">
+                            <span class="fw-semibold flex-grow-1 text-truncate dashboard-list-name"
+                                  th:text="${c.nombre + ' ' + c.apellido}">Nombre</span>
+                            <a th:href="@{/ingresos/nuevo(idCliente=${c.idCliente})}"
+                               class="flex-shrink-0 fw-bold text-decoration-none px-2 py-1 rounded-2 dashboard-list-action dashboard-list-action-danger">
+                                Cobrar
+                            </a>
+                        </li>
+                        <li th:if="${#lists.size(clientesDeudores) > 5}"
+                            class="text-center pt-2 pb-2 border-top mt-1">
+                            <a th:href="@{/clientes}" class="small fw-bold text-decoration-none text-muted">
+                                +<span th:text="${#lists.size(clientesDeudores) - 5}">0</span> más &rarr;
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <h6 class="fw-bold text-uppercase mb-2 flex-shrink-0 dashboard-section-label">
+                    Vencen en 7 días
+                    <span class="badge rounded-pill fw-bold ms-1 dashboard-count-badge"
+                          th:text="${#lists.size(proximosVencimientos)}">0</span>
+                </h6>
+                <div class="card border-0 flex-grow-1 position-relative dashboard-alert-card dashboard-alert-card-warning">
+
+                    <div style="position:absolute;top:0;left:0;right:0;height:3px;
+                                background:linear-gradient(90deg,#f59e0b,#fbbf24);
+                                border-radius:14px 14px 0 0;"></div>
+
+                    <div th:if="${#lists.isEmpty(proximosVencimientos)}"
+                         class="d-flex flex-column align-items-center justify-content-center py-4 h-100 dashboard-empty">
+                        <i data-lucide="calendar-check"
+                           style="width:24px;height:24px;color:#fbbf24;" class="mb-1 mt-1"></i>
+                        <small class="fw-bold">Sin vencimientos</small>
+                    </div>
+
+                    <ul th:if="${!#lists.isEmpty(proximosVencimientos)}"
+                        class="list-unstyled mb-0 p-2 pt-3" style="overflow-y:auto;height:100%;">
+                        <li th:each="c : ${proximosVencimientos}"
+                            class="d-flex align-items-center gap-2 rounded-3 px-3 py-2 dashboard-list-row">
+                            <span class="fw-semibold flex-grow-1 text-truncate dashboard-list-name"
+                                  th:text="${c.nombre + ' ' + c.apellido}">Nombre</span>
+                            <a th:href="@{/ingresos/nuevo(idCliente=${c.idCliente})}"
+                               class="flex-shrink-0 fw-bold text-decoration-none px-2 py-1 rounded-2 dashboard-list-action dashboard-list-action-warning">
+                                Renovar
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/script.js}"></script>
+</div>
+

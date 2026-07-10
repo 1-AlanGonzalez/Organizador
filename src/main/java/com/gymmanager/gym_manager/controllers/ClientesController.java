@@ -65,7 +65,7 @@ public class ClientesController {
 
         model.addAttribute("title", "Gym Manager | Clientes");
         model.addAttribute("header", "Panel de control / Clientes");
-        model.addAttribute("vista", "clientes");
+        model.addAttribute("vista", "clientes/clientes");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active", "clientes");
 
@@ -118,7 +118,7 @@ public class ClientesController {
             model.addAttribute("cliente", cliente);
             model.addAttribute("actividades", actividadRepository.findByUsuario(usuario));
             model.addAttribute("metodosPago", configuracionDePagoService.listarActivos(usuario));
-            model.addAttribute("vista", "fragments/panel-cliente");
+            model.addAttribute("vista", "clientes/fragments/panel-cliente");
             model.addAttribute("fragmento", "panelCliente");
             prepararModeloBase(model, "Añadir Cliente", "Clientes / Nuevo");
 
@@ -142,7 +142,7 @@ public class ClientesController {
     @GetMapping("/nuevo")
         public String nuevoCliente(Model model) {
             Usuario usuario = securityUtils.getUsuarioActual();
-            model.addAttribute("vista", "fragments/panel-cliente");
+            model.addAttribute("vista", "clientes/fragments/panel-cliente");
             model.addAttribute("fragmento", "panelCliente");
             model.addAttribute("cliente", new Cliente());
             model.addAttribute("actividades", actividadRepository.findByUsuario(usuario));
@@ -157,7 +157,7 @@ public class ClientesController {
         Cliente cliente = clienteService.obtenerClienteDeUsuario(id);
         Usuario usuario = securityUtils.getUsuarioActual();
         model.addAttribute("fechasInscripcion", clienteService.fechaInscripcionModel(cliente));
-        model.addAttribute("vista",      "fragments/panel-cliente");
+        model.addAttribute("vista",      "clientes/fragments/panel-cliente");
         model.addAttribute("fragmento",  "panelCliente");
         model.addAttribute("cliente",    cliente);
         model.addAttribute("actividades", actividadRepository.findByUsuario(usuario));

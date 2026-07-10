@@ -24,7 +24,7 @@
             <span>Eliminar</span>
         </button>
         <a th:href="@{/actividades/nuevo}"
-           class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+           class="btn-asignar btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
             <i data-lucide="plus" style="width:14px;height:14px;"></i>
             <span>Nueva actividad</span>
         </a>
@@ -36,7 +36,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted">
+                    <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="search" style="width:14px;height:14px;"></i>
                     </span>
                     <input id="filtroActividades" type="text"
@@ -81,7 +81,7 @@
                                   th:with="inscriptosActivos=${actividad.inscripciones.?[estado.name() == 'ACTIVA']}">
                                 <i data-lucide="users" style="width:11px;height:11px;"></i>
                                 <span th:text="${inscriptosActivos.size()}">0</span>
-                                <span th:text="'/' + ${actividad.cupoMaximo}"></span>
+                                <span th:text="${'/' + actividad.cupoMaximo}"></span>
                             </span>
                         </td>
 
@@ -109,7 +109,7 @@
     <div class="d-flex justify-content-center align-items-center">
         <div class="btn-accion-wrap">
             <a th:href="@{/actividades/editar/{id}(id=${actividad.idActividad})}"
-               class="btn btn-sm btn-outline-primary btn-editar-row"
+               class="btn btn-sm btn-outline-secondary btn-editar-row"
                title="Editar">
                 <i data-lucide="pencil" style="width:13px;height:13px;"></i>
             </a>
@@ -150,7 +150,7 @@
     <!-- Panel eliminar — solo confirmación, se mantiene como overlay -->
     <div id="panelEliminarOverlay" class="panel-overlay d-none" onclick="cerrarPanelEliminar()">
         <div class="panel-container" onclick="event.stopPropagation()"
-             th:insert="~{fragments/panel-eliminar :: panelEliminar}"></div>
+             th:insert="~{fragments/common/panel-eliminar :: panelEliminar}"></div>
     </div>
 
     <script th:src="@{/js/actividades.js}"></script>
