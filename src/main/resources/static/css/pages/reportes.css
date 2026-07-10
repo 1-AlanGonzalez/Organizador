@@ -144,3 +144,20 @@
     opacity: 0.3;
     pointer-events: none;
 }
+
+html[data-theme="dark"] .report-option:hover,
+html[data-theme="dark"] .report-option.selected,
+html[data-theme="dark"] .field-checkbox,
+html[data-theme="dark"] .field-checkbox:hover {
+    background-color: var(--card-bg);
+}
+
+html[data-theme="dark"] .bg-blue-light,
+html[data-theme="dark"] .bg-gray-light,
+html[data-theme="dark"] .field-checkbox:has(input:checked) {
+    background-color: #26343a;
+}
+
+html[data-theme="dark"] .bg-pattern {
+    background-image: radial-gradient(#78909c 1px, transparent 1px);
+}

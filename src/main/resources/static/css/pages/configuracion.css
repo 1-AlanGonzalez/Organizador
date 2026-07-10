@@ -23,3 +23,16 @@
     border: 1px dashed #ccc;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
+
+html[data-theme="dark"] .settings-nav .nav-link {
+    color: var(--text-color);
+}
+
+html[data-theme="dark"] .settings-nav .nav-link:hover,
+html[data-theme="dark"] .ticket-preview {
+    background: var(--card-bg);
+}
+
+html[data-theme="dark"] .settings-nav .nav-link.active {
+    color: #d8e2e7;
+}

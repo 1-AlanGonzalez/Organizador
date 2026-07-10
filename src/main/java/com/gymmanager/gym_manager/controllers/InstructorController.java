@@ -40,7 +40,7 @@ public class InstructorController {
         model.addAttribute("actividades",  actividadRepository.findByUsuario(usuario));
         model.addAttribute("title",     "Gym Manager | Instructores");
         model.addAttribute("header",    "Panel de control / Instructores");
-        model.addAttribute("vista",     "instructores");
+        model.addAttribute("vista",     "instructores/instructores");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active",    "instructores");
         return "layouts/main";
@@ -51,7 +51,7 @@ public class InstructorController {
     public String nuevoInstructor(Model model) {
         model.addAttribute("instructor", new Instructor());
         model.addAttribute("title",     "Gym Manager | Nuevo Instructor");
-        model.addAttribute("vista",     "instructores-nuevo");
+        model.addAttribute("vista",     "instructores/instructor-nuevo");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active",    "instructores");
         return "layouts/main";
@@ -69,7 +69,7 @@ public class InstructorController {
 
         model.addAttribute("instructor", instructor);
         model.addAttribute("title",     "Gym Manager | Editar Instructor");
-        model.addAttribute("vista",     "instructores-nuevo");
+        model.addAttribute("vista",     "instructores/instructor-nuevo");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active",    "instructores");
         return "layouts/main";

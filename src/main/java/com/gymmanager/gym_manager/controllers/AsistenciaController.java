@@ -55,7 +55,7 @@ public String asistencias(Model model,
     model.addAttribute("asistencias",       asistenciaRepository.findByActividadCliente_Cliente_Usuario(usuario));
     model.addAttribute("reporteAsistencia", reporte);
     model.addAttribute("fechaSeleccionada", fechaReporte.toString()); // para que el input muestre la fecha elegida
-    model.addAttribute("vista",             "asistencias");
+    model.addAttribute("vista",             "asistencias/asistencias");
     model.addAttribute("fragmento",         "contenido");
     model.addAttribute("active",            "asistencias");
     return "layouts/main";
@@ -67,7 +67,7 @@ public String asistencias(Model model,
 
         model.addAttribute("title",      "Gym Manager | Tomar Asistencia");
         model.addAttribute("header",     "Asistencias / Nueva Planilla");
-        model.addAttribute("vista",      "asistencias-tomar");
+        model.addAttribute("vista",      "asistencias/asistencias-tomar");
         model.addAttribute("fragmento",  "contenido");
         model.addAttribute("active",     "asistencias");
         model.addAttribute("fechaHoy",   LocalDate.now());

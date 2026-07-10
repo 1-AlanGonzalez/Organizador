@@ -81,7 +81,7 @@ public class DashboardController {
 
         model.addAttribute("title",     "Gym Manager | Inicio");
         model.addAttribute("header",    "Panel de control / Inicio");
-        model.addAttribute("vista",     "inicio");
+        model.addAttribute("vista",     "inicio/inicio");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active",    "dashboard");
 

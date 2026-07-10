@@ -128,3 +128,16 @@ body.modo-eliminar-activo .btn-editar-row {
 .activity-row:hover .badge {
     filter: brightness(0.95);
 }
+
+html[data-theme="dark"] .panel-wrapper,
+html[data-theme="dark"] .activity-row:hover {
+    background: var(--card-bg) !important;
+}
+
+html[data-theme="dark"] .custom-checkbox .form-check-label {
+    color: var(--text-color);
+}
+
+html[data-theme="dark"] .activity-row {
+    border-color: var(--border-soft);
+}

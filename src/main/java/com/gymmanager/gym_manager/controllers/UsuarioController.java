@@ -38,7 +38,7 @@ public class UsuarioController {
         model.addAttribute("usuarios",  usuarioRepository.findAll());
         model.addAttribute("title",     "Gym Manager | Usuarios");
         model.addAttribute("header",    "Administración / Usuarios");
-        model.addAttribute("vista",     "usuarios");
+        model.addAttribute("vista",     "admin/usuarios");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active",    "usuarios");
         return "layouts/main";
@@ -122,7 +122,7 @@ public class UsuarioController {
         model.addAttribute("usuario",   securityUtils.getUsuarioActual());
         model.addAttribute("title",     "Gym Manager | Mi Perfil");
         model.addAttribute("header",    "Mi Perfil");
-        model.addAttribute("vista",     "perfil");
+        model.addAttribute("vista",     "configuracion/perfil");
         model.addAttribute("fragmento", "contenido");
         model.addAttribute("active",    "perfil");
         return "layouts/main";

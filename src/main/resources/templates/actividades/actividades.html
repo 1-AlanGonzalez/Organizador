@@ -81,7 +81,7 @@
                                   th:with="inscriptosActivos=${actividad.inscripciones.?[estado.name() == 'ACTIVA']}">
                                 <i data-lucide="users" style="width:11px;height:11px;"></i>
                                 <span th:text="${inscriptosActivos.size()}">0</span>
-                                <span th:text="'/' + ${actividad.cupoMaximo}"></span>
+                                <span th:text="${'/' + actividad.cupoMaximo}"></span>
                             </span>
                         </td>
 
@@ -150,7 +150,7 @@
     <!-- Panel eliminar — solo confirmación, se mantiene como overlay -->
     <div id="panelEliminarOverlay" class="panel-overlay d-none" onclick="cerrarPanelEliminar()">
         <div class="panel-container" onclick="event.stopPropagation()"
-             th:insert="~{fragments/panel-eliminar :: panelEliminar}"></div>
+             th:insert="~{fragments/common/panel-eliminar :: panelEliminar}"></div>
     </div>
 
     <script th:src="@{/js/actividades.js}"></script>

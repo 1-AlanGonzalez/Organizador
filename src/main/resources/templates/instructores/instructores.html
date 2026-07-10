@@ -116,10 +116,10 @@
     <!-- Panel eliminar — solo confirmación, se mantiene como overlay -->
     <div id="panelEliminarOverlay" class="panel-overlay d-none" onclick="cerrarPanelEliminar()">
         <div class="panel-container" onclick="event.stopPropagation()"
-             th:insert="~{fragments/panel-eliminar :: panelEliminar}"></div>
+             th:insert="~{fragments/common/panel-eliminar :: panelEliminar}"></div>
     </div>
 
-    <script src="/js/instructores.js"></script>
+    <script th:src="@{/js/instructores.js}"></script>
     <script th:src="@{/js/pagination.js}"></script>
     <script>
         const pagInstructores = initPaginator('tablaInstructores', 'paginadorInstructores', 10);
