@@ -158,10 +158,13 @@
                             </td>
 
                             <td>
-                                <span th:if="${c.adeuda()}" class="badge bg-danger-light text-danger border border-danger border-opacity-25">
+                                <span th:if="${c.tieneVencidos()}" class="badge bg-danger text-white border border-danger">
+                                    <i data-lucide="alert-circle" style="width:11px;height:11px;"></i> Vencido
+                                </span>
+                                <span th:if="${!c.tieneVencidos() and c.adeuda()}" class="badge bg-danger-light text-danger border border-danger border-opacity-25">
                                     <i data-lucide="alert-circle" style="width:11px;height:11px;"></i> Adeuda
                                 </span>
-                                <span th:if="${!c.adeuda()}" class="badge bg-success-light text-success border border-success border-opacity-25">
+                                <span th:if="${!c.tieneVencidos() and !c.adeuda()}" class="badge bg-success-light text-success border border-success border-opacity-25">
                                     <i data-lucide="check-circle" style="width:11px;height:11px;"></i> Al día
                                 </span>
                             </td>
