@@ -1,4 +1,4 @@
-<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2">
+<div th:fragment="contenido" class="config-page h-100 d-flex flex-column ps-2 pe-2 pb-2">
 
     <style>
         /* ── Tabs laterales ── */
@@ -87,6 +87,101 @@
             padding: 1.2rem;
             font-size: .8rem;
         }
+
+        /* Tema oscuro: la especificidad también neutraliza los estilos inline
+           de esta vista sin modificar los colores del resto de la aplicación. */
+        html[data-theme="dark"] .config-page #configTabs .nav-link {
+            color: var(--text-secondary);
+        }
+        html[data-theme="dark"] .config-page #configTabs .nav-link:hover {
+            color: var(--heading-color);
+            background-color: var(--card-hover-bg);
+        }
+        html[data-theme="dark"] .config-page #configTabs .nav-link.active {
+            color: #d8e2e7;
+            background: linear-gradient(135deg, #34474f, #263940);
+            box-shadow: 0 4px 12px rgba(0,0,0,.3);
+        }
+        html[data-theme="dark"] .config-page .metodo-item,
+        html[data-theme="dark"] .config-page #listaInactivos > div {
+            color: var(--text-color);
+            background: var(--input-bg) !important;
+            border-color: var(--border-color) !important;
+        }
+        html[data-theme="dark"] .config-page .metodo-item:hover {
+            border-color: var(--input-focus-border) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,.25);
+        }
+        html[data-theme="dark"] .config-page .input-clean,
+        html[data-theme="dark"] .config-page .form-control,
+        html[data-theme="dark"] .config-page .form-select,
+        html[data-theme="dark"] .config-page .input-group-text {
+            color: var(--text-color) !important;
+            background-color: var(--input-bg) !important;
+            border-color: var(--border-color) !important;
+        }
+        html[data-theme="dark"] .config-page .input-clean:focus,
+        html[data-theme="dark"] .config-page .form-control:focus,
+        html[data-theme="dark"] .config-page .form-select:focus {
+            color: var(--heading-color) !important;
+            background-color: var(--card-hover-bg) !important;
+            border-color: var(--input-focus-border) !important;
+            box-shadow: 0 0 0 3px rgba(120,144,156,.18) !important;
+        }
+        html[data-theme="dark"] .config-page .form-control:disabled,
+        html[data-theme="dark"] .config-page .form-control[readonly] {
+            color: var(--text-muted) !important;
+            background-color: #202c31 !important;
+            opacity: 1;
+        }
+        html[data-theme="dark"] .config-page input:-webkit-autofill,
+        html[data-theme="dark"] .config-page input:-webkit-autofill:hover,
+        html[data-theme="dark"] .config-page input:-webkit-autofill:focus {
+            -webkit-text-fill-color: var(--text-color);
+            -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset;
+            caret-color: var(--text-color);
+        }
+        html[data-theme="dark"] .config-page .ticket-preview-card,
+        html[data-theme="dark"] .config-page [style*="background:#f8fafc"],
+        html[data-theme="dark"] .config-page [style*="background:#f1f5f9"] {
+            background: var(--input-bg) !important;
+            border-color: var(--border-color) !important;
+        }
+        html[data-theme="dark"] .config-page [style*="color:#1f2a30"],
+        html[data-theme="dark"] .config-page [style*="color: #1f2a30"] {
+            color: var(--heading-color) !important;
+        }
+        html[data-theme="dark"] .config-page [style*="color:#64748b"],
+        html[data-theme="dark"] .config-page [style*="color:#94a3b8"] {
+            color: var(--text-secondary) !important;
+        }
+        html[data-theme="dark"] .config-page [style*="border-color:#e2e8f0"] {
+            border-color: var(--border-color) !important;
+        }
+        html[data-theme="dark"] .config-page .divider-text {
+            color: var(--text-muted);
+        }
+        html[data-theme="dark"] .config-page .divider-text::before,
+        html[data-theme="dark"] .config-page .divider-text::after {
+            background: var(--border-color);
+        }
+        html[data-theme="dark"] .config-page [style*="background:#dcfce7"] {
+            color: #86efac !important;
+            background: rgba(22,163,74,.16) !important;
+        }
+        html[data-theme="dark"] .config-page [style*="background:#fee2e2"] {
+            color: #fca5a5 !important;
+            background: rgba(239,68,68,.15) !important;
+        }
+        html[data-theme="dark"] .config-page [style*="background:#fff7ed"] {
+            color: #fdba74 !important;
+            background: rgba(245,158,11,.14) !important;
+        }
+        html[data-theme="dark"] .config-page .modal-content {
+            color: var(--text-color);
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color) !important;
+        }
     </style>
 
     <!-- ── Header ── -->
@@ -141,7 +236,7 @@
                 </div>
 
                 <button type="button"
-                        class="btn btn-dark-brand w-100 py-2 d-flex justify-content-center align-items-center gap-2"
+                        class="btn btn-guardar w-100 py-2 d-flex justify-content-center align-items-center gap-2"
                         onclick="guardarSeccionActiva()">
                     <i data-lucide="save" style="width:15px;height:15px;"></i>
                     Guardar Cambios
@@ -407,7 +502,7 @@
                                                    placeholder="Ej: Gimnasio El Campeón">
                                         </div>
                                         <button type="submit"
-                                                class="btn btn-dark-brand w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                                                class="btn btn-guardar w-100 py-2 d-flex align-items-center justify-content-center gap-2">
                                             <i data-lucide="save" style="width:15px;height:15px;"></i>
                                             Guardar cambios
                                         </button>
@@ -489,8 +584,7 @@
                         Podés reactivarlo cuando quieras.
                     </p>
                     <div class="d-flex gap-2 justify-content-center">
-                        <button class="btn btn-sm px-3 py-2 fw-medium"
-                                style="background:#f1f5f9;color:#64748b;border:none;border-radius:8px;"
+                        <button class="btn btn-cancelar btn-sm px-3 py-2"
                                 data-bs-dismiss="modal">Cancelar</button>
                         <button class="btn btn-sm px-3 py-2 fw-bold"
                                 style="background:#fff7ed;color:#d97706;border:none;border-radius:8px;"
@@ -522,8 +616,7 @@
                         Esta acción <strong>no se puede deshacer</strong>.
                     </div>
                     <div class="d-flex gap-2 justify-content-center">
-                        <button class="btn btn-sm px-3 py-2 fw-medium"
-                                style="background:#f1f5f9;color:#64748b;border:none;border-radius:8px;"
+                        <button class="btn btn-cancelar btn-sm px-3 py-2"
                                 data-bs-dismiss="modal">Cancelar</button>
                         <button class="btn btn-sm px-3 py-2 fw-bold"
                                 style="background:#ef4444;color:#fff;border:none;border-radius:8px;"

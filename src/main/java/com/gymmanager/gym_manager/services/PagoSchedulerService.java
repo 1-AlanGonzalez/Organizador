@@ -30,7 +30,7 @@ public class PagoSchedulerService {
 
 
 
-    @Scheduled(cron = "0 0 0 * * *") //Ejecuta todos los días a medianoche
+    @Scheduled(cron = "0/10 * * * * *") //Ejecuta todos los días a medianoche
     @Transactional
     public void generarPagosMensuales() {
 
