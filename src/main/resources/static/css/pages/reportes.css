@@ -129,6 +129,20 @@
     transform: none;
 }
 
+.btn-reporte-mensual {
+    color: #d97706;
+    background-color: #fff7ed;
+    border: 1px solid #fed7aa;
+    font-weight: 600;
+}
+
+.btn-reporte-mensual:hover,
+.btn-reporte-mensual:focus-visible {
+    color: #b45309;
+    background-color: #ffedd5;
+    border-color: #fdba74;
+}
+
 .bg-pattern {
     position: absolute;
     top: 0;
@@ -160,4 +174,154 @@ html[data-theme="dark"] .field-checkbox:has(input:checked) {
 
 html[data-theme="dark"] .bg-pattern {
     background-image: radial-gradient(#78909c 1px, transparent 1px);
+}
+
+html[data-theme="dark"] .btn-reporte-mensual {
+    color: #fdba74;
+    background-color: rgba(245, 158, 11, 0.12);
+    border-color: rgba(251, 191, 36, 0.3);
+}
+
+html[data-theme="dark"] .btn-reporte-mensual:hover,
+html[data-theme="dark"] .btn-reporte-mensual:focus-visible {
+    color: #fde68a;
+    background-color: rgba(245, 158, 11, 0.2);
+    border-color: rgba(251, 191, 36, 0.5);
+}
+
+/* Reportes: tema oscuro completo */
+html[data-theme="dark"] .reportes-page .card,
+html[data-theme="dark"] .reportes-page .seccion-datos {
+    color: var(--text-color);
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    box-shadow: var(--card-shadow) !important;
+}
+
+html[data-theme="dark"] .reportes-page .bg-light,
+html[data-theme="dark"] .reportes-page .bg-white {
+    color: var(--text-color);
+    background-color: var(--input-bg) !important;
+}
+
+html[data-theme="dark"] .reportes-page .border,
+html[data-theme="dark"] .reportes-page .border-top,
+html[data-theme="dark"] .reportes-page .border-bottom {
+    border-color: var(--border-color) !important;
+}
+
+html[data-theme="dark"] .reportes-page .report-option {
+    color: var(--text-color);
+    border-color: transparent;
+}
+
+html[data-theme="dark"] .reportes-page .report-option:hover {
+    background-color: var(--card-hover-bg);
+    border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .reportes-page .report-option.selected {
+    color: var(--heading-color);
+    background-color: var(--input-bg);
+    border-color: var(--input-focus-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+html[data-theme="dark"] .reportes-page .field-checkbox,
+html[data-theme="dark"] .reportes-page .field-checkbox:hover {
+    color: var(--text-color);
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .reportes-page .field-checkbox:hover {
+    color: var(--heading-color);
+    background-color: var(--card-hover-bg);
+    border-color: var(--input-focus-border);
+}
+
+html[data-theme="dark"] .reportes-page .field-checkbox:has(input:checked) {
+    color: var(--heading-color);
+    background-color: rgba(120, 144, 156, 0.16);
+    border-color: #78909c;
+}
+
+html[data-theme="dark"] .reportes-page .form-control {
+    color: var(--text-color);
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .reportes-page .form-control:focus {
+    color: var(--heading-color);
+    background-color: var(--card-hover-bg);
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 0.2rem rgba(120, 144, 156, 0.16);
+}
+
+html[data-theme="dark"] .reportes-page input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+}
+
+html[data-theme="dark"] .reportes-page .bg-blue-light {
+    background-color: rgba(59, 130, 246, 0.14);
+}
+
+html[data-theme="dark"] .reportes-page .bg-green-light {
+    background-color: rgba(34, 197, 94, 0.14);
+}
+
+html[data-theme="dark"] .reportes-page .bg-orange-light {
+    background-color: rgba(245, 158, 11, 0.14);
+}
+
+html[data-theme="dark"] .reportes-page .bg-purple-light {
+    background-color: rgba(139, 92, 246, 0.14);
+}
+
+html[data-theme="dark"] .reportes-page .bg-gray-light {
+    background-color: var(--input-bg);
+}
+
+html[data-theme="dark"] .reportes-page .text-primary { color: #93c5fd !important; }
+html[data-theme="dark"] .reportes-page .text-success { color: #86efac !important; }
+html[data-theme="dark"] .reportes-page .text-warning { color: #fdba74 !important; }
+html[data-theme="dark"] .reportes-page .text-purple { color: #c4b5fd !important; }
+
+html[data-theme="dark"] .reportes-page .btn-outline-secondary {
+    color: var(--text-secondary);
+    background-color: transparent;
+    border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .reportes-page .btn-outline-secondary:hover {
+    color: var(--heading-color);
+    background-color: var(--card-hover-bg);
+    border-color: var(--input-focus-border);
+}
+
+html[data-theme="dark"] .reportes-page .btn-exportar:disabled {
+    color: var(--text-muted);
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+}
+
+.reportes-page .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-muted) transparent;
+}
+
+.reportes-page .custom-scrollbar::-webkit-scrollbar {
+    width: 7px;
+}
+
+.reportes-page .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.reportes-page .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--text-muted);
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
 }

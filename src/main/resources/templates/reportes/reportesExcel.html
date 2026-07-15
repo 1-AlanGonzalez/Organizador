@@ -1,4 +1,4 @@
-<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2 animate-entry">
+<div th:fragment="contenido" class="reportes-page h-100 d-flex flex-column ps-2 pe-2 pb-2 animate-entry">
 
     <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
         <div>
@@ -146,9 +146,19 @@
                         </div>
 
                         <div id="seccion-ingresos" class="seccion-datos d-none mb-3 animate-fade-in border rounded p-3 bg-white shadow-sm">
-                            <h6 class="fw-bold text-warning mb-2 border-bottom pb-2 small d-flex align-items-center gap-2">
-                                <i data-lucide="banknote" style="width:14px;height:14px;"></i>Datos de Ingresos
-                            </h6>
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2 border-bottom pb-2">
+                                <h6 class="fw-bold text-warning mb-0 small d-flex align-items-center gap-2">
+                                    <i data-lucide="banknote" style="width:14px;height:14px;"></i>Datos de Ingresos
+                                </h6>
+                                <button type="button"
+                                        id="btn-exportar-ingresos-mensuales"
+                                        class="btn btn-sm btn-reporte-mensual d-inline-flex align-items-center gap-2"
+                                        aria-label="Seleccionar exportación mensual"
+                                        title="Seleccionar solamente un mes">
+                                    <i data-lucide="calendar-range" style="width:14px;height:14px;"></i>
+                                    Seleccionar mes
+                                </button>
+                            </div>
                             <div class="row g-2">
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="fechaGeneracion"> <span>Fecha Pago</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="montoAPagar"> <span>Monto</span></label></div>
