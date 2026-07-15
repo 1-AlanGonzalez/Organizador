@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
     filtroAnio?.addEventListener('change', function () {
         // Si cambia el año, limpiar mes para no tener conflicto
         if (filtroMes) filtroMes.value = '';
-        document.getElementById('labelMes').textContent = this.value || '';
+        document.getElementById('labelMes').textContent = this.value || 'Todos';
         aplicarFiltros();
     });
 

@@ -63,6 +63,6 @@ public class PagoController {
 
         model.addAttribute("pago",    pago);
         model.addAttribute("usuario", usuarioActual);
-        return "pagos/ticket";
+        return "ingresos/ticket";
     }
 }

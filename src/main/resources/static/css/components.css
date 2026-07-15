@@ -55,6 +55,41 @@
     transform: scale(0.95);
 }
 
+/* Acciones de formulario: aspecto consistente en cualquier pantalla o modal. */
+.btn-guardar {
+    color: #fff !important;
+    background: linear-gradient(135deg, #1f2a30 0%, #2d3f46 100%) !important;
+    border: 1px solid transparent !important;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(31, 42, 48, 0.18);
+}
+
+.btn-guardar:hover,
+.btn-guardar:focus-visible {
+    color: #fff !important;
+    background: linear-gradient(135deg, #162024 0%, #243340 100%) !important;
+    border-color: transparent !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(31, 42, 48, 0.25);
+}
+
+.btn-cancelar {
+    color: var(--text-secondary) !important;
+    background-color: var(--input-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-cancelar:hover,
+.btn-cancelar:focus-visible {
+    color: var(--text-color) !important;
+    background-color: var(--card-hover-bg) !important;
+    border-color: var(--input-focus-border) !important;
+    transform: translateY(-1px);
+}
+
 .btn-action {
     background-color: var(--card-bg);
     border: none;
@@ -63,7 +98,6 @@
     font-weight: 500;
     text-align: left;
     transition: 0.2s ease;
-
 }
 
 .icons {
@@ -171,6 +205,9 @@
     background-color: var(--card-bg) !important;
     border-color: var(--input-focus-border);
 }
+.form-control::placeholder {
+    color: var(--text-muted);
+}
 .form-control,
 .form-select {
     color: var(--text-color);
@@ -273,6 +310,19 @@ html[data-theme="dark"] .btn-primary:hover,
 html[data-theme="dark"] .btn-outline-primary:hover,
 html[data-theme="dark"] .page-active {
     color: #d8e2e7 !important;
+}
+
+html[data-theme="dark"] .btn-guardar {
+    color: #d8e2e7 !important;
+    background: linear-gradient(135deg, #34474f 0%, #263940 100%) !important;
+    border-color: #48606a !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme="dark"] .btn-guardar:hover,
+html[data-theme="dark"] .btn-guardar:focus-visible {
+    background: linear-gradient(135deg, #405760 0%, #30474f 100%) !important;
+    border-color: #78909c !important;
 }
 
 html[data-theme="dark"] .input-group:focus-within .input-group-text,

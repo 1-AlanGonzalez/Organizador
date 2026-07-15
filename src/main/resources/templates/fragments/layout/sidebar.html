@@ -5,7 +5,7 @@
         <img th:src="@{/images/logo/logo.png}" class="logo-icon" alt="GM">
     </div>
 
-    <ul class="nav nav-pills flex-column gap-1" style="flex:1; overflow:hidden;">
+    <ul class="sidebar-nav nav nav-pills flex-column gap-1">
         <li class="nav-item">
             <a th:href="@{/dashboard}" class="nav-link"
                th:classappend="${active == 'dashboard'} ? 'active'" title="Inicio">
@@ -56,18 +56,18 @@
         </li>
 
         <!-- Logout pegado al fondo -->
-        <li class="nav-item" style="margin-top:auto;">
+        <li class="sidebar-actions nav-item">
             <button
                     type="button"
                     id="theme-toggle"
-                    class="btn btn-outline-secondary"
+                    class="sidebar-action"
                     aria-label="Cambiar tema"
             >
                 <i id="theme-icon" class="bi bi-moon-fill"></i>
                 <span class="nav-text">Cambiar tema</span>
             </button>
             <form th:action="@{/logout}" method="post" id="logoutForm" class="d-none"></form>
-            <a href="#" class="nav-link text-danger mb-2"
+            <a href="#" class="nav-link sidebar-logout"
                onclick="document.getElementById('logoutForm').submit(); return false;"
                title="Cerrar sesión">
                 <i data-lucide="power"></i><span class="nav-text">Cerrar sesión</span>

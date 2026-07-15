@@ -51,16 +51,16 @@
                                            required>
                                 </div>
                                 <div class="col-md-4">
-    <label class="form-label small fw-bold text-secondary">Cupo Máximo</label>
-    <div class="d-flex align-items-center gap-2 mb-1">
-        <input type="checkbox" id="ilimitado" onchange="toggleCupo(this)">
-        <label for="ilimitado" class="small text-muted mb-0">Ilimitado</label>
-    </div>
-    <input type="number" name="cupoMaximo" id="act-cupoMaximo"
-           class="form-control"
-           th:value="${actividad.cupoMaximo}"
-           min="1">
-</div>
+                                    <label class="form-label small fw-bold text-secondary">Cupo Máximo</label>
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <input type="checkbox" id="ilimitado" onchange="toggleCupo(this)">
+                                        <label for="ilimitado" class="small text-muted mb-0">Ilimitado</label>
+                                    </div>
+                                    <input type="number" name="cupoMaximo" id="act-cupoMaximo"
+                                           class="form-control"
+                                           th:value="${actividad.cupoMaximo}"
+                                           min="1">
+                                </div>
                             </div>
                         </div>
 
@@ -68,7 +68,7 @@
 
                         <!-- BLOQUE 2: Precios -->
                         <div class="p-4 pb-3">
-                            <div class="d-flex align-items-center gap-2 mb-3">
+                            <div class="icons d-flex align-items-center gap-2 mb-3">
                                 <i data-lucide="tag" style="width:15px;height:15px;" class="text-secondary"></i>
                                 <span class="fw-bold text-dark small text-uppercase"
                                       style="letter-spacing:0.05em;">Esquema de Cobro</span>
@@ -77,7 +77,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label small fw-bold text-secondary">Precio Mensual</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-light text-primary fw-bold">$</span>
+                                        <span class="input-group-text bg-light text-primary fw-bold icons">$</span>
                                         <input type="number" name="precio" id="act-precio"
                                                class="form-control fw-bold"
                                                placeholder="0.00" step="0.01"
@@ -88,10 +88,10 @@
                                 <div class="col-md-6">
                                     <label class="form-label small fw-bold text-secondary">
                                         Precio por Clase
-                                        <span class="fw-normal text-muted">(Opcional)</span>
+                                        <span class=" fw-normal text-muted">(Opcional)</span>
                                     </label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-light text-success">$</span>
+                                        <span class="icons input-group-text bg-light text-success">$</span>
                                         <!--
                                             value="0" como fallback — si queda vacío Spring falla
                                             al parsear "" como BigDecimal (400 Bad Request)
@@ -117,7 +117,7 @@
                                           style="letter-spacing:0.05em;">Instructores y Horarios</span>
                                 </div>
                                 <button type="button"
-                                        class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
+                                        class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1"
                                         onclick="agregarFilaInstructor()">
                                     <i data-lucide="plus" style="width:13px;height:13px;"></i>
                                     Añadir instructor
@@ -132,7 +132,7 @@
                         <!-- Acciones -->
                         <div class="p-4 pt-3 d-flex flex-column gap-2">
                             <button type="submit"
-                                    class="btn btn-primary py-2 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2"
+                                    class="btn btn-guardar py-2 d-flex align-items-center justify-content-center gap-2"
                                     id="btnSubmitActividad">
                                 <i data-lucide="save" style="width:16px;height:16px;"></i>
                                 <span th:text="${actividad.idActividad != null} ? 'Guardar Cambios' : 'Crear Actividad'">
@@ -140,7 +140,7 @@
                                 </span>
                             </button>
                             <a th:href="@{/actividades}"
-                               class="btn btn-link text-decoration-none text-muted btn-sm text-center">
+                               class="btn btn-cancelar btn-sm text-center">
                                 Cancelar
                             </a>
                         </div>
