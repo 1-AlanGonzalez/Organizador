@@ -1,152 +1,205 @@
-# Sistema De Gestión De Clientes Y Asistencias
-## Modelo de Dominio
+# Gym Manager
 
-El sistema está compuesto por las siguientes entidades principales:
+Aplicación web para administrar la operación diaria de un gimnasio desde un único lugar. Permite gestionar clientes, actividades, instructores, asistencias, cobros y reportes, con acceso autenticado y soporte para múltiples usuarios.
 
-## Cliente
+La interfaz es responsive y cuenta con temas claro y oscuro.
 
-Representa a una persona que se inscribe en una o más actividades.
+## Funcionalidades
 
-### Atributos:
+- Dashboard con métricas de ingresos, estado de clientes, deudores y próximos vencimientos.
+- Alta, edición, consulta y baja de clientes.
+- Inscripción de clientes en una o varias actividades.
+- Administración de actividades, horarios, cupos e instructores.
+- Registro y consulta de asistencias.
+- Gestión de pagos, deudas, recargos y métodos de pago.
+- Generación de comprobantes imprimibles.
+- Exportación de reportes personalizados a Excel.
+- Configuración de los datos del gimnasio y del contenido de los tickets.
+- Administración de usuarios con permisos diferenciados.
+- Autenticación, control de sesiones y contraseñas cifradas.
+- Diseño responsive con modo oscuro persistente.
 
-- id (Long)
+## Tecnologías
 
-- nombre (String)
+### Backend
 
-- apellido (String)
+- Java 21
+- Spring Boot 4
+- Spring MVC
+- Spring Data JPA
+- Spring Security
+- Hibernate
+- MariaDB
+- Apache POI para archivos Excel
+- Maven
 
-- telefono (String)
+### Frontend
 
-- dni (String)
+- Thymeleaf
+- HTML, CSS y JavaScript
+- Bootstrap 5
+- Lucide Icons y Bootstrap Icons
+- Chart.js y ApexCharts
+- Tom Select
 
-### Responsabilidades:
+## Requisitos
 
-- Almacenar información personal del cliente
-- Se relaciona con Asistencia para el registro de cuándo asistió.
-- Se relaciona con ClienteActividad para inscribirse a una o varias actividades
+Antes de ejecutar el proyecto necesitás:
 
-## Actividad
+- JDK 21
+- MariaDB
+- Maven 3.9 o el Maven Wrapper incluido
+- Un navegador moderno
 
-Representa una actividad disponible (ej: Funcional, Gym, Boxeo).
+Podés comprobar las instalaciones con:
 
-### Atributos:
+```bash
+java -version
+mvn -version
+```
 
-id (Long)
+## Configuración local
 
-nombre (String)
+### 1. Clonar el repositorio
 
-cupoMaximo (int)
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd Organizador
+```
 
-precio (BigDecimal)
+### 2. Crear la base de datos
 
-instructor (Instructor)
+Ingresá a MariaDB y creá la base utilizada por la aplicación:
 
-### Responsabilidades:
+```sql
+CREATE DATABASE GymOrganization
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+```
 
-Definir las características de la actividad
+### 3. Configurar la conexión
 
-Controlar el cupo máximo
+Actualizá `src/main/resources/application.properties` con los datos de tu instalación:
 
-Se relaciona con ClienteActividad para relacionarse con todos los clientes que se inscriben
-Se relaciona con Asistencia para saber quién asistió
-Tiene un instructor como atributo 
-## Instructor
+```properties
+spring.datasource.url=jdbc:mariadb://localhost:3306/GymOrganization
+spring.datasource.username=TU_USUARIO
+spring.datasource.password=TU_CONTRASEÑA
+spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
 
-Representa a la persona encargada de dictar una actividad.
+spring.jpa.hibernate.ddl-auto=update
+```
 
-### Atributos:
+No utilices credenciales reales ni contraseñas de producción dentro de archivos versionados.
 
-id (Long)
+### 4. Configurar el administrador inicial
 
-nombre (String)
+Al iniciar con una base vacía, la aplicación crea un usuario `admin`. Su contraseña se obtiene de la propiedad `app.admin.password` y dispone de un valor de desarrollo si no se configura.
 
-apellido (String)
+Para definirla mediante una variable de entorno en PowerShell:
 
-dni (String)
+```powershell
+$env:APP_ADMIN_PASSWORD="una-contraseña-segura"
+```
 
-telefono (String)
+En Linux o macOS:
 
-### Responsabilidades:
+```bash
+export APP_ADMIN_PASSWORD="una-contraseña-segura"
+```
 
-Identificar al instructor de una actividad
+La variable debe establecerse antes del primer inicio que crea al administrador.
 
-Permitir reutilización del instructor en múltiples actividades
+## Ejecución
 
-## Asistencia
+Con Maven instalado:
 
-Registra la presencia de un cliente en una actividad en una fecha determinada.
+```bash
+mvn spring-boot:run
+```
 
-### Atributos:
+Con Maven Wrapper en Windows:
 
-id (Long)
+```powershell
+.\mvnw.cmd spring-boot:run
+```
 
-fecha (LocalDate)
+Con Maven Wrapper en Linux o macOS:
 
-cliente (Cliente)
+```bash
+./mvnw spring-boot:run
+```
 
-actividad (Actividad)
+Luego abrí:
 
-### Responsabilidades:
+```text
+http://localhost:8080
+```
 
-Registrar asistencias diarias.
+## Compilación
 
-Se relaciona con Cliente para saber quién asistió
-Se relaciona con Actividad para saber a qué actividad asistió
+Para generar el archivo ejecutable:
 
+```bash
+mvn clean package
+```
 
-## Pago
+El resultado se crea dentro de `target/`. Podés ejecutarlo con:
 
-Representa un pago realizado por un cliente respecto a una actividad.
+```bash
+java -jar target/gym-manager-0.0.1-SNAPSHOT.jar
+```
 
-### Atributos:
+Para activar el perfil de producción:
 
-id (Long)
+```bash
+java -jar target/gym-manager-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+```
 
-tipoPago (enum: EFECTIVO | TRANSFERENCIA)
+Antes de usar ese perfil, configurá la conexión a la base de datos y las credenciales mediante secretos o variables del entorno de despliegue.
 
-monto (BigDecimal)
+## Estructura del proyecto
 
-### Responsabilidades:
+```text
+src/
+├── main/
+│   ├── java/com/gymmanager/gym_manager/
+│   │   ├── config/          # Seguridad y configuración general
+│   │   ├── controllers/     # Rutas y manejo de solicitudes
+│   │   ├── entity/          # Entidades JPA y DTO
+│   │   ├── initializers/    # Datos y configuración inicial
+│   │   ├── repository/      # Acceso a MariaDB
+│   │   └── services/        # Lógica de negocio y exportaciones
+│   └── resources/
+│       ├── static/          # CSS, JavaScript e imágenes
+│       ├── templates/       # Vistas Thymeleaf
+│       ├── application.properties
+│       └── application-prod.properties
+└── test/                    # Pruebas automatizadas
+```
 
-Registrar pagos por un cliente 
+## Módulos principales
 
-Asociar pagos a una inscripción concreta
+| Módulo | Descripción |
+| --- | --- |
+| Inicio | Métricas y resumen operativo del gimnasio |
+| Clientes | Datos personales, inscripciones e historial |
+| Actividades | Precios, cupos, horarios e instructores |
+| Asistencias | Registro diario de presentes |
+| Ingresos | Pagos, deudas, métodos y comprobantes |
+| Reportes | Selección de datos y exportación a Excel |
+| Configuración | Datos del gimnasio, tickets, pagos y cuenta |
+| Usuarios | Administración de accesos para el rol administrador |
 
-Se relacionaría con ClienteActividad debido a que cada pago está asociado a una inscripción
+## Seguridad
 
-## ClienteActividad (Entidad intermedia)
+- Las contraseñas se almacenan cifradas con BCrypt.
+- Las rutas internas requieren autenticación.
+- La administración de usuarios está restringida al rol `ADMIN`.
+- Las sesiones expiran después de un período de inactividad.
+- Los formularios protegidos utilizan tokens CSRF de Spring Security.
 
-Modela la relación muchos a muchos entre Cliente y Actividad.
+## Estado del proyecto
 
-### Atributos:
+El proyecto se encuentra en desarrollo activo. Algunas funcionalidades y configuraciones pueden cambiar hasta alcanzar una versión estable.
 
-id (Long)
-
-cliente (Cliente)
-
-actividad (Actividad)
-
-fechaInscripcion (LocalDate)
-
-costo (BigDecimal)
-
-## Responsabilidades:
-
-Entidad intermedia entre Cliente y Actividad, porque un cliente puede tener muchas actividades y una actividad puede tener muchos clientes.
-
-Servir como referencia para pagos
-
-Se relaciona con Cliente y Actividad
-
-Se relaciona con Pago 
-
-
-# Flujo de uso conceptual
-
-Cliente se inscribe en Actividad → se crea un registro en ClienteActividad.
-
-Cliente realiza pagos → se crean registros en Pago, referenciando ClienteActividad.
-
-Cliente asiste a clases → se crean registros en Asistencia, asociando Cliente y Actividad.
-
-Actividad tiene un Instructor asignado 
