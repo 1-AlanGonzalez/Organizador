@@ -188,4 +188,100 @@ public String nuevoIngreso(Model model) {
                 .filter(d -> d.montoAdeudado().compareTo(BigDecimal.ZERO) > 0)
                 .toList();
     }
+
+    // ── POST /ingresos/eliminar ────────────────────────────────────────────────
+    @PostMapping("/eliminar/{id}")
+    public String eliminarPago(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            pagoService.eliminarPago(id);
+            redirectAttributes.addFlashAttribute("success", "Pago eliminado correctamente");
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/ingresos";
+    }
+
+
+    // ── GET /ingresos/editar ──────────────────────────────────────────────────
+
+    @GetMapping("/editar/{id}")
+    public String editarPago(@PathVariable Integer id, Model model) {
+
+        Pago pago = pagoService.obtenerPago(id);
+        Usuario usuario = securityUtils.getUsuarioActual();
+
+        model.addAttribute("pago", pago);
+        model.addAttribute(
+                "metodosPago",
+                configuracionDePagoService.listarActivos(usuario)
+        );
+
+        // Panel que se va a cargar
+        model.addAttribute(
+                "vista",
+                "ingresos/fragments/ingresos-editar"
+        );
+
+        // th:fragment del HTML
+        model.addAttribute(
+                "fragmento",
+                "panelIngreso"
+        );
+
+        model.addAttribute(
+                "title",
+                "Gym Manager | Editar Pago"
+        );
+
+        model.addAttribute(
+                "header",
+                "Contabilidad / Editar Pago"
+        );
+
+        model.addAttribute(
+                "active",
+                "ingresos"
+        );
+
+        return "layouts/main";
+    }
+
+    @PostMapping("/editar/{id}")
+    public String actualizarPago(
+            @PathVariable Integer id,
+            @RequestParam Integer metodoPagoId,
+            @RequestParam(required = false) String observaciones,
+            @RequestParam LocalDate fechaDePago,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+
+            pagoService.editarPago(
+                    id,
+                    metodoPagoId,
+                    observaciones,
+                    fechaDePago
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "Pago actualizado correctamente"
+            );
+
+            return "redirect:/ingresos";
+
+        } catch (Exception e) {
+
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    e.getMessage()
+            );
+
+            return "redirect:/ingresos/editar/" + id;
+        }
+    }
+
+
 }
