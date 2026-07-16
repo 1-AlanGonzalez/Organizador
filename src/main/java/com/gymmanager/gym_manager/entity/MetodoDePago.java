@@ -2,15 +2,7 @@ package com.gymmanager.gym_manager.entity;
 
 import com.gymmanager.gym_manager.entity.Anotation.ColumnLabel;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +12,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table
+@Table(
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {"usuario_id", "nombre"}
+        )
+)
 public class MetodoDePago {
 
     @Id
@@ -28,7 +24,7 @@ public class MetodoDePago {
     @Column(name = "ID_METODO")
     private Integer idMetodoDePago;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     @ColumnLabel("Metodo Utilizado")
     private String nombre;
 

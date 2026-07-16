@@ -104,7 +104,7 @@ public class ConfiguracionController {
     @ResponseBody
     public ResponseEntity<Void> desactivarMetodo(@PathVariable Integer idMetodo) {
         try {
-            configuracionDePagoService.desactivarMetodo(idMetodo);
+            configuracionDePagoService.desactivarMetodo(idMetodo, securityUtils.getUsuarioActual());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(409).build();
@@ -115,7 +115,7 @@ public class ConfiguracionController {
     @ResponseBody
     public ResponseEntity<Void> reactivarMetodo(@PathVariable Integer idMetodo) {
         try {
-            configuracionDePagoService.reactivarMetodo(idMetodo);
+            configuracionDePagoService.reactivarMetodo(idMetodo, securityUtils.getUsuarioActual());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(409).build();
@@ -126,7 +126,7 @@ public class ConfiguracionController {
     @ResponseBody
     public ResponseEntity<Void> eliminarPermanente(@PathVariable Integer idMetodo) {
         try {
-            configuracionDePagoService.eliminarMetodoPermanente(idMetodo);
+            configuracionDePagoService.eliminarMetodoPermanente(idMetodo, securityUtils.getUsuarioActual());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(409).build();

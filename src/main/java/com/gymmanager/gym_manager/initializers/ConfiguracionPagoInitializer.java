@@ -54,10 +54,10 @@ public class ConfiguracionPagoInitializer implements  CommandLineRunner {
             return;
         }
 
-        crearSiNoExiste("No especificado", BigDecimal.ZERO, admin);
-        crearSiNoExiste("Efectivo", BigDecimal.ZERO, admin);
-        crearSiNoExiste("Transferencia", BigDecimal.ZERO, admin);
-        crearSiNoExiste("Tarjeta/Crédito", BigDecimal.valueOf(15), admin);
+        crearSiNoExiste("NO_ESPECIFICADO", BigDecimal.ZERO, admin);
+        crearSiNoExiste("EFECTIVO", BigDecimal.ZERO, admin);
+        crearSiNoExiste("TRANSFERENCIA", BigDecimal.ZERO, admin);
+        crearSiNoExiste("TARJETA/CREDITO", BigDecimal.valueOf(15), admin);
 
 
     }

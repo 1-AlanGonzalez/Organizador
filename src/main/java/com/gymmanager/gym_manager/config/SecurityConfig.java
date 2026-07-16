@@ -2,6 +2,7 @@ package com.gymmanager.gym_manager.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,9 +15,12 @@ import com.gymmanager.gym_manager.services.UserDetailsServiceImpl;
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final int maximumSessions;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService,
+                          @Value("${app.security.maximum-sessions:1}") int maximumSessions) {
         this.userDetailsService = userDetailsService;
+        this.maximumSessions = maximumSessions;
     }
 
     @Bean
@@ -26,11 +30,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/login",
-                    "/olvide-password", 
+                    "/olvide-password",
                     "/css/**",
                     "/js/**",
-                    "/images/logo/**",
-                    "/exportar/**"
+                    "/images/logo/**"
                 ).permitAll()
                 .requestMatchers("/usuarios/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
@@ -45,7 +48,7 @@ public class SecurityConfig {
             )
             .sessionManagement(session -> session
                 .invalidSessionUrl("/login?session=expirada")
-                .maximumSessions(1)
+                .maximumSessions(maximumSessions)
                 .expiredUrl("/login?session=expirada")
             );
 

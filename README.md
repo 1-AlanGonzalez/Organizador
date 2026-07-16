@@ -63,7 +63,7 @@ mvn -version
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <URL_DEL_REPOSITORIO>
+git clone https://github.com/1-AlanGonzalez/Organizador.git
 cd Organizador
 ```
 
@@ -77,24 +77,31 @@ CREATE DATABASE GymOrganization
     COLLATE utf8mb4_unicode_ci;
 ```
 
-### 3. Configurar la conexión
+### 3. Configurar las variables de entorno
 
-Actualizá `src/main/resources/application.properties` con los datos de tu instalación:
+Copiá `.env.example` como `.env` y reemplazá sus valores con los de tu entorno local:
 
-```properties
-spring.datasource.url=jdbc:mariadb://localhost:3306/GymOrganization
-spring.datasource.username=TU_USUARIO
-spring.datasource.password=TU_CONTRASEÑA
-spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
-
-spring.jpa.hibernate.ddl-auto=update
+```dotenv
+DB_URL=jdbc:mariadb://localhost:3306/GymOrganization
+DB_USERNAME=root
+DB_PASSWORD=tu_contraseña_local
+APP_ADMIN_PASSWORD=una_contraseña_segura
 ```
 
-No utilices credenciales reales ni contraseñas de producción dentro de archivos versionados.
+El archivo `.env` está ignorado por Git y nunca debe subirse al repositorio. La aplicación lo importa desde la raíz mediante `spring.config.import`. Las variables del sistema siguen teniendo prioridad, por lo que en producción podés configurar secretos directamente desde el servidor o la plataforma de despliegue.
+
+En PowerShell:
+
+```powershell
+$env:DB_URL="jdbc:mariadb://localhost:3306/GymOrganization"
+$env:DB_USERNAME="root"
+$env:DB_PASSWORD="tu_contraseña_local"
+$env:APP_ADMIN_PASSWORD="una_contraseña_segura"
+```
 
 ### 4. Configurar el administrador inicial
 
-Al iniciar con una base vacía, la aplicación crea un usuario `admin`. Su contraseña se obtiene de la propiedad `app.admin.password` y dispone de un valor de desarrollo si no se configura.
+Al iniciar con una base vacía, la aplicación crea un usuario `admin`. Su contraseña se obtiene de `APP_ADMIN_PASSWORD`, que debe estar definida en `.env` o en el entorno antes de iniciar.
 
 Para definirla mediante una variable de entorno en PowerShell:
 
@@ -202,4 +209,3 @@ src/
 ## Estado del proyecto
 
 El proyecto se encuentra en desarrollo activo. Algunas funcionalidades y configuraciones pueden cambiar hasta alcanzar una versión estable.
-

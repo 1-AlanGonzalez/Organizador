@@ -57,8 +57,9 @@ public class ConfiguracionDePagoService {
 
     // ── Actualizar recargo de una ConfiguracionDePago existente ───────────────
 
-       public void actualizarRecargo(Integer idConfiguracion, BigDecimal nuevoRecargo) {
-        ConfiguracionDePago config = configuracionDePagoRepository.findById(idConfiguracion)
+       public void actualizarRecargo(Integer idConfiguracion, BigDecimal nuevoRecargo, Usuario usuario) {
+        ConfiguracionDePago config = configuracionDePagoRepository
+                .findByIdAndMetodoDePago_Usuario(idConfiguracion, usuario)
                 .orElseThrow(() -> new RuntimeException(
                         "Configuración no encontrada: " + idConfiguracion));
         config.cambiarOAgregarRecargo(nuevoRecargo != null ? nuevoRecargo : BigDecimal.ZERO);
@@ -92,8 +93,8 @@ public class ConfiguracionDePagoService {
         }
 
     // ── Soft-delete: desactiva la ConfiguracionDePago activa del método ──────
-        public void desactivarMetodo(Integer idMetodo) {
-        MetodoDePago metodo = metodoDePagoRepository.findById(idMetodo)
+        public void desactivarMetodo(Integer idMetodo, Usuario usuario) {
+        MetodoDePago metodo = metodoDePagoRepository.findByIdMetodoDePagoAndUsuario(idMetodo, usuario)
                 .orElseThrow(() -> new RuntimeException("Método no encontrado: " + idMetodo));
 
         ConfiguracionDePago config = configuracionDePagoRepository
@@ -106,8 +107,8 @@ public class ConfiguracionDePagoService {
 
     // ── Reactivar método ──────────────────────────────────────────────────────
 
-    public void reactivarMetodo(Integer idMetodo) {
-        MetodoDePago metodo = metodoDePagoRepository.findById(idMetodo)
+    public void reactivarMetodo(Integer idMetodo, Usuario usuario) {
+        MetodoDePago metodo = metodoDePagoRepository.findByIdMetodoDePagoAndUsuario(idMetodo, usuario)
                 .orElseThrow(() -> new IllegalArgumentException("Método no encontrado: " + idMetodo));
 
         ConfiguracionDePago config = configuracionDePagoRepository
@@ -119,8 +120,8 @@ public class ConfiguracionDePagoService {
     }
 
      // ── Eliminar permanente ───────────────────────────────────────────────────
-      public void eliminarMetodoPermanente(Integer idMetodo) {
-        MetodoDePago metodo = metodoDePagoRepository.findById(idMetodo)
+      public void eliminarMetodoPermanente(Integer idMetodo, Usuario usuario) {
+        MetodoDePago metodo = metodoDePagoRepository.findByIdMetodoDePagoAndUsuario(idMetodo, usuario)
                 .orElseThrow(() -> new IllegalArgumentException("Método no encontrado: " + idMetodo));
 
         if (configuracionDePagoRepository.existsByMetodoDePagoAndActivoTrue(metodo))
@@ -151,7 +152,7 @@ public class ConfiguracionDePagoService {
         for (int i = 0; i < configIds.size(); i++) {
             BigDecimal recargo = (configRecargoList == null || i >= configRecargoList.size() || configRecargoList.get(i) == null)
                 ? BigDecimal.ZERO : configRecargoList.get(i);
-            actualizarRecargo(configIds.get(i), recargo);
+            actualizarRecargo(configIds.get(i), recargo, usuario);
         }
     }
     if (nuevosNombres != null) {

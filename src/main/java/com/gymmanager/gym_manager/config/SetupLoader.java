@@ -13,10 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Order(1)
 public class SetupLoader {
 
-    // Lee la contraseña de una variable de entorno.
-    // Si no existe la variable, usa "admin123" como fallback SOLO para desarrollo.
-    // En producción: export APP_ADMIN_PASSWORD=ContraseñaSegura
-    @Value("${app.admin.password:admin123}")
+    // APP_ADMIN_PASSWORD es obligatoria y no se almacena en el repositorio.
+    @Value("${app.admin.password}")
     private String adminPassword;
 
     @Bean

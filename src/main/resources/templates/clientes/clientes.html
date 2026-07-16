@@ -26,16 +26,18 @@
     </div>
 
     <!-- SubHeader / Divisor para filtros  -->
-    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
-    <div class="row g-2">
+    <form class="card custom-card mb-3 p-3 flex-shrink-0 border-0"
+          method="get" th:action="@{/clientes}">
+    <div class="row g-2 align-items-center">
         <div class="col-md-4">
             <div class="input-group input-group-sm">
                 <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="search" style="width:14px;height:14px;"></i>
                     </span>
-                <input id="filtroClientes" type="text"
+                <input id="filtroClientes" name="q" type="search"
                        class="form-control border-start-0 ps-0 bg-light"
-                       placeholder="Buscar por nombre, apellido, fecha, estado...">
+                       th:value="${q}"
+                       placeholder="Buscar por nombre, apellido o DNI...">
             </div>
         </div>
         <div class="col-md-4">
@@ -43,17 +45,24 @@
                 <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="filter" style="width:14px;height:14px;"></i>
                     </span>
-                <select id="filtroActividadClientes" class="form-select form-select-sm border-start-0 bg-light">
-                    <option value="todos">Todas las actividades</option>
+                <select id="filtroActividadClientes" name="actividad"
+                        class="form-select form-select-sm border-start-0 bg-light">
+                    <option value="">Todas las actividades</option>
                     <option th:each="act : ${actividades}"
                             th:value="${act.nombre}"
+                            th:selected="${act.nombre == actividadFiltro}"
                             th:text="${act.nombre}">
                     </option>
                 </select>
             </div>
         </div>
+        <div class="col-md-auto d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+            <a th:if="${!#strings.isEmpty(q) or !#strings.isEmpty(actividadFiltro)}"
+               th:href="@{/clientes}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+        </div>
     </div>
-</div>
+</form>
 
     <!-- Main / Divisor para la tabla -->
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
@@ -199,7 +208,33 @@
                 </tbody>
             </table>
         </div>
-        <div id="paginadorClientes" class="border-top px-3 flex-shrink-0"></div>
+        <div class="border-top px-3 py-2 flex-shrink-0 d-flex align-items-center justify-content-between">
+            <span class="text-muted small">
+                Mostrando <strong th:text="${primerCliente}">0</strong>–<strong th:text="${ultimoCliente}">0</strong>
+                de <strong th:text="${totalClientes}">0</strong>
+            </span>
+            <nav th:if="${totalPaginas > 1}" aria-label="Paginación de clientes">
+                <ul class="pagination pagination-sm mb-0 gap-1">
+                    <li class="page-item" th:classappend="${paginaActual == 0} ? 'disabled'">
+                        <a class="page-link border-0 rounded-2 px-2"
+                           th:href="${paginaActual == 0} ? '#' : @{/clientes(page=${paginaActual - 1},q=${q},actividad=${actividadFiltro})}"
+                           aria-label="Página anterior">‹</a>
+                    </li>
+                    <li class="page-item"
+                        th:each="numeroPagina : ${#numbers.sequence(paginaInicial, paginaFinal)}">
+                        <a class="page-link border-0 rounded-2 px-3"
+                           th:classappend="${numeroPagina == paginaActual} ? 'page-active'"
+                           th:href="@{/clientes(page=${numeroPagina},q=${q},actividad=${actividadFiltro})}"
+                           th:text="${numeroPagina + 1}">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${paginaActual + 1 >= totalPaginas} ? 'disabled'">
+                        <a class="page-link border-0 rounded-2 px-2"
+                           th:href="${paginaActual + 1 >= totalPaginas} ? '#' : @{/clientes(page=${paginaActual + 1},q=${q},actividad=${actividadFiltro})}"
+                           aria-label="Página siguiente">›</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
     <div id="panelEliminarOverlay"
          class="panel-overlay d-none"
@@ -212,8 +247,4 @@
 
     <!-- Scripts -->
 <script th:src="@{/js/clientes.js}"></script>
-<script th:src="@{/js/pagination.js}"></script>
-<script>
-    initPaginator('tablaClientes', 'paginadorClientes', 10);
-</script>
 </div>

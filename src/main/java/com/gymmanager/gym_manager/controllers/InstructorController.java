@@ -1,6 +1,9 @@
 package com.gymmanager.gym_manager.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -33,10 +36,18 @@ public class InstructorController {
 
     // ── Listado ───────────────────────────────────────────────────────────────
     @GetMapping
-    public String instructores(Model model) {
+    public String instructores(@RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "") String q,
+                               Model model) {
         Usuario usuario = securityUtils.getUsuarioActual();
+        String texto = q.trim();
+        Page<Instructor> pagina = instructorRepository.buscarPagina(
+                usuario, texto,
+                PageRequest.of(Math.max(page, 0), 20, Sort.by("apellido", "nombre").ascending()));
 
-        model.addAttribute("instructores", instructorRepository.findByUsuario(usuario));
+        model.addAttribute("instructores", pagina.getContent());
+        model.addAttribute("pagina", pagina);
+        model.addAttribute("q", texto);
         model.addAttribute("actividades",  actividadRepository.findByUsuario(usuario));
         model.addAttribute("title",     "Gym Manager | Instructores");
         model.addAttribute("header",    "Panel de control / Instructores");
@@ -61,7 +72,10 @@ public class InstructorController {
     @GetMapping("/editar/{id}")
     public String editarInstructor(@PathVariable Integer id, Model model,
                                    RedirectAttributes redirectAttributes) {
-        Instructor instructor = instructorRepository.findById(id).orElse(null);
+        Instructor instructor = instructorRepository.findByIdInstructorAndUsuario(
+                id,
+                securityUtils.getUsuarioActual()
+        ).orElse(null);
         if (instructor == null) {
             redirectAttributes.addFlashAttribute("error", "Instructor no encontrado.");
             return "redirect:/instructores";
@@ -81,24 +95,77 @@ public class InstructorController {
                                     RedirectAttributes redirectAttributes) {
         Usuario usuario = securityUtils.getUsuarioActual();
 
-        // Validar DNI duplicado solo en creación
-        if (instructor.getIdInstructor() == null &&
-                instructorRepository.existsByDniAndUsuario(instructor.getDni(), usuario)) {
-            redirectAttributes.addFlashAttribute("error", "El DNI ya está registrado.");
+        if (instructor.getIdInstructor() == null) {
+            return crearInstructor(instructor, usuario, redirectAttributes);
+        }
+
+        return actualizarInstructor(instructor, usuario, redirectAttributes);
+    }
+
+    private String crearInstructor(Instructor datosFormulario,
+                                   Usuario usuario,
+                                   RedirectAttributes redirectAttributes) {
+        if (instructorRepository.existsByDniAndUsuario(
+                datosFormulario.getDni(), usuario)) {
+            redirectAttributes.addFlashAttribute(
+                    "error", "El DNI ya está registrado."
+            );
             return "redirect:/instructores/nuevo";
         }
 
-        instructor.setUsuario(usuario);
-        instructorRepository.save(instructor);
-        redirectAttributes.addFlashAttribute("success", "Instructor guardado con éxito.");
+        Instructor nuevoInstructor = new Instructor();
+        copiarDatosPermitidos(datosFormulario, nuevoInstructor);
+        nuevoInstructor.setUsuario(usuario);
+
+        instructorRepository.save(nuevoInstructor);
+
+        redirectAttributes.addFlashAttribute(
+                "success", "Instructor guardado con éxito."
+        );
         return "redirect:/instructores";
+    }
+
+    private String actualizarInstructor(Instructor datosFormulario,
+                                        Usuario usuario,
+                                        RedirectAttributes redirectAttributes) {
+        Instructor instructorDb = instructorRepository
+                .findByIdInstructorAndUsuario(
+                        datosFormulario.getIdInstructor(),
+                        usuario
+                )
+                .orElse(null);
+
+        if (instructorDb == null) {
+            redirectAttributes.addFlashAttribute(
+                    "error", "Instructor no encontrado."
+            );
+            return "redirect:/instructores";
+        }
+
+        copiarDatosPermitidos(datosFormulario, instructorDb);
+        instructorRepository.save(instructorDb);
+
+        redirectAttributes.addFlashAttribute(
+                "success", "Instructor actualizado con éxito."
+        );
+        return "redirect:/instructores";
+    }
+
+    private void copiarDatosPermitidos(Instructor origen, Instructor destino) {
+        destino.setNombre(origen.getNombre());
+        destino.setApellido(origen.getApellido());
+        destino.setDni(origen.getDni());
+        destino.setTelefono(origen.getTelefono());
     }
 
     // ── Eliminar ──────────────────────────────────────────────────────────────
     @PostMapping("/eliminar/{id}")
     public String eliminarInstructor(@PathVariable Integer id,
                                      RedirectAttributes redirectAttributes) {
-        Instructor instructor = instructorRepository.findById(id).orElse(null);
+        Instructor instructor = instructorRepository.findByIdInstructorAndUsuario(
+                id,
+                securityUtils.getUsuarioActual()
+        ).orElse(null);
         if (instructor == null) {
             redirectAttributes.addFlashAttribute("error", "Instructor no encontrado.");
             return "redirect:/instructores";

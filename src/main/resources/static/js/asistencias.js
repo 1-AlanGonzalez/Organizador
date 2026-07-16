@@ -45,16 +45,18 @@ function actualizarContador() {
 // ── DOM Ready ─────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Input de texto
     const filtroInput = document.getElementById('filtroAsistencias');
+    let temporizador;
     if (filtroInput) {
-        filtroInput.addEventListener('input', filtrarTabla);
+        filtroInput.addEventListener('input', () => {
+            clearTimeout(temporizador);
+            temporizador = setTimeout(() => filtroInput.closest('form')?.requestSubmit(), 350);
+        });
     }
 
-    // Select de actividad
     const filtroActividad = document.getElementById('filtroActividad');
     if (filtroActividad) {
-        filtroActividad.addEventListener('change', filtrarTabla);
+        filtroActividad.addEventListener('change', () => filtroActividad.closest('form')?.requestSubmit());
     }
 
     actualizarContador();

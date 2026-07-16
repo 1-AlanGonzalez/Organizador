@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 import com.gymmanager.gym_manager.entity.Actividad;
 import com.gymmanager.gym_manager.entity.ActividadCliente;
@@ -38,9 +41,29 @@ public interface ClienteActividadRepository extends JpaRepository<ActividadClien
     @Query("SELECT ac FROM ActividadCliente ac WHERE ac.estado = 'ACTIVA'")
     List<ActividadCliente> findAllActivas();
 
-    List<ActividadCliente> findByEstado(EstadoInscripcion estadoInscripcion);
     List<ActividadCliente> findByEstadoAndCliente_Usuario(EstadoInscripcion estado, Usuario usuario);
 
+    @Query("""
+        SELECT ac FROM ActividadCliente ac
+        WHERE ac.estado = :estado
+          AND ac.cliente.usuario = :usuario
+          AND (:texto = ''
+               OR LOWER(ac.cliente.nombre) LIKE LOWER(CONCAT('%', :texto, '%'))
+               OR LOWER(ac.cliente.apellido) LIKE LOWER(CONCAT('%', :texto, '%'))
+               OR LOWER(COALESCE(ac.cliente.dni, '')) LIKE LOWER(CONCAT('%', :texto, '%')))
+          AND (:idActividad IS NULL OR ac.actividad.idActividad = :idActividad)
+        """)
+    Page<ActividadCliente> buscarActivas(
+            @Param("estado") EstadoInscripcion estado,
+            @Param("usuario") Usuario usuario,
+            @Param("texto") String texto,
+            @Param("idActividad") Integer idActividad,
+            Pageable pageable);
+    Optional<ActividadCliente>
+    findByIdActividadClienteAndCliente_Usuario(
+            Integer idActividadCliente,
+            Usuario usuario
+    );
 }
 
 

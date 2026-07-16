@@ -18,7 +18,8 @@
     </div>
 
     <!-- Filtros -->
-    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
+    <form class="card custom-card mb-3 p-3 flex-shrink-0 border-0" method="get" th:action="@{/asistencias/tomar}">
+        <input type="hidden" name="fecha" th:value="${fechaHoy}">
         <div class="row g-2 align-items-center">
             <div class="col-md-3">
                 <div class="input-group input-group-sm">
@@ -35,7 +36,7 @@
                     <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="search" style="width:14px;height:14px;"></i>
                     </span>
-                    <input id="filtroAsistencias" type="text"
+                    <input id="filtroAsistencias" name="q" type="search" th:value="${q}"
                            class="form-control form-control-sm border-start-0 ps-0 bg-light"
                            placeholder="Buscar por nombre, DNI...">
                 </div>
@@ -45,24 +46,25 @@
                     <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="filter" style="width:14px;height:14px;"></i>
                     </span>
-                    <select id="filtroActividad" class="form-select form-select-sm border-start-0 bg-light text-muted"
-                            onchange="filtrarTabla()">
-                        <option value="todos">Todas las actividades</option>
+                    <select id="filtroActividad" name="idActividad" class="form-select form-select-sm border-start-0 bg-light text-muted">
+                        <option value="">Todas las actividades</option>
                         <option th:each="act : ${actividades}"
-                                th:value="${act.nombre}"
+                                th:value="${act.idActividad}"
+                                th:selected="${act.idActividad == idActividadSeleccionada}"
                                 th:text="${act.nombre}">
                         </option>
                     </select>
                 </div>
             </div>
             <div class="col-md-3 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary btn-sm me-2">Buscar</button>
                 <span class="badge bg-light text-dark border rounded-pill px-3 py-2 d-flex align-items-center gap-2">
                     <i data-lucide="user-check" style="width:13px;height:13px;" class="text-success"></i>
                     Marcados: <span id="contadorPresentes" class="fw-bold text-success">0</span>
                 </span>
             </div>
         </div>
-    </div>
+    </form>
 
     <!-- Tabla -->
     <form id="formAsistencia" th:action="@{/asistencias/guardar}" method="post">
@@ -120,6 +122,16 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="border-top px-3 py-2 d-flex justify-content-between align-items-center">
+                <span class="small text-muted" th:text="${'Alumnos: ' + pagina.totalElements}"></span>
+                <div class="btn-group btn-group-sm" th:if="${pagina.totalPages > 1}">
+                    <a class="btn btn-outline-secondary" th:classappend="${pagina.first} ? 'disabled'"
+                       th:href="@{/asistencias/tomar(page=${pagina.number - 1},fecha=${fechaHoy},q=${q},idActividad=${idActividadSeleccionada})}">Anterior</a>
+                    <span class="btn btn-outline-secondary disabled" th:text="${pagina.number + 1 + ' / ' + pagina.totalPages}"></span>
+                    <a class="btn btn-outline-secondary" th:classappend="${pagina.last} ? 'disabled'"
+                       th:href="@{/asistencias/tomar(page=${pagina.number + 1},fecha=${fechaHoy},q=${q},idActividad=${idActividadSeleccionada})}">Siguiente</a>
+                </div>
             </div>
         </div>
     </form>

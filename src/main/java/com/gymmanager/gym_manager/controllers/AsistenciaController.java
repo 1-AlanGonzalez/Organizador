@@ -4,6 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import com.gymmanager.gym_manager.entity.ActividadCliente;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,18 +46,23 @@ public class AsistenciaController {
 @GetMapping
 public String asistencias(Model model,
                            @RequestParam(required = false) String fecha,
-                           Integer idActividad) {
+                           @RequestParam(required = false) Integer idActividad,
+                           @RequestParam(defaultValue = "") String q,
+                           @RequestParam(defaultValue = "0") int page) {
     Usuario usuario = securityUtils.getUsuarioActual();
     LocalDate fechaReporte = asistenciaService.parsearFecha(fecha);
 
-    List<ReporteAsistenciaDTO> reporte =
-            asistenciaService.generarReporteDiario(fechaReporte, idActividad, usuario);
+    Page<ReporteAsistenciaDTO> reporte = asistenciaService.generarReporteDiarioPaginado(
+            fechaReporte, idActividad, q.trim(), usuario,
+            PageRequest.of(Math.max(page, 0), 20));
 
     model.addAttribute("title",             "Gym Manager | Asistencias");
     model.addAttribute("header",            "Panel de control / Asistencias");
     model.addAttribute("actividades",       actividadRepository.findByUsuario(usuario));
-    model.addAttribute("asistencias",       asistenciaRepository.findByActividadCliente_Cliente_Usuario(usuario));
-    model.addAttribute("reporteAsistencia", reporte);
+    model.addAttribute("reporteAsistencia", reporte.getContent());
+    model.addAttribute("pagina", reporte);
+    model.addAttribute("q", q.trim());
+    model.addAttribute("idActividadSeleccionada", idActividad);
     model.addAttribute("fechaSeleccionada", fechaReporte.toString()); // para que el input muestre la fecha elegida
     model.addAttribute("vista",             "asistencias/asistencias");
     model.addAttribute("fragmento",         "contenido");
@@ -62,7 +71,11 @@ public String asistencias(Model model,
 }
 
     @GetMapping("/tomar")
-    public String tomarAsistencia(Model model) {
+    public String tomarAsistencia(@RequestParam(defaultValue = "") String q,
+                                  @RequestParam(required = false) Integer idActividad,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(required = false) LocalDate fecha,
+                                  Model model) {
         Usuario usuario = securityUtils.getUsuarioActual();
 
         model.addAttribute("title",      "Gym Manager | Tomar Asistencia");
@@ -70,12 +83,16 @@ public String asistencias(Model model,
         model.addAttribute("vista",      "asistencias/asistencias-tomar");
         model.addAttribute("fragmento",  "contenido");
         model.addAttribute("active",     "asistencias");
-        model.addAttribute("fechaHoy",   LocalDate.now());
+        model.addAttribute("fechaHoy",   fecha != null ? fecha : LocalDate.now());
         model.addAttribute("actividades", actividadRepository.findByUsuario(usuario)); 
 
-        model.addAttribute("inscripciones",
-                clienteActividadRepository.findByEstadoAndCliente_Usuario(
-                        EstadoInscripcion.ACTIVA, usuario));                           
+        Page<ActividadCliente> pagina = clienteActividadRepository.buscarActivas(
+                EstadoInscripcion.ACTIVA, usuario, q.trim(), idActividad,
+                PageRequest.of(Math.max(page, 0), 20, Sort.by("cliente.apellido").ascending()));
+        model.addAttribute("inscripciones", pagina.getContent());
+        model.addAttribute("pagina", pagina);
+        model.addAttribute("q", q.trim());
+        model.addAttribute("idActividadSeleccionada", idActividad);
         return "layouts/main";
     }
 

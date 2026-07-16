@@ -244,7 +244,6 @@
 }
 
 .panel-container {
-    width: 100%;
     max-width: 520px;
     background: var(--card-bg);
     animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -332,4 +331,21 @@ html[data-theme="dark"] .input-group:focus-within .form-control {
 
 html[data-theme="dark"] .table tbody tr:hover {
     background-color: var(--table-hover-bg) !important;
+}
+
+/* Controles nativos de fecha y hora en tema oscuro */
+html[data-theme="dark"] input[type="date"],
+html[data-theme="dark"] input[type="month"],
+html[data-theme="dark"] input[type="datetime-local"],
+html[data-theme="dark"] input[type="time"] {
+    color-scheme: dark;
+}
+
+html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+html[data-theme="dark"] input[type="month"]::-webkit-calendar-picker-indicator,
+html[data-theme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+html[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.8) !important;
+    opacity: .9;
+    cursor: pointer;
 }

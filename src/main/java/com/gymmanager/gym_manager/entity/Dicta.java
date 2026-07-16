@@ -23,7 +23,10 @@ import lombok.Setter;
 @Table(
     name = "INSTRUCTOR_ACTIVIDAD",
     uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"ID_ACTIVIDAD", "ID_INSTRUCTOR"})
+        @UniqueConstraint(
+            name = "UK_DICTA_ASIGNACION",
+            columnNames = {"ID_ACTIVIDAD", "ID_INSTRUCTOR", "DIAS", "HORARIO"}
+        )
     }
 )
 public class Dicta {

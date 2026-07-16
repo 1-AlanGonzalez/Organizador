@@ -11,6 +11,8 @@ import com.gymmanager.gym_manager.entity.Usuario;
 
 public interface ConfiguracionPagoRepository extends JpaRepository<ConfiguracionDePago, Integer> {
 
+    Optional<ConfiguracionDePago> findByIdAndMetodoDePago_Usuario(Integer id, Usuario usuario);
+
     Optional<ConfiguracionDePago> findByMetodoDePagoAndActivoTrue(MetodoDePago metodoDePago);
     Optional<ConfiguracionDePago> findByMetodoDePagoAndActivoFalse(MetodoDePago metodoDePago);
 
@@ -22,4 +24,10 @@ public interface ConfiguracionPagoRepository extends JpaRepository<Configuracion
     // ── NUEVOS: filtrados por usuario — la DB hace el trabajo, no Java ────────
     List<ConfiguracionDePago> findByActivoTrueAndMetodoDePago_Usuario(Usuario usuario);
     List<ConfiguracionDePago> findByActivoFalseAndMetodoDePago_Usuario(Usuario usuario);
+
+    Optional<ConfiguracionDePago>
+    findByMetodoDePagoAndActivoTrueAndMetodoDePago_Usuario(
+            MetodoDePago metodo,
+            Usuario usuario
+    );
 }

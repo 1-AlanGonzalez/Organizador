@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.EstadoInscripcion;
@@ -19,6 +21,36 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     // Añadido para el multi-tenant 
     List<Cliente> findByUsuario(Usuario usuario);
+    Page<Cliente> findByUsuario(Usuario usuario, Pageable pageable);
+    @Query(value = """
+        SELECT DISTINCT c
+        FROM Cliente c
+        LEFT JOIN c.inscripciones i
+        LEFT JOIN i.actividad a
+        WHERE c.usuario = :usuario
+          AND (:texto = ''
+               OR LOWER(c.nombre) LIKE LOWER(CONCAT('%', :texto, '%'))
+               OR LOWER(c.apellido) LIKE LOWER(CONCAT('%', :texto, '%'))
+               OR LOWER(COALESCE(c.dni, '')) LIKE LOWER(CONCAT('%', :texto, '%')))
+          AND (:actividad = '' OR a.nombre = :actividad)
+        """,
+        countQuery = """
+        SELECT COUNT(DISTINCT c.idCliente)
+        FROM Cliente c
+        LEFT JOIN c.inscripciones i
+        LEFT JOIN i.actividad a
+        WHERE c.usuario = :usuario
+          AND (:texto = ''
+               OR LOWER(c.nombre) LIKE LOWER(CONCAT('%', :texto, '%'))
+               OR LOWER(c.apellido) LIKE LOWER(CONCAT('%', :texto, '%'))
+               OR LOWER(COALESCE(c.dni, '')) LIKE LOWER(CONCAT('%', :texto, '%')))
+          AND (:actividad = '' OR a.nombre = :actividad)
+        """)
+    Page<Cliente> buscarPagina(
+            @Param("usuario") Usuario usuario,
+            @Param("texto") String texto,
+            @Param("actividad") String actividad,
+            Pageable pageable);
     boolean existsByDniAndUsuario(String dni, Usuario usuario);
     Optional<Cliente> findByIdClienteAndUsuario(Integer id, Usuario usuario);
 

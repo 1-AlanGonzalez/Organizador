@@ -193,10 +193,6 @@ function filtrarClientes() {
         msgVacio.style.display = (visibles === 0) ? "" : "none";
     }
 
-    // Repaginar
-    if (window._paginators?.tablaClientes) {
-        window._paginators.tablaClientes.refresh();
-    }
 }
 
 /* ==========================================================================
@@ -213,12 +209,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     calcularTotal();
 
-    // Conectar filtros
-    const filtroTexto     = document.getElementById("filtroClientes");
+    const filtroClientes = document.getElementById("filtroClientes");
     const filtroActividad = document.getElementById("filtroActividadClientes");
-
-    if (filtroTexto)     filtroTexto.addEventListener("input",  filtrarClientes);
-    if (filtroActividad) filtroActividad.addEventListener("change", filtrarClientes);
+    let temporizadorFiltro;
+    filtroClientes?.addEventListener("input", () => {
+        clearTimeout(temporizadorFiltro);
+        temporizadorFiltro = setTimeout(() => filtroClientes.closest("form")?.requestSubmit(), 350);
+    });
+    filtroActividad?.addEventListener("change", () => filtroActividad.closest("form")?.requestSubmit());
 
     // Teclas
     document.addEventListener("keydown", function (e) {
