@@ -1,0 +1,184 @@
+<div th:fragment="panelIngreso">
+
+    <div class="card custom-card w-100 border-0">
+        <div class="card-body p-4">
+
+            <!-- Header -->
+            <div class="d-flex align-items-center justify-content-between mb-4 pb-3">
+                <div class="d-flex align-items-center gap-3">
+
+                    <div class="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
+                         style="width:42px;height:42px;background:linear-gradient(135deg,#1f2a30,#2d3f46);">
+
+                        <i data-lucide="receipt"
+                           style="width:18px;height:18px;color:#fff;"></i>
+
+                    </div>
+
+                    <div>
+                        <h4 class="fw-bold mb-0">
+                            Editar Pago
+                        </h4>
+
+                        <small class="text-muted">
+                            Modificar los datos del pago registrado
+                        </small>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- Error -->
+            <div th:if="${error}"
+                 class="alert alert-danger"
+                 th:text="${error}">
+            </div>
+
+
+            <!-- Formulario -->
+            <form th:action="@{/ingresos/editar/{id}(id=${pago.idPago})}"
+                  method="post">
+
+                <!-- Cliente -->
+                <div class="mb-4">
+
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <i data-lucide="user"
+                           style="width:14px;height:14px;"></i>
+
+                        <label class="form-label small fw-bold mb-0">
+                            CLIENTE
+                        </label>
+                    </div>
+
+                    <small class="text-muted d-block mb-2">
+                        Cliente asociado a este pago.
+                    </small>
+
+                    <input type="text"
+                           class="form-control"
+                           th:value="${pago.actividadCliente.cliente.nombre + ' ' +
+                                     pago.actividadCliente.cliente.apellido}"
+                           disabled>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- Detalle del pago -->
+                <div class="mb-4">
+
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <i data-lucide="credit-card"
+                           style="width:14px;height:14px;"></i>
+
+                        <label class="form-label small fw-bold mb-0">
+                            DETALLE DEL PAGO
+                        </label>
+                    </div>
+
+                    <small class="text-muted d-block mb-3">
+                        Modificá los datos del pago.
+                    </small>
+
+
+                    <div class="row g-3">
+
+                        <!-- Método de pago -->
+                        <div class="col-md-6">
+
+                            <label class="form-label small fw-bold">
+                                Método de pago
+                            </label>
+
+                            <select name="metodoPagoId"
+                                    class="form-select"
+                                    required>
+
+                                <option value="" disabled>
+                                    Seleccione...
+                                </option>
+
+                                <option th:each="metodo : ${metodosPago}"
+                                        th:value="${metodo.idMetodo}"
+                                        th:text="${metodo.nombre}"
+                                        th:selected="${pago.metodoPago != null
+                                        && pago.metodoPago.idMetodoDePago == metodo.idMetodo}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Observaciones -->
+                        <div class="col-md-6">
+
+                            <label class="form-label small fw-bold">
+                                Observaciones (opcional)
+                            </label>
+
+                            <input type="text"
+                                   name="observaciones"
+                                   class="form-control"
+                                   placeholder="Notas..."
+                                   th:value="${pago.observaciones}">
+
+                        </div>
+
+
+                        <!-- Fecha de pago -->
+                        <div class="col-12">
+
+                            <label class="form-label small fw-bold">
+                                FECHA DE PAGO
+                            </label>
+
+                            <input type="date"
+                                   name="fechaDePago"
+                                   class="form-control"
+                                   th:value="${pago.fechaGeneracion}"
+                                   required>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- Botones -->
+                <div class="d-flex flex-column gap-2">
+
+                    <button type="submit"
+                            class="btn btn-dark-brand py-2 d-flex align-items-center justify-content-center gap-2">
+
+                        <i data-lucide="save"
+                           style="width:15px;height:15px;"></i>
+
+                        Guardar Cambios
+
+                    </button>
+
+
+                    <a th:href="@{/ingresos}"
+                       class="btn py-2 text-muted">
+
+                        Cancelar operación
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

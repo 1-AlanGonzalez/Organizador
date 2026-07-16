@@ -39,6 +39,12 @@ public class Pago {
     @ColumnLabel("Fecha de Vencimiento")
     private LocalDate fechaVencimiento;
 
+    @Column(name = "FECHA_GENERACION_ORIGINAL")
+    private LocalDate fechaGeneracionOriginal;
+
+    @Column(name = "FECHA_VENCIMIENTO_ORIGINAL")
+    private LocalDate fechaVencimientoOriginal;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO_PAGO", nullable = false)
     @ColumnLabel("Estado de Pago")
@@ -48,6 +54,9 @@ public class Pago {
     @ColumnLabel("Monto a Pagar")
     private BigDecimal montoAPagar;
 
+    @Column(name="MONTO_ORIGINAL")
+    private BigDecimal montoOriginal;
+
     @ManyToOne
     @JoinColumn(name = "ID_ACTIVIDAD_CLIENTE", nullable = false)
     private ActividadCliente actividadCliente;
@@ -55,30 +64,30 @@ public class Pago {
     @ManyToOne
     @JoinColumn(name = "ID_METODO", nullable = true)
     private MetodoDePago metodoPago;
-    // AÑADO HOY 28/1
-
-    // @Column(name = "MONTO_ABONADO")
-    // private BigDecimal montoAbonado;
-
-    // @Column(name = "DEUDA")
-    // private BigDecimal deuda;
-
-    // @Column(name = "FECHA_PAGO")
-    // private LocalDate fechaPago;
 
     @Column(name = "OBSERVACIONES", nullable = true, columnDefinition = "TEXT")
     private String observaciones;
 
     // -------------------
-    public Pago(BigDecimal montoAPagar, LocalDate fechaGeneracion,LocalDate fechaVencimiento, 
-        ActividadCliente actividadCliente, MetodoDePago metodoDePago) {
+    public Pago(BigDecimal montoAPagar,
+                LocalDate fechaGeneracion,
+                LocalDate fechaVencimiento,
+                ActividadCliente actividadCliente,
+                MetodoDePago metodoDePago) {
+
         this.fechaGeneracion = fechaGeneracion;
         this.fechaVencimiento = fechaVencimiento;
+
+        this.fechaGeneracionOriginal = fechaGeneracion;
+        this.fechaVencimientoOriginal = fechaVencimiento;
+
         this.estado = EstadoPago.ADEUDA;
+
         this.montoAPagar = montoAPagar;
+        this.montoOriginal = montoAPagar;
+
         this.actividadCliente = actividadCliente;
         this.metodoPago = metodoDePago;
-        
     }
 
     /* ================== LÓGICA DEL PAGO ================== */
@@ -112,4 +121,26 @@ public class Pago {
         fechaGeneracion = fechaNueva;
         fechaVencimiento = fechaNueva.plusMonths(1);
     }
+
+    public void restaurarPago() {
+        if (estado == EstadoPago.ADEUDA) {
+            throw new RuntimeException("El pago ya está pendiente");
+        }
+
+        this.estado = EstadoPago.ADEUDA;
+        this.metodoPago = null;
+        this.observaciones = null;
+        this.montoAPagar = (this.montoOriginal != null) ? this.montoOriginal : this.montoAPagar;
+        this.fechaGeneracion = (this.fechaGeneracionOriginal != null) ? this.fechaGeneracionOriginal : this.fechaGeneracion;
+        this.fechaVencimiento = (this.fechaVencimientoOriginal != null) ? this.fechaVencimientoOriginal : this.fechaVencimiento;
+    }
+
+    public void editarPago(MetodoDePago metodo,
+                           String observaciones,
+                           LocalDate fechaPago) {
+        this.metodoPago = metodo;
+        this.observaciones = observaciones;
+        ajusteDeFechas(fechaPago);
+    }
+
 }

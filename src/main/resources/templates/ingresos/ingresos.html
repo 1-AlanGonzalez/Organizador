@@ -11,42 +11,59 @@
 
     <!-- Cards -->
     <div class="row g-3 mb-4 animate-fade-up">
+
         <div class="col-6 col-md-3">
             <div class="card card-stat bg-gradient-primary p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Ingresos del Mes</span>
-                    <h4 class="stat-value" id="cardTotal"
-                        th:text="${'$' + #numbers.formatDecimal(ingresosTotales ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <h4 class="stat-value"
+                        id="cardTotal"
+                        th:text="${'$' + #numbers.formatDecimal(ingresosTotales ?: 0, 1, 'POINT', 2, 'COMMA')}">
+                        $0,00
+                    </h4>
                 </div>
             </div>
         </div>
+
         <div class="col-6 col-md-3">
             <div class="card card-stat bg-gradient-success p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Efectivo</span>
-                    <h4 class="stat-value" id="cardEfectivo"
-                        th:text="${'$' + #numbers.formatDecimal(ingresosEfectivo ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <h4 class="stat-value"
+                        id="cardEfectivo"
+                        th:text="${'$' + #numbers.formatDecimal(ingresosEfectivo ?: 0, 1, 'POINT', 2, 'COMMA')}">
+                        $0,00
+                    </h4>
                 </div>
             </div>
         </div>
+
         <div class="col-6 col-md-3">
             <div class="card card-stat bg-gradient-info p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Transferencias</span>
-                    <h4 class="stat-value" id="cardTransferencia"
-                        th:text="${'$' + #numbers.formatDecimal(ingresosTransferencia ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <h4 class="stat-value"
+                        id="cardTransferencia"
+                        th:text="${'$' + #numbers.formatDecimal(ingresosTransferencia ?: 0, 1, 'POINT', 2, 'COMMA')}">
+                        $0,00
+                    </h4>
                 </div>
             </div>
         </div>
+
         <div class="col-6 col-md-3">
             <div class="card card-stat bg-gradient-warning p-3 h-100">
                 <div class="card-body-content">
                     <span class="stat-title">Pendientes</span>
-                    <h4 class="stat-value" id="cardPendiente"
-                        th:text="${'$' + #numbers.formatDecimal(ingresosPendientes ?: 0, 1, 'POINT', 2, 'COMMA')}">$0,00</h4>
+                    <h4 class="stat-value"
+                        id="cardPendiente"
+                        th:text="${'$' + #numbers.formatDecimal(ingresosPendientes ?: 0, 1, 'POINT', 2, 'COMMA')}">
+                        $0,00
+                    </h4>
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- Barra de herramientas -->
@@ -65,7 +82,6 @@
                        class="form-control border-start-0 ps-0 bg-light"
                        placeholder="Buscar por alumno...">
             </div>
-        </div>
 
         <!-- Filtro MES -->
         <div style="min-width:140px; flex:1;">
@@ -78,7 +94,6 @@
                        th:value="${filtroMes}"
                        title="Filtrar por mes">
             </div>
-        </div>
 
         <!-- Filtro AÑO -->
         <div style="min-width:110px; flex:1;">
@@ -91,20 +106,38 @@
                     <option th:each="year : ${#numbers.sequence(2020, 2030)}" th:value="${year}"
                             th:selected="${year == filtroAnio}" th:text="${year}"></option>
                 </select>
-            </div>
-        </div>
+            <!-- Filtro AÑO -->
+            <div style="min-width:110px; flex:1;">
+                <div class="input-group input-group-sm">
+                    <span class="icons input-group-text bg-light border-end-0 text-muted">
+                        <i data-lucide="calendar-range" style="width:14px;height:14px;"></i>
+                    </span>
 
-        <!-- Botones — se van al final, en mobile bajan solos -->
-        <div class="d-flex gap-2 ms-auto">
-            <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
-                <i data-lucide="file-spreadsheet" style="width:14px;height:14px;"></i>
-                <span>Exportar</span>
-            </button>
-            <a th:href="@{/ingresos/nuevo}"
-               class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
-                <i data-lucide="plus" style="width:14px;height:14px;"></i>
-                <span>Nuevo Pago</span>
-            </a>
+                    <select id="filtroAnio"
+                            class="form-select form-select-sm border-start-0 bg-light">
+                        <option value="">Todos</option>
+                        <option value="2026" selected>2026</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex gap-2 ms-auto">
+
+                <button type="button"
+                        class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
+                    <i data-lucide="file-spreadsheet" style="width:14px;height:14px;"></i>
+                    <span>Exportar</span>
+                </button>
+
+                <a th:href="@{/ingresos/nuevo}"
+                   class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+                    <i data-lucide="plus" style="width:14px;height:14px;"></i>
+                    <span>Nuevo Pago</span>
+                </a>
+
+            </div>
+
         </div>
 
     </div>
@@ -113,9 +146,42 @@
     <!-- Tabla -->
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative animate-fade-up delay-2">
 
+        <!-- Cabecera con Botones Editar/Anular que vos necesitás -->
         <div class="px-3 pt-3 pb-0 border-bottom flex-shrink-0">
-            <h6 class="fw-bold text-dark mb-2">Movimientos</h6>
-            <ul class="nav nav-tabs border-0" id="paymentTabs" role="tablist">
+
+            <div class="d-flex align-items-center justify-content-between">
+
+                <h6 class="fw-bold text-dark mb-2">
+                    Movimientos
+                </h6>
+
+                <div class="d-flex gap-2 mb-2">
+
+                    <button type="button"
+                            id="btnModoEditarPago"
+                            class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2"
+                            onclick="toggleModoAccionPago('editar')">
+                        <i data-lucide="pencil" style="width:14px;height:14px;"></i>
+                        <span>Editar</span>
+                    </button>
+
+                    <button type="button"
+                            id="btnModoEliminarPago"
+                            class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2"
+                            onclick="toggleModoAccionPago('eliminar')">
+                        <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
+                        <span>Anular Pago</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs border-0"
+                id="paymentTabs"
+                role="tablist">
+
                 <li class="nav-item">
                     <button class="nav-link fw-bold small px-3" th:classappend="${estadoFiltro == 'todos'} ? 'active'"
                             data-estado="todos"
@@ -123,108 +189,309 @@
                         Todos
                     </button>
                 </li>
+
                 <li class="nav-item">
                     <button class="nav-link fw-bold small px-3" th:classappend="${estadoFiltro == 'pagado'} ? 'active'"
                             data-estado="pagado"
                             onclick="filtrarEstado('pagado')">
-                        <i data-lucide="check-circle" style="width:13px;height:13px;" class="text-success"></i>Pagados
+                        <i data-lucide="check-circle"
+                           style="width:13px;height:13px;"
+                           class="text-success"></i>
+                        Pagados
                     </button>
                 </li>
+
                 <li class="nav-item">
                     <button class="nav-link fw-bold small px-3" th:classappend="${estadoFiltro == 'pendiente'} ? 'active'"
                             data-estado="pendiente"
                             onclick="filtrarEstado('pendiente')">
-                        <i data-lucide="clock" style="width:13px;height:13px;" class="text-warning"></i>Pendientes
+                        <i data-lucide="clock"
+                           style="width:13px;height:13px;"
+                           class="text-warning"></i>
+                        Pendientes
                     </button>
                 </li>
+
             </ul>
+
         </div>
 
-        <div class="table-responsive custom-scrollbar" style="flex:1;overflow-y:auto;">
-            <table class="table table-hover align-middle mb-0 tableAnimation" id="tablaPagos">
+        <!-- Tabla (Estilo custom-scrollbar y responsive heredados de tu amigo) -->
+        <div class="table-responsive custom-scrollbar"
+             style="flex:1;overflow-y:auto;">
+
+            <table class="table table-hover align-middle mb-0 tableAnimation"
+                   id="tablaPagos">
+
                 <thead style="position:sticky;top:0;z-index:10;">
-                    <tr class="text-secondary small text-uppercase">
-                        <th class="ps-4 py-3 bg-light border-bottom">Cliente</th>
-                        <th class="py-3 bg-light border-bottom">Actividad</th>
-                        <th class="py-3 bg-light border-bottom">Fecha</th>
-                        <th class="py-3 bg-light border-bottom">Método / Estado</th>
-                        <th class="py-3 bg-light border-bottom text-end">Monto</th>
-                        <th class="pe-4 py-3 bg-light border-bottom text-center">Ticket</th>
-                    </tr>
+
+                <tr class="text-secondary small text-uppercase">
+
+                    <th class="ps-4 py-3 bg-light border-bottom">
+                        Cliente
+                    </th>
+
+                    <th class="py-3 bg-light border-bottom">
+                        Actividad
+                    </th>
+
+                    <th class="py-3 bg-light border-bottom">
+                        Fecha
+                    </th>
+
+                    <th class="py-3 bg-light border-bottom">
+                        Método / Estado
+                    </th>
+
+                    <!-- Conservamos tu columna de acción dinámica -->
+                    <th id="thAccionPago"
+                        class="py-3 bg-light border-bottom text-center"
+                        style="display:none;">
+                        Acción
+                    </th>
+
+                    <th class="py-3 bg-light border-bottom text-end">
+                        Monto
+                    </th>
+
+                    <th class="pe-4 py-3 bg-light border-bottom text-center">
+                        Ticket
+                    </th>
+
+                </tr>
+
                 </thead>
+
                 <tbody class="border-top-0">
 
-                    <tr th:each="pago : ${pagosRecientes}"
-                        th:data-estado="${pago.estado.name() == 'PAGADO' ? 'pagado' : 'pendiente'}"
-                        th:data-fecha="${#temporals.format(pago.fechaGeneracion, 'yyyy-MM')}"
-                        class="fila-pago">
+                <tr th:each="pago : ${pagosRecientes}"
+                    th:data-id="${pago.idPago}"
+                    th:data-estado="${pago.estado.name() == 'PAGADO' ? 'pagado' : 'pendiente'}"
+                    th:data-fecha="${#temporals.format(pago.fechaGeneracion, 'yyyy-MM')}"
+                    class="fila-pago">
 
-                        <td class="ps-4">
-                            <div class="fw-bold text-dark"
-                                 th:text="${pago.actividadCliente.cliente.nombre + ' ' + pago.actividadCliente.cliente.apellido}"></div>
-                            <small class="text-muted" style="font-size:0.72rem;">
-                                ID: <span th:text="${pago.actividadCliente.cliente.idCliente}"></span>
-                            </small>
-                        </td>
+                    <!-- Cliente -->
+                    <td class="ps-4">
 
-                        <td>
-                            <span class="badge bg-light text-dark border fw-normal"
-                                  th:text="${pago.actividadCliente.actividad.nombre}"></span>
-                        </td>
+                        <div class="fw-bold text-dark"
+                             th:text="${pago.actividadCliente.cliente.nombre + ' ' + pago.actividadCliente.cliente.apellido}">
+                        </div>
 
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border"
-                                     style="width:30px;height:30px;">
-                                    <i data-lucide="calendar" style="width:13px;height:13px;"></i>
-                                </div>
-                                <span class="small text-muted"
-                                      th:text="${#temporals.format(pago.fechaGeneracion,'dd/MM/yyyy')}"></span>
+                        <small class="text-muted" style="font-size:0.72rem;">
+                            ID:
+                            <span th:text="${pago.actividadCliente.cliente.idCliente}"></span>
+                        </small>
+
+                    </td>
+
+                    <!-- Actividad -->
+                    <td>
+                        <span class="badge bg-light text-dark border fw-normal"
+                              th:text="${pago.actividadCliente.actividad.nombre}">
+                        </span>
+                    </td>
+
+                    <!-- Fecha -->
+                    <td>
+
+                        <div class="d-flex align-items-center gap-2">
+
+                            <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border"
+                                 style="width:30px;height:30px;">
+                                <i data-lucide="calendar"
+                                   style="width:13px;height:13px;"></i>
                             </div>
-                        </td>
 
-                        <td>
-                            <span th:if="${pago.estado.name() == 'PAGADO'}"
-                                  class="badge bg-success-light text-success border border-success border-opacity-25">
-                                <i data-lucide="check-circle" style="width:11px;height:11px;"></i>
-                                <span th:text="${pago.metodoPago}"></span>
+                            <span class="small text-muted"
+                                  th:text="${#temporals.format(pago.fechaGeneracion,'dd/MM/yyyy')}">
                             </span>
-                            <span th:if="${pago.estado.name() == 'ADEUDA'}"
-                                  class="badge bg-light text-secondary border">
-                                <i data-lucide="clock" style="width:11px;height:11px;"></i> Pendiente
-                            </span>
-                        </td>
 
-                        <td class="text-end">
-                            <span class="fw-bold text-dark" th:text="${'$' + pago.montoAPagar}"></span>
-                        </td>
+                        </div>
 
-                        <td class="pe-4 text-center">
-                            <a th:if="${pago.estado.name() == 'PAGADO'}"
-                               th:href="@{/pagos/ticket/{id}(id=${pago.idPago})}"
-                               class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1"
-                               title="Ver ticket">
-                                <i data-lucide="receipt" style="width:13px;height:13px;"></i>
-                            </a>
-                            <span th:if="${pago.estado.name() != 'PAGADO'}" class="text-muted small">—</span>
-                        </td>
-                    </tr>
+                    </td>
 
-                    <tr class="empty-row" th:if="${#lists.isEmpty(pagosRecientes)}">
-                        <td colspan="6" class="text-center py-5 text-muted">
-                            <i data-lucide="receipt" style="width:40px;height:40px;opacity:0.3;" class="d-block mx-auto mb-2"></i>
-                            No hay movimientos registrados.
-                        </td>
-                    </tr>
+                    <!-- Método / Estado -->
+                    <td>
 
-                    <tr id="mensajeVacioPagos" class="empty-row" style="display:none;">
-                        <td colspan="6" class="text-center py-5 text-muted">
-                            <i data-lucide="search" style="width:40px;height:40px;opacity:0.3;" class="d-block mx-auto mb-2"></i>
-                            No se encontraron pagos para este período.
-                        </td>
-                    </tr>
+                        <span th:if="${pago.estado.name() == 'PAGADO'}"
+                              class="badge bg-success-light text-success border border-success border-opacity-25">
+
+                            <i data-lucide="check-circle"
+                               style="width:11px;height:11px;"></i>
+
+                            <span th:text="${pago.metodoPago}"></span>
+
+                        </span>
+
+                        <span th:if="${pago.estado.name() == 'ADEUDA'}"
+                              class="badge bg-light text-secondary border">
+
+                            <i data-lucide="clock"
+                               style="width:11px;height:11px;"></i>
+
+                            Pendiente
+
+                        </span>
+
+                    </td>
+
+                    <!-- Acción dinámica (Solo se muestra en los modos Editar/Eliminar) -->
+                    <td class="td-accion-pago text-center"
+                        style="display:none;">
+
+                        <!-- Editar -->
+                        <a th:href="@{/ingresos/editar/{id}(id=${pago.idPago})}"
+                           class="btn btn-sm btn-outline-secondary btn-editar-pago"
+                           style="display:none;"
+                           title="Editar pago">
+
+                            <i data-lucide="pencil"
+                               style="width:13px;height:13px;"></i>
+
+                        </a>
+
+                        <!-- Eliminar / Anular -->
+                        <button type="button"
+                                class="btn btn-sm btn-outline-danger btn-eliminar-pago"
+                                style="display:none;"
+                                th:data-id="${pago.idPago}"
+                                th:data-nombre="${pago.actividadCliente.cliente.nombre + ' ' + pago.actividadCliente.cliente.apellido}"
+                                th:data-url="@{/ingresos/eliminar}"
+                                onclick="abrirPanelEliminar(this)"
+                                title="Anular pago">
+
+                            <i data-lucide="trash-2"
+                               style="width:13px;height:13px;"></i>
+
+                        </button>
+
+                    </td>
+
+                    <!-- Monto -->
+                    <td class="text-end">
+                        <span class="fw-bold text-dark"
+                              th:text="${'$' + pago.montoAPagar}">
+                        </span>
+                    </td>
+
+                    <!-- Ticket -->
+                    <td class="pe-4 text-center">
+
+                        <a th:if="${pago.estado.name() == 'PAGADO'}"
+                           th:href="@{/pagos/ticket/{id}(id=${pago.idPago})}"
+                           class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1"
+                           title="Ver ticket">
+
+                            <i data-lucide="receipt"
+                               style="width:13px;height:13px;"></i>
+
+                        </a>
+
+                        <span th:if="${pago.estado.name() != 'PAGADO'}"
+                              class="text-muted small">
+                            —
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                <!-- Sin pagos (Adaptado a 7 columnas para que no se deforme al activar las acciones) -->
+                <tr class="empty-row"
+                    th:if="${#lists.isEmpty(pagosRecientes)}">
+
+                    <td colspan="7"
+                        class="text-center py-5 text-muted">
+
+                        <i data-lucide="receipt"
+                           style="width:40px;height:40px;opacity:0.3;"
+                           class="d-block mx-auto mb-2">
+                        </i>
+
+                        No hay movimientos registrados.
+
+                    </td>
+
+                </tr>
+
+                <!-- Sin resultados -->
+                <tr id="mensajeVacioPagos"
+                    class="empty-row"
+                    style="display:none;">
+
+                    <td colspan="7"
+                        class="text-center py-5 text-muted">
+
+                        <i data-lucide="search"
+                           style="width:40px;height:40px;opacity:0.3;"
+                           class="d-block mx-auto mb-2">
+                        </i>
+
+                        No se encontraron pagos para este período.
+
+                    </td>
+
+                </tr>
+
                 </tbody>
+
             </table>
+
+        </div>
+
+        <!-- Paginador -->
+        <div id="paginadorPagos"
+             class="border-top px-3 flex-shrink-0">
+        </div>
+
+    </div>
+
+    <!-- PANEL LOCAL DE ANULACIÓN (Evitamos el th:insert para conservar el cartel personalizado de Anular) -->
+    <div id="panelEliminarOverlay"
+         class="panel-overlay d-none"
+         onclick="cerrarPanelEliminar()">
+
+        <div class="panel-container"
+             onclick="event.stopPropagation()">
+
+            <div class="p-4 bg-white rounded-3 text-center" style="max-width: 400px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+
+                <div class="mb-3 d-flex align-items-center justify-content-center rounded-circle mx-auto"
+                     style="width: 56px; height: 56px; background-color: #fdf2f2;">
+                    <i data-lucide="alert-triangle" style="width: 28px; height: 28px; color: #dc3545;"></i>
+                </div>
+
+                <h4 class="fw-bold text-danger mb-2" id="tituloAnulacion">
+                    Anular Pago
+                </h4>
+
+                <p class="text-dark mb-2">
+                    ¿Seguro que querés anular el pago de <strong id="nombreEliminar">este cliente</strong>?
+                </p>
+
+                <p class="text-muted small mb-4" style="line-height: 1.4;">
+                    Esta acción no se puede deshacer y el estado del pago volverá a figurar como pendiente (Adeuda).
+                </p>
+
+                <div class="d-flex justify-content-center gap-2">
+
+                    <button type="button"
+                            class="btn btn-light border text-secondary px-4 py-2 small fw-bold"
+                            onclick="cerrarPanelEliminar()">
+                        Cancelar
+                    </button>
+
+                    <form id="formEliminar" method="post" style="display: inline;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:if="${_csrf != null}"/>
+                        <button type="submit" class="btn btn-danger px-4 py-2 small fw-bold">
+                            Anular
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+
         </div>
 
         <div class="border-top px-3 py-2 d-flex justify-content-between align-items-center">
@@ -240,4 +507,5 @@
     </div>
 
     <script th:src="@{/js/ingresos.js}"></script>
+
 </div>

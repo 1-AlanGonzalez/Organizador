@@ -11,6 +11,11 @@ import com.gymmanager.gym_manager.entity.ConfiguracionDePago;
 import com.gymmanager.gym_manager.entity.EstadoPago;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.Pago;
+import com.gymmanager.gym_manager.entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import com.gymmanager.gym_manager.repository.ConfiguracionPagoRepository;
 import com.gymmanager.gym_manager.repository.MetodoDePagoRepository;
 import com.gymmanager.gym_manager.repository.PagoRepository;
@@ -92,5 +97,53 @@ public class PagoService {
                 idActividadCliente, metodo.getNombre(), pagado.getMontoAPagar());
 
         return pagado;  // ← devuelve el pago con su ID para el ticket
+    }
+    @Transactional
+    public void eliminarPago(Integer id) {
+
+        Pago pago = pagoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
+
+        System.out.println("ANTES:");
+        System.out.println(pago.getEstado());
+        System.out.println(pago.getMontoAPagar());
+
+        pago.restaurarPago();
+
+        System.out.println("DESPUÉS:");
+        System.out.println(pago.getEstado());
+        System.out.println(pago.getMontoAPagar());
+
+        System.out.println("ID: " + pago.getIdPago());
+        System.out.println("Estado: " + pago.getEstado());
+        System.out.println("Monto: " + pago.getMontoAPagar());
+
+        pagoRepository.save(pago);
+
+        Pago actualizado = pagoRepository.findById(id).orElseThrow();
+
+        System.out.println("BD: " + actualizado.getEstado());
+        System.out.println("BD monto: " + actualizado.getMontoAPagar());
+    }
+
+    public Pago obtenerPago(Integer id) {
+        return pagoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+    }
+
+    public Pago editarPago(
+            Integer id,
+            Integer metodoPagoId,
+            String observaciones,
+            LocalDate fechaDePago) {
+
+        Pago pago = obtenerPago(id);
+
+        MetodoDePago metodo = metodoDePagoRepository.findById(metodoPagoId)
+                .orElseThrow(() ->
+                        new RuntimeException("Método de pago no encontrado"));
+
+        pago.editarPago(metodo, observaciones, fechaDePago);
+        return pagoRepository.save(pago);
     }
 }
