@@ -66,19 +66,23 @@
 
     </div>
 
-    <!-- Barra de herramientas -->
-<div class="card custom-card mb-3 p-3 flex-shrink-0 border-0 animate-fade-up delay-1">
-    <div class="d-flex flex-wrap gap-2 align-items-center">
+    <!-- Barra de herramientas (Estructura de tu amigo con clases limpias) -->
+    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0 animate-fade-up delay-1">
 
-        <!-- Buscador -->
-        <div style="min-width:160px; flex:2;">
-            <div class="input-group input-group-sm">
-                <span class="icons input-group-text bg-light border-end-0 text-muted">
-                    <i data-lucide="search" style="width:14px;height:14px;"></i>
-                </span>
-                <input type="text" id="buscadorTabla"
-                       class="form-control border-start-0 ps-0 bg-light"
-                       placeholder="Buscar por alumno...">
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+
+            <!-- Buscador -->
+            <div style="min-width:160px; flex:2;">
+                <div class="input-group input-group-sm">
+                    <span class="icons input-group-text bg-light border-end-0 text-muted">
+                        <i data-lucide="search" style="width:14px;height:14px;"></i>
+                    </span>
+
+                    <input type="text"
+                           id="buscadorTabla"
+                           class="form-control border-start-0 ps-0 bg-light"
+                           placeholder="Buscar por alumno...">
+                </div>
             </div>
 
             <!-- Filtro MES -->
@@ -96,16 +100,36 @@
                 </div>
             </div>
 
-        <!-- Filtro AÑO -->
-        <div style="min-width:110px; flex:1;">
-            <div class="input-group input-group-sm">
-                <span class="icons input-group-text bg-light border-end-0 text-muted">
-                    <i data-lucide="calendar-range" style="width:14px;height:14px;"></i>
-                </span>
-                <select id="filtroAnio" class="form-select form-select-sm border-start-0 bg-light">
-                    <option value="">Todos</option>
-                    <option value="2026" selected>2026</option>
-                </select>
+            <!-- Filtro AÑO -->
+            <div style="min-width:110px; flex:1;">
+                <div class="input-group input-group-sm">
+                    <span class="icons input-group-text bg-light border-end-0 text-muted">
+                        <i data-lucide="calendar-range" style="width:14px;height:14px;"></i>
+                    </span>
+
+                    <select id="filtroAnio"
+                            class="form-select form-select-sm border-start-0 bg-light">
+                        <option value="">Todos</option>
+                        <option value="2026" selected>2026</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex gap-2 ms-auto">
+
+                <button type="button"
+                        class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
+                    <i data-lucide="file-spreadsheet" style="width:14px;height:14px;"></i>
+                    <span>Exportar</span>
+                </button>
+
+                <a th:href="@{/ingresos/nuevo}"
+                   class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+                    <i data-lucide="plus" style="width:14px;height:14px;"></i>
+                    <span>Nuevo Pago</span>
+                </a>
+
             </div>
 
         </div>
@@ -467,4 +491,5 @@
 
     <script th:src="@{/js/pagination.js}"></script>
     <script th:src="@{/js/ingresos.js}"></script>
+
 </div>
