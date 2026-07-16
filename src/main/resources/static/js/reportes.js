@@ -19,6 +19,9 @@ function toggleSeccion(tipo, checkboxElem) {
         seccion.classList.add('d-none');
         //Lo quitamos del orden
         ordenSeleccion = ordenSeleccion.filter(t => t !== tipo);    
+        if (tipo === 'ingresos') {
+            limpiarFiltroMensualIngresos();
+        }
     }
 
     actualizarEstadoPanelDerecho();
@@ -70,18 +73,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     form.addEventListener("submit", handleExportSubmit);
 
+    document.getElementById("btn-exportar-ingresos-mensuales")
+        ?.addEventListener("click", mostrarSelectorMensualIngresos);
+    document.getElementById("limpiar-mes-ingresos")
+        ?.addEventListener("click", limpiarFiltroMensualIngresos);
+
 });
+
+function mostrarSelectorMensualIngresos() {
+    const contenedor = document.getElementById("selector-mes-ingresos");
+    const input = document.getElementById("mesIngresos");
+    contenedor?.classList.remove("d-none");
+    input?.focus();
+    input?.showPicker?.();
+}
+
+function limpiarFiltroMensualIngresos() {
+    const contenedor = document.getElementById("selector-mes-ingresos");
+    const input = document.getElementById("mesIngresos");
+    if (input) input.value = "";
+    contenedor?.classList.add("d-none");
+}
 
 async function handleExportSubmit(e) {
     e.preventDefault();
 
     const fecha = document.querySelector('input[name="fecha"]').value;
+    const mesIngresos = document.getElementById("mesIngresos")?.value || null;
     const entidades = buildAtributosSeleccionados();
 
     const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
     const requestBody = {
         fecha: fecha || null,
+        mes: mesIngresos,
         entidades: entidades
     };
     console.log(requestBody);

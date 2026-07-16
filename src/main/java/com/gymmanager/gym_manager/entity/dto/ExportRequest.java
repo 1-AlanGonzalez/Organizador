@@ -22,6 +22,8 @@ public class ExportRequest {
 
     private LocalDate fecha; // puede ser null
 
+    private String mes; // yyyy-MM; se aplica exclusivamente a pagos/ingresos
+
     private List<EntidadRequestDTO> entidades;
 
     public LocalDate getFecha() {
@@ -30,6 +32,14 @@ public class ExportRequest {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public String getMes() {
+        return mes;
+    }
+
+    public void setMes(String mes) {
+        this.mes = mes;
     }
 
     public List<EntidadRequestDTO> getEntidades() {

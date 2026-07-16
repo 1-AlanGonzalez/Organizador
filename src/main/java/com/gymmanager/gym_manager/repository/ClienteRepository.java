@@ -125,8 +125,7 @@ List<Cliente> findClientesConDeudaByUsuario(@Param("usuario") Usuario usuario);
        "WHERE c.usuario = :usuario " +
        "AND i.estado = com.gymmanager.gym_manager.entity.EstadoInscripcion.ACTIVA " +
        "AND p.estado = com.gymmanager.gym_manager.entity.EstadoPago.ADEUDA " +
-       "AND p.fechaVencimiento BETWEEN :desde AND :hasta " +
-       "ORDER BY p.fechaVencimiento ASC")
+       "AND p.fechaVencimiento BETWEEN :desde AND :hasta")
 List<Cliente> findClientesConVencimientoEntre(
         @Param("usuario") Usuario usuario,
         @Param("desde")   LocalDate desde,

@@ -84,3 +84,58 @@ html[data-theme="dark"] .nuevo-pago-page #deudasContainer .card {
     background-color: var(--input-bg);
     border-color: var(--border-color);
 }
+
+/* Edición de pago */
+.editar-pago-page .editar-pago-icon {
+    width: 42px;
+    height: 42px;
+    color: #fff;
+    background: linear-gradient(135deg, #1f2a30, #2d3f46);
+}
+
+.editar-pago-page .card,
+.editar-pago-page .card-body {
+    color: var(--text-color);
+    background-color: var(--card-bg);
+}
+
+.editar-pago-page .editar-pago-divider {
+    border-color: var(--border-color);
+    opacity: 1;
+}
+
+html[data-theme="dark"] .editar-pago-page .form-control,
+html[data-theme="dark"] .editar-pago-page .form-select,
+html[data-theme="dark"] .editar-pago-page .form-select option {
+    color: var(--text-color);
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .editar-pago-page .form-control:disabled {
+    color: var(--text-secondary);
+    background-color: var(--card-hover-bg);
+    opacity: 1;
+}
+
+html[data-theme="dark"] .editar-pago-page .form-control:focus,
+html[data-theme="dark"] .editar-pago-page .form-select:focus {
+    background-color: var(--card-hover-bg);
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 0.2rem rgba(120, 144, 156, 0.16);
+}
+
+html[data-theme="dark"] .editar-pago-page input::placeholder {
+    color: var(--text-muted);
+}
+
+html[data-theme="dark"] .editar-pago-page input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+}
+
+html[data-theme="dark"] .editar-pago-page .editar-pago-icon,
+html[data-theme="dark"] .editar-pago-page .btn-guardar {
+    color: #fff !important;
+    background: linear-gradient(135deg, #34474f, #26343a) !important;
+    border-color: #52666f !important;
+}

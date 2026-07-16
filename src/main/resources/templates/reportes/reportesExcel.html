@@ -159,6 +159,23 @@
                                     Seleccionar mes
                                 </button>
                             </div>
+                            <div id="selector-mes-ingresos" class="d-none mb-3">
+                                <label for="mesIngresos" class="form-label small fw-semibold mb-1">
+                                    Mes de los ingresos
+                                </label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="month" id="mesIngresos" name="mesIngresos"
+                                           class="form-control form-control-sm"
+                                           aria-describedby="ayuda-mes-ingresos">
+                                    <button type="button" id="limpiar-mes-ingresos"
+                                            class="btn btn-sm btn-outline-secondary">
+                                        Quitar filtro
+                                    </button>
+                                </div>
+                                <small id="ayuda-mes-ingresos" class="text-muted">
+                                    Este filtro se aplica solamente a la hoja de Ingresos.
+                                </small>
+                            </div>
                             <div class="row g-2">
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="fechaGeneracion"> <span>Fecha Pago</span></label></div>
                                 <div class="col-md-3"><label class="field-checkbox"><input type="checkbox" name="camposIngresos" value="montoAPagar"> <span>Monto</span></label></div>

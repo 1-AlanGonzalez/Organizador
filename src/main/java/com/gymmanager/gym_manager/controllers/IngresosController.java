@@ -307,7 +307,7 @@ public String nuevoIngreso(Model model) {
                     e.getMessage()
             );
 
-            return "redirect:/ingresos/editar/" + id;
+            return "redirect:/ingresos";
         }
     }
 }
