@@ -215,7 +215,7 @@ public String nuevoIngreso(Model model) {
                 .filter(d -> d.montoAdeudado().compareTo(BigDecimal.ZERO) > 0)
                 .toList();
     }
-}
+
 
     // ── POST /ingresos/eliminar ────────────────────────────────────────────────
     @PostMapping("/eliminar/{id}")
@@ -310,6 +310,6 @@ public String nuevoIngreso(Model model) {
             return "redirect:/ingresos/editar/" + id;
         }
     }
-
-
 }
+
+

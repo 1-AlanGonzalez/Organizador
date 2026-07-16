@@ -1,6 +1,8 @@
 package com.gymmanager.gym_manager.controllers;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +18,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/actividades")
 public class ActividadController {
+    private static final Logger log = LoggerFactory.getLogger(ActividadController.class);
     private final ActividadService actividadService;
 
 
@@ -98,13 +101,28 @@ public class ActividadController {
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (DataIntegrityViolationException e) {
+            log.error("Error de integridad al guardar la actividad {}", idActividad, e);
+            String detalle = mensajeCompleto(e).toUpperCase();
             redirectAttributes.addFlashAttribute("error",
-                    "No se pudo guardar la actividad porque hay una asignación repetida.");
+                    detalle.contains("UK_DICTA_ASIGNACION")
+                            ? "El mismo instructor ya tiene esa asignación de días y horario."
+                            : "No se pudo guardar la actividad por una restricción de los datos.");
         } catch (Exception e) {
+            log.error("Error inesperado al guardar la actividad {}", idActividad, e);
             redirectAttributes.addFlashAttribute("error",
                     "No se pudo guardar la actividad. Intentá nuevamente.");
         }
         return "redirect:/actividades";
+    }
+
+    private String mensajeCompleto(Throwable error) {
+        StringBuilder mensaje = new StringBuilder();
+        for (Throwable actual = error; actual != null; actual = actual.getCause()) {
+            if (actual.getMessage() != null) {
+                mensaje.append(' ').append(actual.getMessage());
+            }
+        }
+        return mensaje.toString();
     }
 
     // ── Eliminar ──────────────────────────────────────────────────────────────

@@ -70,8 +70,8 @@
 <form id="filtrosIngresos" method="get" th:action="@{/ingresos}"
       class="card custom-card mb-3 p-3 flex-shrink-0 border-0 animate-fade-up delay-1">
     <input type="hidden" name="estado" id="estadoIngreso" th:value="${estadoFiltro}">
-    <div class="d-flex flex-wrap gap-2 align-items-center">
 
+    <div class="d-flex flex-wrap gap-2 align-items-center">
         <!-- Buscador -->
         <div style="min-width:160px; flex:2;">
             <div class="input-group input-group-sm">
@@ -82,7 +82,7 @@
                        class="form-control border-start-0 ps-0 bg-light"
                        placeholder="Buscar por alumno...">
             </div>
-
+        </div>
         <!-- Filtro MES -->
         <div style="min-width:140px; flex:1;">
             <div class="input-group input-group-sm">
@@ -94,7 +94,7 @@
                        th:value="${filtroMes}"
                        title="Filtrar por mes">
             </div>
-
+        </div>
         <!-- Filtro AÑO -->
         <div style="min-width:110px; flex:1;">
             <div class="input-group input-group-sm">
@@ -106,21 +106,8 @@
                     <option th:each="year : ${#numbers.sequence(2020, 2030)}" th:value="${year}"
                             th:selected="${year == filtroAnio}" th:text="${year}"></option>
                 </select>
-            <!-- Filtro AÑO -->
-            <div style="min-width:110px; flex:1;">
-                <div class="input-group input-group-sm">
-                    <span class="icons input-group-text bg-light border-end-0 text-muted">
-                        <i data-lucide="calendar-range" style="width:14px;height:14px;"></i>
-                    </span>
-
-                    <select id="filtroAnio"
-                            class="form-select form-select-sm border-start-0 bg-light">
-                        <option value="">Todos</option>
-                        <option value="2026" selected>2026</option>
-                    </select>
-                </div>
             </div>
-
+        </div>
             <!-- Botones -->
             <div class="d-flex gap-2 ms-auto">
 
@@ -137,10 +124,7 @@
                 </a>
 
             </div>
-
         </div>
-
-    </div>
 </form>
     <!-- <p th:text="${pagosRecientes.size()}"></p> -->
     <!-- Tabla -->
@@ -439,9 +423,16 @@
 
         </div>
 
-        <!-- Paginador -->
-        <div id="paginadorPagos"
-             class="border-top px-3 flex-shrink-0">
+        <!-- Paginador del servidor -->
+        <div class="border-top px-3 py-2 d-flex justify-content-between align-items-center">
+            <span class="small text-muted" th:text="${'Movimientos: ' + pagina.totalElements}"></span>
+            <div class="btn-group btn-group-sm" th:if="${pagina.totalPages > 1}">
+                <a class="btn btn-outline-secondary" th:classappend="${pagina.first} ? 'disabled'"
+                   th:href="@{/ingresos(page=${pagina.number - 1},q=${q},mes=${filtroMes},anio=${filtroAnio},estado=${estadoFiltro})}">Anterior</a>
+                <span class="btn btn-outline-secondary disabled" th:text="${pagina.number + 1 + ' / ' + pagina.totalPages}"></span>
+                <a class="btn btn-outline-secondary" th:classappend="${pagina.last} ? 'disabled'"
+                   th:href="@{/ingresos(page=${pagina.number + 1},q=${q},mes=${filtroMes},anio=${filtroAnio},estado=${estadoFiltro})}">Siguiente</a>
+            </div>
         </div>
 
     </div>
@@ -492,17 +483,6 @@
 
             </div>
 
-        </div>
-
-        <div class="border-top px-3 py-2 d-flex justify-content-between align-items-center">
-            <span class="small text-muted" th:text="${'Movimientos: ' + pagina.totalElements}"></span>
-            <div class="btn-group btn-group-sm" th:if="${pagina.totalPages > 1}">
-                <a class="btn btn-outline-secondary" th:classappend="${pagina.first} ? 'disabled'"
-                   th:href="@{/ingresos(page=${pagina.number - 1},q=${q},mes=${filtroMes},anio=${filtroAnio},estado=${estadoFiltro})}">Anterior</a>
-                <span class="btn btn-outline-secondary disabled" th:text="${pagina.number + 1 + ' / ' + pagina.totalPages}"></span>
-                <a class="btn btn-outline-secondary" th:classappend="${pagina.last} ? 'disabled'"
-                   th:href="@{/ingresos(page=${pagina.number + 1},q=${q},mes=${filtroMes},anio=${filtroAnio},estado=${estadoFiltro})}">Siguiente</a>
-            </div>
         </div>
     </div>
 

@@ -82,7 +82,7 @@
                                   th:with="inscriptosActivos=${actividad.inscripciones.?[estado.name() == 'ACTIVA']}">
                                 <i data-lucide="users" style="width:11px;height:11px;"></i>
                                 <span th:text="${inscriptosActivos.size()}">0</span>
-                                <span th:text="${'/' + actividad.cupoMaximo}"></span>
+                                <span th:text="${actividad.cupoMaximo == null ? '/ Ilimitado' : '/ ' + actividad.cupoMaximo}"></span>
                             </span>
                         </td>
 

@@ -2,6 +2,7 @@ package com.gymmanager.gym_manager.services;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -67,24 +68,59 @@ public class ActividadService {
             actividad.setPrecioDiario(precioDiario != null ? precioDiario : BigDecimal.ZERO);
             actividad.setCupoMaximo(cupoMaximo);
 
-            actividad.getDictados().clear();
-            actividadRepository.saveAndFlush(actividad);
+            actualizarAsignaciones(actividad, asignaciones);
             } else {
                 actividad = new Actividad(nombre, cupoMaximo, precio,
                         precioDiario != null ? precioDiario : BigDecimal.ZERO);
                 actividad.setUsuario(usuario);
                 actividad = actividadRepository.save(actividad);
+                for (AsignacionInstructor asignacion : asignaciones) {
+                    actividad.agregarDictado(nuevoDictado(actividad, asignacion));
+                }
             }
 
-            for (AsignacionInstructor asignacion : asignaciones) {
-                actividad.getDictados().add(new Dicta(
-                        actividad,
-                        asignacion.instructor(),
-                        asignacion.dias(),
-                        asignacion.horario()));
+            actividadRepository.saveAndFlush(actividad);
+    }
+
+    private void actualizarAsignaciones(Actividad actividad,
+                                         List<AsignacionInstructor> asignaciones) {
+        List<Dicta> existentes = new ArrayList<>(actividad.getDictados());
+        Set<Dicta> utilizados = Collections.newSetFromMap(new java.util.IdentityHashMap<>());
+
+        for (AsignacionInstructor asignacion : asignaciones) {
+            Dicta dicta = buscarReutilizable(existentes, utilizados, asignacion);
+            if (dicta == null) {
+                actividad.agregarDictado(nuevoDictado(actividad, asignacion));
+                continue;
             }
 
-            actividadRepository.save(actividad);
+            dicta.setInstructor(asignacion.instructor());
+            dicta.setDias(asignacion.dias());
+            dicta.setHorario(asignacion.horario());
+            utilizados.add(dicta);
+        }
+
+        existentes.stream()
+                .filter(dicta -> !utilizados.contains(dicta))
+                .forEach(actividad::quitarDictado);
+    }
+
+    private Dicta buscarReutilizable(List<Dicta> existentes, Set<Dicta> utilizados,
+                                     AsignacionInstructor asignacion) {
+        return existentes.stream()
+                .filter(dicta -> !utilizados.contains(dicta))
+                .filter(dicta -> dicta.getInstructor().getIdInstructor()
+                        .equals(asignacion.instructor().getIdInstructor()))
+                .findFirst()
+                .orElseGet(() -> existentes.stream()
+                        .filter(dicta -> !utilizados.contains(dicta))
+                        .findFirst()
+                        .orElse(null));
+    }
+
+    private Dicta nuevoDictado(Actividad actividad, AsignacionInstructor asignacion) {
+        return new Dicta(actividad, asignacion.instructor(),
+                asignacion.dias(), asignacion.horario());
     }
 
     public Page<Actividad> buscarPagina(int pagina, int cantidad, String texto) {
