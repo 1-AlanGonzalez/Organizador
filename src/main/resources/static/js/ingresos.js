@@ -1,30 +1,3 @@
-const MESES = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-];
-
-function formatearMes(valor) {
-    if (!valor) return "Todos";
-    const [anio, mes] = valor.split("-");
-    return `${MESES[Number(mes) - 1]} ${anio}`;
-}
-
-async function actualizarCards(mes) {
-    if (!mes) return;
-    try {
-        const respuesta = await fetch(`/ingresos/stats?mes=${encodeURIComponent(mes)}`);
-        if (!respuesta.ok) return;
-        const datos = await respuesta.json();
-        const moneda = valor => "$" + Number(valor).toLocaleString("es-AR", {
-            minimumFractionDigits: 2
-        });
-        document.getElementById("cardTotal").textContent = moneda(datos.total);
-        document.getElementById("cardEfectivo").textContent = moneda(datos.efectivo);
-        document.getElementById("cardTransferencia").textContent = moneda(datos.transferencia);
-        document.getElementById("cardPendiente").textContent = moneda(datos.pendiente);
-    } catch (error) {
-        console.error("No se pudieron actualizar las estadísticas", error);
-// ── ingresos.js ───────────────────────────────────────────────────────────────
 
 const MESES = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -32,7 +5,6 @@ const MESES = [
 ];
 
 let estadoActivo = 'todos';
-let pagPagos = null;
 let modoAccionPago = null;
 
 
@@ -209,12 +181,6 @@ function aplicarFiltros() {
 
     }
 
-
-    if (pagPagos) {
-
-        pagPagos.refresh();
-
-    }
 
 }
 
@@ -501,15 +467,6 @@ document.addEventListener('keydown', function (e) {
 // ── Inicialización ────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function () {
-
-
-    // Paginador
-    pagPagos =
-        initPaginator(
-            'tablaPagos',
-            'paginadorPagos',
-            10
-        );
 
 
     const filtroMes =
