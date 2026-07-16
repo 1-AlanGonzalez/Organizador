@@ -263,6 +263,10 @@ html[data-theme="dark"] .reportes-page input[type="date"]::-webkit-calendar-pick
     filter: invert(0.8);
 }
 
+html[data-theme="dark"] .reportes-page input[type="month"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+}
+
 html[data-theme="dark"] .reportes-page .bg-blue-light {
     background-color: rgba(59, 130, 246, 0.14);
 }

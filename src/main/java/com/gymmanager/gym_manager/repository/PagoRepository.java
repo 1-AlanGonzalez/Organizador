@@ -173,6 +173,8 @@ Optional<Pago> findByActividadCliente_IdActividadClienteAndFechaGeneracion(
     Optional<Pago> findTopByActividadCliente_IdActividadClienteOrderByFechaGeneracionDesc(Integer idActividadCliente);
     List<Pago> findByFechaGeneracion(LocalDate fechaGeneracion);
     List<Pago> findByActividadCliente_Cliente_UsuarioAndFechaGeneracion(Usuario usuario, LocalDate fechaGeneracion);
+    List<Pago> findByActividadCliente_Cliente_UsuarioAndFechaGeneracionBetween(
+            Usuario usuario, LocalDate desde, LocalDate hasta);
     List<Pago> findByActividadCliente_Cliente_Usuario(Usuario usuario);
 
     Optional<Pago>

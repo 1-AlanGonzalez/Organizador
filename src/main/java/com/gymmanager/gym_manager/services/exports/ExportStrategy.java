@@ -14,5 +14,10 @@ public interface ExportStrategy {
     //Logica de exportacion por entidad
     List<Map<String,Object>> exportar(EntidadRequestDTO entidad, LocalDate fecha, Usuario usuario);
 
+    default List<Map<String, Object>> exportar(EntidadRequestDTO entidad, LocalDate fecha,
+                                                String mes, Usuario usuario) {
+        return exportar(entidad, fecha, usuario);
+    }
+
     String getNombreEntidad();
 }

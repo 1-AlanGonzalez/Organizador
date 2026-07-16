@@ -1,4 +1,4 @@
-<div th:fragment="panelIngreso">
+<div th:fragment="panelIngreso" class="editar-pago-page">
 
     <div class="card custom-card w-100 border-0">
         <div class="card-body p-4">
@@ -7,8 +7,7 @@
             <div class="d-flex align-items-center justify-content-between mb-4 pb-3">
                 <div class="d-flex align-items-center gap-3">
 
-                    <div class="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
-                         style="width:42px;height:42px;background:linear-gradient(135deg,#1f2a30,#2d3f46);">
+                    <div class="editar-pago-icon d-flex align-items-center justify-content-center rounded-3 flex-shrink-0">
 
                         <i data-lucide="receipt"
                            style="width:18px;height:18px;color:#fff;"></i>
@@ -16,7 +15,7 @@
                     </div>
 
                     <div>
-                        <h4 class="fw-bold mb-0">
+                        <h4 class="fw-bold text-dark mb-0">
                             Editar Pago
                         </h4>
 
@@ -65,7 +64,7 @@
                 </div>
 
 
-                <hr class="my-4">
+                <hr class="editar-pago-divider my-4">
 
 
                 <!-- Detalle del pago -->
@@ -150,14 +149,14 @@
                 </div>
 
 
-                <hr class="my-4">
+                <hr class="editar-pago-divider my-4">
 
 
                 <!-- Botones -->
                 <div class="d-flex flex-column gap-2">
 
                     <button type="submit"
-                            class="btn btn-dark-brand py-2 d-flex align-items-center justify-content-center gap-2">
+                            class="btn btn-guardar py-2 d-flex align-items-center justify-content-center gap-2">
 
                         <i data-lucide="save"
                            style="width:15px;height:15px;"></i>
@@ -168,7 +167,7 @@
 
 
                     <a th:href="@{/ingresos}"
-                       class="btn py-2 text-muted">
+                       class="btn btn-cancelar py-2">
 
                         Cancelar operación
 

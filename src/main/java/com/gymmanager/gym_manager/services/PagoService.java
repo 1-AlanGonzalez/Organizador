@@ -100,35 +100,20 @@ public class PagoService {
     }
     @Transactional
     public void eliminarPago(Integer id) {
-
-        Pago pago = pagoRepository.findById(id)
+        Usuario usuario = securityUtils.getUsuarioActual();
+        Pago pago = pagoRepository
+                .findByIdPagoAndActividadCliente_Cliente_Usuario(id, usuario)
                 .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
 
-        System.out.println("ANTES:");
-        System.out.println(pago.getEstado());
-        System.out.println(pago.getMontoAPagar());
-
         pago.restaurarPago();
-
-        System.out.println("DESPUÉS:");
-        System.out.println(pago.getEstado());
-        System.out.println(pago.getMontoAPagar());
-
-        System.out.println("ID: " + pago.getIdPago());
-        System.out.println("Estado: " + pago.getEstado());
-        System.out.println("Monto: " + pago.getMontoAPagar());
-
         pagoRepository.save(pago);
-
-        Pago actualizado = pagoRepository.findById(id).orElseThrow();
-
-        System.out.println("BD: " + actualizado.getEstado());
-        System.out.println("BD monto: " + actualizado.getMontoAPagar());
     }
 
     public Pago obtenerPago(Integer id) {
-        return pagoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+        Usuario usuario = securityUtils.getUsuarioActual();
+        return pagoRepository
+                .findByIdPagoAndActividadCliente_Cliente_Usuario(id, usuario)
+                .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
     }
 
     public Pago editarPago(
@@ -137,9 +122,13 @@ public class PagoService {
             String observaciones,
             LocalDate fechaDePago) {
 
-        Pago pago = obtenerPago(id);
+        Usuario usuario = securityUtils.getUsuarioActual();
+        Pago pago = pagoRepository
+                .findByIdPagoAndActividadCliente_Cliente_Usuario(id, usuario)
+                .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
 
-        MetodoDePago metodo = metodoDePagoRepository.findById(metodoPagoId)
+        MetodoDePago metodo = metodoDePagoRepository
+                .findByIdMetodoDePagoAndUsuario(metodoPagoId, usuario)
                 .orElseThrow(() ->
                         new RuntimeException("Método de pago no encontrado"));
 

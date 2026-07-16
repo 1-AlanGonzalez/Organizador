@@ -64,7 +64,7 @@ public class ExportService {
         }
 
         List<Map<String, Object>> datos =
-                strategy.exportar(entidadDTO, request.getFecha(), usuario);
+                strategy.exportar(entidadDTO, request.getFecha(), request.getMes(), usuario);
 
         resultado.put(entidadDTO.getNombre(), datos);
     }

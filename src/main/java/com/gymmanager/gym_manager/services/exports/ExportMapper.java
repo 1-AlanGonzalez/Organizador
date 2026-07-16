@@ -9,39 +9,35 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.gymmanager.gym_manager.entity.Anotation.ColumnLabel;
 
 public class ExportMapper {
     public static List<Map<String, Object>> mapearEntidad(Object entidad, List<String> atributos) {
 
-    List<Map<String, Object>> filas = new ArrayList<>();
-    filas.add(new LinkedHashMap<>()); // fila base vacía
+    Map<String, Object> fila = new LinkedHashMap<>();
 
     for (String atributo : atributos) {
         String nombreColumna = obtenerLabel(entidad, atributo);
-        List<Map<String, Object>> nuevasFilas = new ArrayList<>();
+        List<Object> valores = resolverRutaExpandida(entidad, atributo).stream()
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
 
-        for (Map<String, Object> filaActual : filas) {
-
-            List<Object> valores = resolverRutaExpandida(entidad, atributo);
-
-            if (valores.isEmpty()) {
-                filaActual.put(nombreColumna, null);
-                nuevasFilas.add(filaActual);
-            } else {
-                for (Object valor : valores) {
-                    Map<String, Object> copia = new LinkedHashMap<>(filaActual);
-                    copia.put(nombreColumna, valor);
-                    nuevasFilas.add(copia);
-                }
-            }
+        if (valores.isEmpty()) {
+            fila.put(nombreColumna, null);
+        } else if (valores.size() == 1) {
+            fila.put(nombreColumna, valores.get(0));
+        } else {
+            fila.put(nombreColumna, valores.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(", ")));
         }
-
-        filas = nuevasFilas;
     }
 
-    return filas;
+    return List.of(fila);
 }
 
 private static List<Object> resolverRutaExpandida(Object objeto, String ruta) {
