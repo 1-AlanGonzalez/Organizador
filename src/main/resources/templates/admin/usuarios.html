@@ -1,27 +1,208 @@
-<div th:fragment="contenido" class="h-100 d-flex flex-column ps-2 pe-2 pb-2 animate-entry">
+<div th:fragment="contenido" class="admin-users-page h-100 d-flex flex-column ps-2 pe-2 pb-2">
 
-    <!-- Lista de usuarios -->
-<table>
-  <tr th:each="u : ${usuarios}">
-    <td th:text="${u.username}"></td>
-    <td th:text="${u.nombreGimnasio}"></td>
-    <td>
-      <form th:action="@{/usuarios/eliminar/{id}(id=${u.id})}" method="post">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <button type="submit">Eliminar</button>
-      </form>
-    </td>
-  </tr>
-</table>
-
-<!-- Formulario crear usuario -->
-<form th:action="@{/usuarios/crear}" method="post">
-  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-  <input type="text"     name="username"      placeholder="Usuario"          required/>
-  <input type="text"     name="nombreGimnasio" placeholder="Nombre del gym" />
-  <input type="password" name="password"      placeholder="Contraseña"       required/>
-  <button type="submit">Crear usuario</button>
-</form>
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-3 pt-3 flex-shrink-0">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="admin-kicker">Administración</span>
+                <span class="badge rounded-pill admin-secure-badge">
+                    <i data-lucide="shield-check"></i> Acceso restringido
+                </span>
+            </div>
+            <h4 class="fw-bold text-dark mb-0">Usuarios y gimnasios</h4>
+            <p class="text-muted small mb-0">Creá cuentas, administrá accesos y restablecé contraseñas.</p>
+        </div>
+        <div class="admin-count-card">
+            <span class="admin-count-icon"><i data-lucide="building-2"></i></span>
+            <div>
+                <strong th:text="${#lists.size(usuarios)}">0</strong>
+                <small>cuentas registradas</small>
+            </div>
+        </div>
     </div>
 
+    <div th:if="${success}" class="alert alert-success admin-alert d-flex align-items-center gap-2" role="alert">
+        <i data-lucide="check-circle-2"></i><span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="alert alert-danger admin-alert d-flex align-items-center gap-2" role="alert">
+        <i data-lucide="circle-alert"></i><span th:text="${error}"></span>
+    </div>
+
+    <div class="row g-3 flex-grow-1 min-h-0">
+        <div class="col-xl-8 d-flex">
+            <section class="card custom-card border-0 flex-grow-1 overflow-hidden" aria-labelledby="listaUsuariosTitulo">
+                <div class="admin-card-header d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2">
+                    <div>
+                        <h6 id="listaUsuariosTitulo" class="fw-bold mb-1">Cuentas habilitadas</h6>
+                        <p class="text-muted small mb-0">Cada cuenta administra los datos de su propio gimnasio.</p>
+                    </div>
+                    <div class="input-group input-group-sm admin-search">
+                        <span class="input-group-text"><i data-lucide="search"></i></span>
+                        <input id="buscarUsuario" type="search" class="form-control"
+                               placeholder="Buscar cuenta..." aria-label="Buscar cuenta">
+                    </div>
+                </div>
+
+                <div class="table-responsive admin-users-table-wrap">
+                    <table class="table table-hover align-middle mb-0" id="tablaUsuarios">
+                        <thead>
+                            <tr class="text-secondary small text-uppercase">
+                                <th class="ps-4">Cuenta</th>
+                                <th>Gimnasio</th>
+                                <th>Rol</th>
+                                <th class="pe-4 text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="u : ${usuarios}">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="admin-avatar"
+                                              th:classappend="${u.rol == 'ROLE_ADMIN'} ? ' admin-avatar-owner' : ''"
+                                              th:text="${#strings.toUpperCase(#strings.substring(u.username, 0, 1))}">U</span>
+                                        <div>
+                                            <div class="fw-semibold text-dark" th:text="${u.username}">usuario</div>
+                                            <small class="text-muted" th:text="'ID #' + ${u.id}">ID #1</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="fw-medium"
+                                          th:text="${#strings.isEmpty(u.nombreGimnasio) ? 'Sin nombre configurado' : u.nombreGimnasio}">Gimnasio</span>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill admin-role-badge"
+                                          th:classappend="${u.rol == 'ROLE_ADMIN'} ? ' role-admin' : ' role-gym'">
+                                        <i th:attr="data-lucide=${u.rol == 'ROLE_ADMIN' ? 'shield' : 'building'}"></i>
+                                        <span th:text="${u.rol == 'ROLE_ADMIN' ? 'Administrador' : 'Gimnasio'}">Gimnasio</span>
+                                    </span>
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <div class="d-inline-flex gap-2">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary admin-icon-btn"
+                                                title="Restablecer contraseña"
+                                                data-bs-toggle="modal" data-bs-target="#modalResetPassword"
+                                                th:attr="data-user-id=${u.id},data-username=${u.username}"
+                                                onclick="prepararResetPassword(this)">
+                                            <i data-lucide="key-round"></i>
+                                            <span class="d-none d-xxl-inline">Contraseña</span>
+                                        </button>
+                                        <form th:if="${u.rol != 'ROLE_ADMIN'}"
+                                              th:action="@{/usuarios/eliminar/{id}(id=${u.id})}" method="post"
+                                              onsubmit="return confirm('¿Eliminar definitivamente esta cuenta y todos los datos de su gimnasio? Esta acción no se puede deshacer.');">
+                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger admin-icon-btn" title="Eliminar cuenta">
+                                                <i data-lucide="trash-2"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(usuarios)}">
+                                <td colspan="4" class="text-center py-5 text-muted">
+                                    <i data-lucide="users" class="admin-empty-icon"></i>
+                                    <p class="mb-0 mt-2">No hay cuentas registradas.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-xl-4 d-flex">
+            <section class="card custom-card border-0 flex-grow-1 admin-create-card" aria-labelledby="crearUsuarioTitulo">
+                <div class="admin-create-icon"><i data-lucide="user-plus"></i></div>
+                <h6 id="crearUsuarioTitulo" class="fw-bold mb-1">Nueva cuenta de gimnasio</h6>
+                <p class="text-muted small mb-4">La cuenta se crea con rol de gimnasio y datos completamente separados.</p>
+
+                <form th:action="@{/usuarios/crear}" method="post" class="d-flex flex-column gap-3">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <div>
+                        <label for="nombreGimnasio" class="form-label small fw-semibold">Nombre del gimnasio</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i data-lucide="building-2"></i></span>
+                            <input id="nombreGimnasio" type="text" name="nombreGimnasio" class="form-control"
+                                   placeholder="Ej. Fuerza Norte" autocomplete="organization">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="username" class="form-label small fw-semibold">Nombre de usuario</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i data-lucide="user"></i></span>
+                            <input id="username" type="text" name="username" class="form-control"
+                                   placeholder="usuario.gimnasio" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="password" class="form-label small fw-semibold">Contraseña inicial</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i data-lucide="lock-keyhole"></i></span>
+                            <input id="password" type="password" name="password" class="form-control"
+                                   placeholder="Mínimo 8 caracteres" minlength="8" autocomplete="new-password" required>
+                        </div>
+                        <div class="form-text">El usuario podrá cambiarla luego desde su perfil.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2 mt-2">
+                        <i data-lucide="plus-circle"></i> Crear cuenta
+                    </button>
+                </form>
+
+                <div class="admin-info-box mt-4">
+                    <i data-lucide="info"></i>
+                    <span>Las cuentas nuevas nunca reciben permisos administrativos.</span>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalResetPassword" tabindex="-1" aria-labelledby="resetPasswordTitulo" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0">
+                <form id="formResetPassword" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <div class="modal-header border-0 pb-0">
+                        <div>
+                            <span class="admin-modal-icon"><i data-lucide="key-round"></i></span>
+                            <h5 class="modal-title fw-bold mt-3" id="resetPasswordTitulo">Restablecer contraseña</h5>
+                            <p class="text-muted small mb-0">Cuenta: <strong id="resetUsername"></strong></p>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body py-4">
+                        <label for="nuevaPassword" class="form-label small fw-semibold">Nueva contraseña</label>
+                        <input id="nuevaPassword" type="password" name="nuevaPassword" class="form-control"
+                               minlength="8" placeholder="Mínimo 8 caracteres" autocomplete="new-password" required>
+                        <div class="form-text">La contraseña anterior dejará de funcionar inmediatamente.</div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
+                            <i data-lucide="save"></i> Guardar contraseña
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function prepararResetPassword(button) {
+            const userId = button.dataset.userId;
+            document.getElementById('resetUsername').textContent = button.dataset.username;
+            document.getElementById('formResetPassword').action = '/usuarios/resetear-password/' + userId;
+            document.getElementById('nuevaPassword').value = '';
+        }
+
+        document.getElementById('buscarUsuario')?.addEventListener('input', function () {
+            const termino = this.value.trim().toLowerCase();
+            document.querySelectorAll('#tablaUsuarios tbody tr').forEach(row => {
+                if (row.querySelector('[colspan]')) return;
+                row.style.display = row.textContent.toLowerCase().includes(termino) ? '' : 'none';
+            });
+        });
+
+        document.getElementById('modalResetPassword')?.addEventListener('shown.bs.modal', () => {
+            document.getElementById('nuevaPassword').focus();
+        });
+    </script>
 </div>

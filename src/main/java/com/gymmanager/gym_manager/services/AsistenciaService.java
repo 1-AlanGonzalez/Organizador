@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.ActividadCliente;
@@ -48,8 +50,14 @@ public class AsistenciaService {
 
     @Transactional
     public void registrarAsistencia(Integer idActividadCliente, LocalDate fecha, boolean presente) {
-        ActividadCliente ac = clienteActividadRepository.findById(idActividadCliente)
-            .orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
+        Usuario usuario = securityUtils.getUsuarioActual();
+
+        ActividadCliente ac = clienteActividadRepository
+                .findByIdActividadClienteAndCliente_Usuario(
+                        idActividadCliente,
+                        usuario
+                )
+                .orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
 
         Asistencia asistenciaExistente = asistenciaRepository.findByFechaAndActividadCliente(fecha, ac);
 
@@ -97,6 +105,18 @@ public class AsistenciaService {
             presente
         );
         }).collect(Collectors.toList());
+    }
+
+    public Page<ReporteAsistenciaDTO> generarReporteDiarioPaginado(
+            LocalDate fecha, Integer idActividad, String texto, Usuario usuario, Pageable pageable) {
+        return clienteActividadRepository.buscarActivas(
+                EstadoInscripcion.ACTIVA, usuario, texto, idActividad, pageable)
+                .map(inscripcion -> new ReporteAsistenciaDTO(
+                        inscripcion.getCliente().getNombre(),
+                        inscripcion.getCliente().getApellido(),
+                        inscripcion.getActividad().getNombre(),
+                        fecha,
+                        asistenciaRepository.existsByFechaAndActividadCliente(fecha, inscripcion)));
     }
 
     public LocalDate parsearFecha(String fecha) {

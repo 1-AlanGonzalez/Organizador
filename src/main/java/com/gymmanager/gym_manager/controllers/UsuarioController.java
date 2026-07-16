@@ -1,7 +1,5 @@
 package com.gymmanager.gym_manager.controllers;
 
-import java.math.BigDecimal;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,24 +9,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.repository.UsuarioRepository;
-import com.gymmanager.gym_manager.services.ConfiguracionDePagoService;
+import com.gymmanager.gym_manager.services.UsuarioAdminService;
 
 @Controller
 public class UsuarioController {
 
     private final UsuarioRepository          usuarioRepository;
     private final PasswordEncoder            passwordEncoder;
-    private final ConfiguracionDePagoService configuracionDePagoService;
     private final SecurityUtils              securityUtils;
+    private final UsuarioAdminService        usuarioAdminService;
 
     public UsuarioController(UsuarioRepository          usuarioRepository,
                              PasswordEncoder            passwordEncoder,
-                             ConfiguracionDePagoService configuracionDePagoService,
-                             SecurityUtils              securityUtils) {
+                             SecurityUtils              securityUtils,
+                             UsuarioAdminService        usuarioAdminService) {
         this.usuarioRepository          = usuarioRepository;
         this.passwordEncoder            = passwordEncoder;
-        this.configuracionDePagoService = configuracionDePagoService;
         this.securityUtils              = securityUtils;
+        this.usuarioAdminService        = usuarioAdminService;
     }
 
     // ── GET /usuarios — solo ADMIN ────────────────────────────────────────────
@@ -62,16 +60,21 @@ public class UsuarioController {
             return "redirect:/usuarios";
         }
 
-        Usuario nuevo = new Usuario();
-        nuevo.setUsername(username.trim());
-        nuevo.setPassword(passwordEncoder.encode(password));
-        nuevo.setNombreGimnasio(nombreGimnasio);
-        nuevo.setRol("ROLE_USER");
-        usuarioRepository.save(nuevo);
-        crearMetodosIniciales(nuevo);
+        try {
+            usuarioAdminService.crearGimnasio(
+                    username,
+                    password,
+                    nombreGimnasio
+            );
 
-        redirectAttributes.addFlashAttribute("success",
-                "Usuario '" + username + "' creado correctamente.");
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "Usuario '" + username + "' creado correctamente."
+            );
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
         return "redirect:/usuarios";
     }
 
@@ -110,8 +113,17 @@ public class UsuarioController {
             redirectAttributes.addFlashAttribute("error", "No podés eliminar tu propio usuario.");
             return "redirect:/usuarios";
         }
-        usuarioRepository.deleteById(id);
-        redirectAttributes.addFlashAttribute("success", "Usuario eliminado.");
+        try {
+            usuarioAdminService.eliminarGimnasio(id, actual.getId());
+            redirectAttributes.addFlashAttribute("success", "Usuario y datos del gimnasio eliminados.");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "No se pudo eliminar la cuenta. No se realizaron cambios."
+            );
+        }
         return "redirect:/usuarios";
     }
 
@@ -134,35 +146,46 @@ public class UsuarioController {
     public String cambiarPassword(@RequestParam String passwordActual,
                                   @RequestParam String passwordNueva,
                                   @RequestParam String confirmar,
+                                  @RequestParam(defaultValue = "false") boolean desdeConfiguracion,
                                   RedirectAttributes redirectAttributes) {
         Usuario usuario = securityUtils.getUsuarioActual();
 
         if (!passwordEncoder.matches(passwordActual, usuario.getPassword())) {
             redirectAttributes.addFlashAttribute("error", "La contraseña actual es incorrecta.");
-            return "redirect:/perfil";
+            return redireccionPerfil(desdeConfiguracion, redirectAttributes);
         }
 
         String error = validarPassword(passwordNueva, confirmar);
         if (error != null) {
             redirectAttributes.addFlashAttribute("error", error);
-            return "redirect:/perfil";
+            return redireccionPerfil(desdeConfiguracion, redirectAttributes);
         }
 
         usuario.setPassword(passwordEncoder.encode(passwordNueva));
         usuarioRepository.save(usuario);
         redirectAttributes.addFlashAttribute("success", "Contraseña actualizada correctamente.");
-        return "redirect:/perfil";
+        return redireccionPerfil(desdeConfiguracion, redirectAttributes);
     }
 
     // ── POST /perfil/actualizar ───────────────────────────────────────────────
 
     @PostMapping("/perfil/actualizar")
     public String actualizarPerfil(@RequestParam(required = false) String nombreGimnasio,
+                                   @RequestParam(defaultValue = "false") boolean desdeConfiguracion,
                                    RedirectAttributes redirectAttributes) {
         Usuario usuario = securityUtils.getUsuarioActual();
         usuario.setNombreGimnasio(nombreGimnasio);
         usuarioRepository.save(usuario);
         redirectAttributes.addFlashAttribute("success", "Perfil actualizado.");
+        return redireccionPerfil(desdeConfiguracion, redirectAttributes);
+    }
+
+    private String redireccionPerfil(boolean desdeConfiguracion,
+                                     RedirectAttributes redirectAttributes) {
+        if (desdeConfiguracion) {
+            redirectAttributes.addFlashAttribute("tabActivo", "cuenta");
+            return "redirect:/configuracion";
+        }
         return "redirect:/perfil";
     }
 
@@ -176,18 +199,4 @@ public class UsuarioController {
         return null;
     }
 
-    private void crearMetodosIniciales(Usuario usuario) {
-        crearMetodo("NO_ESPECIFICADO", BigDecimal.ZERO,        usuario);
-        crearMetodo("EFECTIVO",         BigDecimal.ZERO,        usuario);
-        crearMetodo("TRANSFERENCIA",    BigDecimal.ZERO,        usuario);
-        crearMetodo("TARJETA/CREDITO",  BigDecimal.valueOf(15), usuario);
-    }
-
-    private void crearMetodo(String nombre, BigDecimal recargo, Usuario usuario) {
-        try {
-            configuracionDePagoService.crearMetodoConRecargo(nombre, recargo, usuario);
-        } catch (IllegalArgumentException e) {
-            // Ya existe — ignorar
-        }
-    }
 }

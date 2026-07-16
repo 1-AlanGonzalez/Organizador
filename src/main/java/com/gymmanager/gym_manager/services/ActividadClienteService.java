@@ -79,7 +79,7 @@ public class ActividadClienteService {
         cliente.agregarInscripcion(inscripcion); 
         
         MetodoDePago metodoPago = metodoDePagoRepository
-                        .findByNombreAndUsuario("No especificado", usuario)
+                        .findByNombreAndUsuario("NO_ESPECIFICADO", usuario)
                         .orElseThrow(() -> new RuntimeException(
                                 "Método de pago 'NO_ESPECIFICADO' no encontrado para este usuario."));
 

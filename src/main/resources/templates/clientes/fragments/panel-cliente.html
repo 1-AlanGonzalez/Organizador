@@ -1,4 +1,4 @@
-<div th:fragment="panelCliente">
+<div th:fragment="panelCliente" class="cliente-panel-page">
 
     <div class="card custom-card w-100 border-0">
         <div class="card-body p-4">
@@ -24,6 +24,7 @@
             <!-- Error -->
             <div th:if="${error}"
                  class="d-flex align-items-center gap-2 px-3 py-2 rounded-3 small fw-medium mb-3"
+                 style="background:#fee2e2;color:#b91c1c;">
                 <i data-lucide="alert-triangle" style="width:15px;height:15px;flex-shrink:0;"></i>
                 <span th:text="${error}"></span>
             </div>
@@ -103,8 +104,8 @@
 
                             <!-- Tabla de actividades -->
                             <label class="label-titulos form-label small fw-bold mb-2" >Seleccionar Actividades</label>
-                            <div class="rounded-3 overflow-hidden custom-scrollbar"
-                                 style="tabla-actividades max-height:300px;overflow-y:auto;border:1.5px solid var(--border-color);">
+                            <div class="tabla-actividades rounded-3 overflow-hidden custom-scrollbar"
+                                 style="max-height:300px;overflow-y:auto;border:1.5px solid var(--border-color);">
                                 <table class="table act-table mb-0">
                                     <thead>
                                         <tr>

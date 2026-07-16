@@ -10,6 +10,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -18,6 +20,7 @@ import com.gymmanager.gym_manager.config.SecurityUtils;
 import com.gymmanager.gym_manager.entity.Cliente;
 import com.gymmanager.gym_manager.entity.MetodoDePago;
 import com.gymmanager.gym_manager.entity.Pago;
+import com.gymmanager.gym_manager.entity.EstadoPago;
 import com.gymmanager.gym_manager.entity.Usuario;
 import com.gymmanager.gym_manager.entity.dto.DeudaDTO;
 import com.gymmanager.gym_manager.repository.ClienteRepository;
@@ -57,14 +60,40 @@ public class IngresosController {
     // Carga la página con stats del mes actual por defecto
 
     @GetMapping
-    public String ingresos(Model model) {
+    public String ingresos(@RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "") String q,
+                           @RequestParam(required = false) String mes,
+                           @RequestParam(required = false) Integer anio,
+                           @RequestParam(defaultValue = "todos") String estado,
+                           Model model) {
         Usuario   usuario = securityUtils.getUsuarioActual();
-        YearMonth mesActual = YearMonth.now();
+        String mesFiltro = mes == null ? YearMonth.now().toString() : mes;
+        YearMonth mesActual = !mesFiltro.isBlank() ? YearMonth.parse(mesFiltro) : YearMonth.now();
 
         agregarStatsAlModelo(model, usuario, mesActual);
 
         model.addAttribute("mesSeleccionado",    mesActual.toString()); // "2025-03"
-        model.addAttribute("pagosRecientes",     pagoRepository.findPagosVisibles(usuario));
+        LocalDate desde = null;
+        LocalDate hasta = null;
+        if (!mesFiltro.isBlank()) {
+            YearMonth periodo = YearMonth.parse(mesFiltro);
+            desde = periodo.atDay(1);
+            hasta = periodo.atEndOfMonth();
+        } else if (anio != null) {
+            desde = LocalDate.of(anio, 1, 1);
+            hasta = LocalDate.of(anio, 12, 31);
+        }
+        EstadoPago estadoPago = "pagado".equals(estado) ? EstadoPago.PAGADO
+                : "pendiente".equals(estado) ? EstadoPago.ADEUDA : null;
+        Page<Pago> paginaPagos = pagoRepository.buscarVisibles(
+                usuario, q.trim(), estadoPago, desde, hasta,
+                PageRequest.of(Math.max(page, 0), 20));
+        model.addAttribute("pagosRecientes",     paginaPagos.getContent());
+        model.addAttribute("pagina", paginaPagos);
+        model.addAttribute("q", q.trim());
+        model.addAttribute("filtroMes", mesFiltro);
+        model.addAttribute("filtroAnio", anio);
+        model.addAttribute("estadoFiltro", estado);
         model.addAttribute("datosGrafico",       pagoRepository.obtenerIngresosMensuales(usuario.getId()));
         model.addAttribute("categoriasGrafico",  Arrays.asList(
                 "Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"));
@@ -133,11 +162,7 @@ public String nuevoIngreso(Model model) {
     Usuario usuario = securityUtils.getUsuarioActual();
 
     // Filtrar en memoria: solo clientes con al menos un pago ADEUDA > 0
-    List<Cliente> clientesConDeuda = clienteRepository.findByUsuario(usuario)
-            .stream()
-            .filter(c -> c.getInscripciones().stream()
-                    .anyMatch(i -> i.calcularAdeudado().compareTo(BigDecimal.ZERO) > 0))
-            .toList();
+    List<Cliente> clientesConDeuda = clienteRepository.findClientesConDeudaByUsuario(usuario);
 
     model.addAttribute("metodosPago",    configuracionDePagoService.listarActivos(usuario));
     model.addAttribute("clientes",       clientesConDeuda);
@@ -177,7 +202,9 @@ public String nuevoIngreso(Model model) {
     @GetMapping("/deudas")
     @ResponseBody
     public List<DeudaDTO> obtenerDeudas(@RequestParam Integer clienteId) {
-        return clienteRepository.findById(clienteId)
+        Usuario usuario = securityUtils.getUsuarioActual();
+
+        return clienteRepository.findByIdClienteAndUsuario(clienteId, usuario)
                 .orElseThrow()
                 .getInscripciones()
                 .stream()
@@ -188,6 +215,7 @@ public String nuevoIngreso(Model model) {
                 .filter(d -> d.montoAdeudado().compareTo(BigDecimal.ZERO) > 0)
                 .toList();
     }
+}
 
     // ── POST /ingresos/eliminar ────────────────────────────────────────────────
     @PostMapping("/eliminar/{id}")

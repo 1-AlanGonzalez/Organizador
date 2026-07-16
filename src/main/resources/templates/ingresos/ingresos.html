@@ -66,40 +66,46 @@
 
     </div>
 
-    <!-- Barra de herramientas (Estructura de tu amigo con clases limpias) -->
-    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0 animate-fade-up delay-1">
+    <!-- Barra de herramientas -->
+<form id="filtrosIngresos" method="get" th:action="@{/ingresos}"
+      class="card custom-card mb-3 p-3 flex-shrink-0 border-0 animate-fade-up delay-1">
+    <input type="hidden" name="estado" id="estadoIngreso" th:value="${estadoFiltro}">
+    <div class="d-flex flex-wrap gap-2 align-items-center">
 
-        <div class="d-flex flex-wrap gap-2 align-items-center">
-
-            <!-- Buscador -->
-            <div style="min-width:160px; flex:2;">
-                <div class="input-group input-group-sm">
-                    <span class="icons input-group-text bg-light border-end-0 text-muted">
-                        <i data-lucide="search" style="width:14px;height:14px;"></i>
-                    </span>
-
-                    <input type="text"
-                           id="buscadorTabla"
-                           class="form-control border-start-0 ps-0 bg-light"
-                           placeholder="Buscar por alumno...">
-                </div>
+        <!-- Buscador -->
+        <div style="min-width:160px; flex:2;">
+            <div class="input-group input-group-sm">
+                <span class="icons input-group-text bg-light border-end-0 text-muted">
+                    <i data-lucide="search" style="width:14px;height:14px;"></i>
+                </span>
+                <input type="search" id="buscadorTabla" name="q" th:value="${q}"
+                       class="form-control border-start-0 ps-0 bg-light"
+                       placeholder="Buscar por alumno...">
             </div>
 
-            <!-- Filtro MES -->
-            <div style="min-width:140px; flex:1;">
-                <div class="input-group input-group-sm">
-                    <span class="icons input-group-text bg-light border-end-0 text-muted">
-                        <i data-lucide="calendar" style="width:14px;height:14px;"></i>
-                    </span>
-
-                    <input type="month"
-                           id="filtroMes"
-                           class="form-control border-start-0 ps-0 bg-light"
-                           th:value="${mesSeleccionado}"
-                           title="Filtrar por mes">
-                </div>
+        <!-- Filtro MES -->
+        <div style="min-width:140px; flex:1;">
+            <div class="input-group input-group-sm">
+                <span class="icons input-group-text bg-light border-end-0 text-muted">
+                    <i data-lucide="calendar" style="width:14px;height:14px;"></i>
+                </span>
+                <input type="month" id="filtroMes" name="mes"
+                       class="form-control border-start-0 ps-0 bg-light"
+                       th:value="${filtroMes}"
+                       title="Filtrar por mes">
             </div>
 
+        <!-- Filtro AÑO -->
+        <div style="min-width:110px; flex:1;">
+            <div class="input-group input-group-sm">
+                <span class="icons input-group-text bg-light border-end-0 text-muted">
+                    <i data-lucide="calendar-range" style="width:14px;height:14px;"></i>
+                </span>
+                <select id="filtroAnio" name="anio" class="form-select form-select-sm border-start-0 bg-light">
+                    <option value="">Todos</option>
+                    <option th:each="year : ${#numbers.sequence(2020, 2030)}" th:value="${year}"
+                            th:selected="${year == filtroAnio}" th:text="${year}"></option>
+                </select>
             <!-- Filtro AÑO -->
             <div style="min-width:110px; flex:1;">
                 <div class="input-group input-group-sm">
@@ -135,7 +141,8 @@
         </div>
 
     </div>
-
+</form>
+    <!-- <p th:text="${pagosRecientes.size()}"></p> -->
     <!-- Tabla -->
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative animate-fade-up delay-2">
 
@@ -176,7 +183,7 @@
                 role="tablist">
 
                 <li class="nav-item">
-                    <button class="nav-link active fw-bold small px-3"
+                    <button class="nav-link fw-bold small px-3" th:classappend="${estadoFiltro == 'todos'} ? 'active'"
                             data-estado="todos"
                             onclick="filtrarEstado('todos')">
                         Todos
@@ -184,7 +191,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <button class="nav-link fw-bold small px-3"
+                    <button class="nav-link fw-bold small px-3" th:classappend="${estadoFiltro == 'pagado'} ? 'active'"
                             data-estado="pagado"
                             onclick="filtrarEstado('pagado')">
                         <i data-lucide="check-circle"
@@ -195,7 +202,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <button class="nav-link fw-bold small px-3"
+                    <button class="nav-link fw-bold small px-3" th:classappend="${estadoFiltro == 'pendiente'} ? 'active'"
                             data-estado="pendiente"
                             onclick="filtrarEstado('pendiente')">
                         <i data-lucide="clock"
@@ -487,9 +494,18 @@
 
         </div>
 
+        <div class="border-top px-3 py-2 d-flex justify-content-between align-items-center">
+            <span class="small text-muted" th:text="${'Movimientos: ' + pagina.totalElements}"></span>
+            <div class="btn-group btn-group-sm" th:if="${pagina.totalPages > 1}">
+                <a class="btn btn-outline-secondary" th:classappend="${pagina.first} ? 'disabled'"
+                   th:href="@{/ingresos(page=${pagina.number - 1},q=${q},mes=${filtroMes},anio=${filtroAnio},estado=${estadoFiltro})}">Anterior</a>
+                <span class="btn btn-outline-secondary disabled" th:text="${pagina.number + 1 + ' / ' + pagina.totalPages}"></span>
+                <a class="btn btn-outline-secondary" th:classappend="${pagina.last} ? 'disabled'"
+                   th:href="@{/ingresos(page=${pagina.number + 1},q=${q},mes=${filtroMes},anio=${filtroAnio},estado=${estadoFiltro})}">Siguiente</a>
+            </div>
+        </div>
     </div>
 
-    <script th:src="@{/js/pagination.js}"></script>
     <script th:src="@{/js/ingresos.js}"></script>
 
 </div>

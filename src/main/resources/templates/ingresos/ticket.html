@@ -220,6 +220,11 @@
             letter-spacing: 0.05em;
         }
 
+        @page {
+            size: auto;
+            margin: 0;
+        }
+
         @media print {
             :root,
             html[data-theme="dark"] {
@@ -235,7 +240,11 @@
                 --border-color: #e2e8f0;
                 --border-soft: #f1f5f9;
             }
-            body { background: #fff; padding: 0; }
+            body {
+                background: #fff;
+                padding: 10mm;
+                min-height: auto;
+            }
             .acciones { display: none; }
             .ticket { box-shadow: none; border-radius: 0; max-width: 100%; }
             html[data-theme="dark"] .badge-pagado {

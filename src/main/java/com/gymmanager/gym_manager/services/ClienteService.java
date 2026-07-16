@@ -126,7 +126,7 @@ Cliente cliente,
                                 inscripcion.getIdActividadCliente(),
                                 metodoPago.getIdMetodoDePago(),
                                 observacionPago,
-                                LocalDate.now()
+                                inscripcion.getFechaDeInscripcion()
                         )
                 );
     }
@@ -214,15 +214,15 @@ Cliente cliente,
     }
     // Método para validar los cupos antes de guardar un cliente
     private void validarCuposDisponibles(List<Integer> idActividades) {
-        // Validación 1.
-        if (idActividades == null || idActividades.isEmpty()) return;
-        // Validación 2.
-        // Itero en cada actividad.
+        if (idActividades == null || idActividades.isEmpty()) {
+            return;
+        }
+
+        Usuario usuario = securityUtils.getUsuarioActual();
+
         for (Integer idActividad : idActividades) {
-            Actividad actividad = actividadRepository.findById(idActividad)
-                    .orElseThrow(() -> 
-                        new IllegalArgumentException("Actividad no encontrada ID: " + idActividad)
-                    );
+            Actividad actividad =
+                    obtenerActividadDeUsuario(idActividad, usuario);
 
             int inscriptosActuales =
                     clienteActividadRepository.countByActividadAndEstado(
@@ -232,7 +232,8 @@ Cliente cliente,
 
             if (inscriptosActuales >= actividad.getCupoMaximo()) {
                 throw new IllegalArgumentException(
-                    "No hay cupos disponibles para la actividad: " + actividad.getNombre()
+                        "No hay cupos disponibles para la actividad: "
+                                + actividad.getNombre()
                 );
             }
         }
@@ -263,31 +264,54 @@ Cliente cliente,
     }
 
     private void validarEdicion(Cliente cliente) {
-        if (!clienteRepository.existsById(cliente.getIdCliente())) {
-            throw new RuntimeException("El cliente que intenta editar no existe.");
+        Usuario usuario = securityUtils.getUsuarioActual();
+
+        boolean perteneceAlUsuario = clienteRepository
+                .findByIdClienteAndUsuario(
+                        cliente.getIdCliente(),
+                        usuario
+                )
+                .isPresent();
+
+        if (!perteneceAlUsuario) {
+            throw new RuntimeException(
+                    "El cliente que intenta editar no existe."
+            );
         }
     }
 
     @Transactional
-    public Cliente registrarClienteEInscribir(Cliente cliente,
-                                               List<Integer> idActividades,
-                                               Map<Integer, LocalDate> fechasPorActividad,
-                                               TipoDeCobro tipoDeCobro) {
+    public Cliente registrarClienteEInscribir(
+            Cliente cliente,
+            List<Integer> idActividades,
+            Map<Integer, LocalDate> fechasPorActividad,
+            TipoDeCobro tipoDeCobro) {
+
         Usuario usuario = securityUtils.getUsuarioActual();
 
-        if (clienteRepository.existsByDniAndUsuario(cliente.getDni(), usuario))
+        if (clienteRepository.existsByDniAndUsuario(
+                cliente.getDni(), usuario)) {
             throw new RuntimeException("El cliente ya existe.");
+        }
 
         Cliente clienteGuardado = clienteRepository.save(cliente);
 
         for (Integer idActividad : idActividades) {
-            Actividad actividad = actividadRepository.findById(idActividad)
-                    .orElseThrow(() -> new RuntimeException(
-                            "Actividad no encontrada ID: " + idActividad));
+            Actividad actividad =
+                    obtenerActividadDeUsuario(idActividad, usuario);
 
-            LocalDate fecha = fechasPorActividad.getOrDefault(idActividad, LocalDate.now());
-            
-            actividadClienteService.inscribirCliente(clienteGuardado, actividad, fecha, tipoDeCobro, usuario);
+            LocalDate fecha = fechasPorActividad.getOrDefault(
+                    idActividad,
+                    LocalDate.now()
+            );
+
+            actividadClienteService.inscribirCliente(
+                    clienteGuardado,
+                    actividad,
+                    fecha,
+                    tipoDeCobro,
+                    usuario
+            );
         }
 
         return clienteGuardado;
@@ -317,10 +341,16 @@ Cliente cliente,
     }
     
     // SUBMÉTODOS 
-    
-    
+
+
     private Cliente obtenerCliente(Integer idCliente) {
-        return clienteRepository.findById(idCliente).orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+        Usuario usuario = securityUtils.getUsuarioActual();
+
+        return clienteRepository
+                .findByIdClienteAndUsuario(idCliente, usuario)
+                .orElseThrow(() -> new RuntimeException(
+                        "Cliente no encontrado"
+                ));
     }
 
     private void actualizarDatosPersonales(Cliente db, Cliente form) {
@@ -350,60 +380,84 @@ Cliente cliente,
             }
         }
     }
-    
+    private Actividad obtenerActividadDeUsuario(Integer idActividad,
+                                                Usuario usuario) {
+        return actividadRepository
+                .findByIdActividadAndUsuario(idActividad, usuario)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Actividad no encontrada ID: " + idActividad
+                ));
+    }
     private void procesarAltasYReactivaciones(
-        Cliente cliente,
-        List<Integer> idsNuevos,
-        LocalDate fechaInicio,
-        TipoDeCobro tipoDeCobro
-        ) {
-            Usuario usuario = securityUtils.getUsuarioActual();
-            for (Integer idActividad : idsNuevos) {
-                
-                Actividad actividad = actividadRepository.findById(idActividad)
-                .orElseThrow(() -> new RuntimeException("Actividad no encontrada ID: " + idActividad));
-                
-                Optional<ActividadCliente> existente = cliente.getInscripciones().stream()
-                .filter(i -> i.getActividad().getIdActividad().equals(idActividad))
-                .findFirst();
-                if (existente.isPresent()) {
-                    manejarInscripcionExistente(existente.get(), actividad, tipoDeCobro);
-                } else {
-                    inscribirNueva(cliente, actividad, fechaInicio, tipoDeCobro, usuario);
-                }
+            Cliente cliente,
+            List<Integer> idsNuevos,
+            LocalDate fechaInicio,
+            TipoDeCobro tipoDeCobro) {
+
+        Usuario usuario = securityUtils.getUsuarioActual();
+
+        for (Integer idActividad : idsNuevos) {
+            Actividad actividad =
+                    obtenerActividadDeUsuario(idActividad, usuario);
+
+            Optional<ActividadCliente> existente =
+                    cliente.getInscripciones()
+                            .stream()
+                            .filter(inscripcion ->
+                                    inscripcion.getActividad()
+                                            .getIdActividad()
+                                            .equals(idActividad)
+                            )
+                            .findFirst();
+
+            if (existente.isPresent()) {
+                manejarInscripcionExistente(
+                        existente.get(),
+                        actividad,
+                        tipoDeCobro
+                );
+            } else {
+                inscribirNueva(
+                        cliente,
+                        actividad,
+                        fechaInicio,
+                        tipoDeCobro,
+                        usuario
+                );
             }
         }
-        private void manejarInscripcionExistente(
-            ActividadCliente inscripcion,
-            Actividad actividad,
-            TipoDeCobro tipoDeCobro
-            ) {
-                // Si la actividad ya existe en el cliente pero está dada de BAJA
-                if (inscripcion.getEstado() == EstadoInscripcion.BAJA) {
-                    inscripcion.setEstado(EstadoInscripcion.ACTIVA);
-                    inscripcion.setFechaDeInscripcion(LocalDate.now());
-                }
-                // También actualizamos el tipoDeCobro en caso de haber cambiado.
-                if (inscripcion.getTipoDeCobro() != tipoDeCobro) {
-                    inscripcion.setTipoDeCobro(tipoDeCobro);
-                }
-                // Y actualizamos el costo por si es MENSUAL o DIARIO
-                actualizarCosto(inscripcion, actividad);
+    }
+    private void manejarInscripcionExistente(
+        ActividadCliente inscripcion,
+        Actividad actividad,
+        TipoDeCobro tipoDeCobro
+        ) {
+            // Si la actividad ya existe en el cliente pero está dada de BAJA
+            if (inscripcion.getEstado() == EstadoInscripcion.BAJA) {
+                inscripcion.setEstado(EstadoInscripcion.ACTIVA);
+                inscripcion.setFechaDeInscripcion(LocalDate.now());
             }
+            // También actualizamos el tipoDeCobro en caso de haber cambiado.
+            if (inscripcion.getTipoDeCobro() != tipoDeCobro) {
+                inscripcion.setTipoDeCobro(tipoDeCobro);
+            }
+            // Y actualizamos el costo por si es MENSUAL o DIARIO
+            actualizarCosto(inscripcion, actividad);
+        }
 
-        private void actualizarCosto(ActividadCliente inscripcion, Actividad actividad) {
-            if (inscripcion.getTipoDeCobro() == TipoDeCobro.DIARIO) {
-                inscripcion.setCosto(
-                    // Acá por si ocurre algún error de por medio, siempre devuelvo la mensualidad en caso de no existir el precio diario (a analizar)
-                    actividad.getPrecioDiario() != null
-                    ? actividad.getPrecioDiario()
-                    : actividad.getPrecio()
-                    );
-                } else {
-                    // Si no, devuelvo el precio mensual
-                    inscripcion.setCosto(actividad.getPrecio());
-                }
+    private void actualizarCosto(ActividadCliente inscripcion, Actividad actividad) {
+        if (inscripcion.getTipoDeCobro() == TipoDeCobro.DIARIO) {
+            inscripcion.setCosto(
+                // Acá por si ocurre algún error de por medio, siempre devuelvo la mensualidad en caso de no existir el precio diario (a analizar)
+                actividad.getPrecioDiario() != null
+                ? actividad.getPrecioDiario()
+                : actividad.getPrecio()
+                );
+            } else {
+                // Si no, devuelvo el precio mensual
+                inscripcion.setCosto(actividad.getPrecio());
             }
+        }
         
     private void inscribirNueva(Cliente cliente, Actividad actividad, LocalDate fechaInicio, TipoDeCobro tipoDeCobro, Usuario usuario) {
             LocalDate fechaAlta = (fechaInicio != null) ? fechaInicio : LocalDate.now();
@@ -412,9 +466,7 @@ Cliente cliente,
 
     @Transactional
     public void eliminarCliente(Integer idCliente) {
-        Cliente cliente = clienteRepository.findById(idCliente)
-            .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-    
+        Cliente cliente = obtenerCliente(idCliente);
         clienteRepository.delete(cliente);
     }
 

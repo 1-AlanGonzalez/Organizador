@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -53,12 +56,37 @@ public class ClientesController {
     }
 
     @GetMapping
-    public String clientes(Model model) {
+    public String clientes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "") String q,
+            @RequestParam(defaultValue = "") String actividad,
+            Model model) {
         
         Usuario usuario = securityUtils.getUsuarioActual();
+        int paginaSolicitada = Math.max(page, 0);
+        String textoFiltro = q == null ? "" : q.trim();
+        String actividadFiltro = actividad == null ? "" : actividad.trim();
+        Page<Cliente> paginaClientes = clienteRepository.buscarPagina(
+                usuario, textoFiltro, actividadFiltro,
+                PageRequest.of(paginaSolicitada, 20, Sort.by("apellido", "nombre").ascending()));
+
+        int paginaActual = paginaClientes.getNumber();
+        int totalPaginas = paginaClientes.getTotalPages();
+        int paginaInicial = Math.max(0, paginaActual - 2);
+        int paginaFinal = Math.min(Math.max(totalPaginas - 1, 0), paginaActual + 2);
 
         model.addAttribute("actividades", actividadRepository.findByUsuario(usuario));
-        model.addAttribute("clientes", clienteRepository.findByUsuario(usuario));
+        model.addAttribute("clientes", paginaClientes.getContent());
+        model.addAttribute("paginaActual", paginaActual);
+        model.addAttribute("totalPaginas", totalPaginas);
+        model.addAttribute("totalClientes", paginaClientes.getTotalElements());
+        model.addAttribute("paginaInicial", paginaInicial);
+        model.addAttribute("paginaFinal", paginaFinal);
+        model.addAttribute("q", textoFiltro);
+        model.addAttribute("actividadFiltro", actividadFiltro);
+        model.addAttribute("primerCliente", paginaClientes.isEmpty() ? 0 : paginaActual * 20 + 1);
+        model.addAttribute("ultimoCliente", paginaClientes.isEmpty() ? 0
+                : paginaActual * 20 + paginaClientes.getNumberOfElements());
         model.addAttribute("cliente", new Cliente());
         
         model.addAttribute("metodosPago", configuracionDePagoService.listarActivos(usuario));
@@ -169,16 +197,22 @@ public class ClientesController {
 
     @GetMapping("/ver/{id}")
     public String verCliente(@PathVariable Integer id, Model model) {
+        Usuario usuario = securityUtils.getUsuarioActual();
+
         Cliente cliente = clienteService.obtenerClienteDeUsuario(id);
-        List<Pago> pagos = pagoRepository.findByActividadCliente_Cliente_IdClienteOrderByFechaGeneracionDesc(id);
+        List<Pago> pagos = pagoRepository
+                .findByActividadCliente_Cliente_IdClienteAndActividadCliente_Cliente_UsuarioOrderByFechaGeneracionDesc(
+                id,
+                usuario
+        );
         model.addAttribute("cliente", cliente);
         model.addAttribute("historialPagos", pagos);
         model.addAttribute("title", "Gym Manager | Detalle Cliente");
         model.addAttribute("header", "Clientes / " + cliente.getNombre() + " " + cliente.getApellido());
         model.addAttribute("active", "clientes");
-        model.addAttribute("vista", "clientes/ver_cliente"); 
-        model.addAttribute("fragmento", "detalle_cliente"); 
-        return "layouts/main"; 
+        model.addAttribute("vista", "clientes/ver_cliente");
+        model.addAttribute("fragmento", "detalle_cliente");
+        return "layouts/main";
     }
 
     private void prepararModeloBase(Model model, String title, String header) {

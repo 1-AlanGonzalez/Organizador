@@ -32,20 +32,21 @@
 </div>
 
     <!-- Buscador -->
-    <div class="card custom-card mb-3 p-3 flex-shrink-0 border-0">
+    <form class="card custom-card mb-3 p-3 flex-shrink-0 border-0" method="get" th:action="@{/actividades}">
         <div class="row">
             <div class="col-md-4">
                 <div class="input-group input-group-sm">
                     <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="search" style="width:14px;height:14px;"></i>
                     </span>
-                    <input id="filtroActividades" type="text"
+                    <input id="filtroActividades" name="q" type="search" th:value="${q}"
                            class="form-control border-start-0 ps-0 bg-light"
                            placeholder="Buscar actividad...">
                 </div>
             </div>
+            <div class="col-md-auto"><button class="btn btn-primary btn-sm" type="submit">Buscar</button></div>
         </div>
-    </div>
+    </form>
 
     <!-- Tabla -->
     <div class="card custom-card border-0 flex-grow-1 overflow-hidden position-relative">
@@ -144,7 +145,16 @@
                 </tbody>
             </table>
         </div>
-        <div id="paginadorActividades" class="border-top px-3 flex-shrink-0"></div>
+        <div class="border-top px-3 py-2 d-flex justify-content-between align-items-center">
+            <span class="small text-muted" th:text="${'Total: ' + pagina.totalElements}"></span>
+            <div class="btn-group btn-group-sm" th:if="${pagina.totalPages > 1}">
+                <a class="btn btn-outline-secondary" th:classappend="${pagina.first} ? 'disabled'"
+                   th:href="@{/actividades(page=${pagina.number - 1},q=${q})}">Anterior</a>
+                <span class="btn btn-outline-secondary disabled" th:text="${pagina.number + 1 + ' / ' + pagina.totalPages}"></span>
+                <a class="btn btn-outline-secondary" th:classappend="${pagina.last} ? 'disabled'"
+                   th:href="@{/actividades(page=${pagina.number + 1},q=${q})}">Siguiente</a>
+            </div>
+        </div>
     </div>
 
     <!-- Panel eliminar — solo confirmación, se mantiene como overlay -->
@@ -154,8 +164,4 @@
     </div>
 
     <script th:src="@{/js/actividades.js}"></script>
-    <script th:src="@{/js/pagination.js}"></script>
-    <script>
-        initPaginator('tablaActividades', 'paginadorActividades', 10);
-    </script>
 </div>

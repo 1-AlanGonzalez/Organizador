@@ -64,7 +64,7 @@ public class PagoSchedulerService {
 
             // Generar nuevo pago ADEUDA
             Usuario usuario = inscripcion.getCliente().getUsuario();
-            MetodoDePago sinMetodo = metodoDePagoRepository.findByNombreAndUsuario("No especificado", usuario).orElse(null);
+            MetodoDePago sinMetodo = metodoDePagoRepository.findByNombreAndUsuario("NO_ESPECIFICADO", usuario).orElse(null);
 
             Pago nuevoPago = new Pago();
             nuevoPago.setActividadCliente(inscripcion);

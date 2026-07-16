@@ -2,6 +2,7 @@ package com.gymmanager.gym_manager.controllers;
 
 import java.time.LocalDate;
 
+import com.gymmanager.gym_manager.entity.Usuario;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,17 +32,23 @@ public class PagoController {
     // ── POST /pagos/pagar ─────────────────────────────────────────────────────
 
     @PostMapping("/pagar")
-    public String pagar(@RequestParam Integer idPago,
-                        @RequestParam Integer metodoPagoId,
-                        @RequestParam(required = false) String observaciones,
-                        @RequestParam (required = false) LocalDate fechaDePago,
-                        RedirectAttributes redirectAttributes) {
-        System.out.println("ActividadCliente: " + idPago);
-        System.out.println("MetodoPago: " + metodoPagoId);
+    public String pagar(
+            @RequestParam Integer idActividadCliente,
+            @RequestParam Integer metodoPagoId,
+            @RequestParam(required = false) String observaciones,
+            @RequestParam(required = false) LocalDate fechaDePago,
+            RedirectAttributes redirectAttributes
+    ) {
         try {
-            Pago pago = pagoService.procesarPago(idPago, metodoPagoId, observaciones, fechaDePago);
-            // Redirige al ticket imprimible con el ID del pago recién registrado
+            Pago pago = pagoService.procesarPago(
+                    idActividadCliente,
+                    metodoPagoId,
+                    observaciones,
+                    fechaDePago
+            );
+
             return "redirect:/pagos/ticket/" + pago.getIdPago();
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/clientes";
@@ -52,17 +59,20 @@ public class PagoController {
 
     @GetMapping("/ticket/{idPago}")
     public String verTicket(@PathVariable Integer idPago, Model model) {
-        Pago pago = pagoRepository.findById(idPago)
-                .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
+        Usuario usuarioActual = securityUtils.getUsuarioActual();
 
-        // Seguridad: solo el dueño del pago puede ver el ticket
-        var usuarioActual = securityUtils.getUsuarioActual();
-        var usuarioPago   = pago.getActividadCliente().getCliente().getUsuario();
-        if (!usuarioActual.getId().equals(usuarioPago.getId()))
-            return "redirect:/clientes";
+        Pago pago = pagoRepository
+                .findByIdPagoAndActividadCliente_Cliente_Usuario(
+                        idPago,
+                        usuarioActual
+                )
+                .orElseThrow(() -> new RuntimeException(
+                        "Pago no encontrado"
+                ));
 
-        model.addAttribute("pago",    pago);
+        model.addAttribute("pago", pago);
         model.addAttribute("usuario", usuarioActual);
+
         return "ingresos/ticket";
     }
 }

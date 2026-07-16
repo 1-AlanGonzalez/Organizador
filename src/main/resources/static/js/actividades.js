@@ -5,6 +5,14 @@ function setVal(id, value) {
     if (el) el.value = (value !== null && value !== undefined) ? value : "";
 }
 
+function escaparAtributo(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+}
+
 // ── Filas de instructor dinámicas ─────────────────────────────────────────────
 
 function resetFilasInstructor() {
@@ -33,11 +41,11 @@ function agregarFilaInstructor(instructorId = null, dias = "", horario = "") {
         </div>
         <div class="col-md-3">
             <input type="text" name="dias" class="form-control form-control-sm"
-                   placeholder="Lun - Mie" value="${dias || ""}" required>
+                   placeholder="Lun - Mie" value="${escaparAtributo(dias)}" required>
         </div>
         <div class="col-md-3">
             <input type="text" name="horarios" class="form-control form-control-sm"
-                   placeholder="18:00" value="${horario || ""}" required>
+                   placeholder="18:00" value="${escaparAtributo(horario)}" required>
         </div>
         <div class="col-md-2">
             <button type="button" class="btn btn-sm btn-outline-danger w-100 btn-quitar-instructor"
@@ -61,6 +69,31 @@ function actualizarBotonesEliminar() {
         const btn = f.querySelector(".btn-quitar-instructor");
         if (btn) btn.style.visibility = filas.length === 1 ? "hidden" : "visible";
     });
+}
+
+function validarAsignaciones(form) {
+    const combinaciones = new Set();
+    let duplicado = false;
+
+    form.querySelectorAll(".fila-instructor").forEach(fila => {
+        const instructor = fila.querySelector('[name="instructorIds"]');
+        const dias = fila.querySelector('[name="dias"]');
+        const horario = fila.querySelector('[name="horarios"]');
+        [instructor, dias, horario].forEach(campo => campo?.setCustomValidity(""));
+
+        const normalizar = valor => valor.trim().replace(/\s+/g, " ").toLocaleLowerCase("es");
+        const clave = `${instructor?.value}|${normalizar(dias?.value || "")}|${normalizar(horario?.value || "")}`;
+        if (combinaciones.has(clave)) {
+            const mensaje = "Este instructor ya tiene una asignación con los mismos días y horario.";
+            instructor?.setCustomValidity(mensaje);
+            dias?.setCustomValidity(mensaje);
+            horario?.setCustomValidity(mensaje);
+            duplicado = true;
+        }
+        combinaciones.add(clave);
+    });
+
+    return !duplicado;
 }
 
 // ── Panel eliminar ────────────────────────────────────────────────────────────
@@ -152,5 +185,15 @@ document.addEventListener("DOMContentLoaded", function () {
             agregarFilaInstructor(); // fila vacía para nueva actividad
         }
     }
+
+    const formActividad = container?.closest("form");
+    container?.addEventListener("input", event => event.target.setCustomValidity?.(""));
+    container?.addEventListener("change", event => event.target.setCustomValidity?.(""));
+    formActividad?.addEventListener("submit", event => {
+        if (!validarAsignaciones(formActividad)) {
+            event.preventDefault();
+            formActividad.reportValidity();
+        }
+    });
 
 });

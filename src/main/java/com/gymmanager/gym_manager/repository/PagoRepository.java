@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
@@ -19,6 +21,11 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
     
     Optional<Pago> findByActividadCliente_IdActividadClienteAndEstado(Integer idActividadCliente, EstadoPago estado);
     List<Pago> findByActividadCliente_Cliente_IdClienteOrderByFechaGeneracionDesc(Integer idCliente);
+    List<Pago>
+            findByActividadCliente_Cliente_IdClienteAndActividadCliente_Cliente_UsuarioOrderByFechaGeneracionDesc(
+            Integer idCliente,
+            Usuario usuario
+    );
     void deleteByMetodoPago(MetodoDePago metodo);
     
 
@@ -55,17 +62,7 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
             @Param("metodo")  MetodoDePago metodo,
             @Param("usuario") Usuario usuario);
 
-    // Ingresos mensuales (para gráfico)
-    // @Query(value = """
-    // SELECT MONTH(fecha_generacion) AS mes,
-    //        SUM(monto_a_pagar) AS total
-    // FROM pago
-    // WHERE estado_pago = 'PAGADO'
-    //   AND YEAR(fecha_generacion) = YEAR(CURDATE())
-    // GROUP BY MONTH(fecha_generacion)
-    // ORDER BY MONTH(fecha_generacion)
-    // """, nativeQuery = true)
-    // List<Object[]> obtenerIngresosMensuales();
+
     @Query(value = """
         SELECT MONTH(fecha_generacion) AS mes,
                SUM(monto_a_pagar) AS total
@@ -81,12 +78,6 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
     List<Object[]> obtenerIngresosMensuales(@Param("usuarioId") Integer usuarioId);
 
 
-
-    // @Query("SELECT COALESCE(SUM(p.montoAPagar), 0) FROM Pago p " +
-    //     "WHERE p.estado = 'PAGADO' " +
-    //     "AND MONTH(p.fechaGeneracion) = :mes " +
-    //     "AND YEAR(p.fechaGeneracion) = :anio")
-    // BigDecimal sumTotalRecaudadoEnMes(@Param("mes") int mes, @Param("anio") int anio);
     @Query("SELECT COALESCE(SUM(p.montoAPagar), 0) FROM Pago p " +
            "WHERE p.estado = 'PAGADO' " +
            "AND MONTH(p.fechaGeneracion) = :mes " +
@@ -149,11 +140,50 @@ Optional<Pago> findByActividadCliente_IdActividadClienteAndFechaGeneracion(
        "AND (p.estado = 'PAGADO' OR p.estado = 'ADEUDA') " +
        "AND p.actividadCliente.estado = 'ACTIVA' " +
        "ORDER BY p.fechaGeneracion DESC")
-List<Pago> findPagosVisibles(@Param("usuario") Usuario usuario);
+    List<Pago> findPagosVisibles(@Param("usuario") Usuario usuario);
 
-Optional<Pago> findTopByActividadCliente_IdActividadClienteOrderByFechaGeneracionDesc(Integer idActividadCliente);
-List<Pago> findByFechaGeneracion(LocalDate fechaGeneracion);
-List<Pago> findByActividadCliente_Cliente_UsuarioAndFechaGeneracion(Usuario usuario, LocalDate fechaGeneracion);
-List<Pago> findByActividadCliente_Cliente_Usuario(Usuario usuario);
+    @Query("SELECT p FROM Pago p " +
+           "WHERE p.actividadCliente.cliente.usuario = :usuario " +
+           "AND (p.estado = 'PAGADO' OR p.estado = 'ADEUDA') " +
+           "AND p.actividadCliente.estado = 'ACTIVA' " +
+           "ORDER BY p.fechaGeneracion DESC")
+    Page<Pago> findPagosVisibles(@Param("usuario") Usuario usuario, Pageable pageable);
+
+    @Query("""
+        SELECT p FROM Pago p
+        WHERE p.actividadCliente.cliente.usuario = :usuario
+          AND (p.estado = 'PAGADO' OR p.estado = 'ADEUDA')
+          AND p.actividadCliente.estado = 'ACTIVA'
+          AND (:texto = ''
+               OR LOWER(p.actividadCliente.cliente.nombre) LIKE LOWER(CONCAT('%', :texto, '%'))
+               OR LOWER(p.actividadCliente.cliente.apellido) LIKE LOWER(CONCAT('%', :texto, '%'))
+               OR LOWER(p.actividadCliente.actividad.nombre) LIKE LOWER(CONCAT('%', :texto, '%')))
+          AND (:estado IS NULL OR p.estado = :estado)
+          AND (:desde IS NULL OR p.fechaGeneracion >= :desde)
+          AND (:hasta IS NULL OR p.fechaGeneracion <= :hasta)
+        ORDER BY p.fechaGeneracion DESC
+        """)
+    Page<Pago> buscarVisibles(@Param("usuario") Usuario usuario,
+                              @Param("texto") String texto,
+                              @Param("estado") EstadoPago estado,
+                              @Param("desde") LocalDate desde,
+                              @Param("hasta") LocalDate hasta,
+                              Pageable pageable);
+
+    Optional<Pago> findTopByActividadCliente_IdActividadClienteOrderByFechaGeneracionDesc(Integer idActividadCliente);
+    List<Pago> findByFechaGeneracion(LocalDate fechaGeneracion);
+    List<Pago> findByActividadCliente_Cliente_UsuarioAndFechaGeneracion(Usuario usuario, LocalDate fechaGeneracion);
+    List<Pago> findByActividadCliente_Cliente_Usuario(Usuario usuario);
+
+    Optional<Pago>
+            findByActividadCliente_IdActividadClienteAndEstadoAndActividadCliente_Cliente_Usuario(
+            Integer idActividadCliente,
+            EstadoPago estado,
+            Usuario usuario
+    );
+    Optional<Pago> findByIdPagoAndActividadCliente_Cliente_Usuario(
+            Integer idPago,
+            Usuario usuario
+    );
 
 }  

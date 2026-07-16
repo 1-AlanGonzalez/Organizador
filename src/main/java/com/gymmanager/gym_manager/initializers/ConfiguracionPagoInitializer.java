@@ -3,6 +3,7 @@ package com.gymmanager.gym_manager.initializers;
 import java.math.BigDecimal;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.gymmanager.gym_manager.entity.ConfiguracionDePago;
@@ -32,6 +33,7 @@ import com.gymmanager.gym_manager.repository.UsuarioRepository;
 //solo si no existen, así el sistema siempre arranca con reglas válidas.”
 
 @Component
+@Order(2)
 public class ConfiguracionPagoInitializer implements  CommandLineRunner {
     private final MetodoDePagoRepository metodoDePagoRepository;
     private final ConfiguracionPagoRepository configuracionPagoRepository;
@@ -54,10 +56,10 @@ public class ConfiguracionPagoInitializer implements  CommandLineRunner {
             return;
         }
 
-        crearSiNoExiste("No especificado", BigDecimal.ZERO, admin);
-        crearSiNoExiste("Efectivo", BigDecimal.ZERO, admin);
-        crearSiNoExiste("Transferencia", BigDecimal.ZERO, admin);
-        crearSiNoExiste("Tarjeta/Crédito", BigDecimal.valueOf(15), admin);
+        crearSiNoExiste("NO_ESPECIFICADO", BigDecimal.ZERO, admin);
+        crearSiNoExiste("EFECTIVO", BigDecimal.ZERO, admin);
+        crearSiNoExiste("TRANSFERENCIA", BigDecimal.ZERO, admin);
+        crearSiNoExiste("TARJETA/CREDITO", BigDecimal.valueOf(15), admin);
 
 
     }

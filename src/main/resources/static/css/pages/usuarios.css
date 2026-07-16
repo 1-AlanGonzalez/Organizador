@@ -1,0 +1,55 @@
+.admin-users-page { min-height: 0; }
+.admin-users-page svg { width: 16px; height: 16px; }
+.admin-kicker { color: var(--text-secondary); font-size: .7rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+.admin-secure-badge { display: inline-flex; align-items: center; gap: .35rem; padding: .4rem .65rem; color: #166534; background: #dcfce7; font-size: .68rem; font-weight: 700; }
+.admin-count-card { display: flex; align-items: center; gap: .75rem; min-width: 180px; padding: .7rem 1rem; background: var(--card-bg); border: 1px solid var(--border-soft); border-radius: 12px; box-shadow: var(--card-shadow); }
+.admin-count-icon, .admin-create-icon, .admin-modal-icon { display: inline-flex; align-items: center; justify-content: center; color: #475569; background: #eef2f6; border-radius: 10px; }
+.admin-count-icon { width: 38px; height: 38px; }
+.admin-count-card strong, .admin-count-card small { display: block; line-height: 1.15; }
+.admin-count-card strong { color: var(--heading-color); font-size: 1.15rem; }
+.admin-count-card small { color: var(--text-secondary); font-size: .72rem; }
+.admin-alert { padding: .7rem 1rem; border: 0; border-radius: 10px; font-size: .85rem; }
+.admin-card-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-soft); }
+.admin-search { width: min(100%, 250px); }
+.admin-users-page .input-group-text { color: var(--text-secondary); background: var(--input-bg); border-color: var(--border-color); }
+.admin-users-page .form-control { background: var(--input-bg); border-color: var(--border-color); }
+.admin-users-page .form-control:focus { background: var(--card-bg); border-color: var(--input-focus-border); box-shadow: 0 0 0 3px rgba(85,103,111,.12); }
+.admin-users-table-wrap { max-height: 100%; overflow: auto; }
+.admin-users-page table thead { position: sticky; top: 0; z-index: 2; background: var(--input-bg); }
+.admin-users-page table th { padding-top: .8rem; padding-bottom: .8rem; border-bottom-color: var(--border-color); font-size: .68rem; letter-spacing: .05em; white-space: nowrap; }
+.admin-users-page table td { padding-top: .85rem; padding-bottom: .85rem; border-bottom-color: var(--border-soft); }
+.admin-avatar { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 36px; height: 36px; color: #334155; background: #e2e8f0; border-radius: 10px; font-size: .8rem; font-weight: 800; }
+.admin-avatar-owner { color: #1d4ed8; background: #dbeafe; }
+.admin-role-badge { display: inline-flex; align-items: center; gap: .35rem; padding: .45rem .65rem; font-size: .68rem; }
+.role-admin { color: #1d4ed8; background: #dbeafe; }
+.role-gym { color: #475569; background: #f1f5f9; }
+.admin-icon-btn { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: 32px; }
+.admin-create-card { padding: 1.35rem; }
+.admin-create-icon { width: 44px; height: 44px; margin-bottom: 1rem; }
+.admin-create-icon svg { width: 20px; height: 20px; }
+.admin-info-box { display: flex; align-items: flex-start; gap: .6rem; padding: .75rem; color: var(--text-secondary); background: var(--input-bg); border-radius: 9px; font-size: .75rem; }
+.admin-info-box svg { flex: 0 0 auto; margin-top: 1px; }
+.admin-modal-icon { width: 42px; height: 42px; }
+.admin-empty-icon { width: 38px !important; height: 38px !important; opacity: .35; }
+
+html[data-theme="dark"] .admin-secure-badge { color: #86efac; background: rgba(22,163,74,.16); }
+html[data-theme="dark"] .admin-count-icon,
+html[data-theme="dark"] .admin-create-icon,
+html[data-theme="dark"] .admin-modal-icon { color: var(--text-color); background: var(--input-bg); }
+html[data-theme="dark"] .admin-avatar { color: var(--text-color); background: var(--input-bg); }
+html[data-theme="dark"] .admin-avatar-owner,
+html[data-theme="dark"] .role-admin { color: #93c5fd; background: rgba(37,99,235,.17); }
+html[data-theme="dark"] .role-gym { color: var(--text-secondary); background: var(--input-bg); }
+html[data-theme="dark"] .admin-users-page .modal-content { color: var(--text-color); background: var(--card-bg); border: 1px solid var(--border-color) !important; }
+html[data-theme="dark"] .admin-users-page .btn-close { filter: invert(1) grayscale(100%) brightness(180%); }
+
+@media (max-width: 1199.98px) {
+    .admin-users-page .row.flex-grow-1 { overflow: visible; }
+    .admin-users-table-wrap { max-height: 520px; }
+}
+
+@media (max-width: 767.98px) {
+    .admin-count-card { width: 100%; }
+    .admin-users-page table th:nth-child(3), .admin-users-page table td:nth-child(3) { display: none; }
+    .admin-users-page table th, .admin-users-page table td { white-space: nowrap; }
+}

@@ -1,10 +1,17 @@
 package com.gymmanager.gym_manager.services;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 
 import com.gymmanager.gym_manager.config.SecurityUtils;
@@ -48,10 +55,12 @@ public class ActividadService {
             ) {
 
         Usuario usuario = securityUtils.getUsuarioActual();
+        List<AsignacionInstructor> asignaciones = validarYResolverAsignaciones(
+                instructorIds, dias, horarios, usuario);
         Actividad actividad;
 
         if (idActividad != null) {
-            actividad = actividadRepository.findById(idActividad)
+            actividad = actividadRepository.findByIdActividadAndUsuario(idActividad, usuario)
                         .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
             actividad.setNombre(nombre);
             actividad.setPrecio(precio);
@@ -67,14 +76,63 @@ public class ActividadService {
                 actividad = actividadRepository.save(actividad);
             }
 
-            for (int i = 0; i < instructorIds.size(); i++) {
-                Instructor instructor = instructorRepository.findById(instructorIds.get(i))
-                        .orElseThrow(() -> new RuntimeException("Instructor no encontrado"));
-                actividad.getDictados().add(
-                        new Dicta(actividad, instructor, dias.get(i), horarios.get(i)));
+            for (AsignacionInstructor asignacion : asignaciones) {
+                actividad.getDictados().add(new Dicta(
+                        actividad,
+                        asignacion.instructor(),
+                        asignacion.dias(),
+                        asignacion.horario()));
             }
 
             actividadRepository.save(actividad);
+    }
+
+    public Page<Actividad> buscarPagina(int pagina, int cantidad, String texto) {
+        return actividadRepository.buscarPagina(
+                securityUtils.getUsuarioActual(), texto,
+                PageRequest.of(pagina, cantidad, Sort.by("nombre").ascending()));
+    }
+
+    private List<AsignacionInstructor> validarYResolverAsignaciones(
+            List<Integer> instructorIds, List<String> dias, List<String> horarios, Usuario usuario) {
+        if (instructorIds == null || dias == null || horarios == null
+                || instructorIds.isEmpty()
+                || instructorIds.size() != dias.size()
+                || instructorIds.size() != horarios.size()) {
+            throw new IllegalArgumentException("Las asignaciones de instructores y horarios están incompletas.");
+        }
+
+        Set<String> combinaciones = new HashSet<>();
+        List<AsignacionInstructor> asignaciones = new ArrayList<>();
+        for (int i = 0; i < instructorIds.size(); i++) {
+            Integer instructorId = instructorIds.get(i);
+            String diasNormalizados = normalizarTexto(dias.get(i));
+            String horarioNormalizado = normalizarTexto(horarios.get(i));
+            if (instructorId == null || diasNormalizados.isEmpty() || horarioNormalizado.isEmpty()) {
+                throw new IllegalArgumentException("Cada asignación debe tener instructor, días y horario.");
+            }
+
+            String clave = instructorId + "|"
+                    + diasNormalizados.toLowerCase(Locale.ROOT) + "|"
+                    + horarioNormalizado.toLowerCase(Locale.ROOT);
+            if (!combinaciones.add(clave)) {
+                throw new IllegalArgumentException(
+                        "El mismo instructor no puede repetirse con los mismos días y horario.");
+            }
+
+            Instructor instructor = instructorRepository
+                    .findByIdInstructorAndUsuario(instructorId, usuario)
+                    .orElseThrow(() -> new IllegalArgumentException("Instructor no encontrado."));
+            asignaciones.add(new AsignacionInstructor(instructor, diasNormalizados, horarioNormalizado));
+        }
+        return asignaciones;
+    }
+
+    private String normalizarTexto(String valor) {
+        return valor == null ? "" : valor.trim().replaceAll("\\s+", " ");
+    }
+
+    private record AsignacionInstructor(Instructor instructor, String dias, String horario) {
     }
 
 
