@@ -1,4 +1,4 @@
-<div th:fragment="contenido">
+<div th:fragment="contenido" class="nuevo-pago-page">
 
     <div class="d-flex align-items-center justify-content-between mb-3 pt-3 flex-shrink-0">
         <div>
@@ -34,7 +34,7 @@
                         <!-- BLOQUE 1: Cliente -->
                         <div class="p-4 pb-3">
                             <div class="d-flex align-items-center gap-2 mb-1">
-                                <i data-lucide="user" style="width:15px;height:15px;" class="text-secondary"></i>
+                                <i data-lucide="user" style="width:15px;height:15px;" class="icons text-secondary"></i>
                                 <span class="fw-bold text-dark small text-uppercase"
                                       style="letter-spacing:0.05em;">Cliente</span>
                             </div>
@@ -56,7 +56,7 @@
                         <!-- BLOQUE 2: Detalle -->
                         <div class="p-4 pb-3">
                             <div class="d-flex align-items-center gap-2 mb-1">
-                                <i data-lucide="banknote" style="width:15px;height:15px;" class="text-secondary"></i>
+                                <i data-lucide="banknote" style="width:15px;height:15px;" class="icons text-secondary"></i>
                                 <span class="fw-bold text-dark small text-uppercase"
                                       style="letter-spacing:0.05em;">Detalle del pago</span>
                             </div>
@@ -82,7 +82,7 @@
                                     <label for="fecha" class="form-label small text-muted fw-bold text-uppercase mb-1"
                                            style="font-size: 0.65rem; letter-spacing: 0.06em;">Fecha de pago</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0 text-muted">
+                                        <span class="icons input-group-text bg-light border-end-0 text-muted">
                                             <i class="bi bi-calendar-event"></i>
                                         </span>
                                         <input type="date"
@@ -101,12 +101,12 @@
                         <!-- Acciones -->
                         <div class="p-4 pt-3 d-flex flex-column gap-2">
                             <button type="submit"
-                                    class="btn btn-primary py-2 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+                                    class="btn btn-guardar py-2 d-flex align-items-center justify-content-center gap-2">
                                 <i data-lucide="check" style="width:16px;height:16px;"></i>
                                 Confirmar Pago
                             </button>
                             <a th:href="@{/ingresos}"
-                               class="btn btn-link text-decoration-none text-muted btn-sm text-center">
+                               class="btn btn-cancelar btn-sm text-center">
                                 Cancelar operación
                             </a>
                         </div>

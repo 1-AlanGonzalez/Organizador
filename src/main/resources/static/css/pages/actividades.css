@@ -1,3 +1,9 @@
 .btn-asignar {
     border: 1.5px solid var(--border-soft);
 }
+.icons {
+    border: 1.5px solid var(--border-soft);
+}
+.boton-cancelar:hover {
+    background-color: var(--card-bg);
+}

@@ -394,6 +394,51 @@
     transition: background 0.15s;
 }
 
+/* Scroll de deudores */
+.dashboard-debt-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(239, 68, 68, 0.5) transparent;
+    scrollbar-gutter: stable;
+}
+
+.dashboard-debt-scroll::-webkit-scrollbar {
+    width: 7px;
+}
+
+.dashboard-debt-scroll::-webkit-scrollbar-track {
+    margin-block: 6px;
+    background: transparent;
+}
+
+.dashboard-debt-scroll::-webkit-scrollbar-thumb {
+    background: rgba(239, 68, 68, 0.42);
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+}
+
+.dashboard-debt-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(239, 68, 68, 0.7);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+html[data-theme="dark"] .dashboard-debt-scroll {
+    scrollbar-color: rgba(248, 113, 113, 0.58) transparent;
+}
+
+html[data-theme="dark"] .dashboard-debt-scroll::-webkit-scrollbar-thumb {
+    background: rgba(248, 113, 113, 0.5);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+html[data-theme="dark"] .dashboard-debt-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(252, 165, 165, 0.75);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
 .dashboard-list-row:hover {
     background: var(--card-hover-bg);
 }

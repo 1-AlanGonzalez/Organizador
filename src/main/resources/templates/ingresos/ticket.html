@@ -6,12 +6,42 @@
     <title>Comprobante de Pago</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        (() => {
+            const savedTheme = localStorage.getItem('theme');
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            document.documentElement.dataset.theme = savedTheme ?? systemTheme;
+        })();
+    </script>
     <style>
         :root {
+            color-scheme: light;
             --sidebar-bg: #1f2a30;
             --main-bg: #f8fafc;
             --card-bg: #ffffff;
+            --surface-bg: #f8fafc;
+            --text-color: #334155;
+            --heading-color: #1a1a2e;
+            --text-muted: #94a3b8;
+            --text-faint: #cbd5e1;
+            --border-color: #e2e8f0;
+            --border-soft: #f1f5f9;
             --card-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+            --sidebar-bg: #121a1e;
+            --main-bg: #141a1e;
+            --card-bg: #1f2a30;
+            --surface-bg: #26343a;
+            --text-color: #c3d0d6;
+            --heading-color: #d8e2e7;
+            --text-muted: #94a3b8;
+            --text-faint: #78909c;
+            --border-color: #3a4a51;
+            --border-soft: #2f3e45;
+            --card-shadow: 0 8px 24px rgba(0,0,0,0.35);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,6 +54,7 @@
             align-items: center;
             padding: 2rem 1rem;
             min-height: 100vh;
+            color: var(--text-color);
         }
 
         /* ── Acciones ── */
@@ -52,7 +83,7 @@
         }
         .btn:hover { opacity: 0.88; }
         .btn-print  { background: var(--sidebar-bg); color: #fff; }
-        .btn-volver { background: var(--card-bg); color: #555; border: 1px solid #e2e8f0; }
+        .btn-volver { background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); }
 
         /* ── Ticket ── */
         .ticket {
@@ -101,17 +132,23 @@
             margin-top: 1rem;
         }
 
+        html[data-theme="dark"] .badge-pagado {
+            color: #86efac;
+            background: rgba(22, 163, 74, 0.18);
+            border: 1px solid rgba(134, 239, 172, 0.22);
+        }
+
         /* Cuerpo */
         .ticket-body { padding: 1.75rem 2rem; }
 
         .cliente-nombre {
             font-size: 1.05rem;
             font-weight: 700;
-            color: #1a1a2e;
+            color: var(--heading-color);
         }
         .cliente-dni {
             font-size: 0.8rem;
-            color: #94a3b8;
+            color: var(--text-muted);
             margin-top: 0.2rem;
             display: flex;
             align-items: center;
@@ -120,7 +157,7 @@
 
         .divider {
             border: none;
-            border-top: 1px dashed #e2e8f0;
+            border-top: 1px dashed var(--border-color);
             margin: 1.25rem 0;
         }
 
@@ -132,14 +169,14 @@
             font-size: 0.875rem;
         }
         .detalle-fila .label {
-            color: #94a3b8;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             gap: 0.4rem;
         }
         .detalle-fila .valor {
             font-weight: 500;
-            color: #334155;
+            color: var(--text-color);
         }
 
         /* Total */
@@ -149,7 +186,7 @@
             align-items: center;
             margin-top: 0.75rem;
             padding: 1rem 1.25rem;
-            background: var(--main-bg);
+            background: var(--surface-bg);
             border-radius: 10px;
         }
         .total-fila .total-label {
@@ -157,36 +194,55 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #64748b;
+            color: var(--text-muted);
         }
         .total-fila .total-valor {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--sidebar-bg);
+            color: var(--heading-color);
         }
 
         .pie {
             text-align: center;
             padding: 1rem 2rem 1.5rem;
-            border-top: 1px solid #f1f5f9;
+            border-top: 1px solid var(--border-soft);
         }
         .pie .mensaje {
             font-size: 0.78rem;
-            color: #94a3b8;
+            color: var(--text-muted);
             font-style: italic;
         }
         .pie .comprobante-num {
             font-size: 0.68rem;
-            color: #cbd5e1;
+            color: var(--text-faint);
             margin-top: 0.35rem;
             font-family: monospace;
             letter-spacing: 0.05em;
         }
 
         @media print {
+            :root,
+            html[data-theme="dark"] {
+                color-scheme: light;
+                --sidebar-bg: #1f2a30;
+                --main-bg: #fff;
+                --card-bg: #fff;
+                --surface-bg: #f8fafc;
+                --text-color: #334155;
+                --heading-color: #1a1a2e;
+                --text-muted: #64748b;
+                --text-faint: #94a3b8;
+                --border-color: #e2e8f0;
+                --border-soft: #f1f5f9;
+            }
             body { background: #fff; padding: 0; }
             .acciones { display: none; }
             .ticket { box-shadow: none; border-radius: 0; max-width: 100%; }
+            html[data-theme="dark"] .badge-pagado {
+                color: #065f46;
+                background: #d1fae5;
+                border: none;
+            }
         }
     </style>
 </head>

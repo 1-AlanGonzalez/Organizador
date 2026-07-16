@@ -1,0 +1,86 @@
+/* Ingresos */
+.ingresos-page #paymentTabs .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--text-secondary);
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.ingresos-page #paymentTabs .nav-link:hover {
+    color: var(--text-color);
+    background-color: var(--card-hover-bg);
+    border-color: var(--border-color);
+}
+
+.ingresos-page #paymentTabs .nav-link.active {
+    color: var(--heading-color);
+    background-color: var(--input-bg);
+    border-color: var(--border-color) var(--border-color) var(--input-bg);
+}
+
+html[data-theme="dark"] .ingresos-page #paymentTabs .nav-link.active {
+    color: var(--heading-color) !important;
+    background-color: var(--input-bg) !important;
+    border-color: var(--border-color) var(--border-color) var(--input-bg) !important;
+}
+
+html[data-theme="dark"] .ingresos-page .form-control,
+html[data-theme="dark"] .ingresos-page .form-select,
+html[data-theme="dark"] .ingresos-page .input-group-text,
+html[data-theme="dark"] .ingresos-page .form-select option {
+    color: var(--text-color);
+    background-color: var(--input-bg) !important;
+    border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .ingresos-page input[type="month"]::-webkit-calendar-picker-indicator,
+html[data-theme="dark"] .nuevo-pago-page input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+}
+
+/* Nuevo pago, incluidos los controles que genera Tom Select. */
+html[data-theme="dark"] .nuevo-pago-page hr {
+    border-color: var(--border-color) !important;
+    opacity: 1;
+}
+
+html[data-theme="dark"] .nuevo-pago-page .ts-control,
+html[data-theme="dark"] .nuevo-pago-page .ts-dropdown,
+html[data-theme="dark"] .nuevo-pago-page .ts-dropdown .option,
+html[data-theme="dark"] .nuevo-pago-page .form-control,
+html[data-theme="dark"] .nuevo-pago-page .form-select,
+html[data-theme="dark"] .nuevo-pago-page .input-group-text {
+    color: var(--text-color);
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .nuevo-pago-page .ts-control input {
+    color: var(--text-color);
+}
+
+html[data-theme="dark"] .nuevo-pago-page .ts-control input::placeholder {
+    color: var(--text-muted);
+}
+
+html[data-theme="dark"] .nuevo-pago-page .ts-dropdown .active,
+html[data-theme="dark"] .nuevo-pago-page .ts-dropdown .selected {
+    color: var(--heading-color);
+    background-color: var(--card-hover-bg);
+}
+
+html[data-theme="dark"] .nuevo-pago-page .ts-wrapper.focus .ts-control,
+html[data-theme="dark"] .nuevo-pago-page .form-control:focus,
+html[data-theme="dark"] .nuevo-pago-page .form-select:focus {
+    background-color: var(--card-hover-bg);
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 0.2rem rgba(120, 144, 156, 0.16);
+}
+
+html[data-theme="dark"] .nuevo-pago-page #deudasContainer .card {
+    color: var(--text-color);
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+}

@@ -6,11 +6,11 @@
             <p class="text-muted small mb-0">Registra la presencia de los alumnos del día</p>
         </div>
         <div class="d-flex gap-2">
-            <a th:href="@{/asistencias}" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
+            <a th:href="@{/asistencias}" class="btn btn-cancelar btn-sm d-flex align-items-center gap-2">
                 <i data-lucide="arrow-left" style="width:14px;height:14px;"></i>
                 <span>Cancelar</span>
             </a>
-            <button type="submit" form="formAsistencia" class="btn btn-primary btn-sm shadow-sm d-flex align-items-center gap-2">
+            <button type="submit" form="formAsistencia" class="btn btn-guardar btn-sm d-flex align-items-center gap-2">
                 <i data-lucide="check" style="width:14px;height:14px;"></i>
                 <span>Guardar Planilla</span>
             </button>
@@ -22,7 +22,7 @@
         <div class="row g-2 align-items-center">
             <div class="col-md-3">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted">
+                    <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="calendar" style="width:14px;height:14px;"></i>
                     </span>
                     <input type="date" class="form-control form-control-sm border-start-0 ps-0 bg-light"
@@ -32,7 +32,7 @@
             </div>
             <div class="col-md-3">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted">
+                    <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="search" style="width:14px;height:14px;"></i>
                     </span>
                     <input id="filtroAsistencias" type="text"
@@ -42,7 +42,7 @@
             </div>
             <div class="col-md-3">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-muted">
+                    <span class="icons input-group-text bg-light border-end-0 text-muted">
                         <i data-lucide="filter" style="width:14px;height:14px;"></i>
                     </span>
                     <select id="filtroActividad" class="form-select form-select-sm border-start-0 bg-light text-muted"
