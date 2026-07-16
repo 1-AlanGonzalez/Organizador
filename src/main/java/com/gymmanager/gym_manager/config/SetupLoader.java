@@ -10,7 +10,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@Order(1)
 public class SetupLoader {
 
     // APP_ADMIN_PASSWORD es obligatoria y no se almacena en el repositorio.
@@ -18,6 +17,7 @@ public class SetupLoader {
     private String adminPassword;
 
     @Bean
+    @Order(1)
     CommandLineRunner initDatabase(UsuarioRepository repo, PasswordEncoder encoder) {
         return args -> {
             if (repo.findByUsername("admin").isEmpty()) {
