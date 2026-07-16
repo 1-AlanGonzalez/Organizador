@@ -19,6 +19,32 @@ La interfaz es responsive y cuenta con temas claro y oscuro.
 - Autenticación, control de sesiones y contraseñas cifradas.
 - Diseño responsive con modo oscuro persistente.
 
+## Capturas de la aplicación
+
+### Panel principal
+
+![Panel principal de Gym Manager](docs/images/dashboard.png)
+
+### Gestión de clientes
+
+![Panel de gestión de clientes de Gym Manager](docs/images/panelClientes.png)
+
+### Perfil e historial del cliente
+
+![Perfil de cliente de Gym Manager](docs/images/perfilCliente.png)
+
+### Actividades e instructores
+
+![Perfil de actividades en modo oscuro](docs/images/actividadesModoOscuro.png)
+
+### Control de pagos e ingresos
+
+![Pagos e ingresos modo oscuro](docs/images/pagos.png)
+
+### Reportes y exportación
+
+![Reportes y exportación](docs/images/exportacion.png)
+
 ## Tecnologías
 
 ### Backend
@@ -205,6 +231,16 @@ src/
 - La administración de usuarios está restringida al rol `ADMIN`.
 - Las sesiones expiran después de un período de inactividad.
 - Los formularios protegidos utilizan tokens CSRF de Spring Security.
+
+## Datos para una presentación
+
+El proyecto incluye un escenario completamente ficticio para grabar videos o tomar capturas sin exponer datos reales. Crea una base vacía llamada `GymOrganizationDemo`, configura `DEMO_DB_URL` en `.env` y ejecuta:
+
+```powershell
+mvn.cmd "-Dtest=DemoDataGenerator" test
+```
+
+Luego inicia la aplicación apuntando `DB_URL` a esa misma base. Las credenciales son `demo` / `Demo2026!`. Por seguridad, el generador solo reemplaza el contenido de una base cuyo nombre contenga `GymOrganizationDemo`.
 
 ## Estado del proyecto
 
